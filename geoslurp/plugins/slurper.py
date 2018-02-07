@@ -15,9 +15,11 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
+
 class Slurper():
     """ (Abstract) Base class to which implemented dataslurper should comply to"""
     def __init__(self):
+        """slurper Dummy template for geoslurper plugins""" 
     def update(self):
         """Checks for new data and download accordingly"""
     def clear(self):  
@@ -26,3 +28,5 @@ class Slurper():
         """ perform and retrieve a datatype specific query """
     def datahook(self):
         """ Converts the downloaded files to alternative formats or enters the data in the database"""
+
+PlugName=Slurper

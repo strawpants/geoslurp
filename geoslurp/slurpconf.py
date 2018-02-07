@@ -15,23 +15,22 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-#note assumes Python > 3.4
-from pathlib import Path
+import os.path
 import yaml
 
 class slurpconf():
     """ Class which reads and writes configure data in yaml format"""
     def __init__(self):
-        self.confyaml=Path.home()/'.geoslurp.yaml'
-        if Path.exists(self.confyaml):
+        self.confyaml=os.path.join(os.path.expanduser('~'),'.geoslurp.yaml')
+        if os.path.exists(self.confyaml):
             #Read parameters from yaml file
             fid=open(self.confyaml,'r')
             self.confobj=[x for x in yaml.safe_load_all(fid)][0]
             fid.close()
     def writeDefaultConfig(self):
         """Write the default configuration to ${HOME}/.geoslurp.yaml.default"""
-        obj={"Mongo":"localhost:27017","DataDir":"/tmp/geoslurp"}
-        fid=open(str(self.confyaml)+'.default','w')
+        obj={"Mongo":"localhost:27017","DataDir":"/tmp/geoslurp","PluginDir":"/tmp/geoslurp/plugins"}
+        fid=open(self.confyaml+'.default','w')
         fid.write("# Default configuration file for geoslurp\n")
         fid.write("# Change settings below and save file to .geoslurp.yaml\n")
         yaml.dump(obj,fid,default_flow_style=False)

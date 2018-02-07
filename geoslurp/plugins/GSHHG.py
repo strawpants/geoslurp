@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # This file is part of geoslurp.
 # geoslurp is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,14 +15,11 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-#this is intended to be turned into a daemon services at some stage
 
-from geoslurp.PluginManager import PluginManager
+class GSHHG():
+    """ Get and update the Global Self-consistent, Hierarchical, High-resolution Geography Database"""
+    def __init__(self):
+        """Setup main urls"""
 
-def main():
-    Manager=PluginManager()
-    Manager.list()
+PlugName=GSHHG
 
-
-if __name__ == "__main__":
-    main()
