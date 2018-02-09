@@ -19,11 +19,29 @@
 #this is intended to be turned into a daemon services at some stage
 
 from geoslurp.PluginManager import PluginManager
+from geoslurp.slurpconf import slurpconf
 
-def main():
+import sys
+import argparse
+
+def main(argv):
+    usage="Download and manage datasets"
+    parser = argparse.ArgumentParser(description=usage)
+    parser.add_argument('-l','--list',action='store_true',help="Show a list of available data plugins")
+    parser.add_argument('-u','--update',action='store_true',help="update selected datasets")
+    parser.add_argument('--default',action='store_true',help='Prints out a default configuration file (default file is ~/.geoslurp.yaml)')
+    parser.add_argument('datasets',nargs='*',help='Datasets to consider')
+    args = parser.parse_args(argv[1:])
+
+    if args.default:
+        conf=slurpconf()
+        conf.default(sys.stdout)
+        sys.exit(0)
+    
     Manager=PluginManager()
-    Manager.list()
+    if args.list:
+        Manager.list()
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)

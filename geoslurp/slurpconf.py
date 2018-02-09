@@ -17,6 +17,7 @@
 
 import os.path
 import yaml
+import sys
 
 class slurpconf():
     """ Class which reads and writes configure data in yaml format"""
@@ -25,27 +26,25 @@ class slurpconf():
         if os.path.exists(self.confyaml):
             #Read parameters from yaml file
             fid=open(self.confyaml,'r')
-            self.confobj=[x for x in yaml.safe_load_all(fid)][0]
+            self.confobj=[x for x in yaml.safe_load_all(fid)]
             fid.close()
-    def writeDefaultConfig(self):
-        """Write the default configuration to ${HOME}/.geoslurp.yaml.default"""
+    def default(self,out=sys.stderr):
+        """Write the default configuration """
         obj={"Mongo":"localhost:27017","DataDir":"/tmp/geoslurp","PluginDir":"/tmp/geoslurp/plugins"}
-        fid=open(self.confyaml+'.default','w')
-        fid.write("# Default configuration file for geoslurp\n")
-        fid.write("# Change settings below and save file to .geoslurp.yaml\n")
-        yaml.dump(obj,fid,default_flow_style=False)
-        fid.close()
+        out.write("# Default configuration file for geoslurp\n")
+        out.write("# Change settings below and save file to .geoslurp.yaml\n")
+        yaml.dump(obj,out,default_flow_style=False)
 
     def write(self):
         """Writes changed setup back to confuguration file"""
         fid=open(self.confyaml,'w')
-        yaml.dump(self.confobj,fid,default_flow_style=False)
+        yaml.dump(self.confobj[0],fid,default_flow_style=False)
         fid.close()
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
     def __getitem__(self,arg):
-        return self.confobj[arg]
+        return self.confobj[0][arg]
 
     def __setitem__(self,key,val):
-        self.confobj[key]=val
+        self.confobj[0][key]=val
 

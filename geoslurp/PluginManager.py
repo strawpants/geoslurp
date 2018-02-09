@@ -19,11 +19,33 @@
 #this is intended to be turned into a daemon services at some stage
 import  importlib.util
 import sys
-import os.path
+import os.path,datetime
 from glob import glob
 from .slurpconf import slurpconf  
 class PluginManager():
     """ Manages plugins which can be loaded and executed dynamically"""
+    def checkForPlugins(self):
+        """Dynamically updates the loaded plugins"""
+        
+        #Check for possible deleted plugins
+        for key,val in self.pluginFiles.items():
+            if not os.path.exists(val):
+                del self.plugins[key]
+                del self.pluginFiles[key]
+        
+        for pdirec in self.pluginpath:
+            for pyf in glob(os.path.join(pdirec,'')+'*.py'):
+                #check if file is unchanged and already loaded
+                tmod= datetime.datetime.fromtimestamp(os.path.getmtime(pyf))
+                if tmod > self.lastcheck:
+                    #reload plugin
+                    cl=loadPlugin(pyf)
+                    tag=type(cl).__name__
+                    self.plugins[tag]=cl
+                    self.pluginFiles[tag]=pyf
+        self.lastcheck
+    
+    
     def __init__(self):
         #load settings
         self.conf=slurpconf()
@@ -32,15 +54,18 @@ class PluginManager():
             self.pluginpath.append(self.conf['PluginDir'])
         except KeyError:
             pass
+        #enforces loading of all plugins upons first use
+        self.lastcheck=datetime.datetime.min
+        self.plugins={}
+        self.pluginFiles={}
+        self.checkForPlugins()
+
 
     def list(self,out=sys.stderr):
-        """List available plugins"""
+        """List loaded plugins"""
         #create a list of potential plugins
-        for pdirec in self.pluginpath:
-            for pyf in glob(os.path.join(pdirec,'')+'*.py'):
-                #dynamically load class and print class name and doc string
-                cl=loadPlugin(pyf)
-                print(type(cl).__name__,": ",cl.__doc__,file=out)
+        for key,cl in self.plugins.items():
+            print(type(cl).__name__,": ",type(cl).__doc__,file=out)
 
     
 def loadPlugin(path):
@@ -49,6 +74,11 @@ def loadPlugin(path):
     if sys.version_info < (3,5,0) and sys.version_info > (3,3,0):
         from importlib.machinery import SourceFileLoader
         mod = SourceFileLoader("geoslurp.plugins",path).load_module() 
+        return mod.PlugName()
+    elif sys.version_info >= (3,5,0):
+        spec = importlib.util.spec_from_file_location("geoslurp.plugins", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
         return mod.PlugName()
     else:
         raise Exception('This python version cannot dynamically load a plugin')
