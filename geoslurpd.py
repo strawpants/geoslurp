@@ -41,6 +41,13 @@ def main(argv):
     Manager=PluginManager()
     if args.list:
         Manager.list()
+    
+    if args.update:
+        if not args.datasets:
+            raise Exception("No dataset selected")
+        for clname in args.datasets:
+            print("Updating "+clname,file=sys.stderr)
+            Manager[clname].update()
 
 
 if __name__ == "__main__":

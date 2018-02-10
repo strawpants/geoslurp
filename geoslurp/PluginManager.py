@@ -22,6 +22,7 @@ import sys
 import os.path,datetime
 from glob import glob
 from .slurpconf import slurpconf  
+
 class PluginManager():
     """ Manages plugins which can be loaded and executed dynamically"""
     def checkForPlugins(self):
@@ -39,12 +40,15 @@ class PluginManager():
                 tmod= datetime.datetime.fromtimestamp(os.path.getmtime(pyf))
                 if tmod > self.lastcheck:
                     #reload plugin
-                    cl=loadPlugin(pyf)
+                    cl=self.loadPlugin(pyf)
                     tag=type(cl).__name__
                     self.plugins[tag]=cl
                     self.pluginFiles[tag]=pyf
         self.lastcheck
-    
+
+    def __getitem__(self,clname):
+        """Forward the [] call to retrieve the registered plugin"""
+        return self.plugins[clname]
     
     def __init__(self):
         #load settings
@@ -68,17 +72,17 @@ class PluginManager():
             print(type(cl).__name__,": ",type(cl).__doc__,file=out)
 
     
-def loadPlugin(path):
-    """Loads the plugin class from python file (path)"""
-    #note this is python version specific code
-    if sys.version_info < (3,5,0) and sys.version_info > (3,3,0):
-        from importlib.machinery import SourceFileLoader
-        mod = SourceFileLoader("geoslurp.plugins",path).load_module() 
-        return mod.PlugName()
-    elif sys.version_info >= (3,5,0):
-        spec = importlib.util.spec_from_file_location("geoslurp.plugins", path)
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        return mod.PlugName()
-    else:
-        raise Exception('This python version cannot dynamically load a plugin')
+    def loadPlugin(self,path):
+        """Loads the plugin class from python file (path)"""
+        #note this is python version specific code
+        if sys.version_info < (3,5,0) and sys.version_info > (3,3,0):
+            from importlib.machinery import SourceFileLoader
+            mod = SourceFileLoader("geoslurp.plugins",path).load_module() 
+            return mod.PlugName(self.conf)
+        elif sys.version_info >= (3,5,0):
+            spec = importlib.util.spec_from_file_location("geoslurp.plugins", path)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod.PlugName(self.conf)
+        else:
+            raise Exception('This python version cannot dynamically load a plugin')

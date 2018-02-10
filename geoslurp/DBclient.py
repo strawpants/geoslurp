@@ -14,19 +14,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
+from pymongo import MongoClient
+class DBclient():
+    """Interface between the geoslurp data and database (currently mongodb)"""
+    def __init__(self,mongohost):
+        self.conn=MongoClient(host=mongohost)
 
+    def getPluginInfo(self,name):
+        """retrieves registered plugin data from the database"""
+        db=self.conn.PluginReg
+        return db.find({"PluginName":name})
 
-class Slurper():
-    """ (Abstract) Base class to which implemented dataslurper should comply to"""
-    def __init__(self,conf):
-        """slurper Dummy template for geoslurper plugins""" 
-    def update(self):
-        """Checks for new data and download accordingly"""
-    def clear(self):  
-        """ Clears the data cache and deletes the corresponding database table """
-    def query(self):
-        """ perform and retrieve a datatype specific query """
-    def datahook(self):
-        """ Converts the downloaded files to alternative formats or enters the data in the database"""
-
-PlugName=Slurper
+    def setPluginInfo(self,doc):
+        """Sets a """
