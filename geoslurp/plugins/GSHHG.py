@@ -19,19 +19,34 @@ from .URLtool import URLtool
 from .DBclient import DBclient
 import os,re,sys
 import datetime
+from pymongo import MongoClient
 class GSHHG():
     """ Get and update the Global Self-consistent, Hierarchical, High-resolution Geography Database"""
     def __init__(self,conf):
         """Setup main urls"""
         self.url='ftp://ftp.soest.hawaii.edu/gshhg/'
         self.conf=conf #stores a reference to  the global configuration file
-        self.version=(0,0,0) 
-        self.lastupdate=datetime.datetime(datetime.MINYEAR,1,1)
+        self.invent={"version":(0,0,0),"lastupdate":datetime.datetime(datetime.MINYEAR,1,1)}
+
         self.datadir=os.path.join(conf['DataDir'],type(self).__name__)
+        self.cachedir=os.path.join(conf['CacheDir'],type(self).__name__)
         if not os.path.exists(self.datadir):
             os.makedirs(self.datadir)
-        #retrieve last update info from  the database
+        
+        if not os.path.exists(self.cachedir):
+            os.makedirs(self.cachedir)
 
+        #Setup a mongodb connector
+        self.dbclient=MongoClient(self.conf['Mongo'])
+        dbinventory=self.dbclient.geoslurp.inventory
+
+        #retrieve info on last update
+        dbentry=dbinventory.find({"Name":type(self).__name__})    
+        if dbentry.count() == 1:
+            self.invent=dbentry[0]     
+        
+        
+    
     def update(self):
         self.urlt=URLtool(self.url)
         ftplist=self.urlt.getftplist('gshhg-shp.*zip')
@@ -46,16 +61,19 @@ class GSHHG():
             if ver > newestver:
                 newestver=ver
                 getf=fname
-        #now determine whether to retireve the file
-        if newestver > self.version and t > self.lastupdate:
-            fid=open(os.path.join(self.datadir,getf),'wb')
+        #now determine whether to retrieve the file
+        if newestver > self.invent["version"] and t > self.invent["lastupdate"]:
+            fid=open(os.path.join(self.cachedir,getf),'wb')
             print("Downloading "+getf,file=sys.stderr)
             self.urlt.downloadFile(getf,fid)
-            self.version=newestver
-            self.lastupdate=datetime.datetime.now()
+            self.invent["version"]=newestver
+            self.invent["lastupdate"]=datetime.datetime.now()
             fid.close()
         else:
             print("Already at newest version",file=sys.stderr)
-
+        
+        #Add/update the database
+        plugincol=self.dbclient.geoslurp.inventory.insert(self.invent)
+        
 PlugName=GSHHG
 
