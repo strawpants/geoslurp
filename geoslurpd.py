@@ -29,7 +29,10 @@ def main(argv):
     parser = argparse.ArgumentParser(description=usage)
     parser.add_argument('-l','--list',action='store_true',help="Show a list of available data plugins")
     parser.add_argument('-u','--update',action='store_true',help="update selected datasets")
+    parser.add_argument('-r','--remove',action='store_true',help="remove selected dataset files and database entries")
     parser.add_argument('--default',action='store_true',help='Prints out a default configuration file (default file is ~/.geoslurp.yaml)')
+    parser.add_argument('--cleancache',action='store_true',help="Clean up the cache directory")
+    parser.add_argument('--force',action='store_true',help='enforce action')
     parser.add_argument('datasets',nargs='*',help='Datasets to consider')
     args = parser.parse_args(argv[1:])
 
@@ -37,8 +40,12 @@ def main(argv):
         conf=slurpconf()
         conf.default(sys.stdout)
         sys.exit(0)
-    
+   
+
     Manager=PluginManager()
+    if args.cleancache:
+        Manager.cleancache()
+    
     if args.list:
         Manager.list()
     
@@ -47,8 +54,15 @@ def main(argv):
             raise Exception("No dataset selected")
         for clname in args.datasets:
             print("Updating "+clname,file=sys.stderr)
-            Manager[clname].update()
-
+            Manager[clname].update(args.force)
+    
+    
+    if args.remove:
+        if not args.datasets:
+            raise Exception("No dataset selected")
+        for clname in args.datasets:
+            print("Removing data "+clname,file=sys.stderr)
+            Manager[clname].remove()
 
 if __name__ == "__main__":
     main(sys.argv)

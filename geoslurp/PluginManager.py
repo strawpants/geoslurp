@@ -20,6 +20,7 @@
 import  importlib.util
 import sys
 import os.path,datetime
+import shutil
 from glob import glob
 from .slurpconf import slurpconf  
 
@@ -86,3 +87,13 @@ class PluginManager():
             return mod.PlugName(self.conf)
         else:
             raise Exception('This python version cannot dynamically load a plugin')
+    
+    def cleancache(self):
+        for f in  os.listdir(self.conf['CacheDir']):
+            filep=os.path.join(self.conf['CacheDir'],f)
+            if os.path.isfile(f):
+                print(filep)
+                os.unlink(filep)
+            elif os.path.isdir(filep):
+                shutil.rmtree(filep)
+

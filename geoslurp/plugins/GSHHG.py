@@ -20,13 +20,15 @@ from .DBclient import DBclient
 import os,re,sys
 import datetime
 from pymongo import MongoClient
+import zipfile
 class GSHHG():
     """ Get and update the Global Self-consistent, Hierarchical, High-resolution Geography Database"""
     def __init__(self,conf):
         """Setup main urls"""
         self.url='ftp://ftp.soest.hawaii.edu/gshhg/'
         self.conf=conf #stores a reference to  the global configuration file
-        self.invent={"version":(0,0,0),"lastupdate":datetime.datetime(datetime.MINYEAR,1,1)}
+        self.invent={"Name":type(self).__name__,"version":(0,0,0),"lastupdate":datetime.datetime(datetime.MINYEAR,1,1),
+                    "MainTable":None,"filelist":[]}
 
         self.datadir=os.path.join(conf['DataDir'],type(self).__name__)
         self.cachedir=os.path.join(conf['CacheDir'],type(self).__name__)
@@ -47,7 +49,7 @@ class GSHHG():
         
         
     
-    def update(self):
+    def update(self,force):
         self.urlt=URLtool(self.url)
         ftplist=self.urlt.getftplist('gshhg-shp.*zip')
         #first find out the newest version
@@ -62,18 +64,42 @@ class GSHHG():
                 newestver=ver
                 getf=fname
         #now determine whether to retrieve the file
-        if newestver > self.invent["version"] and t > self.invent["lastupdate"]:
-            fid=open(os.path.join(self.cachedir,getf),'wb')
-            print("Downloading "+getf,file=sys.stderr)
-            self.urlt.downloadFile(getf,fid)
+        if force or (newestver > self.invent["version"] and t > self.invent["lastupdate"]):
+            fout=os.path.join(self.cachedir,getf)
+            if os.path.exists(fout) and not force:
+                print ("File already in cache no need to download")
+            else:
+                with open(fout,'wb') as fid:
+                    print("Downloading "+getf,file=sys.stderr)
+                    self.urlt.downloadFile(getf,fid)
+
             self.invent["version"]=newestver
             self.invent["lastupdate"]=datetime.datetime.now()
-            fid.close()
+            self.postProcess(fout)
+
+
         else:
             print("Already at newest version",file=sys.stderr)
+            return
         
         #Add/update the database
-        plugincol=self.dbclient.geoslurp.inventory.insert(self.invent)
-        
+        print("Updating database")
+        self.dbclient.geoslurp.inventory.insert(self.invent)
+   
+    def postProcess(self,zipf):
+        print("Unzipping shapefiles")
+        with zipfile.ZipFile(zipf,'r') as zp:
+            self.invent["filelist"]=zp.namelist()
+            zp.extractall(self.datadir)
+
+
+    def remove(self):
+        """removes the plugin files and database entries"""
+        for f in self.invent["filelist"]:
+            os.remove(f)
+
+        self.dbclient.geoslurp.inventory.delete_one({"Name":type(self).__name__})
+
+
 PlugName=GSHHG
 
