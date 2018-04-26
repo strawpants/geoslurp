@@ -64,10 +64,13 @@ class PluginManager():
         self.plugins={}
         self.pluginFiles={}
         self.checkForPlugins()
-
+        self.verbose=0
+    
+    def verbose(self):
+        self.verbose=1
 
     def list(self,out=sys.stderr):
-        """List loaded plugins"""
+        """List available plugins and status"""
         #create a list of potential plugins
         for key,cl in self.plugins.items():
             print(type(cl).__name__,": ",type(cl).__doc__,file=out)
@@ -92,8 +95,10 @@ class PluginManager():
         for f in  os.listdir(self.conf['CacheDir']):
             filep=os.path.join(self.conf['CacheDir'],f)
             if os.path.isfile(f):
-                print(filep)
+                #print(filep)
                 os.unlink(filep)
             elif os.path.isdir(filep):
                 shutil.rmtree(filep)
-
+    
+    def printconfig(self):
+        self.conf.default(sys.stdout)

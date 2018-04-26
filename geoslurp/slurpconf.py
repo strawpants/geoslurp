@@ -30,7 +30,7 @@ class slurpconf():
             fid.close()
     def default(self,out=sys.stderr):
         """Write the default configuration """
-        obj={"Mongo":"mongodb://localhost:27017/","DataDir":"/tmp/geoslurp","PluginDir":"/tmp/geoslurp/plugins"}
+        obj={"Mongo":"mongodb://localhost:27017/","DataDir":"/tmp/geoslurp/data","CacheDir":"/tmp/geoslurp/cache","PluginDir":"/tmp/geoslurp/plugins"}
         out.write("# Default configuration file for geoslurp\n")
         out.write("# Change settings below and save file to .geoslurp.yaml\n")
         yaml.dump(obj,out,default_flow_style=False)

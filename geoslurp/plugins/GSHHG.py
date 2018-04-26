@@ -45,8 +45,9 @@ class GSHHG():
         #retrieve info on last update
         dbentry=dbinventory.find({"Name":type(self).__name__})    
         if dbentry.count() == 1:
-            self.invent=dbentry[0]     
-        
+            self.invent=dbentry[0]
+            #convert version number from list to tuple
+            self.invent['version']=tuple(self.invent['version'])
         
     
     def update(self,force):
