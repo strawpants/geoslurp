@@ -69,11 +69,11 @@ class PluginManager():
     def verbose(self):
         self.verbose=1
 
-    def list(self,out=sys.stderr):
-        """List available plugins and status"""
-        #create a list of potential plugins
-        for key,cl in self.plugins.items():
-            print(type(cl).__name__,": ",type(cl).__doc__,file=out)
+    # def list(self,out=sys.stderr):
+        # """List available plugins and status"""
+        # #create a list of potential plugins
+        # for key,cl in self.plugins.items():
+            # print(type(cl).__name__,": ",type(cl).__doc__,file=out)
 
     
     def loadPlugin(self,path):
@@ -102,3 +102,39 @@ class PluginManager():
     
     def printconfig(self):
         self.conf.default(sys.stdout)
+    
+    def addArgs(self,parser):
+        """Add command line arguments (also for the loaded plugins)"""
+        
+        parser.add_argument('-u','--update',action='store_true',help="update selected datasources")
+        parser.add_argument('-r','--remove',action='store_true',help="remove selected datasource files and database entries")
+        parser.add_argument('--printconfig',action='store_true',help='Prints out a default configuration file (default file is ~/.geoslurp.yaml)')
+        parser.add_argument('--cleancache',action='store_true',help="Clean up the cache directory")
+        parser.add_argument('--force',action='store_true',help='enforce action')
+        parser.add_argument('--verbose',action='store_true',help='Be more verbose')
+        
+        #also add datasource options
+        subparsers = parser.add_subparsers(help='Datasource to select',dest='datasource') 
+
+        for key,cl in self.plugins.items():
+            cl.addParserArgs(subparsers)
+    
+    def execTasks(self,args):
+        """execute tasks contained within the arguments"""
+        if args.printconfig:
+            self.printconfig()
+            sys.exit(0)
+        
+        if args.cleancache:
+            self.cleancache()
+        
+        if not 'datasource' in args:
+            sys.exit(0)
+
+        if args.update:
+            self.plugins[args.datasource].update(args.force)
+        
+        if args.remove:
+            self.plugins[args.datasource].remove()
+
+

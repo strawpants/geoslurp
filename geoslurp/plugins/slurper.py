@@ -25,8 +25,10 @@ class Slurper():
     def clear(self):  
         """ Clears the data cache and deletes the corresponding database table """
     def query(self):
-        """ perform and retrieve a datatype specific query """
+        """ perform and retrieve a datasource specific query """
     def datahook(self):
         """ Converts the downloaded files to alternative formats or enters the data in the database"""
-
+    def addParserArgs(self,subparsers):
+        """adds datasource specific help options"""
+        parser_a = subparsers.add_parser(type(self).__name__, help=type(self).__doc__)
 PlugName=Slurper

@@ -22,7 +22,7 @@ import datetime
 from pymongo import MongoClient
 import zipfile
 class GSHHG():
-    """ Get and update the Global Self-consistent, Hierarchical, High-resolution Geography Database"""
+    """The Global Self-consistent, Hierarchical, High-resolution Geography Database"""
     def __init__(self,conf):
         """Setup main urls"""
         self.url='ftp://ftp.soest.hawaii.edu/gshhg/'
@@ -101,6 +101,8 @@ class GSHHG():
 
         self.dbclient.geoslurp.inventory.delete_one({"Name":type(self).__name__})
 
-
+    def addParserArgs(self,subparsers):
+        """adds GSHHG specific help options"""
+        parser = subparsers.add_parser(type(self).__name__, help=type(self).__doc__)
 PlugName=GSHHG
 
