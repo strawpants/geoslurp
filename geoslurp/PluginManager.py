@@ -22,7 +22,6 @@ import sys
 import os.path,datetime
 import shutil
 from glob import glob
-from .slurpconf import slurpconf  
 
 class PluginManager():
     """ Manages plugins which can be loaded and executed dynamically"""
@@ -51,9 +50,9 @@ class PluginManager():
         """Forward the [] call to retrieve the registered plugin"""
         return self.plugins[clname]
     
-    def __init__(self):
+    def __init__(self,conf):
         #load settings
-        self.conf=slurpconf()
+        self.conf=conf
         self.pluginpath=[os.path.join(os.path.dirname(__file__),'plugins')]
         try:
             self.pluginpath.append(self.conf['PluginDir'])

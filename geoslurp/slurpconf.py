@@ -18,9 +18,18 @@
 import os.path
 import yaml
 import sys
+from .geoslurpClient import geoslurpClient
+
+def getCreateDir(root,subdir):
+    """creates a directory when not existent and return it"""
+    returndir=os.path.join(root,subdir)
+    if not os.path.exists(returndir):
+        os.makedirs(returndir)
+    return returndir
+
 
 class slurpconf():
-    """ Class which reads and writes configure data in yaml format"""
+    """ Class which reads and writes configure data in yaml format and contains a database connector"""
     def __init__(self):
         self.confyaml=os.path.join(os.path.expanduser('~'),'.geoslurp.yaml')
         if os.path.exists(self.confyaml):
@@ -28,9 +37,13 @@ class slurpconf():
             fid=open(self.confyaml,'r')
             self.confobj=[x for x in yaml.safe_load_all(fid)]
             fid.close()
+
+        #setup the database connector
+        self.db=geoslurpClient(self.confobj[0]["DBscheme"])
+
     def default(self,out=sys.stderr):
         """Write the default configuration """
-        obj={"Mongo":"mongodb://localhost:27017/","DataDir":"/tmp/geoslurp/data","CacheDir":"/tmp/geoslurp/cache","PluginDir":"/tmp/geoslurp/plugins"}
+        obj={"dbScheme":"mongodb://localhost:27017/","DataDir":"/tmp/geoslurp/data","CacheDir":"/tmp/geoslurp/cache","PluginDir":"/tmp/geoslurp/plugins"}
         out.write("# Default configuration file for geoslurp\n")
         out.write("# Change settings below and save file to .geoslurp.yaml\n")
         yaml.dump(obj,out,default_flow_style=False)
@@ -47,4 +60,13 @@ class slurpconf():
 
     def __setitem__(self,key,val):
         self.confobj[0][key]=val
+
+    def getDataDir(self,subdir):
+        """Retrieves the data directory by appending a subdir and creates it when not existent"""
+        return getCreateDir(self.confobj[0]['DataDir'],subdir)
+
+    def getCacheDir(self,subdir):
+        """Retrieves the cache directory by appending a subdir and creates it when not existent"""
+        return getCreateDir(self.confobj[0]['CacheDir'],subdir)
+
 

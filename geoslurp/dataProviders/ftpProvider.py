@@ -18,20 +18,21 @@ import pycurl,re
 from io import BytesIO
 import datetime
 import os
-class URLtool():
-    """Class which encapsulates the retrieval of data from URL's"""
+class ftpProvider():
+    """Class which encapsulates the retrieval of data from ftp"""
     def __init__(self,rooturl):
         """Sets the root url"""
         self.rooturl=rooturl
         self.curl=pycurl.Curl()
         self.curl.setopt(self.curl.URL,rooturl)
-        self.isftp=bool(re.match('^ftp://',rooturl))
-        self.ishttp=bool(re.match('^http://',rooturl))
+        if not bool(re.match('^ftp://',rooturl)):
+            raise Exception("URL does not seem to be a ftp address")
+
         self.t0=datetime.datetime(1970,1,1,0,0,0)
+        
+
     def getftplist(self,pattern):
         """Retrieve a list of files with modification dates obeying a pattern"""
-        if not self.isftp:
-            raise Exception("Only ftp supported for getting lists")
         buf=BytesIO() 
         self.curl.setopt(self.curl.WRITEDATA,buf)
         self.curl.perform()
@@ -53,6 +54,7 @@ class URLtool():
                 #add a tuple with modification time and file url to mathing list
                 outlist.append((t,fname))
         return outlist 
+    
     def downloadFile(self,filen,fid):
         """Retrieves a file from the root url"""
         crl=pycurl.Curl()

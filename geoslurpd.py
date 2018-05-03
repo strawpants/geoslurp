@@ -16,17 +16,20 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-#this is intended to be turned into a daemon services at some stage (e.g. handling json posts)
+#this is intended to be turned into a daemon services at some stage (e.g. handling the options through json posts)
 
 from geoslurp.PluginManager import PluginManager
+from geoslurp.slurpconf import slurpconf
 
 import sys
 import argparse
 
 def main(argv):
-    usage="Download and manage Earth Science data"
+    usage="Download, manage and query Earth Science data"
     parser = argparse.ArgumentParser(description=usage)
-    Manager=PluginManager()
+    #load settings and start a database connection
+    conf=slurpconf()
+    Manager=PluginManager(conf)
     Manager.addArgs(parser)
     
     
