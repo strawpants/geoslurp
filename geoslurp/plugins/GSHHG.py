@@ -15,86 +15,93 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from dataProviders.ftpProvider import ftpProvider as ftp
+from .dataProviders.ftpProvider import ftpProvider as ftp
 import os,re,sys
 import datetime
 import zipfile
 
 class GSHHG():
     """The Global Self-consistent, Hierarchical, High-resolution Geography Database"""
-    def __init__(self,conf):
-        """Setup main urls"""
+    
+    ###### COMPULSARY FUNCTIONS #######
+    def __init__(self):
+        """Setup main urls, and retrieve already registered plugins from the database"""
         self.ftpt=ftp('ftp://ftp.soest.hawaii.edu/gshhg/')
-        self.conf=conf #stores a reference to  the global configuration filea
         self.name=type(self).__name__
-        #retrieve inventory from the database
+        self.initdb=False
+        #plugin version (needs to be updated for breaking changes)
+        pluginVersion=(0,0,0)
+        #retrieve inventory from the database (or create a default one)
         self.dbinvent=self.conf.db.getDataSource(self.name)
-
-        self.datadir=self.conf.getDataDir(self.name)
-        self.cachedir=self.conf.getCacheDir(self.name)
-
-        #retrieve info on last update
-        # dbentry=dbinventory.find({"Name":type(self).__name__})    
-        # if dbentry.count() == 1:
-            # self.dbinvent=dbentry[0]
-            # #convert version number from list to tuple
-            # self.dbinvent['version']=tuple(self.dbinvent['version'])
-    def getInvent(self):
-        """returns the dictionary which contains the inventory entry"""
-        return self.dbinvent
+        #get registered plugin version
+        self.dbinvent['version']=tuple(self.dbinvent['version'])
+        
+        #possibly resolve plugin version differences here
+        self.dbinvent['version']=pluginVersion
+        self.dbinvent['datadir']=self.conf.getDataDir(self.name)
+        self.dbinvent['structure']={"data":"jsonb"}
+        
+        
     
-    def getDataDescriptors(self):
-        """Returns the updated datadescriptor entries"""
-        return self.ddescr
+    def executeaction(self,args):
+        """Download/update data and apply possible processing"""
+        self.download(args.force)
+
+
+    def addParserArgs(self,subparsers):
+        """adds GSHHG specific help options"""
+        parser = subparsers.add_parser(self.name, help=type(self).__doc__)
+
+    def initDB(self,db):
+        """function which registers the datasource, initializes the associated dataset table and possibly register stored POSTGRESQL procedures"""
+        self.conf.db.setDataSource(self.dbinvent)
+        DBdataset=DataSetEntry(self.name,self.dbinvent['structure'])
+        DBdataset.initTable(self.conf.db)
+    ###### END COMPULSARY FUNCTIONS #######
     
-    def update(self,force):
+    def download(self,force):
         ftplist=self.ftpt.getftplist('gshhg-shp.*zip')
         #first find out the newest version
         vregex=re.compile('gshhg-shp-([0-9]\.[0-9]\.[0-9]).*zip')
         newestver=(0,0,0)
         getf=''
-
+        
+        #find out the newest version
         for t,fname in ftplist:
             match=vregex.findall(fname)
             ver=tuple(int(x) for x in match[0].split('.'))
             if ver > newestver:
                 newestver=ver
                 getf=fname
+
         #now determine whether to retrieve the file
-        if force or (newestver > self.dbinvent["misc"]["version"] and t > self.dbinvent["lastupdate"]):
-            fout=os.path.join(self.cachedir,getf)
+        if force or (newestver > self.dbinvent["data"]["GSHHGversion"] and t > self.dbinvent["lastupdate"]):
+            fout=os.path.join(self.conf.getCacheDir(self.name),getf)
             if os.path.exists(fout) and not force:
                 print ("File already in cache no need to download")
             else:
                 with open(fout,'wb') as fid:
                     print("Downloading "+getf,file=sys.stderr)
-                    self.urlt.downloadFile(getf,fid)
+                    self.ftpt.downloadFile(getf,fid)
 
-            self.dbinvent["misc"]["version"]=newestver
+            self.dbinvent["data"]["GSHHGversion"]=newestver
             self.dbinvent["lastupdate"]=datetime.datetime.now()
-            self.postProcess(fout)
-
-
+            self.unzip(fout)
+            #update database inventory
+            self.conf.db.setDataSource(self.dbinvent)
+            makeDataDescriptors()
         else:
             print("Already at newest version",file=sys.stderr)
             return
         
-    def postProcess(self,zipf):
+    def unzip(self,zipf):
         print("Unzipping shapefiles")
         with zipfile.ZipFile(zipf,'r') as zp:
             self.dbinvent["misc"]["filelist"]=zp.namelist()
             zp.extractall(self.datadir)
-
-
-    def remove(self):
-        """removes the plugin files and database entries"""
-        for f in self.dbinvent["misc"]["filelist"]:
-            os.remove(f)
-
-        #self.dbclient.geoslurp.inventory.delete_one({"Name":type(self).__name__})
-
-    def addParserArgs(self,subparsers):
-        """adds GSHHG specific help options"""
-        parser = subparsers.add_parser(type(self).__name__, help=type(self).__doc__)
+    
+    def makeDataDescriptors(self):
+        """ create a list of data descriptors and submit them to the database"""
+        # dummy=self.conf.db.getDataDescriptor(self.name,
+        
 PlugName=GSHHG
-

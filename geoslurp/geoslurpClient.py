@@ -16,36 +16,20 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 import psycopg2 
 from psycopg2 import sql
-from psycopg2.extras import DictCursor,Json
-from schema import Schema, And, Use
+from psycopg2.extras import DictCursor
 import datetime
 import json
-
-class dataSourceSchema():
-    def __init__(self):
-        self.scheme=Schema({"datasource":And(str,len),"lastupdate":And(lambda dt:dt.isoformat()),"misc":Use(Json)})
-        #scheme which only retains the to be updated elements
-        self.schemeupdate=Schema({"lastupdate":And(lambda dt:dt.isoformat()),"misc":object}, ignore_extra_keys=True)
-        self.default=self.scheme.validate({"datasource":"DUMMY", "lastupdate":datetime.datetime(datetime.MINYEAR,1,1),"misc":{}})
-    def initTable(self,dbc):
-        """ initializes the corresponding database table"""
-        with dbc.cursor() as cur:
-            cur.execute("CREATE TABLE IF NOT EXISTS inventory ( id serial PRIMARY KEY, datasource varchar UNIQUE, lastupdate timestamp, misc jsonb )")
-        dbc.commit()
-#dataDescriptorSchema=Schema({"dataSource":And(str, len)})
-
+from .dbTablestructure import dataSourceEntry
 
 class geoslurpClient():
     """Interface between the geoslurp data and database (currently postgresql)"""
     def __init__(self,dbscheme):
         #open up a database connector
         self._dbcon=psycopg2.connect(dbscheme)
-        self.invent=dataSourceSchema()
-        cur=self._dbcon.cursor()
-        self.invent.initTable(self._dbcon)
-
-    def getDataSource(self,name):
-        """retrieves registered data Source entry from the database"""
+        self.invent=dataSourceEntry()
+    
+    def getDSentry(self,name):
+        """retrieves registered datasource entry from the inventory table in the database by its registered name"""
         with self._dbcon.cursor(cursor_factory=DictCursor) as cur:
             cur.execute("SELECT * FROM inventory WHERE datasource = %s",(name,))
             tmp=cur.fetchone()
@@ -56,7 +40,7 @@ class geoslurpClient():
                 tmp['datasource']=name
                 return tmp
 
-    def setDataSource(self,dataSource):
+    def setDSentry(self,dataSource):
         """insert/update a datasource registry to the database"""
         ds=self.invent.scheme.validate(dataSource)
         dsupdate=self.invent.schemeupdate.validate(ds)
@@ -69,29 +53,10 @@ class geoslurpClient():
             cur.executemany(query,(ds,))
         self._dbcon.commit()
 
-    def putDataDescriptor(self,dataDescriptor):
-        """Adds a datadescriptor entry to the database"""
-        # dd=dataDescriptorSchema.validate(dataDescriptor)
-        # self._db[dataDescriptor["dataSource"]].insert(dd) 
-    
-    def findDataDescriptor(self,dataSourceName,query):
-        """Perform a query for datadescriptor on the database"""
-        # self._db[dataSourceName].find(query) 
+    def registerInventory(self):
+        """ initialize the inventory table of the postgresql database"""
+        self.invent.initDB(self._dbcon)
 
-    #setup query constructors
-    def withinTquery(self,tmin,tmax):
-        """Creates a query restricting the epochs"""
-    
-    def withinGEOquery(self,poly):
-        """Creates a query restricting the geographical region (e.g. within a polygon or bounding box)"""
-
-    def withinSHquery(self,nmax,nmin):
-        """Creates a query restricting the minimum and maximum spherical harmonic degree"""
-
-    def setQueryAlias(self,name,query):
-        """Register an alias for a query"""
-        self._db.queryAliases.insert({"alias":name,"query":query})
-    
-    def getQueryAlias(self,alias):
-        return self._db.queryAliases.find({"alias":name})
-   
+    def registerPlugin(self,Plugin):
+        """Register a plugin (add entry in inventory and initialize a dataset table"""
+        Plugin.initDB(self._dbcon)

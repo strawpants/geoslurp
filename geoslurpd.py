@@ -18,26 +18,26 @@
 
 #this is intended to be turned into a daemon services at some stage (e.g. handling the options through json posts)
 
-from geoslurp.PluginManager import PluginManager
-from geoslurp.slurpconf import slurpconf
+from geoslurp.taskScheduler import taskScheduler
 
 import sys
 import argparse
+import os.path
 
 def main(argv):
     usage="Download, manage and query Earth Science data"
     parser = argparse.ArgumentParser(description=usage)
     #load settings and start a database connection
-    conf=slurpconf()
-    Manager=PluginManager(conf)
-    Manager.addArgs(parser)
+      
+    taskManager=taskScheduler(os.path.join(os.path.expanduser('~'),'.geoslurp.yaml'))
+    taskManager.addArgs(parser)
     
     
     
     args = parser.parse_args(argv[1:])
 
     #now process datasources with their parsed arguments
-    Manager.execTasks(args)
+    taskManager.execTasks(args)
 
 if __name__ == "__main__":
     main(sys.argv)

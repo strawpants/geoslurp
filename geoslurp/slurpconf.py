@@ -19,6 +19,7 @@ import os.path
 import yaml
 import sys
 from .geoslurpClient import geoslurpClient
+from .PluginManager import PluginManager
 
 def getCreateDir(root,subdir):
     """creates a directory when not existent and return it"""
@@ -30,36 +31,39 @@ def getCreateDir(root,subdir):
 
 class slurpconf():
     """ Class which reads and writes configure data in yaml format and contains a database connector"""
-    def __init__(self):
-        self.confyaml=os.path.join(os.path.expanduser('~'),'.geoslurp.yaml')
-        if os.path.exists(self.confyaml):
-            #Read parameters from yaml file
-            fid=open(self.confyaml,'r')
-            self.confobj=[x for x in yaml.safe_load_all(fid)]
-            fid.close()
+    def __init__(self,conffile):
+        self.confyaml=conffile
+        self.read(self.confyaml)
 
-        #setup the database connector
-        self.db=geoslurpClient(self.confobj[0]["DBscheme"])
-
-    def default(self,out=sys.stderr):
+    def printDefault(self,out=sys.stderr):
         """Write the default configuration """
         obj={"dbScheme":"mongodb://localhost:27017/","DataDir":"/tmp/geoslurp/data","CacheDir":"/tmp/geoslurp/cache","PluginDir":"/tmp/geoslurp/plugins"}
         out.write("# Default configuration file for geoslurp\n")
         out.write("# Change settings below and save file to .geoslurp.yaml\n")
         yaml.dump(obj,out,default_flow_style=False)
 
-    def write(self):
-        """Writes changed setup back to confuguration file"""
-        fid=open(self.confyaml,'w')
+    def write(self,conffile):
+        """Writes changed setup back to the yaml configuration file"""
+        fid=open(self.conffile,'w')
         yaml.dump(self.confobj[0],fid,default_flow_style=False)
         fid.close()
+
+    def read(self,conffile):
+        """Read the parameters from the yaml onfiguration file"""
+        if os.path.exists(conffile):
+            #Read parameters from yaml file
+            fid=open(conffile,'r')
+            self.confobj=[x for x in yaml.safe_load_all(fid)]
+            fid.close()
+        else:
+            raise Exception('cannot find geoslurp configuration file')
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
     def __getitem__(self,arg):
         return self.confobj[0][arg]
 
-    def __setitem__(self,key,val):
-        self.confobj[0][key]=val
+    #def __setitem__(self,key,val):
+     #   self.confobj[0][key]=val
 
     def getDataDir(self,subdir):
         """Retrieves the data directory by appending a subdir and creates it when not existent"""
@@ -68,5 +72,4 @@ class slurpconf():
     def getCacheDir(self,subdir):
         """Retrieves the cache directory by appending a subdir and creates it when not existent"""
         return getCreateDir(self.confobj[0]['CacheDir'],subdir)
-
 
