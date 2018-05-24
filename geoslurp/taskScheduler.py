@@ -26,7 +26,7 @@ class taskScheduler():
         #read configuration stuff
         self.conf=slurpconf(conffile)
         #set up a database connector 
-        self.db=geoslurpClient(self.conf["DBscheme"])
+        self.db=geoslurpClient(self.conf["dburl"])
 
         #load available plugins
         self.plugman=PluginManager(self.conf['PluginDir'])
@@ -50,7 +50,7 @@ class taskScheduler():
     
     
     def execTasks(self,args):
-        """execute tasks as requested by the the arguments"""
+        """execute tasks as requested by the arguments"""
         if args.printconfig:
             self.conf.printDefault()
         
@@ -59,13 +59,8 @@ class taskScheduler():
         
         if not 'datasource' in args:
             return
-
-        if args.update:
-            self.plugins[args.datasource].update(args.force)
-        
-        if args.remove:
-            self.plugins[args.datasource].remove()
-
+#        else:
+#            self.plugins[args.datasource].parseAndExec(args)
 
 
     def cleancache(self):

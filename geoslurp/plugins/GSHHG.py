@@ -15,37 +15,37 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from .dataProviders.ftpProvider import ftpProvider as ftp
+from geoslurp.dataProviders.ftpProvider import ftpProvider as ftp
 import os,re,sys
 import datetime
 import zipfile
+from geoslurp.geoslurpClient import GSBase,Invent
+from sqlalchemy import Column, Integer
+from sqlalchemy.orm.exc import NoResultFound
+
+class GSHHGTable(GSBase):
+    """Defines a dataset table for the GSHHG"""
+    __tablename__='GSSHHG'
+    id=Column(Integer,primary_key=True)
 
 class GSHHG():
     """The Global Self-consistent, Hierarchical, High-resolution Geography Database"""
     
+    #plugin version (needs to be updated for breaking changes)
+    pluginVersion=(0,0,0)
     ###### COMPULSARY FUNCTIONS #######
     def __init__(self):
         """Setup main urls, and retrieve already registered plugins from the database"""
         self.ftpt=ftp('ftp://ftp.soest.hawaii.edu/gshhg/')
         self.name=type(self).__name__
-        self.initdb=False
-        #plugin version (needs to be updated for breaking changes)
-        pluginVersion=(0,0,0)
-        #retrieve inventory from the database (or create a default one)
-        self.dbinvent=self.conf.db.getDataSource(self.name)
-        #get registered plugin version
-        self.dbinvent['version']=tuple(self.dbinvent['version'])
-        
-        #possibly resolve plugin version differences here
-        self.dbinvent['version']=pluginVersion
-        self.dbinvent['datadir']=self.conf.getDataDir(self.name)
-        self.dbinvent['structure']={"data":"jsonb"}
         
         
     
-    def executeaction(self,args):
+    def parseAndExec(self,args):
         """Download/update data and apply possible processing"""
-        self.download(args.force)
+        
+        if args.update:
+            self.download(args.force)
 
 
     def addParserArgs(self,subparsers):
@@ -53,10 +53,29 @@ class GSHHG():
         parser = subparsers.add_parser(self.name, help=type(self).__doc__)
 
     def initDB(self,db):
-        """function which registers the datasource, initializes the associated dataset table and possibly register stored POSTGRESQL procedures"""
-        self.conf.db.setDataSource(self.dbinvent)
-        DBdataset=DataSetEntry(self.name,self.dbinvent['structure'])
-        DBdataset.initTable(self.conf.db)
+        """function which retrieves the inventory entry of this datasource. If not found it will create a default inventory entry, initializes the possible datasource specific tables and register datasource specific POSTGRESQL procedures"""
+        ses=db.Session()
+        try:
+            #retrieve the stored inventory entry
+            self.dbinvent=ses.query(Invent).filter(Invent.datasource == self.name).one()
+        except NoResultFound:
+        # #set defaultss for the  inventory
+            self.dbinvent=Invent(datasource=self.name,version=self.pluginVersion,lastupdate=datetime.datetime.min,data={})
+        #retrieve an existing inventory from the database (or create a default one)
+#        self.dbinvent=db.getInventoryEntry(self.name)
+
+ #       if self.dbinvent:
+            #convert the version array as a tuple
+  #          self.dbinvent['version']=tuple(self.dbinvent['version'])
+  #      else:
+            #initialize inventory with defaults
+   #         self.dbinvent={'version':pluginVersion,"datadir":conf.getDataDir(self.name),"data":{}}
+            #also create additional plugin specific tables if needed
+    #        self.tablestruct=OrderedDict([("id","serial PRIMARY KEY"),("dataset","varchar"),("data","jsonb")])
+     #       db.CreateTable(self.name,self.tablestruct)
+            #possibly register functions in the database
+
+
     ###### END COMPULSARY FUNCTIONS #######
     
     def download(self,force):

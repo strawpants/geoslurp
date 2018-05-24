@@ -38,9 +38,12 @@ class PluginManager():
         self.plugins={}
         self.pluginFiles={}
         self.checkForPlugins()
-    
+
+    def load(self,clname):
+        return self.plugins[clname]();
+
     def checkForPlugins(self):
-        """Dynamically updates the loaded plugins"""
+        """Dynamically updates the file plugins"""
         
         #Check for possible deleted plugins
         for key,val in self.pluginFiles.items():
@@ -55,27 +58,27 @@ class PluginManager():
                 if tmod > self.lastcheck:
                     #reload plugin
                     cl=self.loadPlugin(pyf)
-                    tag=type(cl).__name__
+                    tag=cl.__name__
                     self.plugins[tag]=cl
                     self.pluginFiles[tag]=pyf
-        self.lastcheck
+        self.lastcheck=datetime.datetime.now()
 
-    def __getitem__(self,clname):
-        """Forward the [] call to retrieve the registered plugin"""
-        return self.plugins[clname]
+    # def __getitem__(self,clname):
+        # """Forward the [] call to retrieve the registered plugin"""
+        # return self.plugins[clname]
     
     def loadPlugin(self,path):
-        """Loads the plugin class from python file (path)"""
+        """Loads the plugin class dynamically from python file (path)"""
         #note this is python version specific code
         if sys.version_info < (3,5,0) and sys.version_info > (3,3,0):
             from importlib.machinery import SourceFileLoader
             mod = SourceFileLoader("geoslurp.plugins",path).load_module() 
-            return mod.PlugName()
+            return mod.PlugName
         elif sys.version_info >= (3,5,0):
             spec = importlib.util.spec_from_file_location("geoslurp.plugins", path)
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
-            return mod.PlugName()
+            return mod.PlugName
         else:
             raise Exception('This python version cannot dynamically load a plugin')
     

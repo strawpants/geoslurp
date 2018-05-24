@@ -27,7 +27,7 @@ import os.path
 def main(argv):
     usage="Download, manage and query Earth Science data"
     parser = argparse.ArgumentParser(description=usage)
-    #load settings and start a database connection
+    #load settings and start a taskmanager instance
       
     taskManager=taskScheduler(os.path.join(os.path.expanduser('~'),'.geoslurp.yaml'))
     taskManager.addArgs(parser)
