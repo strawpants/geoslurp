@@ -39,9 +39,6 @@ class PluginManager():
         self.pluginFiles={}
         self.checkForPlugins()
 
-    def load(self,clname):
-        return self.plugins[clname]();
-
     def checkForPlugins(self):
         """Dynamically updates the file plugins"""
         
