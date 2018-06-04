@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
         postgis:
                 image: mdillon/postgis:10-alpine
@@ -8,4 +8,6 @@ services:
                         POSTGRES_DB: geoslurp
                         POSTGRES_USER: geoslurp
                         POSTGRES_PASSWORD: Swapforyour0wn
+                volumes:
+                    - /scratch/postgresql/data:/var/lib/postgresql/data
                 restart: always

@@ -16,7 +16,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-#this is intended to be turned into a daemon services at some stage (e.g. handling the options through json posts)
+#this may be turned into a daemon service at some stage (e.g. handling the options through json posts)
 
 from geoslurp.taskScheduler import taskScheduler
 
@@ -35,7 +35,9 @@ def main(argv):
     
     
     args = parser.parse_args(argv[1:])
-
+    if not any(vars(args).values()):
+        print(__file__+' Error: no arguments provided, try --help',file=sys.stderr)
+        sys.exit(1)
     #now process datasources with their parsed arguments
     taskManager.execTasks(args)
 

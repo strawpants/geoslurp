@@ -37,7 +37,7 @@ class slurpconf():
 
     def printDefault(self,out=sys.stderr):
         """Write the default configuration """
-        obj={"dbScheme":"mongodb://localhost:27017/","DataDir":"/tmp/geoslurp/data","CacheDir":"/tmp/geoslurp/cache","PluginDir":"/tmp/geoslurp/plugins"}
+        obj={"dburl":"postgresql+psycopg2://geoslurp:Swapwithyour0wn@localhost/geoslurp","DataDir":"/tmp/geoslurp/data","CacheDir":"/tmp/geoslurp/cache","PluginDir":"/tmp/geoslurp/plugins"}
         out.write("# Default configuration file for geoslurp\n")
         out.write("# Change settings below and save file to .geoslurp.yaml\n")
         yaml.dump(obj,out,default_flow_style=False)

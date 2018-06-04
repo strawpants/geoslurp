@@ -18,6 +18,8 @@
 from .slurpconf import slurpconf
 from .geoslurpClient import geoslurpClient
 from .PluginManager import PluginManager
+from sqlalchemy.orm import load_only
+from geoslurp.geoslurpClient import Invent
 class taskScheduler():
     """Manages and schedules geoslurp tasks"""
     def __init__(self,conffile):
@@ -33,17 +35,14 @@ class taskScheduler():
         
     
     def addArgs(self,parser):
-        """Add command line arguments (also for the loaded plugins)"""
+        """Add top level command line arguments (and request arguments from the plugins)"""
         
-        parser.add_argument('-r','--remove',action='store_true',help="remove all datasets and database entries of the selected datasource")
-        parser.add_argument('--printconfig',action='store_true',help='Prints out a default configuration file (default file is ~/.geoslurp.yaml)')
+        parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
         parser.add_argument('--cleancache',action='store_true',help="Clean up the cache directory")
-        parser.add_argument('--force',action='store_true',help='enforce action')
-        parser.add_argument('--verbose',action='store_true',help='Be more verbose')
+        parser.add_argument('-l','--list',action='store_true',help="list registered datasources from the inventory")
         
         #also add datasource options
-        subparsers = parser.add_subparsers(help='Datasource to select',dest='datasource') 
-
+        subparsers = parser.add_subparsers(help='Datasource to select',dest='datasource')
         for key,cl in self.plugman.plugins.items():
             cl.addParserArgs(subparsers)
     
@@ -56,7 +55,13 @@ class taskScheduler():
         if args.cleancache:
             self.cleancache()
         
-        if not 'datasource' in args:
+        if args.list:
+            #retrieve the entries from the inventory table
+            ses=self.db.Session()
+            dbinvent=ses.query(Invent).options(load_only('datasource'))
+            for ds in dbinvent:
+                print(ds.datasource)
+        if not args.datasource:
             return
 
         self.plugman.plugins[args.datasource](self.db,self.conf).parseAndExec(args)

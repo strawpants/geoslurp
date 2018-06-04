@@ -16,6 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataProviders.ftpProvider import ftpProvider as ftp
+from geoslurp.commonOptions import commonOptions
 import os,re,sys
 import datetime
 import zipfile
@@ -69,6 +70,7 @@ class GSHHG():
     def addParserArgs(subparsers):
         """adds GSHHG specific help options (note this is a static function)"""
         parser = subparsers.add_parser(GSHHG.__name__, help=GSHHG.__doc__)
+        commonOptions['force'](parser)
 
 
     ###### END COMPULSARY FUNCTIONS #######
@@ -127,7 +129,7 @@ class GSHHG():
             
             for Ds in Dsets:
                 for res in resolution:
-                    GSHHGentry=GSHHGTable(dataset=Ds,variable=res,datatype='Shapefile',data={"URI":os.path.join(self.datadir,Ds,res}))
+                    GSHHGentry=GSHHGTable(dataset=Ds,variable=res,datatype='Shapefile',data={"URI":os.path.join(self.datadir,Ds,res)})
 
 
 PlugName=GSHHG
