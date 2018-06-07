@@ -22,5 +22,7 @@ def addRemove(parser):
 def addForce(parser):
 	parser.add_argument('--force',action='store_true',help='enforce action')
 
+def addUpdate(parser):
+    parser.add_argument('--update',action='store_true',help='download/update selected datasets')
 
-commonOptions={"remove":addRemove,"force":addForce}
+commonOptions={"remove":addRemove,"force":addForce,"update":addUpdate}

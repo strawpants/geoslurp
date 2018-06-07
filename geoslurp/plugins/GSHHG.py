@@ -24,15 +24,19 @@ from geoslurp.geoslurpClient import GSBase,Invent
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import TIMESTAMP, ARRAY,JSONB
 from sqlalchemy.orm.exc import NoResultFound
+from geoalchemy2 import Geometry,shape
+from osgeo import ogr
+from glob import glob
+from shapely.geometry import shape
 
-class GSHHGEntry(GSBase):
+class GSHHGTable(GSBase):
     """Defines a dataset table for the GSHHG"""
     __tablename__='GSHHG'
     id=Column(Integer,primary_key=True)
-    dataset=Column(String,unique=True)
-    datatype=Column(String)
-    group=Column(String)
-    variable=Column(String)
+    dataset=Column(String)
+    resolution=Column(String)
+    layer=Column(String)
+    data=Column(Geometry('MULTIPOLYGON'))
 
 class GSHHG():
     """The Global Self-consistent, Hierarchical, High-resolution Geography Database"""
@@ -45,7 +49,7 @@ class GSHHG():
         self.ftpt=ftp('ftp://ftp.soest.hawaii.edu/gshhg/')
         self.name=type(self).__name__
         self.datadir=conf.getDataDir(self.name)
-        self.cachedir=conf['CacheDir']
+        self.cachedir=conf.getCacheDir(self.name)
         #Initialize databases (if not existent)
         self.ses=db.Session()
         try:
@@ -71,7 +75,7 @@ class GSHHG():
         """adds GSHHG specific help options (note this is a static function)"""
         parser = subparsers.add_parser(GSHHG.__name__, help=GSHHG.__doc__)
         commonOptions['force'](parser)
-
+        commonOptions['update'](parser)
 
     ###### END COMPULSARY FUNCTIONS #######
     
@@ -111,25 +115,31 @@ class GSHHG():
             return
         
     def unzip(self,zipf):
-        print("Unzipping shapefiles")
+        print("Unzipping shapefiles in cache directory")
         with zipfile.ZipFile(zipf,'r') as zp:
-            #self.dbinvent["data"]["filelist"]=zp.namelist()
-            zp.extractall(self.datadir)
+            zp.extractall(self.cachedir)
     
     def register(self):
-        """Register shapefiles with layers"""
+        """Register shapefiles layers in the postgis database"""
 
         ncount=self.ses.query(GSHHGTable).count()
-
+        
         if (ncount == 0):
-            #set up new entries
-    
-            Dsets=['GSHHS_shp', 'WDBII_shp']
-            resolution=['c',  'f', 'h',  'i' , 'l']
-            
+            #loop over directories
+            Dsets=['GSHHS_shp','WDBII_shp']
+            resolution=['c', 'f',  'h',  'i',  'l']
             for Ds in Dsets:
                 for res in resolution:
-                    GSHHGentry=GSHHGTable(dataset=Ds,variable=res,datatype='Shapefile',data={"URI":os.path.join(self.datadir,Ds,res)})
-
+                    #open shapefile directory
+                    shpf=ogr.Open(os.path.join(self.cachedir,Ds,res))
+                    #loop over layers
+                    for ithlayer in range(shpf.GetLayerCount()):
+                        #loop over features
+                        for ithfeat in range(shpf.GetLayer(ithlayer).GetFeatureCount()):
+                            
+                            shpobj=shpf[ithlayer][ithfeat].geometry().ExportToWkb()
+                            #create a database table entry
+                            entry=GSHHGTable(dataset=Ds,resolution=res,layer=shpf.GetLayer(ithlayer).GetName(),data=shpobj)
+                            self.ses.add(entry)
 
 PlugName=GSHHG
