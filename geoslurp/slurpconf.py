@@ -34,6 +34,7 @@ class slurpconf():
     def __init__(self,conffile):
         self.confyaml=conffile
         self.read(self.confyaml)
+        self.setLogger()
 
     def printDefault(self,out=sys.stderr):
         """Write the default configuration """
@@ -72,4 +73,11 @@ class slurpconf():
     def getCacheDir(self,subdir):
         """Retrieves the cache directory by appending a subdir and creates it when not existent"""
         return getCreateDir(self.confobj[0]['CacheDir'],subdir)
-
+    
+    def setLogger(self):
+        """set where to output log info"""
+        try:
+            logfile=self.confobj[0]['Logger']
+            self.log=open(logfile,'w')
+        except:
+            self.log=sys.stdout

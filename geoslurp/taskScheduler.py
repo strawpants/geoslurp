@@ -42,7 +42,7 @@ class taskScheduler():
         parser.add_argument('-l','--list',action='store_true',help="list registered datasources from the inventory")
         
         #also add datasource options
-        subparsers = parser.add_subparsers(help='Datasource to select',dest='datasource')
+        subparsers = parser.add_subparsers(help='Datasource to select (type geoslurpd.py DATASOURCE --help for detailed options)',dest='datasource')
         for key,cl in self.plugman.plugins.items():
             cl.addParserArgs(subparsers)
     
@@ -58,9 +58,9 @@ class taskScheduler():
         if args.list:
             #retrieve the entries from the inventory table
             ses=self.db.Session()
-            dbinvent=ses.query(Invent).options(load_only('datasource'))
+            dbinvent=ses.query(Invent).options(load_only('datasource','lastupdate'))
             for ds in dbinvent:
-                print(ds.datasource)
+                print("Datasource:",ds.datasource,", last updated:",ds.lastupdate)
         if not args.datasource:
             return
 

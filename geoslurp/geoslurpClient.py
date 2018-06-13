@@ -37,7 +37,7 @@ class Invent(GSBase):
     id=Column(Integer,primary_key=True)
     datasource=Column(String,unique=True)
     lastupdate=Column(TIMESTAMP)
-    version=Column(ARRAY(Integer,as_tuple=True))
+    pluginversion=Column(ARRAY(Integer,as_tuple=True))
     data=Column(JSONB)
 
 
@@ -45,7 +45,7 @@ class geoslurpClient():
     """Holds some SQLalchemy database stuff"""
     
     def __init__(self,dburl):
-       self.dbeng=create_engine(dburl,echo=True)
+       self.dbeng=create_engine(dburl,echo=False)
        self.Session=sessionmaker(bind=self.dbeng)
        GSBase.metadata.create_all(self.dbeng)
 
