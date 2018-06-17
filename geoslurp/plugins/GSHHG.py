@@ -106,7 +106,7 @@ class GSHHG():
             self.dbinvent=Invent(datasource=self.name,pluginversion=self.pluginVersion,lastupdate=datetime.datetime.min,data={"GSHHGversion":(0,0,0)})
             
             # create the schema and tables
-            db.dbeng.execute('CREATE SCHEMA IF NOT EXISTS "GSHHG";')
+            db.createSchema("GSHHG")
             GSHHSBase.metadata.create_all(db.dbeng)
             WDBIIBase.metadata.create_all(db.dbeng)
             self.ses.add(self.dbinvent)

@@ -24,7 +24,7 @@
 # from collections import OrderedDict
 
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_enginei,text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import TIMESTAMP, ARRAY,JSONB
@@ -48,4 +48,7 @@ class geoslurpClient():
        self.dbeng=create_engine(dburl,echo=False)
        self.Session=sessionmaker(bind=self.dbeng)
        GSBase.metadata.create_all(self.dbeng)
-
+    
+    def createSchema(self,name):
+        sqlcmd=text('CREATE SCHEMA IF NOT EXISTS :scheme')
+        self.dbeng.execute(sqlcmd,scheme=name)

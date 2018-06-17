@@ -7,7 +7,7 @@ services:
                 environment:
                         POSTGRES_DB: geoslurp
                         POSTGRES_USER: geoslurp
-                        POSTGRES_PASSWORD: Swapforyour0wn
+                        POSTGRES_PASSWORD: ${GEOSLURPPASS}
                 volumes:
-                    - /scratch/postgresql/data:/var/lib/postgresql/data
+                    - ${GEOSLURPPGDATA}:/var/lib/postgresql/data
                 restart: always

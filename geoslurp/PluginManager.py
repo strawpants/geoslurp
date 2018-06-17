@@ -54,10 +54,13 @@ class PluginManager():
                 tmod= datetime.datetime.fromtimestamp(os.path.getmtime(pyf))
                 if tmod > self.lastcheck:
                     #reload plugin
-                    cl=self.loadPlugin(pyf)
-                    tag=cl.__name__
-                    self.plugins[tag]=cl
-                    self.pluginFiles[tag]=pyf
+                    try:
+                        cl=self.loadPlugin(pyf)
+                        tag=cl.__name__
+                        self.plugins[tag]=cl
+                        self.pluginFiles[tag]=pyf
+                    except  ValueError as ver:
+                        pass
         self.lastcheck=datetime.datetime.now()
 
     # def __getitem__(self,clname):
@@ -70,11 +73,15 @@ class PluginManager():
         if sys.version_info < (3,5,0) and sys.version_info > (3,3,0):
             from importlib.machinery import SourceFileLoader
             mod = SourceFileLoader("geoslurp.plugins",path).load_module() 
+            if not hasattr(mod,'PlugName'):
+                raise ValueError('Not a plugin')
             return mod.PlugName
         elif sys.version_info >= (3,5,0):
             spec = importlib.util.spec_from_file_location("geoslurp.plugins", path)
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
+            if not hasattr(mod,'PlugName'):
+                raise ValueError('Not a plugin')
             return mod.PlugName
         else:
             raise Exception('This python version cannot dynamically load a plugin')
