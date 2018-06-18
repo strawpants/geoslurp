@@ -92,8 +92,8 @@ class GSHHG():
         """Setup main urls, and retrieve already registered plugins from the database"""
         self.ftpt=ftp('ftp://ftp.soest.hawaii.edu/gshhg/')
         self.name=type(self).__name__
-        self.datadir=conf.getDataDir(self.name)
-        self.cachedir=conf.getCacheDir(self.name)
+        self.datadir=conf['DataDir']
+        self.cachedir=conf['CacheDir']
         #Initialize databases (if not existent)
         self.ses=db.Session()
         self.dbeng=db.dbeng
@@ -114,9 +114,6 @@ class GSHHG():
     
     def parseAndExec(self,args):
         """Download/update data and apply possible processing"""
-        if args.remove:
-            print(self.name+":Removing SCHEMA and tables",file=Log)
-            self.remove()
         if args.update:
             self.download(args.force)
 
@@ -126,7 +123,6 @@ class GSHHG():
         parser = subparsers.add_parser(GSHHG.__name__, help=GSHHG.__doc__)
         commonOptions['force'](parser)
         commonOptions['update'](parser)
-        commonOptions['remove'](parser)
 
     ###### END COMPULSARY FUNCTIONS #######
     
@@ -206,14 +202,6 @@ class GSHHG():
                 self.ses.add(entry)
             self.ses.commit()
 
-    def remove(self):
-        """Removes the database entries"""
-        #remove entire GSHHG schema and the tables
-        self.dbeng.execute('DROP SCHEMA "GSHHG" CASCADE;')
-
-        #remove entry in the inventory
-        self.ses.query(Invent).filter(Invent.datasource == self.name).delete()
-        self.ses.commit() 
 
 #define the plugin name
 PlugName=GSHHG

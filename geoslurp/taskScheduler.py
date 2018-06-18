@@ -63,11 +63,15 @@ class taskScheduler():
                 print("Datasource:",ds.datasource,", last updated:",ds.lastupdate)
         if not args.datasource:
             return
-
-            
+        
+        if args.purge:
+            self.purge(args.datasource)
+            return
+        #iextract datasource specific configuration
+        confds=self.conf.getDataSource(args.datasource)    
 
         #if we land here we pass the arguments to the plugin calss itself
-        self.plugman.plugins[args.datasource](self.db,self.conf).parseAndExec(args)
+        self.plugman.plugins[args.datasource](self.db,confds).parseAndExec(args)
 
 
     def cleancache(self):
@@ -84,4 +88,18 @@ class taskScheduler():
     def purge(self,datasource):
         """purge selected datasource (db tables and data files)"""
         #remove the datadir and it's content
+        try:
+            ddir=self.conf[datasource]['DataDir']
+            if os.path.isdir(ddir):
+                shutil.rmtree(ddir)
+        except KeyError:
+            pass
 
+        #now also remove the scheme and all tables/indexes
+        self.db.removeScheme(datasource)
+        #remove entry in the inventory
+        ses=self.db.Session()
+        ses.query(Invent).filter(Invent.datasource == datasource).delete()
+        ses.commit() 
+
+        

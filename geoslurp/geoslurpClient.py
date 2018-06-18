@@ -50,5 +50,10 @@ class geoslurpClient():
        GSBase.metadata.create_all(self.dbeng)
     
     def createSchema(self,name):
-        sqlcmd=text('CREATE SCHEMA IF NOT EXISTS :scheme')
+        sqlcmd=text('CREATE SCHEMA IF NOT EXISTS ":scheme"')
         self.dbeng.execute(sqlcmd,scheme=name)
+
+    def removeScheme(self,name):
+        sqlcmd=text('DROP SCHEMA IF EXISTS  ":scheme" CASCADE')
+        self.dbeng.execute(sqlcmd,scheme=name)
+        

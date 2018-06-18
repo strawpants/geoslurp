@@ -21,9 +21,8 @@ import sys
 from .geoslurpClient import geoslurpClient
 from .PluginManager import PluginManager
 
-def getCreateDir(root,subdir):
+def getCreateDir(returndir):
     """creates a directory when not existent and return it"""
-    returndir=os.path.join(root,subdir)
     if not os.path.exists(returndir):
         os.makedirs(returndir)
     return returndir
@@ -67,13 +66,52 @@ class slurpconf():
     #def __setitem__(self,key,val):
      #   self.confobj[key]=val
 
-    def getDataDir(self,subdir):
-        """Retrieves the data directory by appending a subdir and creates it when not existent"""
-        return getCreateDir(self.confobj['DataDir'],subdir)
+    # def getDataDir(self,datasource):
+        # """Retrieves the data directory by appending a subdir and creates it when not existent"""
+        # #default path unless overwritten
+        # ddir=os.path.join(self.confobj['DataDir'],datasource)
+        
+        # #first try to retrieve the datasource specific datadirectory
+        # if datasource in self.confobj:
+            # if 
+            # ddir=self.confobj[datasource]['DataDir'] 
+        # else:
+            # self.confobj[datasource]={}
+            # self.confobj[datasource]['DataDir']=ddir
+        
+        # try:
+            # return getCreateDir(self.confobj[datasource]['DataDir'])
+        # except KeyError as err:
+            # #else we use the default path
+            # if datasource in self.confobj:
+                # self.confobj[datasource]['DataDir']=os.path.join(self.confobj['DataDir'],datasource)
+            # else:
+                # self.confobj[datasource]={}
+                # self.confobj[datasource]['DataDir']=
+            # return getCreateDir(self.confobj[datasource]['DataDir'])
+    
+    def getDataSource(self,datasource):
+        """initializes datasource structure from file or to default"""
+        if not datasource in self.confobj:
+           self.confobj[datasource]={}
+        
+        if not 'DataDir' in self.confobj[datasource]:
+            #create default data directory
+            self.confobj[datasource]['DataDir']=getCreateDir(os.path.join(self.confobj['DataDir'],datasource))
+        else:
+            getCreateDir(self.confobj[datasource]['DataDir'])
+        
+        if not 'CacheDir' in self.confobj[datasource]:
+            #create default data directory
+            self.confobj[datasource]['CacheDir']=getCreateDir(os.path.join(self.confobj['CacheDir'],datasource))
+        else:
+            getCreateDir(self.confobj[datasource]['CacheDir'])
+        
+        return self.confobj[datasource]
 
-    def getCacheDir(self,subdir):
-        """Retrieves the cache directory by appending a subdir and creates it when not existent"""
-        return getCreateDir(self.confobj['CacheDir'],subdir)
+    # def getCacheDir(self,subdir):
+        # """Retrieves the cache directory by appending a subdir and creates it when not existent"""
+        # return getCreateDir(os.path.join(self.confobj['CacheDir'],subdir))
     
     def setLogger(self):
         """set where to output log info"""
