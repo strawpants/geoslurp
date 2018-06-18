@@ -17,6 +17,7 @@
 
 from geoslurp.dataProviders.ftpProvider import ftpProvider as ftp
 from geoslurp.commonOptions import commonOptions
+from geoslurp.slurpconf import Log
 import os,re,sys
 import datetime
 import zipfile
@@ -96,7 +97,6 @@ class GSHHG():
         #Initialize databases (if not existent)
         self.ses=db.Session()
         self.dbeng=db.dbeng
-        self.log=conf.log
         try:
             #retrieve the stored inventory entry
             self.dbinvent=self.ses.query(Invent).filter(Invent.datasource == self.name).one()
@@ -115,7 +115,7 @@ class GSHHG():
     def parseAndExec(self,args):
         """Download/update data and apply possible processing"""
         if args.remove:
-            print(self.name+":Removing SCHEMA and tables",file=self.log)
+            print(self.name+":Removing SCHEMA and tables",file=Log)
             self.remove()
         if args.update:
             self.download(args.force)
@@ -149,10 +149,10 @@ class GSHHG():
         if force or (newestver > self.dbinvent.data["GSHHGversion"] and t > self.dbinvent.lastupdate):
             fout=os.path.join(self.cachedir,getf)
             if os.path.exists(fout) and not force:
-                print (self.name+":File already in cache no need to download",file=self.log)
+                print (self.name+":File already in cache no need to download",file=Log)
             else:
                 with open(fout,'wb') as fid:
-                    print(self.name+":Downloading "+getf,file=self.log)
+                    print(self.name+":Downloading "+getf,file=Log)
                     self.ftpt.downloadFile(getf,fid)
             self.unzip(fout)
             self.dbinvent.data["GSHHGversion"]=newestver
@@ -171,7 +171,7 @@ class GSHHG():
             #update database inventory
             self.ses.flush()
         else:
-            print(self.name+": Already at newest version",file=self.log)
+            print(self.name+": Already at newest version",file=Log)
             return
         
     def unzip(self,zipf):
@@ -187,7 +187,7 @@ class GSHHG():
         #delete all records in the table (easier than update)
         ndel=self.ses.query(table).delete()
 
-        print(self.name+":Filling POSTGIS with data from",folder,file=self.log)
+        print(self.name+":Filling POSTGIS with data from",folder,file=Log)
         #open shapefile directory
         shpf=ogr.Open(folder)
         for il in range(shpf.GetLayerCount()):

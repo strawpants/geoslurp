@@ -40,7 +40,7 @@ class taskScheduler():
         parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
         parser.add_argument('--cleancache',action='store_true',help="Clean up the cache directory")
         parser.add_argument('-l','--list',action='store_true',help="list registered datasources from the inventory")
-        
+        parser.add_argument('--purge',action='store_true',help="Purge selected datasource from the database (both entries and data)") 
         #also add datasource options
         subparsers = parser.add_subparsers(help='Datasource to select (type geoslurpd.py DATASOURCE --help for detailed options)',dest='datasource')
         for key,cl in self.plugman.plugins.items():
@@ -64,6 +64,9 @@ class taskScheduler():
         if not args.datasource:
             return
 
+            
+
+        #if we land here we pass the arguments to the plugin calss itself
         self.plugman.plugins[args.datasource](self.db,self.conf).parseAndExec(args)
 
 
@@ -76,3 +79,9 @@ class taskScheduler():
                 os.unlink(filep)
             elif os.path.isdir(filep):
                 shutil.rmtree(filep)
+    
+    
+    def purge(self,datasource):
+        """purge selected datasource (db tables and data files)"""
+        #remove the datadir and it's content
+

@@ -28,6 +28,7 @@ def getCreateDir(root,subdir):
         os.makedirs(returndir)
     return returndir
 
+Log=sys.stdout
 
 class slurpconf():
     """ Class which reads and writes configure data in yaml format and contains a database connector"""
@@ -46,7 +47,7 @@ class slurpconf():
     def write(self,conffile):
         """Writes changed setup back to the yaml configuration file"""
         fid=open(self.conffile,'w')
-        yaml.dump(self.confobj[0],fid,default_flow_style=False)
+        yaml.dump(self.confobj,fid,default_flow_style=False)
         fid.close()
 
     def read(self,conffile):
@@ -54,30 +55,30 @@ class slurpconf():
         if os.path.exists(conffile):
             #Read parameters from yaml file
             fid=open(conffile,'r')
-            self.confobj=[x for x in yaml.safe_load_all(fid)]
+            self.confobj=yaml.safe_load(fid)
             fid.close()
         else:
             raise Exception('cannot find geoslurp configuration file')
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
     def __getitem__(self,arg):
-        return self.confobj[0][arg]
+        return self.confobj[arg]
 
     #def __setitem__(self,key,val):
-     #   self.confobj[0][key]=val
+     #   self.confobj[key]=val
 
     def getDataDir(self,subdir):
         """Retrieves the data directory by appending a subdir and creates it when not existent"""
-        return getCreateDir(self.confobj[0]['DataDir'],subdir)
+        return getCreateDir(self.confobj['DataDir'],subdir)
 
     def getCacheDir(self,subdir):
         """Retrieves the cache directory by appending a subdir and creates it when not existent"""
-        return getCreateDir(self.confobj[0]['CacheDir'],subdir)
+        return getCreateDir(self.confobj['CacheDir'],subdir)
     
     def setLogger(self):
         """set where to output log info"""
         try:
-            logfile=self.confobj[0]['Logger']
-            self.log=open(logfile,'w')
+            logfile=self.confobj['Logger']
+            Log=open(logfile,'w')
         except:
-            self.log=sys.stdout
+            Log=sys.stdout
