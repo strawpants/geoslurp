@@ -55,7 +55,7 @@ class ftpProvider():
                 outlist.append((t,fname))
         return outlist 
     
-    def downloadFile(self,filen,fid):
+    def downloadFile(self,fid,filen):
         """Retrieves a file from the root url"""
         crl=pycurl.Curl()
         crl.setopt(crl.URL,os.path.join(self.rooturl,filen))

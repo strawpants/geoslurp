@@ -20,6 +20,7 @@ from .geoslurpClient import geoslurpClient
 from .PluginManager import PluginManager
 from sqlalchemy.orm import load_only
 from geoslurp.geoslurpClient import Invent
+from sqlalchemy.schema import CreateSchema
 class taskScheduler():
     """Manages and schedules geoslurp tasks"""
     def __init__(self,conffile):
@@ -96,7 +97,7 @@ class taskScheduler():
             pass
 
         #now also remove the scheme and all tables/indexes
-        self.db.removeScheme(datasource)
+        self.db.dropSchema(datasource,cascade=True)
         #remove entry in the inventory
         ses=self.db.Session()
         ses.query(Invent).filter(Invent.datasource == datasource).delete()

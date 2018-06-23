@@ -23,6 +23,12 @@ def addForce(parser):
 	parser.add_argument('--force',action='store_true',help='enforce action')
 
 def addUpdate(parser):
-    parser.add_argument('--update',action='store_true',help='download/update selected datasets')
+    parser.add_argument('--update',action='store_true',help='download/register selected datasets')
 
-commonOptions={"remove":addRemove,"force":addForce,"update":addUpdate}
+def addDownload(parser):
+    parser.add_argument('--download',action='store_true',help='only download selected datasets to cache')
+
+def addRegister(parser):
+    parser.add_argument('--register',action='store_true',help='register selected datasets')
+
+commonOptions={"remove":addRemove,"force":addForce,"update":addUpdate,"download":addDownload,"register":addRegister}

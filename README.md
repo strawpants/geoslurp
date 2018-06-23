@@ -2,7 +2,7 @@
 The idea is that this tool contains script to download/update commonly used datasets and to register them in a mongodb database. This database can then be queried allowing the retrieval of the relevant data or datafiles. 
 
 Status: Experimental:
-Downloading and registering GSHHG data seems to work now
+Downloading and registering GSHHG and the Randalph Glacier inventory (6.0) data seems to work now
 
 
 ## TODO

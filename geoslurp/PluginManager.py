@@ -17,7 +17,8 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 #this is intended to be turned into a daemon services at some stage
-import  importlib.util
+import importlib
+import importlib.util
 import sys
 import os.path,datetime
 import shutil
@@ -75,14 +76,14 @@ class PluginManager():
             mod = SourceFileLoader("geoslurp.plugins",path).load_module() 
             if not hasattr(mod,'PlugName'):
                 raise ValueError('Not a plugin')
-            return mod.PlugName
+            return getattr(mod,mod.PlugName)
         elif sys.version_info >= (3,5,0):
             spec = importlib.util.spec_from_file_location("geoslurp.plugins", path)
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
             if not hasattr(mod,'PlugName'):
                 raise ValueError('Not a plugin')
-            return mod.PlugName
+            return getattr(mod,mod.PlugName)
         else:
             raise Exception('This python version cannot dynamically load a plugin')
     

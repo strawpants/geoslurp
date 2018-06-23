@@ -18,8 +18,6 @@
 import os.path
 import yaml
 import sys
-from .geoslurpClient import geoslurpClient
-from .PluginManager import PluginManager
 
 def getCreateDir(returndir):
     """creates a directory when not existent and return it"""

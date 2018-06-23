@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#import password and location of the postgresql data (don't put in version control)
+source .geoenv
 
 #check if the necessary environment variables exist
 if [ -z "$GEOSLURPPASS" ]
