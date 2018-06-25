@@ -49,11 +49,10 @@ class GSHHG():
         self.datadir=conf['DataDir']
         self.cachedir=conf['CacheDir']
         #Initialize databases (if not existent)
-        self.ses=db.Session()
         self.db=db
         try:
             #retrieve the stored inventory entry
-            self.dbinvent=self.ses.query(Invent).filter(Invent.datasource == self.name).one()
+            self.dbinvent=self.db.getFromInventory(self.name)
             self.dbinvent.data["GSHHGversion"]=tuple(self.dbinvent.data["GSHHGversion"]) 
         except NoResultFound:
         # #set defaults for the  inventory
@@ -61,8 +60,6 @@ class GSHHG():
             
             # create the schema corresponding tables
             db.CreateSchema(self.schema)
-            self.ses.add(self.dbinvent)
-        
     
     def parseAndExec(self,args):
         """Download/update data and apply possible processing"""
@@ -126,5 +123,5 @@ class GSHHG():
         
         #update database inventory
         self.dbinvent.lastupdate=datetime.datetime.now()
-        self.ses.flush()
+        self.db.updateInventory(self.dbinvent)
     

@@ -30,6 +30,7 @@ from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.dialects.postgresql import TIMESTAMP, ARRAY,JSONB
 from sqlalchemy.orm import sessionmaker,mapper
 from sqlalchemy.schema import CreateSchema,DropSchema,Table
+from sqlalchemy.orm.exc import NoResultFound
 from osgeo import ogr
 from geoalchemy2.elements import WKBElement
 from geoalchemy2 import Geometry
@@ -46,9 +47,16 @@ class Invent(GSBase):
     pluginversion=Column(ARRAY(Integer,as_tuple=True))
     data=Column(JSONB)
 
-def tableMapFactory(name,table):
-    """Dynamically create a mapper class from a Table object"""
-    return type(name,(GSBase,),{'__table__':table})
+def tableMapFactory(name,table=None):
+    """Dynamically create/retrieve a mapper class from a Table object"""
+    try:
+        #possibly this class was already defined (we can only define it once)
+        return globals()[name]
+    except KeyError:
+        if table != None:
+            return type(name,(GSBase,),{'__table__':table})
+        else:
+            raise Exception('When creating a new SQLAlchemy tablemap table is needed')
 
 def columnsFromFeat(feat,spatindex=True,forceGType=None):
     """Returns a list of columns from a osgeo feature"""
@@ -133,6 +141,27 @@ class geoslurpClient():
         except:
             pass
 
+    def getFromInventory(self,datasource):
+        """Retrieves the datasource entry from the inventory table"""
+        #we need to open up a small sqlalcheny session here
+        ses=self.Session()
+        try:
+            invententry=ses.query(Invent).filter(Invent.datasource == datasource).one()
+        except NoResultFound:
+            #in case of an exception we want to clsoet he session first (probably works without but it doesn't harm to be explicit )
+            ses.close()
+            raise NoResultFound
+
+        return invententry
+
+    def updateInventory(self,invententry):
+        """updates an entry in the inventory"""
+        ses=self.Session()
+        ses.add(invententry)
+        ses.commit()
+        ses.close()
+        return invententry
+
 
     def dropSchema(self,name,cascade=False):
         self.dbeng.execute(DropSchema(name.lower(),cascade=cascade))
@@ -186,7 +215,7 @@ class geoslurpClient():
         # currently we can only cope with updating the entire table as a whole
         self.dropTable(tablename,schema)
         # if self.dbeng.has_table(tablename,schema=schema):
-        print("Filling CSV table %s:%s with data from"%(schema,tablename),file=Log)
+        print("Filling CSV table %s:%s "%(schema,tablename),file=Log)
         names,cols=columnsFromCSV(fid,lookup)
         table=Table(tablename,self.mdata,*cols,schema=schema)
         table.create(checkfirst=True)

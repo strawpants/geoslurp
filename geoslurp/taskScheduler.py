@@ -39,7 +39,7 @@ class taskScheduler():
         """Add top level command line arguments (and request arguments from the plugins)"""
         
         parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
-        parser.add_argument('--cleancache',action='store_true',help="Clean up the cache directory")
+        parser.add_argument('--cleancache',action='store_true',help="Clean up the cache directory (optionally refine by specifing a DATASOURCE)")
         parser.add_argument('-l','--list',action='store_true',help="list registered datasources from the inventory")
         parser.add_argument('--purge',action='store_true',help="Purge selected datasource from the database (both entries and data)") 
         #also add datasource options
@@ -54,7 +54,10 @@ class taskScheduler():
             self.conf.printDefault()
         
         if args.cleancache:
-            self.cleancache()
+            if args.datasource:
+                self.cleancache(args.datasource)
+            else:
+                self.cleancache()
         
         if args.list:
             #retrieve the entries from the inventory table
@@ -75,10 +78,16 @@ class taskScheduler():
         self.plugman.plugins[args.datasource](self.db,confds).parseAndExec(args)
 
 
-    def cleancache(self):
+    def cleancache(self,subdir=None):
         """cleans the Cache directory entirely"""
-        for f in  os.listdir(self.conf['CacheDir']):
-            filep=os.path.join(self.conf['CacheDir'],f)
+
+        if subdir == None:
+            dirn=self.conf['CacheDir']
+        else:
+            dirn=os.path.join(self.conf['CacheDir'],subdir)
+
+        for f in  os.listdir(dirn):
+            filep=os.path.join(dirn,f)
             if os.path.isfile(f):
                 #print(filep)
                 os.unlink(filep)
@@ -97,10 +106,14 @@ class taskScheduler():
             pass
 
         #now also remove the scheme and all tables/indexes
-        self.db.dropSchema(datasource,cascade=True)
-        #remove entry in the inventory
+        try:
+            self.db.dropSchema(datasource,cascade=True)
+        except:
+            pass
+        #also  try to remove entry in the inventory
         ses=self.db.Session()
         ses.query(Invent).filter(Invent.datasource == datasource).delete()
-        ses.commit() 
+        ses.commit()
+        ses.close() 
 
         
