@@ -14,15 +14,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
-# from schema import Schema, And, Use
-# import psycopg2 
-# from psycopg2 import sql
-# from psycopg2.extras import DictCursor, Json
-# import datetime
-# import json
-# from .dbTablestructure import dataSourceEntry
-# from collections import OrderedDict
-
 
 from sqlalchemy import create_engine,text,MetaData
 from sqlalchemy.ext.declarative import declarative_base
@@ -35,11 +26,14 @@ from osgeo import ogr
 from geoalchemy2.elements import WKBElement
 from geoalchemy2 import Geometry
 from .slurpconf import Log
+from sqlalchemy.sql.expression import literal_column
 import re
+from datetime import datetime
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 GSBase=declarative_base()
 class Invent(GSBase):
-    """Defines the POSTGRESQL inventory table"""
+    """Defines the GEOSLURP POSTGRESQL inventory table"""
     __tablename__='inventory'
     id=Column(Integer,primary_key=True)
     datasource=Column(String,unique=True)
@@ -56,7 +50,7 @@ def tableMapFactory(name,table=None):
         if table != None:
             return type(name,(GSBase,),{'__table__':table})
         else:
-            raise Exception('When creating a new SQLAlchemy tablemap table is needed')
+            raise Exception('When creating a new SQLAlchemy tablemap, table is needed')
 
 def columnsFromFeat(feat,spatindex=True,forceGType=None):
     """Returns a list of columns from a osgeo feature"""
@@ -79,6 +73,15 @@ def columnsFromFeat(feat,spatindex=True,forceGType=None):
     geomtype=Geometry(gType,srid='4326',spatial_index=spatindex)
     cols.append(Column('geom',geomtype))
     return cols
+
+def columnsFromDict(indict):
+    """ Map the first level entries of a dictionary to POSTGRESQL types"""
+    typeMap={float:Float,int:Integer,dict:JSONB,datetime:TIMESTAMP,str:String}
+    cols=[Column('id',Integer,primary_key=True)]
+    for ky,val in indict.items():
+        cols.append(Column(ky.lower(),typeMap[type(val)]))
+    return cols
+
 
 def valuesFromFeat(feat):
     """Returns a dictionary with loaded values from a feature"""
@@ -135,6 +138,13 @@ class geoslurpClient():
        if not self.dbeng.has_table('inventory'):
            GSBase.metadata.create_all(self.dbeng)
     
+    def vacuumAnalyze(self,name,schema):
+        """vacuum and analyze a certain table"""
+        conn=self.dbeng.raw_connection()
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cursor=conn.cursor()
+        cursor.execute('VACUUM ANALYZE %s."%s";'%(schema,name))
+
     def CreateSchema(self,name):
         try:
             self.dbeng.execute(CreateSchema(name.lower()))
@@ -144,22 +154,20 @@ class geoslurpClient():
     def getFromInventory(self,datasource):
         """Retrieves the datasource entry from the inventory table"""
         #we need to open up a small sqlalcheny session here
-        ses=self.Session()
+        self.invses=self.Session()
         try:
-            invententry=ses.query(Invent).filter(Invent.datasource == datasource).one()
+            invententry=self.invses.query(Invent).filter(Invent.datasource == datasource).one()
         except NoResultFound:
             #in case of an exception we want to clsoet he session first (probably works without but it doesn't harm to be explicit )
-            ses.close()
+            self.invses.close()
             raise NoResultFound
 
         return invententry
 
     def updateInventory(self,invententry):
         """updates an entry in the inventory"""
-        ses=self.Session()
-        ses.add(invententry)
-        ses.commit()
-        ses.close()
+        self.invses.add(invententry)
+        self.invses.commit()
         return invententry
 
 
@@ -167,7 +175,16 @@ class geoslurpClient():
         self.dbeng.execute(DropSchema(name.lower(),cascade=cascade))
 
     def dropTable(self,tablename,schema):
-        self.dbeng.execute('DROP TABLE IF EXISTS %s."%s;"'%(schema,tablename))
+        self.dbeng.execute('DROP TABLE IF EXISTS %s."%s";'%(schema,tablename))
+    
+    def updateFunction(self,fname,schema,inpara,outtype,body,language):
+        """Updates a stored function"""
+        #explicitly add line endings after semicolons in the body when not done already
+        body=re.sub(';(?!\n)',';\n ',body)
+        self.dbeng.execute('DROP FUNCTION IF EXISTS %s."%s";'%(schema,fname))
+        funccmd='CREATE OR REPLACE FUNCTION %s.%s (%s) RETURNS %s AS $$ %s $$ LANGUAGE %s '%(schema,fname,inpara,outtype,body,language)
+        self.dbeng.execute(funccmd)
+
 
     def fillGeoTable(self,folder,tablename,schema,regex=None,forceGType=None):
         """Update/populate a database table (creates one if it doesn't exist)
@@ -200,9 +217,9 @@ class geoslurpClient():
                 try:
                     ses.add(tableMap(**values))
                 except:
-                    import ipdb
-                    ipdb.set_trace()
                     pass
+        ses.commit()
+        # self.vacuumAnalyze(tablename,schema)
         ses.commit()
         ses.close()
     
@@ -224,5 +241,7 @@ class geoslurpClient():
         for ln in fid:
             values=valuesFromCSV(ln,names)
             ses.add(tableMap(**values)) 
+        ses.commit()
+        # self.vacuumAnalyze(tablename,schema)
         ses.commit()
         ses.close()

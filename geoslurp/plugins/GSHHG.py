@@ -68,7 +68,9 @@ class GSHHG():
             self.download(args.force)
         if args.update or args.register:
             self.register()
-
+        
+        if args.update or args.regfunc:
+            self.regFuncs()
     @staticmethod
     def addParserArgs(subparsers):
         """adds GSHHG specific help options (note this is a static function)"""
@@ -77,7 +79,8 @@ class GSHHG():
         commonOptions['update'](parser)
         commonOptions['register'](parser)
         commonOptions['download'](parser)
-
+        commonOptions['regfunc'](parser)
+        
     ###### END COMPULSARY FUNCTIONS #######
     
     def download(self,force):
@@ -124,4 +127,32 @@ class GSHHG():
         #update database inventory
         self.dbinvent.lastupdate=datetime.datetime.now()
         self.db.updateInventory(self.dbinvent)
-    
+
+    # def regFuncs(self):
+        # """Register stored procedures specific to using GSHHG"""
+
+        # maskfunc={"schema":self.schema,"fname":"Ocean_func","inpara":"west Float,east Float,south Float,north Float,ddeg Float","outtype","raster":"plpgsql"}
+
+        # maskfunc["body"]="DECLARE "\
+                # "tmprast raster;"\
+                # "geocur CURSOR FOR SELECT geom FROM gshhg.\"GSHHS_c\" WHERE level <= 5;"\
+                # "BEGIN "\
+                # "tmprast := ST_AddBand(ST_MakeEmptyRaster(100, 100, west, north, ddeg),'1BB');"\
+                # "FOR geo IN geocur\n"\
+                # "LOOP\n"\
+                # "tmprast := ST_SetValue(tmprast,geo.geom,1);"\
+                # "END LOOP;"\
+                # "RETURN tmprast;"\
+                # "END;"\
+
+        # self.db.updateFunction(**maskfunc)
+
+        # # landmask="CREATE OR REPLACE FUNCTION %s.land_mask"\
+                # # "(west Float, east Float ,south Float , north Float, ddeg Float)"\
+                # # "RETURNS Integer AS $$"\
+                # # "BEGIN "\
+                # # "RETURN FLOOR((east-west)/ddeg);"\
+                # # "END;"\
+                # # "$$ LANGUAGE plpgsql"%self.schema
+
+        # #self.db.dbeng.execute(landmask)

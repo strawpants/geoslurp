@@ -21,6 +21,7 @@ from .PluginManager import PluginManager
 from sqlalchemy.orm import load_only
 from geoslurp.geoslurpClient import Invent
 from sqlalchemy.schema import CreateSchema
+import os,shutil
 class taskScheduler():
     """Manages and schedules geoslurp tasks"""
     def __init__(self,conffile):
@@ -99,7 +100,8 @@ class taskScheduler():
         """purge selected datasource (db tables and data files)"""
         #remove the datadir and it's content
         try:
-            ddir=self.conf[datasource]['DataDir']
+            import pdb;pdb.set_trace()
+            ddir=self.conf.getDataSource(datasource)['DataDir']
             if os.path.isdir(ddir):
                 shutil.rmtree(ddir)
         except KeyError:

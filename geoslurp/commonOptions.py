@@ -31,4 +31,7 @@ def addDownload(parser):
 def addRegister(parser):
     parser.add_argument('--register',action='store_true',help='register selected datasets')
 
-commonOptions={"remove":addRemove,"force":addForce,"update":addUpdate,"download":addDownload,"register":addRegister}
+def addRegisterFunc(parser):
+    parser.add_argument('--regfunc',action='store_true',help='update/register POSTGRESQL stored procedures')
+
+commonOptions={"remove":addRemove,"force":addForce,"update":addUpdate,"download":addDownload,"register":addRegister,"regfunc":addRegisterFunc}
