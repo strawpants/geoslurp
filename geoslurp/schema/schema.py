@@ -18,7 +18,7 @@
 
 
 from abc import ABC, abstractmethod
-
+from geoslurp.db import Inventory
 
 class Schema(ABC):
     """Abstract base class for a schema.
@@ -29,9 +29,10 @@ class Schema(ABC):
 
     To create a new schema inherit from this class and implement the abstractmethods
     """
-    def __init__(self,name,geoslurpConn,conf):
+
+    def __init__(self, schema, geoslurpConn, conf):
         """Loads the inventory entry (if available and couples the schema to a database connection and configuration"""
-        self._schema=name
+        self._schema=self.__class__.__name__
 
         #store links to the configurator (allwows this
         self._conf=conf
@@ -50,4 +51,4 @@ class Schema(ABC):
                                    lastupdate=datetime.datetime.min, data={"RGIversion": (0, 0)})
 
             # create the schema
-            db.CreateSchema(self.schema)
+            self._db.CreateSchema(self._schema)

@@ -27,11 +27,12 @@ def getCreateDir(returndir):
 
 Log=sys.stdout
 
-class slurpconf():
+
+class SlurpConf:
     """ Class which reads and writes configure data in yaml format and contains a database connector"""
-    def __init__(self,conffile):
+    def __init__(self, conffile):
         self.confyaml=conffile
-        self.read(self.confyaml)
+        self._confDict=self.read(self.confyaml)
         self.setLogger()
 
     def printDefault(self,out=sys.stderr):
@@ -41,28 +42,28 @@ class slurpconf():
         out.write("# Change settings below and save file to .geoslurp.yaml\n")
         yaml.dump(obj,out,default_flow_style=False)
 
-    def write(self,conffile):
+    def write(self,conffile=None):
         """Writes changed setup back to the yaml configuration file"""
-        fid=open(self.conffile,'w')
-        yaml.dump(self.confobj,fid,default_flow_style=False)
-        fid.close()
+        if not conffile:
+            conffile=self.confyaml
+        with open(conffile,'w') as fid:
+            yaml.dump(self._confDict, fid, default_flow_style=False)
 
     def read(self,conffile):
         """Read the parameters from the yaml onfiguration file"""
         if os.path.exists(conffile):
             #Read parameters from yaml file
-            fid=open(conffile,'r')
-            self.confobj=yaml.safe_load(fid)
-            fid.close()
+            with open(conffile, 'r') as fid:
+                return yaml.safe_load(fid)
         else:
             raise Exception('cannot find geoslurp configuration file')
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
-    def __getitem__(self,arg):
-        return self.confobj[arg]
+    def __getitem__(self, key):
+        return self._confDict[key]
 
-    #def __setitem__(self,key,val):
-     #   self.confobj[key]=val
+    def __setitem__(self, key, val):
+       self._confDict[key]=val
 
     # def getDataDir(self,datasource):
         # """Retrieves the data directory by appending a subdir and creates it when not existent"""
@@ -90,22 +91,22 @@ class slurpconf():
     
     def getDataSource(self,datasource):
         """initializes datasource structure from file or to default"""
-        if not datasource in self.confobj:
-           self.confobj[datasource]={}
+        if not datasource in self._confDict:
+           self._confDict[datasource]={}
         
-        if not 'DataDir' in self.confobj[datasource]:
+        if not 'DataDir' in self._confDict[datasource]:
             #create default data directory
-            self.confobj[datasource]['DataDir']=getCreateDir(os.path.join(self.confobj['DataDir'],datasource))
+            self._confDict[datasource]['DataDir']=getCreateDir(os.path.join(self._confDict['DataDir'], datasource))
         else:
-            getCreateDir(self.confobj[datasource]['DataDir'])
+            getCreateDir(self._confDict[datasource]['DataDir'])
         
-        if not 'CacheDir' in self.confobj[datasource]:
+        if not 'CacheDir' in self._confDict[datasource]:
             #create default data directory
-            self.confobj[datasource]['CacheDir']=getCreateDir(os.path.join(self.confobj['CacheDir'],datasource))
+            self._confDict[datasource]['CacheDir']=getCreateDir(os.path.join(self._confDict['CacheDir'], datasource))
         else:
-            getCreateDir(self.confobj[datasource]['CacheDir'])
+            getCreateDir(self._confDict[datasource]['CacheDir'])
         
-        return self.confobj[datasource]
+        return self._confDict[datasource]
 
     # def getCacheDir(self,subdir):
         # """Retrieves the cache directory by appending a subdir and creates it when not existent"""
@@ -114,7 +115,7 @@ class slurpconf():
     def setLogger(self):
         """set where to output log info"""
         try:
-            logfile=self.confobj['Logger']
-            Log=open(logfile,'w')
+            logfile=self._confDict['Logger']
+            Log=open(logfile, 'w')
         except:
             Log=sys.stdout
