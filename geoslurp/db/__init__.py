@@ -1,2 +1,3 @@
-from connector import  GeoslurpConnector
-from inventory import Inventory,Invent,GSBase
+from .inventory import *
+from .connector import *
+from .schemamanager import *

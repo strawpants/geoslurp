@@ -1,4 +1,3 @@
-# setup.py  
 # This file is part of geoslurp.
 # geoslurp is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -15,26 +14,20 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
-import setuptools
-from setuptools import find_packages
+# Schema which stores Argo data (links)
+from geoslurp.schema import Schema
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+class Argo(Schema):
+    """A scheme to download and manage Argo float data"""
+    def __init__(self):
+        self._catalog='http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901631/profiles/catalog.xml'
 
-print(find_packages("geoslurp"))
-setuptools.setup(
-    name="geoslurp",
-    author="Roelof Rietbroek",
-    author_email="roelof@wobbly.earth",
-    description="Python tools for management of earth science data",
-    long_description=long_description,
-    url="https://github.com/strawpants/geoslurp",
-    packages=find_packages("."),
-    package_dir={"":"."},
-    classifiers=["Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
-        "Operating System :: POSIX :: Linux",
-        "Topic :: Scientific/Engineering",
-        "Development Status :: 1 - Planning"]
-    
-)
+
+
+
+#from netCDF4 import Dataset
+
+# catalog='http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901631/profiles/catalog.xml'
+# furl='http://tds0.ifremer.fr/thredds/dodsC/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901632/profiles/R2901632_156.nc'
+# ncid=Dataset(furl)
+ 

@@ -18,7 +18,7 @@
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import CreateSchema, DropSchema, Table
-from .slurpconf import Log
+from geoslurp.config import Log
 import re
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from geoslurp.db import Inventory, GSBase
