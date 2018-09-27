@@ -20,9 +20,9 @@ from geoslurp.config import Log
 from sqlalchemy import Column,Integer,String,Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import TIMESTAMP, ARRAY,JSONB
-from sqlalchemy.orm import sessionmaker
 
 GSBase=declarative_base()
+
 class InventTable(GSBase):
     """Defines the GEOSLURP POSTGRESQL inventory table"""
     __tablename__='inventory'
@@ -40,22 +40,29 @@ class Inventory:
 
         :type geoslurpConn: geoslurp database connector
         """
+        self.db=geoslurpConn
         #creates a session which is bound to this class instance
-        self.ses=geoslurpConn.Session()
+        self._ses=geoslurpConn.Session()
 
         #creates the inventory table if it doesn't exists
         if not geoslurpConn.dbeng.has_table('inventory'):
             GSBase.metadata.create_all(geoslurpConn.dbeng, tables=[InventTable])
 
+
+    def items(self):
+        """Query the Inventory table and returns a generator"""
+        for entry in self._ses.query(InventTable):
+            yield entry
+
     def __getitem__(self, schema):
         """Retrieves the entry from the inventory table corresponding to the schema"""
         #we need to open up a small sqlalcheny session here
         # note  this will raise a NoResultsFound exception if none was found (should be treated by caller)
-        inventEntry=self.ses.query(InventTable).filter(InventTable.datasource == schema).one()
+        inventEntry=self._ses.query(InventTable).filter(InventTable.datasource == schema).one()
 
         return inventEntry
 
     def update(self,inventEntry):
         """Updates/adds an inventory row"""
-        self.ses.add(inventEntry)
-        self.ses.commit()
+        self._ses.add(inventEntry)
+        self._ses.commit()

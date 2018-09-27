@@ -18,7 +18,10 @@
 
 
 from abc import ABC, abstractmethod
-# from geoslurp.db import Inventory
+from datetime import datetime
+from sqlalchemy.orm.exc import NoResultFound
+import shutil
+import os
 
 class Schema(ABC):
     """Abstract base class for a schema.
@@ -30,25 +33,53 @@ class Schema(ABC):
     To create a new schema inherit from this class and implement the abstractmethods
     """
 
-    def __init__(self, geoslurpConn, conf):
+    __version__ = (0,0,0)
+
+    def __init__(self, InventInstance, conf):
         """Loads the inventory entry (if available and couples the schema to a database connection and configuration"""
         self._schema=self.__class__.__name__
 
-        #store links to the configurator (allwows this
+        #store links to the configurator (allows the class to get and set configuration changes)
         self._conf=conf
-
-        # We need to store the database links beacuse we need them in member functions
-        self._db = geoslurpConn
-
+        self._db=InventInstance.db
+        self._Dsets={}
         try:
             # retrieve the stored inventory entry
-            self.dbinvent = self.db.getFromInventory(self.name)
-            # convert version numer to tuple
-            self.dbinvent.data["RGIversion"] = tuple(self.dbinvent.data["RGIversion"])
+            self._dbinvent = InventInstance[self._schema]
         except NoResultFound:
             # #set defaults for the  inventory
-            self.dbinvent = Invent(datasource=self.name, pluginversion=self.pluginVersion,
-                                   lastupdate=datetime.datetime.min, data={"RGIversion": (0, 0)})
+            self._dbinvent = InventInstance.__table__(datasource=self._schema, pluginversion=self.__class__.__version__,
+                                   lastupdate=datetime.min, data={})
 
             # create the schema
-            self._db.CreateSchema(self._schema)
+            InventInstance.db.CreateSchema(self._schema)
+
+
+    def purge(self):
+        """Delete the scheme, corresponding tables and data"""
+
+        try:
+            ddir = self._dbinvent.data["DataDir"]
+            if os.path.isdir(ddir):
+                shutil.rmtree(ddir)
+        except KeyError:
+            pass
+
+        #now also remove the scheme and all tables/indexes
+        try:
+            self.db.dropSchema(self._schema,cascade=True)
+        except:
+            pass
+
+    def __getitem__(self,dSetName):
+        """Returns a Dataset instance by name"""
+
+
+
+def schemeFromName(name):
+    return availableSchemes()[name]
+
+def availableSchemes():
+    """Returns a dictionary of available schemes"""
+    return dict( [ (x.__name__,x) for x in Schema.__subclasses__()])
+

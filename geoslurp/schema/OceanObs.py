@@ -16,12 +16,15 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 # Schema which stores Argo data (links)
 from geoslurp.schema import Schema
+from geoslurp.dataset import Argo
 
-class Argo(Schema):
-    """A scheme to download and manage Argo float data"""
-    def __init__(self):
+class OceanObs(Schema):
+    """A scheme to download and manage oceanographic insitu data"""
+    __version__=(0, 0, 0)
+    def __init__(self,InventInstance, conf):
+        super().__init__(InventInstance, conf)
         self._catalog='http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901631/profiles/catalog.xml'
-
+        self.Dsets['Argo']=Argo()
 
 
 

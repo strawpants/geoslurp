@@ -17,24 +17,10 @@
 
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.schema import CreateSchema, DropSchema, Table
+from sqlalchemy.schema import CreateSchema, DropSchema
 from geoslurp.config import Log
 import re
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from geoslurp.db import Inventory, GSBase
-
-
-def tableMapFactory(tableName, table=None):
-    """Dynamically create/retrieve a mapper class from a Table object"""
-    try:
-        # possibly this class was already defined (we can only define it once)
-        return globals()[tableName]
-    except KeyError:
-        if table != None:
-            return type(tableName, (GSBase,), {'__table__': table})
-        else:
-            raise Exception('When creating a new SQLAlchemy tablemap, a table is needed')
-
 
 class GeoslurpConnector():
     """Holds a connector to a geoslurp database"""
@@ -48,7 +34,6 @@ class GeoslurpConnector():
         self.dbeng = create_engine(dburl, echo=False)
         self.Session = sessionmaker(bind=self.dbeng)
         self.mdata = MetaData(bind=self.dbeng)
-        self.inventTable = Inventory(self)
 
     def vacuumAnalyze(self, tableName, schema):
         """vacuum and analyze a certain table"""
