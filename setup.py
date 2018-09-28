@@ -26,7 +26,7 @@ setuptools.setup(
     name="geoslurp",
     author="Roelof Rietbroek",
     author_email="roelof@wobbly.earth",
-    description="Python tools for management of earth science data",
+    description="Python datapull for management of earth science data",
     long_description=long_description,
     url="https://github.com/strawpants/geoslurp",
     packages=find_packages("."),

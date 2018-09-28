@@ -33,8 +33,8 @@ class Schema(ABC):
     To create a new schema inherit from this class and implement the abstractmethods
     """
 
-    __version__ = (0,0,0)
-
+    __version__ = (0, 0, 0)
+    __datasets__= {}
     def __init__(self, InventInstance, conf):
         """Loads the inventory entry (if available and couples the schema to a database connection and configuration"""
         self._schema=self.__class__.__name__
@@ -42,7 +42,7 @@ class Schema(ABC):
         #store links to the configurator (allows the class to get and set configuration changes)
         self._conf=conf
         self._db=InventInstance.db
-        self._Dsets={}
+        self.Dsets={}
         try:
             # retrieve the stored inventory entry
             self._dbinvent = InventInstance[self._schema]
@@ -73,13 +73,27 @@ class Schema(ABC):
 
     def __getitem__(self,dSetName):
         """Returns a Dataset instance by name"""
+        return self.Dsets[dSetName]
 
+    def __iter__(self):
+        """loops over initiated Datasets in the scheme"""
+        for val in self.Dsets.values():
+            yield val
+
+    def initDataSets(self,selectDsets=None):
+        """Initializes selected datasets"""
+        if not selectDsets:
+            # default is to select all datasets
+            selectDsets=list(self.__datasets__)
+
+        for name in selectDsets:
+            self.Dsets[name]=self.__datasets__[name](self)
 
 
 def schemeFromName(name):
-    return availableSchemes()[name]
+    return allSchemes()[name]
 
-def availableSchemes():
+def allSchemes():
     """Returns a dictionary of available schemes"""
     return dict( [ (x.__name__,x) for x in Schema.__subclasses__()])
 

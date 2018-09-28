@@ -49,7 +49,7 @@ class Inventory:
             GSBase.metadata.create_all(geoslurpConn.dbeng, tables=[InventTable])
 
 
-    def items(self):
+    def __iter__(self):
         """Query the Inventory table and returns a generator"""
         for entry in self._ses.query(InventTable):
             yield entry

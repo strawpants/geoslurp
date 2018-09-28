@@ -14,24 +14,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
-# Schema which stores Argo data (links)
-from geoslurp.schema import Schema
-from geoslurp.dataset import Argo
 
-class OceanObs(Schema):
-    """A scheme to download and manage oceanographic insitu data"""
-    __datasets__={"Argo":Argo}
-    __version__=(0, 0, 0)
-    def __init__(self,InventInstance, conf):
-        super().__init__(InventInstance, conf)
-        self._catalog='http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901631/profiles/catalog.xml'
+import xml.etree.ElementTree as XMLTree
+import pycurl
+class OpendapProvider:
+    """A class to work with an Opendap server"""
+    def __init__(self,rooturl):
+        self.rooturl=rooturl
 
+    def getCatalogue(self):
+        """Retrieve the catalogue from the root level"""
 
-
-
-#from netCDF4 import Dataset
-
-# catalog='http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901631/profiles/catalog.xml'
-# furl='http://tds0.ifremer.fr/thredds/dodsC/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901632/profiles/R2901632_156.nc'
-# ncid=Dataset(furl)
- 

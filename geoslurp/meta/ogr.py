@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-#some tools to work with ogr vector files
+#some datapull to work with ogr vector files
 
 
 from geoalchemy2.elements import WKBElement

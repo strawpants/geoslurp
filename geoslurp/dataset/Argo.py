@@ -20,8 +20,13 @@ from geoslurp.dataset import DataSet
 
 class Argo(DataSet):
     """Argo table"""
+    def __init__(self,scheme):
+        super().__init__(scheme)
 
-    def pullData(self):
-        """Get a list of URI's"""
-        print("Pulling Argo data")
+
+    def pull(self):
+        pass
+
+    def register(self):
+        pass
 

@@ -19,9 +19,29 @@ from abc import ABC, abstractmethod
 
 class DataSet(ABC):
     """Abstract Base class which hold a dataset (corresponding to a database table"""
-    def __index__(self):
-        self._dset=self.__class__.__name__
+    def __init__(self,scheme):
+        self.name=self.__class__.__name__
+        self._scheme=scheme
+        #retrieve the Dataset entry (in the form of a dictionary) from the Inventory
+        try:
+            self._inventData=scheme._dbinvent.data[self.name]
+        except KeyError:
+            self._inventData={}
+
+    def info(self):
+        return self._inventData
 
     @abstractmethod
-    def pullData(self):
-        """Pulls the encessary data from the online resource"""
+    def pull(self):
+        """Pulls the necessary data from the online resource"""
+        pass
+
+    @abstractmethod
+    def register(self):
+        """Register the downloaded dataset in the database"""
+        pass
+
+    def purge(self):
+        """Delete data and database entries"""
+        pass
+
