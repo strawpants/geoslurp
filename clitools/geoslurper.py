@@ -40,16 +40,17 @@ def main(argv):
         print(__file__+' Error: no arguments provided, try --help', file=sys.stderr)
         sys.exit(1)
 
-    # We need a point of contact to communicate with the database
-    DbConn=GeoslurpConnector(conf['dburl'])
-
-    # Initializes an object which holds the current inventory
-    slurpInvent=Inventory(DbConn)
 
     # Process common options
     if args.list:
        # show available schemes and datasets
         showAvailable()
+
+    # We need a point of contact to communicate with the database
+    DbConn=GeoslurpConnector(conf['dburl'])
+
+    # Initializes an object which holds the current inventory
+    slurpInvent=Inventory(DbConn)
 
     if not args.input and args.info:
         #list the inventory of all the registered schemas but don't list info on the datasets
@@ -87,7 +88,7 @@ def main(argv):
 
     if args.pull or args.update:
         for ds in scheme:
-            ds.pull(args.update)
+            ds.pull()
 
 
     if args.register or args.update:

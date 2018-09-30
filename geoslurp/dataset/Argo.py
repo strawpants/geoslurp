@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataset import DataSet
-
+from geoslurp.datapull import OpendapConnector,OpendapFilter
 
 class Argo(DataSet):
     """Argo table"""
@@ -25,7 +25,14 @@ class Argo(DataSet):
 
 
     def pull(self):
-        pass
+        """Get a list of netcdf files from the Ifremer opendap Thredds server"""
+
+        conn=OpendapConnector([OpendapFilter(attr="urlPath",regex=".*profiles.*")])
+
+        baseurl,xmlroot = conn.getCatalog("http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/catalog.xml")
+        print(conn.getopendapRoot(xmlroot))
+        for ds in conn.dataSets(xmlroot, baseurl, depth=10):
+            print(ds.tag, ds.attrib["urlPath"])
 
     def register(self):
         pass

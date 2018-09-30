@@ -40,12 +40,16 @@ class httpProvider():
         crl=pycurl.Curl()
         
         crl.setopt(pycurl.URL,self.buildURL(filen))
+        crl.setopt(pycurl.FOLLOWLOCATION, 1)
         crl.setopt(pycurl.WRITEDATA,fid)
         crl.perform()
     
     def buildURL(self,filen):
         """Build an url by appending to the root or taking the full input url"""
         url=self.rooturl
+        if not filen:
+            #quick return if downlaod from rooturl is desires
+            return url
         if bool(re.match('^https?://',filen)):
             #use complete URL
             url=filen
