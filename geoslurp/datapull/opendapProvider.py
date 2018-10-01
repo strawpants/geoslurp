@@ -22,44 +22,68 @@ import re
 import os
 
 class OpendapFilter():
-    """Helper class to aid traversing to an opendap xml elements"""
-    def __init__(self,xmltyp="dataset",attr=None,regex=None):
-        """Sets up a filter"""
-        self._filt=None
+    """Helper class to aid traversing to opendap xml elements"""
+    def __init__(self,xmltyp="*",attr=None,regex=None):
+        """Sets up a filter. Note that the default xmltype of '*' accepts all elements"""
         self._type=xmltyp
-        if attr and regex:
-           self.addFilter(attr, re.compile(regex))
+        self._orFilter=None
+        self._andFilter=None
+        self._attr=attr
+        if regex:
+            self._regex=re.compile(regex)
 
-    def isType(self, xmlelem):
-        if xlmelem.tag.endswith(self._type):
+    def isCatalog(self):
+        """Check if the filter type is a catalogRef"""
+        if self._type == 'catalogRef':
             return True
         else:
             return False
 
     def isValid(self,xmlelem):
         """Filter xmlelem on  attributes"""
-        if not xmlelem.tag.endswith(self._type):
-            # Quick return if this filter does not apply to this type
-            return False
 
-        if self._filt:
-            # possibly reject when filter is not applicable
-            valid=False
-            for ky,val in self._filt.items():
-                if ky in xmlelem.attrib:
-                    # import pdb;pdb.set_trace()
-                    "Only test when the attribute is present"
-                    valid=bool(val.match(xmlelem.attrib[ky]))
-                if valid:
-                    # return whe this filter element is valid else try the next filter
-                    return valid
-        return False
+        valid=False
+        # First test: Datatype test
+        if self._type == "*" or xmlelem.tag.endswith(self._type):
+            valid= True
 
-    def addFilter(self,attr,regex):
-        """Appends a filter for a dataset element"""
-        if not self._filt:
-            self._filt={}
-        self._filt[attr]=re.compile(regex)
+        # Second test: attribute test (but test only when datatype matches)
+        if valid and self._attr:
+            # Also do an attribute test
+            if self._attr in xmlelem.attrib:
+                if self._regex:
+                    valid=bool(self._regex.match(xmlelem.attrib[self._attr]))
+                else:
+                    valid=False
+            else:
+                # When the attribute is not found the test is considered as false
+                valid=False
+
+        #possibly apply chained OR and AND filters
+        if self._orFilter and not valid:
+            # perform an additional test
+            return self._orFilter.isValid(xmlelem)
+
+        if self._andFilter and valid:
+            return self._andFilter.isValid(xmlelem)
+
+        #else return the result from the first 2 tests
+        return valid
+
+    def OR(self, xmltyp, attr=None, regex=None):
+        """Provides a method for chaining OR filters"""
+        if self._andFilter:
+            raise ValueError("Cannot apply AND and OR at the same time")
+        self._orFilter=OpendapFilter(xmltyp, attr, regex)
+        return self
+
+    def AND(self, xmltyp, attr=None, regex=None):
+        """Provides a method for chaining OR filters"""
+        if self._orFilter:
+            raise ValueError("Cannot apply AND and OR at the same time")
+        self._andFilter=OpendapFilter(xmltyp, attr, regex)
+        return self
+
 
 
 def gethref(input):
@@ -69,22 +93,14 @@ def gethref(input):
             return val
     return None
 
-def searchElem(xml,filter):
-    """Search for a specific service element"""
-    for elem in xml:
-        if filter.isValid(elem):
-            return elem
-        else:
-            #recursively search
-            return searchElem(elem,filter)
-
 class OpendapConnector:
     """A class to work with an Opendap server"""
-    def __init__(self, filters=None):
-        self._filt=[]
-        if filters:
-           for filt in filters:
-                self._filt.append(filt)
+    def __init__(self, catalogurl, filter=OpendapFilter("dataset",attr="urlPath"), followfilter=OpendapFilter("catalogRef").OR("dataset")):
+        #load the root catalog
+        self._rootxml=self.getCatalog(catalogurl)
+        self._baseurl=os.path.dirname(catalogurl)
+        self._filt=filter
+        self._followFilt=followfilter
 
     @staticmethod
     def getCatalog(url):
@@ -94,7 +110,7 @@ class OpendapConnector:
         http=httpProvider(url)
         http.downloadFile(buf)
         # print(buf.getvalue())
-        return os.path.dirname(url), XMLTree.fromstring(buf.getvalue())
+        return XMLTree.fromstring(buf.getvalue())
 
 
     def getopendapRoot(catalog):
@@ -111,9 +127,9 @@ class OpendapConnector:
             if re.match("HTTPServer",elem.attrib["serviceType"]):
                 return elem.attrib["base"]
 
-    def dataSets(self, xml, baseurl, depth=3):
-        """Generator which loops through all the catalogues possibly applying filters
-        The depth factor determines the maximum depth in the tree datasets wil be searched for"""
+    def items(self,xmlcatalog=None ,depth=10):
+        """Generator which returns xml nodes which obey a certain filter
+        Nodes which obey the followFilter will be recursively searched"""
 
         if depth == 0:
             # signals a stopiteration
@@ -121,27 +137,23 @@ class OpendapConnector:
         else:
             depth-=1
 
-        for xelem in xml:
-            valid=True
-            for filt in self._filt:
-                if not filt.isValid(xelem):
-                    valid=False
-                    break
+        if xmlcatalog is None:
+            xmlcatalog=self._rootxml
+        for xelem in xmlcatalog:
 
-            if filt.isType(xelem):
+            if self._filt.isValid(xelem):
+                # Allright we can return this entry straight away
+                yield xelem
+                # Also continue with the loop after yielding
                 continue
 
-            # import pdb;pdb.set_trace()
-            # if xelem.tag.endswith('dataset'):
-            #     print(depth,xelem.tag,xelem.attrib)
-            if xelem.tag.endswith("dataset") and "urlPath" in xelem.attrib:
-                yield xelem
-            elif xelem.tag.endswith('dataset'):
-                yield from self.dataSets(xelem,baseurl,depth)
-
-            if xelem.tag.endswith("catalogRef"):
-                #Extract a new sub catalog
-                subbaseurl,xmlsub=self.getCatalog(baseurl+"/"+gethref(xelem.attrib))
-                yield from self.dataSets(xmlsub, subbaseurl, depth)
-
+            if self._followFilt.isValid(xelem):
+                # If this is the case we may need a recursive search in either a
+                if xelem.tag.endswith("CatalogRef"):
+                    # We treat CatalogRefs in a special way by retrieving the subcatalog from the OpenDap server
+                    subxml=self.getCatalog(self._baseurl+"/"+gethref(xelem))
+                else:
+                    # Otherwise we're just going to look in the children of the current element
+                    subxml=xelem
+                yield from self.items(subxml, depth)
 
