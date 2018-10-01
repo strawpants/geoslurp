@@ -19,19 +19,15 @@ from geoslurp.schema import Schema
 from geoslurp.dataset import Argo
 
 class OceanObs(Schema):
-    """A scheme to download and manage oceanographic insitu data"""
+    """A scheme to download and manage oceanographic insitu data.
+    Currently the following datasets can be registered:
+    Argo data from the CORLIOLIS Opendap server
+    """
     __datasets__={"Argo":Argo}
     __version__=(0, 0, 0)
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
-        self._catalog='http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901631/profiles/catalog.xml'
 
 
 
 
-#from netCDF4 import Dataset
-
-# catalog='http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901631/profiles/catalog.xml'
-# furl='http://tds0.ifremer.fr/thredds/dodsC/CORIOLIS-ARGO-GDAC-OBS/nmdis/2901632/profiles/R2901632_156.nc'
-# ncid=Dataset(furl)
- 

@@ -20,7 +20,6 @@ from geoslurp.datapull import httpProvider
 from io  import BytesIO
 import re
 import os
-
 class OpendapFilter():
     """Helper class to aid traversing to opendap xml elements"""
     def __init__(self,xmltyp="*",attr=None,regex=None):
@@ -31,6 +30,8 @@ class OpendapFilter():
         self._attr=attr
         if regex:
             self._regex=re.compile(regex)
+        else:
+            self._regex=None
 
     def isCatalog(self):
         """Check if the filter type is a catalogRef"""
@@ -54,7 +55,8 @@ class OpendapFilter():
                 if self._regex:
                     valid=bool(self._regex.match(xmlelem.attrib[self._attr]))
                 else:
-                    valid=False
+                    # return True when no regex search is needed
+                    valid=True
             else:
                 # When the attribute is not found the test is considered as false
                 valid=False
@@ -98,7 +100,11 @@ class OpendapConnector:
     def __init__(self, catalogurl, filter=OpendapFilter("dataset",attr="urlPath"), followfilter=OpendapFilter("catalogRef").OR("dataset")):
         #load the root catalog
         self._rootxml=self.getCatalog(catalogurl)
-        self._baseurl=os.path.dirname(catalogurl)
+        self._catalogurl=catalogurl
+        #extract rootaddress and opendap/http access
+        mtch=re.search("(https?://[^/]+)",catalogurl)
+        self._rooturl=mtch.group(0)
+        self._services=self.getServices(self._rootxml)
         self._filt=filter
         self._followFilt=followfilter
 
@@ -113,21 +119,36 @@ class OpendapConnector:
         return XMLTree.fromstring(buf.getvalue())
 
 
-    def getopendapRoot(catalog):
-        """Retrieves the root opendap url from a catalogue"""
-        import pdb;pdb.set_trace()
-        for xml in catalog:
-            if xml.tag.endswith('service') and re.match("Compound",xml.attrib["serviceType"]):
-                return xml.attrib["base"]
-
     @staticmethod
-    def gethttpRoot(catalog):
-        """Retrieves the root opendap url from a catalogue"""
-        for elem in catalog.findall("service"):
-            if re.match("HTTPServer",elem.attrib["serviceType"]):
-                return elem.attrib["base"]
+    def getServices(catalog,depth=2):
+        """Retrieves the root for serving files over http url from a catalogue"""
+        compoundfilt=OpendapFilter("service",attr="serviceType",regex="Compound")
+        opendapfilt=OpendapFilter("service",attr="serviceType",regex="(OpenDAP)|(OPENDAP)|(DODS)")
+        httpfilt=OpendapFilter("service",attr="serviceType",regex="HTTPServer")
+        services={}
 
-    def items(self,xmlcatalog=None ,depth=10):
+        if depth == 0:
+            return
+        else:
+            depth-=1
+
+        for elem in catalog:
+            if elem.tag.endswith("service"):
+
+                if opendapfilt.isValid(elem):
+                    services["opendap"]=elem.attrib["base"]
+
+                if httpfilt.isValid(elem):
+                    services["http"]=elem.attrib["base"]
+
+                if compoundfilt.isValid(elem):
+                    # allow recursion
+                    services=OpendapConnector.getServices(elem,depth)
+
+        return services
+
+
+    def items(self,xmlcatalog=None,url=None ,depth=10):
         """Generator which returns xml nodes which obey a certain filter
         Nodes which obey the followFilter will be recursively searched"""
 
@@ -139,6 +160,9 @@ class OpendapConnector:
 
         if xmlcatalog is None:
             xmlcatalog=self._rootxml
+        if url is None:
+            url=self._catalogurl
+
         for xelem in xmlcatalog:
 
             if self._filt.isValid(xelem):
@@ -149,11 +173,14 @@ class OpendapConnector:
 
             if self._followFilt.isValid(xelem):
                 # If this is the case we may need a recursive search in either a
-                if xelem.tag.endswith("CatalogRef"):
+                if xelem.tag.endswith("catalogRef"):
                     # We treat CatalogRefs in a special way by retrieving the subcatalog from the OpenDap server
-                    subxml=self.getCatalog(self._baseurl+"/"+gethref(xelem))
+                    suburl=os.path.dirname(url)+"/"+gethref(xelem)
+                    subxml=self.getCatalog(suburl)
                 else:
                     # Otherwise we're just going to look in the children of the current element
+                    suburl=url
                     subxml=xelem
-                yield from self.items(subxml, depth)
+
+                yield from self.items(subxml, suburl, depth)
 

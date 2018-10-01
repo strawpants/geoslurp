@@ -27,7 +27,7 @@ class Argo(DataSet):
     def pull(self):
         """Get a list of netcdf files from the Ifremer opendap Thredds server"""
 
-        conn=OpendapConnector("http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/catalog.xml")
+        conn=OpendapConnector("http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/catalog.xml",followfilter=OpendapFilter("dataset").OR("catalogRef", attr="ID", regex=".*nmdis.*"))
 
         for ds in conn.items():
             print(ds.tag, ds.attrib["urlPath"])

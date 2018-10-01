@@ -28,17 +28,16 @@ from geoslurp.schema import allSchemes, schemeFromName
 
 def main(argv):
     usage=" Program to download and manage Earth Science data"
-    parser = argparse.ArgumentParser(description=usage)
+    parser = argparse.ArgumentParser(description=usage,add_help=False)
 
     conf=SlurpConf(os.path.join(os.path.expanduser('~'), '.geoslurp.yaml'))
 
     # add various arguments to the program
-    addCommandLineArgs(parser)
+    addCommandLineArgs(parser )
 
     args = parser.parse_args(argv[1:])
-    if not any(vars(args).values()):
-        print(__file__+' Error: no arguments provided, try --help', file=sys.stderr)
-        sys.exit(1)
+    check_args(args,parser)
+
 
 
     # Process common options
@@ -111,7 +110,8 @@ class SplitAction(argparse.Action):
 
 def addCommandLineArgs(parser):
         """Add top level command line arguments (and request arguments from the loaded schema)"""
-
+        parser.add_argument('-h','--help',action='store_true',
+                             help="Prints detailed help (my be used in combination with a SCHEME)")
         parser.add_argument('-i','--info',action='store_true',
                             help="Show information about registered schemes and datasets")
 
@@ -129,6 +129,9 @@ def addCommandLineArgs(parser):
 
         parser.add_argument("--register", action="store_true",
                             help="Register data in the database")
+
+        parser.add_argument("--opts", type=str, default="",
+                            help="Pass a string with additional options to pull/register/update. See dataset specific help for details")
 
         parser.add_argument("--update", action="store_true",
                             help="Implies both --pull and --register, but applies only to the updated data")
@@ -151,6 +154,21 @@ def showAvailable():
             sep="|"
         print("]")
 
+def check_args(args,parser):
+    """Sanity check for input arguments and possibly supply detailed help"""
+
+    if not any(vars(args).values()):
+        print(__file__+' Error: no arguments provided, try --help', file=sys.stderr)
+        sys.exit(1)
+
+    if args.help:
+        parser.print_help()
+        if args.input:
+            print("\n\nDetailed --opts string which may be provided to %s:"%(args.input["scheme"]))
+            print("")
+
+
+        sys.exit(0)
 
 
 
