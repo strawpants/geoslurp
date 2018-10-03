@@ -21,7 +21,7 @@ class DataSet(ABC):
     """Abstract Base class which hold a dataset (corresponding to a database table"""
     def __init__(self,scheme):
         self.name=self.__class__.__name__
-        self._scheme=scheme
+        self.scheme=scheme
         #retrieve the Dataset entry (in the form of a dictionary) from the Inventory
         try:
             self._inventData=scheme._dbinvent.data[self.name]
@@ -41,6 +41,7 @@ class DataSet(ABC):
         """Register the downloaded dataset in the database"""
         pass
 
+    @abstractmethod
     def purge(self):
         """Delete data and database entries"""
         pass

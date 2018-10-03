@@ -165,7 +165,6 @@ def check_args(args,parser):
         parser.print_help()
         if args.input:
             print("\n\nDetailed --opts string which may be provided to %s:"%(args.input["scheme"]))
-            print("")
 
 
         sys.exit(0)

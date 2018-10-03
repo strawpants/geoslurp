@@ -47,6 +47,7 @@ def columnsFromFeat(feat, spatindex=True, forceGType=None):
 def valuesFromFeat(feat):
     """Returns a dictionary with loaded values from a feature"""
     df=feat.GetDefnRef()
+
     vals={}
     for i in range(feat.GetFieldCount()):
         fld=df.GetFieldDefn(i)

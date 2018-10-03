@@ -41,7 +41,7 @@ class Schema(ABC):
 
         #store links to the configurator (allows the class to get and set configuration changes)
         self._conf=conf
-        self._db=InventInstance.db
+        self.db=InventInstance.db
         self.Dsets={}
         try:
             # retrieve the stored inventory entry

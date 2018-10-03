@@ -20,7 +20,10 @@ from geoslurp.datapull import httpProvider
 from io  import BytesIO
 import re
 import os
-class OpendapFilter():
+from geoslurp.config import Log
+from collections import namedtuple
+
+class ThreddsFilter():
     """Helper class to aid traversing to opendap xml elements"""
     def __init__(self,xmltyp="*",attr=None,regex=None):
         """Sets up a filter. Note that the default xmltype of '*' accepts all elements"""
@@ -76,14 +79,14 @@ class OpendapFilter():
         """Provides a method for chaining OR filters"""
         if self._andFilter:
             raise ValueError("Cannot apply AND and OR at the same time")
-        self._orFilter=OpendapFilter(xmltyp, attr, regex)
+        self._orFilter=ThreddsFilter(xmltyp, attr, regex)
         return self
 
     def AND(self, xmltyp, attr=None, regex=None):
         """Provides a method for chaining OR filters"""
         if self._orFilter:
             raise ValueError("Cannot apply AND and OR at the same time")
-        self._andFilter=OpendapFilter(xmltyp, attr, regex)
+        self._andFilter=ThreddsFilter(xmltyp, attr, regex)
         return self
 
 
@@ -95,23 +98,29 @@ def gethref(input):
             return val
     return None
 
-class OpendapConnector:
+def getDate(xml):
+    """extracts the date from a dataset element"""
+    for elem in xml:
+        if elem.tag.endswith("date"):
+            return datetime.fromisoformat(elem.text[0:-1])
+
+class ThreddsConnector:
     """A class to work with an Opendap server"""
-    def __init__(self, catalogurl, filter=OpendapFilter("dataset",attr="urlPath"), followfilter=OpendapFilter("catalogRef").OR("dataset")):
+    def __init__(self, catalogurl, filter=ThreddsFilter("dataset", attr="urlPath"), followfilter=ThreddsFilter("catalogRef").OR("dataset")):
         #load the root catalog
         self._rootxml=self.getCatalog(catalogurl)
         self._catalogurl=catalogurl
         #extract rootaddress and opendap/http access
         mtch=re.search("(https?://[^/]+)",catalogurl)
-        self._rooturl=mtch.group(0)
-        self._services=self.getServices(self._rootxml)
+        self.rooturl=mtch.group(0)
+        self.services=self.getServices(self._rootxml)
         self._filt=filter
         self._followFilt=followfilter
 
     @staticmethod
     def getCatalog(url):
         """Retrieve a catalogue"""
-        print("getting Opendap catalog: %s"%(url))
+        print("getting Opendap catalog: %s"%(url),file=Log)
         buf=BytesIO()
         http=httpProvider(url)
         http.downloadFile(buf)
@@ -122,10 +131,10 @@ class OpendapConnector:
     @staticmethod
     def getServices(catalog,depth=2):
         """Retrieves the root for serving files over http url from a catalogue"""
-        compoundfilt=OpendapFilter("service",attr="serviceType",regex="Compound")
-        opendapfilt=OpendapFilter("service",attr="serviceType",regex="(OpenDAP)|(OPENDAP)|(DODS)")
-        httpfilt=OpendapFilter("service",attr="serviceType",regex="HTTPServer")
-        services={}
+        compoundfilt=ThreddsFilter("service", attr="serviceType", regex="Compound")
+        opendapfilt=ThreddsFilter("service", attr="serviceType", regex="(OpenDAP)|(OPENDAP)|(DODS)")
+        httpfilt=ThreddsFilter("service", attr="serviceType", regex="HTTPServer")
+        servtuple=namedtuple("Service","opendap http")
 
         if depth == 0:
             return
@@ -136,16 +145,16 @@ class OpendapConnector:
             if elem.tag.endswith("service"):
 
                 if opendapfilt.isValid(elem):
-                    services["opendap"]=elem.attrib["base"]
+                    opendap=elem.attrib["base"]
 
                 if httpfilt.isValid(elem):
-                    services["http"]=elem.attrib["base"]
+                    http=elem.attrib["base"]
 
                 if compoundfilt.isValid(elem):
                     # allow recursion
-                    services=OpendapConnector.getServices(elem,depth)
+                    return ThreddsConnector.getServices(elem, depth)
 
-        return services
+        return servtuple(opendap=opendap,http=http)
 
 
     def items(self,xmlcatalog=None,url=None ,depth=10):
