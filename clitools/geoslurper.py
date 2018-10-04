@@ -67,7 +67,7 @@ def main(argv):
         scheme.initDataSets(args.input["datasets"])
 
     if args.purge_scheme:
-        scheme.purge
+        scheme.purge()
         # Exit as there are no datasets to work on anymore
         sys.exit(0)
 

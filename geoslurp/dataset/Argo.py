@@ -17,7 +17,8 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull import ThreddsConnector,ThreddsFilter,getDate
-from geoalchemy2 import Geography
+from geoalchemy2.types import Geography
+from geoalchemy2.elements import WKBElement
 from sqlalchemy import Column,Integer,String, Boolean
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 from sqlalchemy import MetaData
@@ -35,7 +36,7 @@ OceanObsTBase=declarative_base(metadata=MetaData(schema='oceanobs'))
 
 # Setup the postgres table
 
-geoPointtype = Geography(geometry_type="POINT", srid='4326', spatial_index=True)
+geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
 
 class ArgoTable(OceanObsTBase):
     """Defines the Argo PostgreSQL table"""
@@ -54,6 +55,10 @@ class ArgoTable(OceanObsTBase):
     geom=Column(geoPointtype)
     data=Column(JSONB)
 
+def ncStr(ncelem):
+    """extracts a utf-8 encoded string from a  netcdf character variable and strips trailing junk"""
+    return b"".join(ncelem).decode('utf-8').strip("\0")
+
 def argoMetaExtractor(uri):
     """Extract meta information as a drictionary from  an argo floats
     Each registered profile gets a separate entry"""
@@ -68,13 +73,17 @@ def argoMetaExtractor(uri):
         geoLoc=ogr.Geometry(ogr.wkbPoint)
         geoLoc.AddPoint(float(ncArgo["LATITUDE"][iprof]), float(ncArgo["LONGITUDE"][iprof]))
         # time point
-        tprof=t0+timedelta(ncArg["JULD"][iprof])
-        tloc=t0+timedelta(ncArg["JULD_LOCATION"][iprof])
-        cycle=ncArgo["CYCLE_NUMBER"][iprof]
-        meta.append({"datacenter":ncArgo["DATA_CENTRE"][iprof],"lastupdate":datetime.now(), "tprofile":tprof,
-                     "tlocation":tloc, "wmoid":int(ncArgo["PLATFORM_NUMBER"][iprof]), "cycle":cycle , "uri":uri,
-                     "mode":ncArgo["DATA_MODE"][iprof], "profnr":iprof, "ascending":ncArgo["DIRECTION"]=="A",
-                     "geom":geoLoc,"data":{}})
+        tprof=t0+timedelta(days=float(ncArgo["JULD"][iprof].data))
+        tloc=t0+timedelta(days=float(ncArgo["JULD_LOCATION"][iprof].data))
+        cycle=int(ncArgo["CYCLE_NUMBER"][iprof].data)
+        datacenter=ncStr(ncArgo["DATA_CENTRE"][iprof])
+        direction=bool(ncArgo["DIRECTION"][iprof].data == b"A")
+        wmoid=int(ncStr(ncArgo["PLATFORM_NUMBER"][iprof]))
+        mode=ncStr(ncArgo["DATA_MODE"][:])[iprof]
+        meta.append({"datacenter":datacenter,"lastupdate":datetime.now(), "tprofile":tprof,
+                     "tlocation":tloc, "wmoid":wmoid, "cycle":cycle , "uri":uri,
+                     "mode":mode, "profnr":iprof, "ascending":direction,
+                     "geom":WKBElement(geoLoc.ExportToWkb(),srid=4326,extended=True),"data":{}})
 
     return meta
 
@@ -88,25 +97,43 @@ class Argo(DataSet):
         # import pdb;pdb.set_trace()
         # OceanObsTBase.metadata.create_all(self.scheme.db.dbeng, tables=[ArgoTable],checkfirst=True)
         OceanObsTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
-
+        self._uris=[]
 
 
     def pull(self):
         """Get a list of netcdf files from the Ifremer opendap Thredds server"""
 
         conn=ThreddsConnector("http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/catalog.xml", followfilter=ThreddsFilter("dataset").OR("catalogRef", attr="ID", regex=".*aoml.*"))
-
+        i=0
         for ds in conn.items():
-            uri=conn.services.opendap+'/'+ds.attrib['urlPath']
+            uri=conn.rooturl+"/"+conn.services.opendap+'/'+ds.attrib['urlPath']
             # check if it needs updating
             lastmod=getDate(ds)
 
-            # for metadict in argoMetaExtractor(conn.services.opendap+"/"+ds.attrib["urlPath"]):
+            # possibly check whether we actually need an update
 
-            # also extract last uodate time
+            self._uris.append(uri)
+            # for metadict in argoMetaExtractor(conn.services.opendap+"/"+ds.attrib["urlPath"]):
+            i+=1
+            if i > 2:
+                break
 
     def register(self):
-        pass
+        """Extracts metadat from the float and registers it in the database"""
+        #create a database session
+        ses=self.scheme.db.Session()
+
+        for uri in self._uris:
+            for metadict in argoMetaExtractor(uri):
+                entry=ArgoTable(**metadict)
+                ses.add(entry)
+
+        ses.commit()
+
+        #also update the inventory
+        # self._inventData
 
     def purge(self):
         pass
+
+

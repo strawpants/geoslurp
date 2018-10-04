@@ -22,6 +22,7 @@ import re
 import os
 from geoslurp.config import Log
 from collections import namedtuple
+from datetime  import datetime
 
 class ThreddsFilter():
     """Helper class to aid traversing to opendap xml elements"""
