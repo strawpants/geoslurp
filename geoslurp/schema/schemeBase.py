@@ -42,6 +42,7 @@ class Schema(ABC):
         #store links to the configurator (allows the class to get and set configuration changes)
         self._conf=conf
         self.db=InventInstance.db
+        self.Inventory=InventInstance
         self.Dsets={}
         try:
             # retrieve the stored inventory entry
@@ -54,6 +55,10 @@ class Schema(ABC):
             # create the schema
             InventInstance.db.CreateSchema(self._schema)
 
+    def updateInvent(self,name,datdict):
+        self._dbinvent.data[name]=datdict
+        self._dbinvent.lastupdate=datetime.now()
+        self.Inventory.update(self._dbinvent)
 
     def purge(self):
         """Delete the scheme, corresponding tables and data"""

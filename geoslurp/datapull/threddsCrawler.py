@@ -135,6 +135,7 @@ class ThreddsConnector:
         compoundfilt=ThreddsFilter("service", attr="serviceType", regex="Compound")
         opendapfilt=ThreddsFilter("service", attr="serviceType", regex="(OpenDAP)|(OPENDAP)|(DODS)")
         httpfilt=ThreddsFilter("service", attr="serviceType", regex="HTTPServer")
+        # possibly add other serices if deemed usefull
         servtuple=namedtuple("Service","opendap http")
 
         if depth == 0:
@@ -186,7 +187,12 @@ class ThreddsConnector:
                 if xelem.tag.endswith("catalogRef"):
                     # We treat CatalogRefs in a special way by retrieving the subcatalog from the OpenDap server
                     suburl=os.path.dirname(url)+"/"+gethref(xelem)
-                    subxml=self.getCatalog(suburl)
+                    try:
+                        subxml=self.getCatalog(suburl)
+                    except:
+                        # Just ignore this catalog entry upon exceptions
+                        print("Ignoring failed CatalogRef %s"%(suburl),file=Log)
+                        continue
                 else:
                     # Otherwise we're just going to look in the children of the current element
                     suburl=url

@@ -28,6 +28,9 @@ class DataSet(ABC):
         except KeyError:
             self._inventData={}
 
+    def updateInvent(self):
+        self.scheme.updateInvent(self.name,self._inventData)
+
     def info(self):
         return self._inventData
 
