@@ -25,6 +25,7 @@ from geoslurp.db import Inventory
 from geoslurp.config import SlurpConf
 from geoslurp.db import GeoslurpConnector
 from geoslurp.schema import allSchemes, schemeFromName
+import json
 
 def main(argv):
     usage=" Program to download and manage Earth Science data"
@@ -33,11 +34,10 @@ def main(argv):
     conf=SlurpConf(os.path.join(os.path.expanduser('~'), '.geoslurp.yaml'))
 
     # add various arguments to the program
-    addCommandLineArgs(parser )
+    addCommandLineArgs(parser)
 
     args = parser.parse_args(argv[1:])
     check_args(args,parser)
-
 
 
     # Process common options
@@ -56,6 +56,12 @@ def main(argv):
         for row in slurpInvent:
             print("schema:", row.datasource, ", last updated:", row.lastupdate)
         sys.exit(0)
+
+    if args.opts:
+        #convert json string in dictionary
+        opts=json.loads(args.opts)
+    else:
+        opts={}
 
     if not args.input:
         # Nothing to do anymore so exit
@@ -131,10 +137,11 @@ def addCommandLineArgs(parser):
                             help="Register data in the database")
 
         parser.add_argument("--opts", type=str, default="",
-                            help="Pass a string with additional options to pull/register/update. See dataset specific help for details")
+                            help="Pass a JSONstring with additional options to pull/register/update. See dataset specific help for details")
 
         parser.add_argument("--update", action="store_true",
                             help="Implies both --pull and --register, but applies only to the updated data")
+
         # parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
         parser.add_argument('--cleancache',action='store_true',
                             help="Clean up the cache directory associated with a dataset")
@@ -164,9 +171,11 @@ def check_args(args,parser):
     if args.help:
         parser.print_help()
         if args.input:
-            print("\n\nDetailed --opts string which may be provided to %s:"%(args.input["scheme"]))
-
-
+            print("\n\nDetailed --opts JSONdictstring which may be provided as arguments to the following options")
+            # print("\n\n %s"%(schemeFromName(args.input["scheme"]).__datasets__[args.input["dataset"]].__doc__))
+            for dSets in args.input["datasets"]:
+                print("\t%s.pull:\n\t\t %s"%(dSets,schemeFromName(args.input["scheme"]).__datasets__[dSets].pull.__doc__))
+                print("\t%s.register:\n\t\t %s"%(dSets,schemeFromName(args.input["scheme"]).__datasets__[dSets].register.__doc__))
         sys.exit(0)
 
 
