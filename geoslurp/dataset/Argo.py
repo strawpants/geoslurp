@@ -33,6 +33,10 @@ from geoslurp.config import Log
 
 from sqlalchemy.ext.declarative import declarative_base
 
+#create a custom exception which describes netcdf datasets with dimensions of zero length
+class ZeroDimException(Exception):
+    pass
+
 # A declarative base which can be used to create database tables
 
 OceanObsTBase=declarative_base(metadata=MetaData(schema='oceanobs'))
@@ -70,6 +74,12 @@ def argoMetaExtractor(uri):
     try:
         print("extracting meta info from: %s"%(uri),file=Log)
         ncArgo=ncDset(uri)
+        
+        #test whether the dataset has zero dimensions (fails for opendap)
+        for ky,val in ncArgo.dimensions.items():
+            if val.size == 0:
+                raise ZeroDimException('Netcdf dimension '+ky+' is zero for '+uri)
+
         # Get reference time
         t0=datetime.strptime(b"".join(ncArgo["REFERENCE_DATE_TIME"][:]).decode("utf-8"),"%Y%m%d%H%M%S")
         for iprof in range(ncArgo.dimensions["N_PROF"].size):
@@ -88,8 +98,10 @@ def argoMetaExtractor(uri):
                          "tlocation":tloc, "wmoid":wmoid, "cycle":cycle , "uri":uri,
                          "mode":mode, "profnr":iprof, "ascending":direction,
                          "geom":WKBElement(geoLoc.ExportToWkb(),srid=4326,extended=True),"data":{}})
+    except ZeroDimException as e:
+        raise RuntimeWarning(str(e)+", skipping")
     except Exception as e:
-        raise RuntimeWarning("Cannot extract meta information from "+ uri)
+        raise RuntimeWarning("Cannot extract meta information from "+ uri+ str(e))
 
     return meta
 

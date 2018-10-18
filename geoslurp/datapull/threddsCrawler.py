@@ -23,6 +23,7 @@ import os
 from geoslurp.config import Log
 from collections import namedtuple
 from datetime  import datetime
+from dateutil.parser import parse as isoParser
 
 class ThreddsFilter():
     """Helper class to aid traversing to opendap xml elements"""
@@ -103,7 +104,7 @@ def getDate(xml):
     """extracts the date from a dataset element"""
     for elem in xml:
         if elem.tag.endswith("date"):
-            return datetime.fromisoformat(elem.text[0:-1])
+            return isoParser(elem.text)
 
 class ThreddsConnector:
     """A class to work with an Opendap server"""
