@@ -56,7 +56,7 @@ class ArgoTable(OceanObsTBase):
     wmoid=Column(Integer)
     cycle=Column(Integer)
     uri=Column(String, index=True)
-    mode=Column(String)
+    mode=Column(String,index=True)
     profnr=Column(Integer)
     ascending=Column(Boolean)
     geom=Column(geoPointtype)
@@ -123,9 +123,13 @@ class Argo(DataSet):
         """Stub because the actual pulling takes place in a separate thread in the register function"""
         pass
 
-    def register(self):
-        """Extracts metadat from the float and registers it in the database"""
-        t=Thread(target=self.pullWorker)
+    def register(self,center=None,mirror=0):
+        """Extracts metadata from the float and registers it in the database
+            :param center: specifies the processing center to screen (default takes all available)
+                currently avalaible are: aoml, bodc, coriolis, csio, csiro, incois, jma, kma, kordi, meds, nmdis
+            :param mirror: use mirror 0: https://tds0.ifremer.fr (default) or mirror 1: https://data.nodc.noaa.gov
+        """
+        t=Thread(target=self.pullWorker,kwargs={"center":center,"mirror":mirror})
         t.start()
 
         #create a database session
@@ -181,13 +185,17 @@ class Argo(DataSet):
         print("Stopping update",file=Log)
         self._killUpdate=True
 
-    def pullWorker(self):
+    def pullWorker(self,center,mirror=0):
         """ Pulls valid opendap URI's from a thredds server and queue them"""
 
         filt=ThreddsFilter("dataset",attr="urlPath",regex=".*profiles.*")
-        mirrors=["http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/catalog.xml", "https://data.nodc.noaa.gov/thredds/catalog/argo/gdac/catalog.xml"]
+        mirrors=["http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS", "https://data.nodc.noaa.gov/thredds/catalog/argo/gdac/"]
+        rootcatalog=mirrors[mirror]
+        if center != None:
+            rootcatalog+="/"+center
+        rootcatalog+='/catalog.xml'
         try:
-            conn=ThreddsConnector(mirrors[0],filter=filt)
+            conn=ThreddsConnector(rootcatalog,filter=filt)
             for ds in conn.items():
                 if self._killUpdate:
                     break

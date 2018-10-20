@@ -51,26 +51,20 @@ def main(argv):
     # Initializes an object which holds the current inventory
     slurpInvent=Inventory(DbConn)
 
-    if not args.input and args.info:
+    if not args.dset and args.info:
         #list the inventory of all the registered schemas but don't list info on the datasets
         for row in slurpInvent:
             print("schema:", row.datasource, ", last updated:", row.lastupdate)
         sys.exit(0)
 
-    if args.opts:
-        #convert json string in dictionary
-        opts=json.loads(args.opts)
-    else:
-        opts={}
-
-    if not args.input:
+    if not args.dset:
         # Nothing to do anymore so exit
         sys.exit(0)
     else:
         # Initialize scheme
-        scheme=schemeFromName(args.input["scheme"])(slurpInvent, conf)
+        scheme=schemeFromName(args.dset["scheme"])(slurpInvent, conf)
         # And the requested Datasets
-        scheme.initDataSets(args.input["datasets"])
+        scheme.initDataSets(args.dset["datasets"])
 
     if args.purge_scheme:
         scheme.purge()
@@ -81,7 +75,7 @@ def main(argv):
     if args.info:
     #info on selected data sources
         for ds in scheme:
-            print("Scheme and dataset: %s.%s"%(args.input["scheme"],ds.name))
+            print("Scheme and dataset: %s.%s"%(args.dset["scheme"],ds.name))
             dsentry=ds.info()
             for ky,val in dsentry:
                 print("\t\t%s = "%(ky),end="")
@@ -93,7 +87,7 @@ def main(argv):
 
     if args.pull or args.update:
         for ds in scheme:
-            ds.pull()
+            ds.pull(**args.pull)
 
 
     if args.register or args.update:
@@ -114,10 +108,20 @@ class SplitAction(argparse.Action):
                 val["datasets"]=[tmpl[1]]
             setattr(namespace, self.dest, val)
 
+class JsonParseAction(argparse.Action):
+    """Parse Arguments provided as JSON into dictionaries"""
+    def __init__(self, option_strings, dest, nargs, **kwargs):
+        super(JsonParseAction, self).__init__(option_strings, dest,nargs, **kwargs)
+    def __call__(self, parser=None, namespace=None, values=None, option_string=None):
+        dct={}
+        if values :
+            dct=json.loads(values)
+        setattr(namespace, self.dest, dct)
+
 def addCommandLineArgs(parser):
         """Add top level command line arguments (and request arguments from the loaded schema)"""
         parser.add_argument('-h','--help',action='store_true',
-                             help="Prints detailed help (my be used in combination with a SCHEME)")
+                             help="Prints detailed help (may be used in combination with --dset for detailed JSON options)")
         parser.add_argument('-i','--info',action='store_true',
                             help="Show information about registered schemes and datasets")
 
@@ -130,24 +134,22 @@ def addCommandLineArgs(parser):
         parser.add_argument('--purge-scheme',action='store_true',
                             help="Purge selected scheme (This deletes all related datasets as well!")
 
-        parser.add_argument("--pull", action="store_true",
-                            help="Pull data from online resource")
+        parser.add_argument("--pull", metavar="JSON",action=JsonParseAction, nargs="?",const={},default={},
+                            help="Pull data from online resource (possibly pass on options as a JSON dict")
 
-        parser.add_argument("--register", action="store_true",
-                            help="Register data in the database")
+        parser.add_argument("--register", metavar="JSON",action=JsonParseAction, nargs="?",const={}, default={},
+                            help="Register data in the database (possibly pass on options as a JSON dict)")
 
-        parser.add_argument("--opts", type=str, default="",
-                            help="Pass a JSONstring with additional options to pull/register/update. See dataset specific help for details")
-
-        parser.add_argument("--update", action="store_true",
-                            help="Implies both --pull and --register, but applies only to the updated data")
+        parser.add_argument("--update", metavar="JSON", action=JsonParseAction, nargs="?",const={},default={},
+                            help="Implies both --pull and --register, but applies only to the updated data (accepts JSON options)")
 
         # parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
         parser.add_argument('--cleancache',action='store_true',
                             help="Clean up the cache directory associated with a dataset")
+
         #also add datasource options
-        parser.add_argument(metavar="SCHEME[.DATASET]",nargs="?",dest='input',action=SplitAction,
-                            help='Scheme and dataset to select. Not specifying a dataset implies all available')
+        parser.add_argument("-d","--dset",metavar="SCHEME[.DATASET]",nargs="?",action=SplitAction,
+                            help='Scheme and dataset to select.')
 
 
 def showAvailable():
@@ -169,13 +171,15 @@ def check_args(args,parser):
         sys.exit(1)
 
     if args.help:
-        parser.print_help()
-        if args.input:
-            print("\n\nDetailed --opts JSONdictstring which may be provided as arguments to the following options")
+        if not args.dset:
+            parser.print_help()
+        else:
+            print("Detailed info on options which may be provided as JSON dictionaries")
             # print("\n\n %s"%(schemeFromName(args.input["scheme"]).__datasets__[args.input["dataset"]].__doc__))
-            for dSets in args.input["datasets"]:
-                print("\t%s.pull:\n\t\t %s"%(dSets,schemeFromName(args.input["scheme"]).__datasets__[dSets].pull.__doc__))
-                print("\t%s.register:\n\t\t %s"%(dSets,schemeFromName(args.input["scheme"]).__datasets__[dSets].register.__doc__))
+            for dSets in args.dset["datasets"]:
+                print("\t%s.pull:\n\t\t %s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].pull.__doc__))
+                print("\t%s.register:\n\t%s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].register.__doc__))
+
         sys.exit(0)
 
 
