@@ -17,19 +17,19 @@
 
 #some functions to work with files with Comma Separated Values (CSV)
 
+from sqlalchemy import Table,Column, Integer
+from geoslurp.db import tableMapFactory
+from geoslurp.config import Log
 
-def columnsFromCSV(fid, lookup, skip=0):
+def columnsFromCSV(line, lookup):
     """reads column descriptors from comma separated values and creates a list of sqlalchemy columns"""
-    csvMap = {'String': String, 'Integer': Integer, 'Float': Float}
-    for i in range(skip):
-        next(fid)
     names = []
     cols = [Column('id', Integer, primary_key=True)]
-    ln = fid.readline().split(',')
+    ln = line.split(',')
     for key in ln:
         ky = key.strip()
         names.append(ky.lower())
-        cols.append(Column(ky.lower(), csvMap[lookup[ky]]))
+        cols.append(Column(ky.lower(), lookup[ky]))
     return names, cols
 
 
@@ -39,28 +39,34 @@ def valuesFromCSV(line,names):
         val=x.strip()
         if not bool(val):
             continue
-        vals[ky]=val
+        vals[ky] = val
     return vals
 
-def fillCSVTable(self,fid,tablename,lookup,schema):
+def fillCSVTable(filename,tablename,lookup,scheme,hskip=0):
     """Update/populate a database table  from a CSV file)
     This function reads all rows from an open CSV file. The first line is expected to hold the COlumn names, which are mapped to types in the lookup string dictionary
     """
-    table=None
-    ses=self.Session()
-    # currently we can only cope with updating the entire table as a whole
-    self.dropTable(tablename,schema)
-    # if self.dbeng.has_table(tablename,schema=schema):
-    print("Filling CSV table %s:%s "%(schema,tablename),file=Log)
-    names,cols=columnsFromCSV(fid,lookup)
-    table=Table(tablename,self.mdata,*cols,schema=schema)
-    table.create(checkfirst=True)
 
-    tableMap=tableMapFactory(tablename,table)
-    for ln in fid:
-        values=valuesFromCSV(ln,names)
-        ses.add(tableMap(**values))
+
+    ses=scheme.db.Session()
+    # currently we can only cope with updating the entire table as a whole
+    scheme.dropTable(tablename)
+
+    # if self.dbeng.has_table(tablename,schema=schema):
+    print("Filling CSV table %s:%s "%(scheme._schema,tablename),file=Log)
+    with open(filename,'r') as fid:
+        for i in range(hskip):
+            next(fid)
+        names,cols=columnsFromCSV(fid.readline(),lookup)
+        table=Table(tablename,scheme.db.mdata, *cols, schema=scheme._schema)
+        table.create(checkfirst=True)
+        tableMap=tableMapFactory(tablename, table)
+
+        for ln in fid:
+            values=valuesFromCSV(ln,names)
+            ses.add(tableMap(**values))
+
     ses.commit()
     # self.vacuumAnalyze(tablename,schema)
-    ses.commit()
+    # ses.commit()
     ses.close()

@@ -14,20 +14,20 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
-#  Schema for downloading the Randalph Glacier inventory
+#  Schema for downloading glacier related stuff (the Randalph Glacier inventory, WGMS)
 
 
 import os
 from geoslurp.schema import Schema
 from geoslurp.config import getCreateDir
 from geoslurp.dataset import getRGIdict
-class RGI(Schema):
+class Glaciers(Schema):
     """A scheme which contains the datasets from the Global Self-consistent, Hierarchical, High-resolution Geography Database"""
     __datasets__=getRGIdict()
     __version__=(0, 0, 0)
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
-        self.cache=getCreateDir(os.path.join(conf["CacheDir"],"RGI"))
+        self.cache=getCreateDir(os.path.join(conf["CacheDir"],"Glaciers"))
 
 
 
