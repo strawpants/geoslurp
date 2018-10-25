@@ -15,7 +15,6 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 import pycurl,re
-from io import BytesIO
 import os
 class httpProvider():
     """Class which encapsulates the retrieval of data from http(s)"""
@@ -36,14 +35,18 @@ class httpProvider():
         return crl.getinfo(pycurl.INFO_FILETIME)
     
     def downloadFile(self,fid,filen=None):
-        """Retrieves a file from the root url appended with """
+        """Retrieves a file from the root url appended with a filename """
         crl=pycurl.Curl()
         
         crl.setopt(pycurl.URL,self.buildURL(filen))
         crl.setopt(pycurl.FOLLOWLOCATION, 1)
         crl.setopt(pycurl.WRITEDATA,fid)
         crl.perform()
-    
+
+    def downloadFileByName(self,fileout:str,filen=None):
+        with open(fileout,'wb') as fid:
+            self.downloadFile(fid,filen=filen)
+
     def buildURL(self,filen):
         """Build an url by appending to the root or taking the full input url"""
         url=self.rooturl

@@ -37,7 +37,7 @@ class Schema(ABC):
     __datasets__= {}
     def __init__(self, InventInstance, conf):
         """Loads the inventory entry (if available and couples the schema to a database connection and configuration"""
-        self._schema=self.__class__.__name__
+        self._schema=self.__class__.__name__.lower()
 
         #store links to the configurator (allows the class to get and set configuration changes)
         self._conf=conf
@@ -55,7 +55,7 @@ class Schema(ABC):
             # create the schema
             InventInstance.db.CreateSchema(self._schema)
 
-    def updateInvent(self,name,datdict):
+    def updateInvent(self,name, datdict):
         self._dbinvent.data[name]=datdict
         self._dbinvent.lastupdate=datetime.now()
         self.Inventory.update(self._dbinvent)
@@ -94,6 +94,10 @@ class Schema(ABC):
         for name in selectDsets:
             self.Dsets[name]=self.__datasets__[name](self)
 
+    def dropTable(self, tableName):
+        """Convenience function to drop a table contained within this schema
+         :param tableName (str) : name of the table to be dropped"""
+        self.db.dropTable(tableName,self._schema)
 
 def schemeFromName(name):
     return allSchemes()[name]

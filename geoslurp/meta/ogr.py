@@ -20,7 +20,12 @@
 
 from geoalchemy2.elements import WKBElement
 from osgeo import ogr
-from geoalchemy2 import Geometry
+from geoalchemy2 import Geometry,Geography
+from geoslurp.config import Log
+from geoslurp.db import tableMapFactory
+from sqlalchemy import Table,Column, Integer, String, Float
+from geoalchemy2.elements import WKBElement
+import re
 
 def columnsFromFeat(feat, spatindex=True, forceGType=None):
     """Returns a list of columns from a osgeo feature"""
@@ -40,7 +45,8 @@ def columnsFromFeat(feat, spatindex=True, forceGType=None):
         gType = forceGType
     else:
         gType = feat.geometry().GetGeometryName()
-    geomtype = Geometry(gType, srid='4326', spatial_index=spatindex)
+    geomtype = Geography(gType, srid='4326', spatial_index=spatindex)
+    # geomtype = Geometry(gType, srid='4326', spatial_index=spatindex)
     cols.append(Column('geom', geomtype))
     return cols
 
@@ -64,17 +70,23 @@ def valuesFromFeat(feat):
     vals['geom']=WKBElement(feat.geometry().ExportToWkb(),srid=4326)
     return vals
 
-def fillGeoTable(self,folder,tablename,schema,regex=None,forceGType=None):
+def fillGeoTable(folder, tablename, scheme, regex=None, forceGType=None):
     """Update/populate a database table (creates one if it doesn't exist)
     This function reads all layers in the shapefile directory whose name obeys
     the regex and puts them in a single table.
+    :param folder: Folder containing shapefiles
+    :param tablename: name of the resulting table
+    :param scheme: An instance of a derived class fom schemeBase
+    :param regex (string,optional): a layer regex to allow selecting a subseet of layers (defauult takes all layers)
+    :param forceGType (optional): a geometry type to be used as the "geom" column
+    :returns nothing
     """
     table=None
-    ses=self.Session()
+    ses=scheme.db.Session()
     # currently we can only cope with updating the entire table as a whole
-    self.dropTable(tablename,schema)
+    scheme.dropTable(tablename)
     # if self.dbeng.has_table(tablename,schema=schema):
-    print("Filling POSTGIS table %s:%s with data from"%(schema,tablename),folder,file=Log)
+    print("Filling POSTGIS table %s.%s with data from" % (scheme._schema, tablename), folder, file=Log)
     #open shapefile directory
     shpf=ogr.Open(folder)
     for il in range(shpf.GetLayerCount()):
@@ -85,10 +97,10 @@ def fillGeoTable(self,folder,tablename,schema,regex=None,forceGType=None):
         for ift in range(shpf[il].GetFeatureCount()):
             #we need to make a emporary clone here as osgeo will cause a segfault otherwise
             feat=shpf[il][ift].Clone()
-            #print(feat.geometry().GetGeometryName(),file=Log)
+
             if table == None:
                 cols=columnsFromFeat(feat,forceGType=forceGType)
-                table=Table(tablename,self.mdata,*cols,schema=schema)
+                table=Table(tablename, scheme.db.mdata, *cols, schema=scheme._schema)
                 table.create(checkfirst=True)
                 tableMap=tableMapFactory(tablename,table)
             values=valuesFromFeat(feat)
@@ -96,8 +108,6 @@ def fillGeoTable(self,folder,tablename,schema,regex=None,forceGType=None):
                 ses.add(tableMap(**values))
             except:
                 pass
-    ses.commit()
-    # self.vacuumAnalyze(tablename,schema)
     ses.commit()
     ses.close()
 

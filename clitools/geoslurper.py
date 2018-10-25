@@ -46,10 +46,13 @@ def main(argv):
         showAvailable()
 
     # We need a point of contact to communicate with the database
-    DbConn=GeoslurpConnector(conf['dburl'])
-
-    # Initializes an object which holds the current inventory
-    slurpInvent=Inventory(DbConn)
+    try:
+        DbConn=GeoslurpConnector(conf['dburl'])
+        # Initializes an object which holds the current inventory
+        slurpInvent=Inventory(DbConn)
+    except Exception as e:
+        print("Cannot connect to postgresql database, quitting")
+        sys.exit(1)
 
     if not args.dset and args.info:
         #list the inventory of all the registered schemas but don't list info on the datasets
@@ -75,9 +78,9 @@ def main(argv):
     if args.info:
     #info on selected data sources
         for ds in scheme:
-            print("Scheme and dataset: %s.%s"%(args.dset["scheme"],ds.name))
+            print("Scheme and dataset: %s.%s"%(scheme._schema,ds.name))
             dsentry=ds.info()
-            for ky,val in dsentry:
+            for ky,val in dsentry.items():
                 print("\t\t%s = "%(ky),end="")
                 print(val)
 
@@ -86,8 +89,15 @@ def main(argv):
             ds.purge()
 
     if args.pull or args.update:
+        if type(args.pull) == dict:
+            opts=args.pull
+        elif type(args.update) == dict:
+            opts=args.update
+        else:
+            opts={}
+
         for ds in scheme:
-            ds.pull(**args.pull)
+            ds.pull(**opts)
 
 
     if args.register or args.update:
@@ -113,9 +123,10 @@ class JsonParseAction(argparse.Action):
     def __init__(self, option_strings, dest, nargs, **kwargs):
         super(JsonParseAction, self).__init__(option_strings, dest,nargs, **kwargs)
     def __call__(self, parser=None, namespace=None, values=None, option_string=None):
-        dct={}
-        if values :
+        if values:
             dct=json.loads(values)
+        else:
+            dct=True
         setattr(namespace, self.dest, dct)
 
 def addCommandLineArgs(parser):
@@ -134,18 +145,18 @@ def addCommandLineArgs(parser):
         parser.add_argument('--purge-scheme',action='store_true',
                             help="Purge selected scheme (This deletes all related datasets as well!")
 
-        parser.add_argument("--pull", metavar="JSON",action=JsonParseAction, nargs="?",const={},default={},
+        parser.add_argument("--pull", metavar="JSON",action=JsonParseAction, nargs="?",const=False,default=False,
                             help="Pull data from online resource (possibly pass on options as a JSON dict")
 
-        parser.add_argument("--register", metavar="JSON",action=JsonParseAction, nargs="?",const={}, default={},
+        parser.add_argument("--register", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register data in the database (possibly pass on options as a JSON dict)")
 
-        parser.add_argument("--update", metavar="JSON", action=JsonParseAction, nargs="?",const={},default={},
+        parser.add_argument("--update", metavar="JSON", action=JsonParseAction, nargs="?",const=False,default=False,
                             help="Implies both --pull and --register, but applies only to the updated data (accepts JSON options)")
 
         # parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
-        parser.add_argument('--cleancache',action='store_true',
-                            help="Clean up the cache directory associated with a dataset")
+        # parser.add_argument('--cleancache',action='store_true',
+        #                     help="Clean up the cache directory associated with a scheme/dataset")
 
         #also add datasource options
         parser.add_argument("-d","--dset",metavar="SCHEME[.DATASET]",nargs="?",action=SplitAction,

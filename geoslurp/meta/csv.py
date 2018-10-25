@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-#some datapull to work with files with Comma Separated Values (CSV)
+#some functions to work with files with Comma Separated Values (CSV)
 
 
 def columnsFromCSV(fid, lookup, skip=0):
