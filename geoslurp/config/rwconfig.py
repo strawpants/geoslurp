@@ -18,6 +18,7 @@
 import os.path
 import yaml
 import sys
+from collections import namedtuple
 
 def getCreateDir(returndir):
     """creates a directory when not existent and return it"""
@@ -27,6 +28,7 @@ def getCreateDir(returndir):
 
 Log=sys.stdout
 
+Credentials=namedtuple("Credentials","user passw")
 
 class SlurpConf:
     """ Class which reads and writes configure data in yaml format and contains a database connector"""
@@ -57,6 +59,12 @@ class SlurpConf:
                 return yaml.safe_load(fid)
         else:
             raise Exception('cannot find geoslurp configuration file')
+
+    def authCred(self,service):
+        """obtains username credentials for a certain service
+        :param service: name of the service
+        :returns a namedtuple with credentials"""
+        return Credentials(**self._confDict["Auth"][service])
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
     def __getitem__(self, key):
@@ -111,7 +119,31 @@ class SlurpConf:
     # def getCacheDir(self,subdir):
         # """Retrieves the cache directory by appending a subdir and creates it when not existent"""
         # return getCreateDir(os.path.join(self.confobj['CacheDir'],subdir))
-    
+    def dataDir(self,scheme,dataset=None):
+        """Returns the datadirectory of a given scheme and optionally dataset
+        A directory will be created if it doesn't exist"""
+
+        #begin with setting the default
+        dirpath=getCreateDir(os.path.join(self._confDict["DataDir"],scheme))
+
+        #let's see if there is a specialized 'DataDir' entry for the dataset
+        if dataset:
+            try:
+                dsetpath=getCreateDir(self._confDict[scheme][dataset]["DataDir"])
+                #upon success let's add a symbolic link in the scheme datadir
+                try:
+                    os.symlink(dsetpath,os.path.join(dirpath,dataset))
+                except:
+                    #ok when it already exists
+                    pass
+                dirpath=dsetpath
+            except KeyError:
+                # no problem just stick with the default
+                dirpath=getCreateDir(os.path.join(dirpath,dataset))
+
+        return dirpath
+
+
     def setLogger(self):
         """set where to output log info"""
         try:

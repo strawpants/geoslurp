@@ -19,15 +19,14 @@
 
 import os
 from geoslurp.schema import Schema
-from geoslurp.config import getCreateDir
+from geoslurp.dataset import GRACEdict
 
 class Gravity(Schema):
-    """A scheme which contains the datasets from the Global Self-consistent, Hierarchical, High-resolution Geography Database"""
-    __datasets__=None
+    """A scheme which contains datasets related to gravity fields"""
+    __datasets__=GRACEdict()
     __version__=(0, 0, 0)
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
-        # self.cache=getCreateDir(os.path.join(conf["CacheDir"],"Glaciers"))
 
 
 

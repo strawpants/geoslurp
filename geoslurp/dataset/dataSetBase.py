@@ -34,6 +34,9 @@ class DataSet(ABC):
     def info(self):
         return self._inventData
 
+    def dataDir(self):
+        return self.scheme.conf.dataDir(scheme=self.scheme.__class__.__name__, dataset=self.__class__.__name__)
+
     @abstractmethod
     def pull(self):
         """Pulls the necessary data from the online resource"""

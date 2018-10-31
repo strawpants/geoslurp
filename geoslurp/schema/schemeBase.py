@@ -40,7 +40,7 @@ class Schema(ABC):
         self._schema=self.__class__.__name__.lower()
 
         #store links to the configurator (allows the class to get and set configuration changes)
-        self._conf=conf
+        self.conf=conf
         self.db=InventInstance.db
         self.Inventory=InventInstance
         self.Dsets={}
