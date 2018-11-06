@@ -29,11 +29,9 @@ class Schema(ABC):
     * Tables (datasets) in the schema
     * The schema's entry in the geoslurp inventory table
     * Postgresql functions
-
     To create a new schema inherit from this class and implement the abstractmethods
     """
 
-    __version__ = (0, 0, 0)
     __datasets__= {}
     def __init__(self, InventInstance, conf):
         """Loads the inventory entry (if available and couples the schema to a database connection and configuration"""
@@ -49,33 +47,36 @@ class Schema(ABC):
             # retrieve the stored inventory entry
             # self._dbinvent = InventInstance[self._schema]
             self._dbinvent=self._ses.query(InventInstance.__table__)\
-                .filter(InventInstance.__table__.datasource == self._schema).one()
+                .filter(InventInstance.__table__.scheme == self._schema).one()
             self.hasInventEntry=True
         except NoResultFound:
             # #set defaults for the  inventory
-            self._dbinvent = InventInstance.__table__(datasource=self._schema, pluginversion=self.__class__.__version__,
-                                   lastupdate=datetime.min, data={})
+            self._dbinvent = InventInstance.__table__(scheme=self._schema, datasets={}, pgfuncs={})
 
             # create the schema
             self.db.CreateSchema(self._schema)
             self.hasInventEntry=False
 
-    def updateInvent(self,name, datdict):
-        self._dbinvent.data[name]=datdict
-        self._dbinvent.lastupdate=datetime.now()
+    def updateInvent(self,name, datdict=None, funcdict=None):
+        """Update the entries in the inventory table by means of """
+        if datdict:
+            self._dbinvent.datasets[name]=datdict
+
+        if funcdict:
+            self._dbinvent.pgfuncs=funcdict
+
         if not self.hasInventEntry:
             self._ses.add(self._dbinvent)
             self.hasInventEntry=True
 
         self._ses.commit()
-        # self.Inventory.update(self._dbinvent)
 
 
     def purge(self):
         """Delete the scheme, corresponding tables and data"""
 
         try:
-            ddir = self.conf.dataDir(self._schema)
+            ddir = self.conf.getDir(self._schema,dirEntry='DataDir')
             if os.path.isdir(ddir):
                 shutil.rmtree(ddir)
         except KeyError:
@@ -88,7 +89,9 @@ class Schema(ABC):
             pass
 
         #finally remove the entry from the inventory
-        self.Inventory.delete(self._dbinvent)
+        if self.hasInventEntry:
+            self._ses.delete(self._dbinvent)
+            self._ses.commit()
 
     def __getitem__(self,dSetName):
         """Returns a Dataset instance by name"""

@@ -97,39 +97,40 @@ class SlurpConf:
                 # self.confobj[datasource]['DataDir']=
             # return getCreateDir(self.confobj[datasource]['DataDir'])
     
-    def getDataSource(self,datasource):
-        """initializes datasource structure from file or to default"""
-        if not datasource in self._confDict:
-           self._confDict[datasource]={}
-        
-        if not 'DataDir' in self._confDict[datasource]:
-            #create default data directory
-            self._confDict[datasource]['DataDir']=getCreateDir(os.path.join(self._confDict['DataDir'], datasource))
-        else:
-            getCreateDir(self._confDict[datasource]['DataDir'])
-        
-        if not 'CacheDir' in self._confDict[datasource]:
-            #create default data directory
-            self._confDict[datasource]['CacheDir']=getCreateDir(os.path.join(self._confDict['CacheDir'], datasource))
-        else:
-            getCreateDir(self._confDict[datasource]['CacheDir'])
-        
-        return self._confDict[datasource]
+    # def getDataSource(self,datasource):
+    #     """initializes datasource structure from file or to default"""
+    #     if not datasource in self._confDict:
+    #        self._confDict[datasource]={}
+    #
+    #     if not 'DataDir' in self._confDict[datasource]:
+    #         #create default data directory
+    #         self._confDict[datasource]['DataDir']=getCreateDir(os.path.join(self._confDict['DataDir'], datasource))
+    #     else:
+    #         getCreateDir(self._confDict[datasource]['DataDir'])
+    #
+    #     if not 'CacheDir' in self._confDict[datasource]:
+    #         #create default data directory
+    #         self._confDict[datasource]['CacheDir']=getCreateDir(os.path.join(self._confDict['CacheDir'], datasource))
+    #     else:
+    #         getCreateDir(self._confDict[datasource]['CacheDir'])
+    #
+    #     return self._confDict[datasource]
 
-    # def getCacheDir(self,subdir):
-        # """Retrieves the cache directory by appending a subdir and creates it when not existent"""
-        # return getCreateDir(os.path.join(self.confobj['CacheDir'],subdir))
-    def dataDir(self,scheme,dataset=None):
-        """Returns the datadirectory of a given scheme and optionally dataset
-        A directory will be created if it doesn't exist"""
 
+    def getDir(self,scheme, dirEntry, dataset=None):
+        """
+        :param scheme str: name of the database scheme
+        :param dataset str: name of the dataset
+        :param dirEntry: type of the directory to look for (CacheDir, or DataDir)
+        :return: the directory (possibly created when it doesn't exist)
+        """
         #begin with setting the default
-        dirpath=getCreateDir(os.path.join(self._confDict["DataDir"],scheme))
+        dirpath=getCreateDir(os.path.join(self._confDict[dirEntry],scheme))
 
         #let's see if there is a specialized 'DataDir' entry for the dataset
         if dataset:
             try:
-                dsetpath=getCreateDir(self._confDict[scheme][dataset]["DataDir"])
+                dsetpath=getCreateDir(self._confDict[scheme][dataset][dirEntry])
                 #upon success let's add a symbolic link in the scheme datadir
                 try:
                     os.symlink(dsetpath,os.path.join(dirpath,dataset))
@@ -138,7 +139,7 @@ class SlurpConf:
                     pass
                 dirpath=dsetpath
             except KeyError:
-                # no problem just stick with the default
+                # no problem we can just stick with the default
                 dirpath=getCreateDir(os.path.join(dirpath,dataset))
 
         return dirpath

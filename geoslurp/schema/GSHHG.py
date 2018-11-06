@@ -18,15 +18,13 @@
 
 import os
 from geoslurp.schema import Schema
-from geoslurp.config import getCreateDir
 from geoslurp.dataset import getGSHHGdict
 
 class GSHHG(Schema):
     """A scheme which contains the datasets from the Global Self-consistent, Hierarchical, High-resolution Geography Database"""
     __datasets__=getGSHHGdict()
-    __version__=(0, 0, 0)
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
-        self.cache=getCreateDir(os.path.join(conf["CacheDir"],"GSHHG"))
+        self.cache=conf.getDir(scheme=self.__class__.__name__, dirEntry="CacheDir")
 
 

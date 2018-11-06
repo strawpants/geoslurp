@@ -27,11 +27,10 @@ GSBase=declarative_base()
 class InventTable(GSBase):
     """Defines the GEOSLURP POSTGRESQL inventory table"""
     __tablename__='inventory'
-    id=Column(Integer,primary_key=True)
-    datasource=Column(String,unique=True)
-    lastupdate=Column(TIMESTAMP)
-    pluginversion=Column(ARRAY(Integer,as_tuple=True))
-    data=Column(MutableDict.as_mutable(JSONB))
+    id=Column(Integer, primary_key=True)
+    scheme=Column(String, unique=True)
+    datasets=Column(MutableDict.as_mutable(JSONB))
+    pgfuncs=Column(MutableDict.as_mutable(JSONB))
 
 class Inventory:
     """Class which provides read/write access to the postgresql inventory table"""
@@ -42,12 +41,10 @@ class Inventory:
         :type geoslurpConn: geoslurp database connector
         """
         self.db=geoslurpConn
-        #creates a session which is bound to this class instance
-        self._ses=geoslurpConn.Session()
 
         #creates the inventory table if it doesn't exists
         if not geoslurpConn.dbeng.has_table('inventory'):
-            GSBase.metadata.create_all(geoslurpConn.dbeng, tables=[InventTable])
+            GSBase.metadata.create_all(geoslurpConn.dbeng )
 
 
     def __iter__(self):
@@ -59,16 +56,6 @@ class Inventory:
         """Retrieves the entry from the inventory table corresponding to the schema"""
         #we need to open up a small sqlalcheny session here
         # note  this will raise a NoResultsFound exception if none was found (should be treated by caller)
-        inventEntry=self._ses.query(InventTable).filter(InventTable.datasource == schema).one()
+        inventEntry=self._ses.query(InventTable).filter(InventTable.scheme == schema).one()
 
         return inventEntry
-
-    # def update(self,inventEntry):
-    #     """Updates/adds an inventory row"""
-    #     self._ses.merge(inventEntry)
-    #     self._ses.commit()
-
-    def delete(self,inventEntry):
-        """Delete a row from the inventory which holds a schema"""
-        self._ses.delete(inventEntry)
-        self._ses.commit()

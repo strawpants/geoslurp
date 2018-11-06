@@ -24,7 +24,6 @@ from geoslurp.dataset import GRACEdict
 class Gravity(Schema):
     """A scheme which contains datasets related to gravity fields"""
     __datasets__=GRACEdict()
-    __version__=(0, 0, 0)
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
 

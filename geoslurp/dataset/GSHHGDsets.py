@@ -40,6 +40,7 @@ class GSHHGBase(DataSet):
             self._inventData["GSHHGversion"]=tuple(self._inventData["GSHHGversion"])
         else:
             self._inventData["GSHHGversion"] = (0, 0, 0)
+            self._inventData["lastupdate"]=datetime.min.isoformat()
 
     def pull(self, force=False):
         """Pulls the entire GSHHG archive from the ftp server"""
@@ -58,7 +59,7 @@ class GSHHGBase(DataSet):
                 getf=fname
 
         #now determine whether to retrieve the file
-        if force or (newestver > self._inventData["GSHHGversion"] and t > self.scheme._dbinvent.lastupdate):
+        if force or (newestver > self._inventData["GSHHGversion"] and t > datetime.fromisoformat(self._inventData["lastupdate"])):
             fout=os.path.join(self.scheme.cache,getf)
             if os.path.exists(fout) and not force:
                 print (self.name+":File already in cache no need to download",file=Log)

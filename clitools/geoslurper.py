@@ -57,7 +57,7 @@ def main(argv):
     if not args.dset and args.info:
         #list the inventory of all the registered schemas but don't list info on the datasets
         for row in slurpInvent:
-            print("schema:", row.datasource, ", last updated:", row.lastupdate)
+            print("schema:", row.scheme)
         sys.exit(0)
 
     if not args.dset:

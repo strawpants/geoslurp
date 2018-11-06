@@ -24,7 +24,6 @@ class OceanObs(Schema):
     Argo data from the CORLIOLIS Opendap server
     """
     __datasets__={"Argo":Argo}
-    __version__=(0, 0, 0)
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
 

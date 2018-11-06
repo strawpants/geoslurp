@@ -24,7 +24,7 @@ class DataSet(ABC):
         self.scheme=scheme
         #retrieve the Dataset entry (in the form of a dictionary) from the Inventory
         try:
-            self._inventData=scheme._dbinvent.data[self.name]
+            self._inventData=scheme._dbinvent.datasets[self.name]
         except KeyError:
             self._inventData={}
 
@@ -35,7 +35,13 @@ class DataSet(ABC):
         return self._inventData
 
     def dataDir(self):
-        return self.scheme.conf.dataDir(scheme=self.scheme.__class__.__name__, dataset=self.__class__.__name__)
+        """Returns the specialized data directory of this scheme and dataset
+        The directory will be created if it does not exist"""
+        return self.scheme.conf.dataDir(scheme=self.scheme.__class__.__name__, datasets=self.__class__.__name__)
+
+    def cacheDir(self):
+        """returns the cache directory of this scheme and dataset"""
+        return self.scheme.conf.cacheDir(scheme=self.scheme.__class__.__name__, datasets=self.__class__.__name__)
 
     @abstractmethod
     def pull(self):
