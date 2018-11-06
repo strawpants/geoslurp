@@ -44,27 +44,38 @@ class Schema(ABC):
         self.db=InventInstance.db
         self.Inventory=InventInstance
         self.Dsets={}
+        self._ses=self.db.Session()
         try:
             # retrieve the stored inventory entry
-            self._dbinvent = InventInstance[self._schema]
+            # self._dbinvent = InventInstance[self._schema]
+            self._dbinvent=self._ses.query(InventInstance.__table__)\
+                .filter(InventInstance.__table__.datasource == self._schema).one()
+            self.hasInventEntry=True
         except NoResultFound:
             # #set defaults for the  inventory
             self._dbinvent = InventInstance.__table__(datasource=self._schema, pluginversion=self.__class__.__version__,
                                    lastupdate=datetime.min, data={})
 
             # create the schema
-            InventInstance.db.CreateSchema(self._schema)
+            self.db.CreateSchema(self._schema)
+            self.hasInventEntry=False
 
     def updateInvent(self,name, datdict):
         self._dbinvent.data[name]=datdict
         self._dbinvent.lastupdate=datetime.now()
-        self.Inventory.update(self._dbinvent)
+        if not self.hasInventEntry:
+            self._ses.add(self._dbinvent)
+            self.hasInventEntry=True
+
+        self._ses.commit()
+        # self.Inventory.update(self._dbinvent)
+
 
     def purge(self):
         """Delete the scheme, corresponding tables and data"""
 
         try:
-            ddir = self._dbinvent.data["DataDir"]
+            ddir = self.conf.dataDir(self._schema)
             if os.path.isdir(ddir):
                 shutil.rmtree(ddir)
         except KeyError:
@@ -75,6 +86,9 @@ class Schema(ABC):
             self.db.dropSchema(self._schema,cascade=True)
         except:
             pass
+
+        #finally remove the entry from the inventory
+        self.Inventory.delete(self._dbinvent)
 
     def __getitem__(self,dSetName):
         """Returns a Dataset instance by name"""

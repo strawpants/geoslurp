@@ -106,7 +106,8 @@ class RGIBase(DataSet):
             fillCSVTable(file, self.name, csvLookup(), self.scheme, hskip=self.hskip)
 
         #also update data entry from the inventory table
-        self._inventData["lastupdate"]=datetime.now().isoformat(),
+        self._inventData["lastupdate"]=datetime.now().isoformat()
+        self._inventData["RGIversion"]=(6,0)
         self._inventData["version"]=self.__version__
         self.updateInvent()
 

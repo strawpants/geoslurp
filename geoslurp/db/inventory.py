@@ -20,6 +20,7 @@ from geoslurp.config import Log
 from sqlalchemy import Column,Integer,String,Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import TIMESTAMP, ARRAY,JSONB
+from sqlalchemy.ext.mutable import MutableDict
 
 GSBase=declarative_base()
 
@@ -30,7 +31,7 @@ class InventTable(GSBase):
     datasource=Column(String,unique=True)
     lastupdate=Column(TIMESTAMP)
     pluginversion=Column(ARRAY(Integer,as_tuple=True))
-    data=Column(JSONB)
+    data=Column(MutableDict.as_mutable(JSONB))
 
 class Inventory:
     """Class which provides read/write access to the postgresql inventory table"""
@@ -62,7 +63,12 @@ class Inventory:
 
         return inventEntry
 
-    def update(self,inventEntry):
-        """Updates/adds an inventory row"""
-        self._ses.add(inventEntry)
+    # def update(self,inventEntry):
+    #     """Updates/adds an inventory row"""
+    #     self._ses.merge(inventEntry)
+    #     self._ses.commit()
+
+    def delete(self,inventEntry):
+        """Delete a row from the inventory which holds a schema"""
+        self._ses.delete(inventEntry)
         self._ses.commit()

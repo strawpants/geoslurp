@@ -101,8 +101,15 @@ def main(argv):
 
 
     if args.register or args.update:
+        if type(args.register) == dict:
+            opts=args.register
+        elif type(args.update) == dict:
+            opts=args.update
+        else:
+            opts={}
+
         for ds in scheme:
-            ds.register()
+            ds.register(**opts)
 
 
 
