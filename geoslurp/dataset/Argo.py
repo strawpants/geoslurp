@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataset import DataSet
-from geoslurp.datapull import ThreddsConnector,ThreddsFilter,getDate
+from geoslurp.datapull import ThreddsCrawler,ThreddsFilter,getDate, getAttrib
 from geoalchemy2.types import Geography
 from geoalchemy2.elements import WKBElement
 from sqlalchemy import Column,Integer,String, Boolean
@@ -114,10 +114,14 @@ class Argo(DataSet):
 
         # Create table if it doesn't exist
         # import pdb;pdb.set_trace()
-        # OceanObsTBase.metadata.create_all(self.scheme.db.dbeng, tables=[ArgoTable],checkfirst=True)
         OceanObsTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
         self._uriqueue=Queue(maxsize=10)
         self._killUpdate=False
+        #set Argo mirrors and datacenters
+        self._inventData['mirrors']= ["http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS", "https://data.nodc.noaa.gov/thredds/catalog/argo/gdac/"]
+        if not 'centers' in self._inventData:
+            #create an empty list of registered centers
+            self._inventData['centers']=[]
 
     def pull(self):
         """Stub because the actual pulling takes place in a separate thread in the register function"""
@@ -129,55 +133,81 @@ class Argo(DataSet):
                 currently avalaible are: aoml, bodc, coriolis, csio, csiro, incois, jma, kma, kordi, meds, nmdis
             :param mirror: use mirror 0: https://tds0.ifremer.fr (default) or mirror 1: https://data.nodc.noaa.gov
         """
-        t=Thread(target=self.pullWorker,kwargs={"center":center,"mirror":mirror})
-        t.start()
 
-        #create a database session
-        ses=self.scheme.db.Session()
-        i=0
-        while not self._killUpdate:
-            try:
-                lastmod,uri=self._uriqueue.get()
-                if uri == None:
-                    # done
-                    break
-                # Check whether an entry already exists inthe database which is up to date
+        #first retrieve a list of catalogrefs  (i.e. datacenters)
+
+        if center:
+            centers=[center]
+        else:
+            # make a list of all available centers
+            filt=ThreddsFilter("catalogRef")
+            followfilt=ThreddsFilter("dataset")
+            rootcatalog=self._inventData["mirrors"][mirror]+'/catalog.xml'
+            conn=ThreddsCrawler(rootcatalog, filter=filt, followfilter=followfilt)
+            centers=[getAttrib(el,'title') for el in conn.items()]
+
+        for cent in centers:
+            #loop over all processing centers
+            print("Getting catalog of precessing center %s"%(cent),file=Log)
+            #determine center catalog url
+            catalogurl=self._inventData["mirrors"][mirror]+'/'+cent+'/catalog.xml'
+            filt = ThreddsFilter("dataset", attr="urlPath", regex=".*profiles.*")
+
+            # let's start a thread which will start quering the threddsserver and queues jobs
+            t=Thread(target=self.pullWorker, kwargs={"conn":ThreddsCrawler(catalogurl, filter=filt)})
+            t.start()
+
+            #create a dedicated database session
+            ses=self.scheme.db.Session()
+            i=0
+            while not self._killUpdate:
                 try:
-                    qResult=ses.query(ArgoTable).filter(ArgoTable.uri == uri).first()
-                    if qResult.lastupdate > lastmod:
-                        print("No Update needed, skipping %s"%(uri))
-                        self._uriqueue.task_done()
-                        continue
-                    else:
-                        #delete the entries which need updating
-                        ses.query(ArgoTable).filter(ArgoTable.uri == uri).delete()
-                except:
-                    # Fine no entries found
-                    pass
+                    lastmod,uri=self._uriqueue.get()
+                    if uri == None:
+                        # done
+                        break
+                    # Check whether an entry already exists inthe database which is up to date
+                    try:
+                        qResult=ses.query(ArgoTable).filter(ArgoTable.uri == uri).first()
+                        if qResult.lastupdate > lastmod:
+                            print("No Update needed, skipping %s"%(uri))
+                            self._uriqueue.task_done()
+                            continue
+                        else:
+                            #delete the entries which need updating
+                            ses.query(ArgoTable).filter(ArgoTable.uri == uri).delete()
+                    except:
+                        # Fine no entries found
+                        pass
 
-                for metadict in argoMetaExtractor(uri):
-                    entry=ArgoTable(**metadict)
-                    ses.add(entry)
-                    if i > 10:
-                        # commit every so many rows
-                        ses.commit()
-                        i=0
-                    else:
-                        i+=1
-                self._uriqueue.task_done()
-            except RuntimeWarning as e:
-                print(e)
-                print("Skipping record",file=Log)
-                continue
-            except Exception as e2:
-                # let the threddscrawler come to a gracefull halt
-               self.stopUpdate()
+                    for metadict in argoMetaExtractor(uri):
+                        entry=ArgoTable(**metadict)
+                        ses.add(entry)
+                        if i > 10:
+                            # commit every so many rows
+                            ses.commit()
+                            i=0
+                        else:
+                            i+=1
+                    self._uriqueue.task_done()
+                except RuntimeWarning as e:
+                    print(e)
+                    print("Skipping record",file=Log)
+                    continue
+                except Exception as e2:
+                    # let the threddscrawler come to a gracefull halt
+                   self.stopUpdate()
 
-        ses.commit()
-        #also update the inventory
-        self._inventData={"lastupdate":datetime.now().isoformat(),"version":self.__version__}
-        self.updateInvent()
-        t.join()
+            ses.commit()
+            #also update the inventory
+            self._inventData["lastupdate":]=datetime.now().isoformat()
+            self._inventData["version"].self.__version__
+            if cent not in self._inventData['centers']:
+                self._inventData['centers'].append(cent)
+
+            self.updateInvent()
+            t.join()
+
     def purge(self):
         pass
 
@@ -185,17 +215,10 @@ class Argo(DataSet):
         print("Stopping update",file=Log)
         self._killUpdate=True
 
-    def pullWorker(self,center,mirror=0):
+    def pullWorker(self,conn):
         """ Pulls valid opendap URI's from a thredds server and queue them"""
 
-        filt=ThreddsFilter("dataset",attr="urlPath",regex=".*profiles.*")
-        mirrors=["http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS", "https://data.nodc.noaa.gov/thredds/catalog/argo/gdac/"]
-        rootcatalog=mirrors[mirror]
-        if center != None:
-            rootcatalog+="/"+center
-        rootcatalog+='/catalog.xml'
         try:
-            conn=ThreddsConnector(rootcatalog,filter=filt)
             for ds in conn.items():
                 if self._killUpdate:
                     break

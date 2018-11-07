@@ -16,7 +16,8 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from lxml import etree as XMLTree
-from geoslurp.datapull import httpProvider
+# from geoslurp.datapull import httpProvider
+from geoslurp.datapull import UriHttp as http
 from io  import BytesIO
 import re
 import os
@@ -24,6 +25,8 @@ from geoslurp.config import Log
 from collections import namedtuple
 from datetime  import datetime
 from dateutil.parser import parse as isoParser
+
+from geoslurp.datapull import BaseCrawler
 
 class ThreddsFilter():
     """Helper class to aid traversing to opendap xml elements"""
@@ -106,15 +109,27 @@ def getDate(xml):
         if elem.tag.endswith("date"):
             return isoParser(elem.text)
 
-class ThreddsConnector:
+def getTagEnding(xml):
+    """Strip the leading junk ({...}) from a tag"""
+    ln=xml.tag.split('}')
+    if len(ln) == 1:
+        return ln[0]
+    else:
+        return ln[1]
+
+def getAttrib(xml,regex):
+    """Search in xml attributes based on a regex"""
+    for ky,val in xml.attrib.items():
+        if re.search(regex,ky):
+            return val
+    return None
+
+class ThreddsCrawler(BaseCrawler):
     """A class to work with an Opendap server"""
     def __init__(self, catalogurl, filter=ThreddsFilter("dataset", attr="urlPath"), followfilter=ThreddsFilter("catalogRef").OR("dataset")):
+        super().__init__(url=catalogurl)
         #load the root catalog
         self._rootxml=self.getCatalog(catalogurl)
-        self._catalogurl=catalogurl
-        #extract rootaddress and opendap/http access
-        mtch=re.search("(https?://[^/]+)",catalogurl)
-        self.rooturl=mtch.group(0)
         self.services=self.getServices(self._rootxml)
         self._filt=filter
         self._followFilt=followfilter
@@ -124,7 +139,7 @@ class ThreddsConnector:
         """Retrieve a catalogue"""
         print("getting Opendap catalog: %s"%(url),file=Log)
         buf=BytesIO()
-        http=httpProvider(url)
+        cathttp=http(url)
         http.downloadFile(buf)
         # print(buf.getvalue())
         return XMLTree.fromstring(buf.getvalue())
@@ -155,7 +170,7 @@ class ThreddsConnector:
 
                 if compoundfilt.isValid(elem):
                     # allow recursion
-                    return ThreddsConnector.getServices(elem, depth)
+                    return ThreddsCrawler.getServices(elem, depth)
 
         return servtuple(opendap=opendap,http=http)
 
@@ -181,6 +196,10 @@ class ThreddsConnector:
                 # Allright we can return this entry straight away
                 yield xelem
                 # Also continue with the loop after yielding
+                continue
+
+            if not self._followFilt:
+                # continue with the next element if no element should be followed
                 continue
 
             if self._followFilt.isValid(xelem):

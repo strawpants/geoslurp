@@ -17,7 +17,7 @@
 
 
 from geoslurp.dataset import DataSet
-from geoslurp.datapull import httpProvider as http
+from geoslurp.datapull import UriHttp as http
 from geoslurp.config import Log
 from geoslurp.meta import fillGeoTable, fillCSVTable
 from sqlalchemy import Integer, String, Float
@@ -54,20 +54,19 @@ class RGIBase(DataSet):
 
     def pull(self, force=False):
         """Pulls the entire RGI 6.0 archive from the web and stores it in a cache"""
-        getf='00_rgi60.zip'
-        httpserv=http('http://www.glims.org/RGI/rgi60_files/')
+        # getf='00_rgi60.zip'
+        # httpserv=http('http://www.glims.org/RGI/rgi60_files/')
+        httpserv=http('http://www.glims.org/RGI/rgi60_files/00_rgi60.zip')
 
         #Newest version which is supported by this plugin
         newestver=(6,0)
         #now determine whether to retrieve the file
         if force or (newestver > self._inventData["RGIversion"]):
-            fout=os.path.join(self.scheme.cache, getf)
-            if os.path.exists(fout) and not force:
-                print ("File %s already in cache no need to download"%(getf),file=Log)
-            else:
-                httpserv.downloadFileByName(fout,getf)
+            uri=httpserv.download(self.scheme.cache,check=True)
+            if not os.path.exists(os.path.join(self.scheme.cache,'extract')):
+                #unzip all the goodies
                 zipd=os.path.join(self.scheme.cache,'zipfiles')
-                with ZipFile(fout,'r') as zp:
+                with ZipFile(uri.url,'r') as zp:
                     zp.extractall(zipd)
 
                 #now recursively zip the other zip files
@@ -90,10 +89,9 @@ class RGIBase(DataSet):
         pf='04_rgi60_ArcticCanadaSouth_hypso.csv.patch'
         print("Patching csv file %s"%(pf), file=Log)
         httpget=http("https://raw.githubusercontent.com/strawpants/geoslurp/master/patches/"+pf)
-        patchf=os.path.join(self.scheme.cache,'extract',pf)
-        httpget.downloadFileByName(patchf)
+        uri=httpget.download(os.path.join(self.scheme.cache,'extract'),check=True)
         #apply patch
-        subprocess.Popen(['patch','-i',pf],cwd=os.path.dirname(patchf))
+        subprocess.Popen(['patch','-i',pf],cwd=os.path.dirname(uri.url))
 
 
     def register(self):

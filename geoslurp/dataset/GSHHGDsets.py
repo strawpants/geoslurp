@@ -22,6 +22,7 @@ from geoslurp.config import Log
 from geoslurp.meta import fillGeoTable
 from zipfile import ZipFile
 from datetime import datetime
+from dateutil.parser import parse as fromisoformat
 import re
 import os
 
@@ -59,7 +60,7 @@ class GSHHGBase(DataSet):
                 getf=fname
 
         #now determine whether to retrieve the file
-        if force or (newestver > self._inventData["GSHHGversion"] and t > datetime.fromisoformat(self._inventData["lastupdate"])):
+        if force or (newestver > self._inventData["GSHHGversion"] and t > fromisoformat(self._inventData["lastupdate"])):
             fout=os.path.join(self.scheme.cache,getf)
             if os.path.exists(fout) and not force:
                 print (self.name+":File already in cache no need to download",file=Log)

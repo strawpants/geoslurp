@@ -28,7 +28,7 @@ def getCreateDir(returndir):
 
 Log=sys.stdout
 
-Credentials=namedtuple("Credentials","user passw")
+Credentials=namedtuple("Credentials","user passw alias")
 
 class SlurpConf:
     """ Class which reads and writes configure data in yaml format and contains a database connector"""
@@ -64,7 +64,7 @@ class SlurpConf:
         """obtains username credentials for a certain service
         :param service: name of the service
         :returns a namedtuple with credentials"""
-        return Credentials(**self._confDict["Auth"][service])
+        return Credentials(alias=service, **self._confDict["Auth"][service])
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
     def __getitem__(self, key):
@@ -72,50 +72,6 @@ class SlurpConf:
 
     def __setitem__(self, key, val):
        self._confDict[key]=val
-
-    # def getDataDir(self,datasource):
-        # """Retrieves the data directory by appending a subdir and creates it when not existent"""
-        # #default path unless overwritten
-        # ddir=os.path.join(self.confobj['DataDir'],datasource)
-        
-        # #first try to retrieve the datasource specific datadirectory
-        # if datasource in self.confobj:
-            # if 
-            # ddir=self.confobj[datasource]['DataDir'] 
-        # else:
-            # self.confobj[datasource]={}
-            # self.confobj[datasource]['DataDir']=ddir
-        
-        # try:
-            # return getCreateDir(self.confobj[datasource]['DataDir'])
-        # except KeyError as err:
-            # #else we use the default path
-            # if datasource in self.confobj:
-                # self.confobj[datasource]['DataDir']=os.path.join(self.confobj['DataDir'],datasource)
-            # else:
-                # self.confobj[datasource]={}
-                # self.confobj[datasource]['DataDir']=
-            # return getCreateDir(self.confobj[datasource]['DataDir'])
-    
-    # def getDataSource(self,datasource):
-    #     """initializes datasource structure from file or to default"""
-    #     if not datasource in self._confDict:
-    #        self._confDict[datasource]={}
-    #
-    #     if not 'DataDir' in self._confDict[datasource]:
-    #         #create default data directory
-    #         self._confDict[datasource]['DataDir']=getCreateDir(os.path.join(self._confDict['DataDir'], datasource))
-    #     else:
-    #         getCreateDir(self._confDict[datasource]['DataDir'])
-    #
-    #     if not 'CacheDir' in self._confDict[datasource]:
-    #         #create default data directory
-    #         self._confDict[datasource]['CacheDir']=getCreateDir(os.path.join(self._confDict['CacheDir'], datasource))
-    #     else:
-    #         getCreateDir(self._confDict[datasource]['CacheDir'])
-    #
-    #     return self._confDict[datasource]
-
 
     def getDir(self,scheme, dirEntry, dataset=None):
         """

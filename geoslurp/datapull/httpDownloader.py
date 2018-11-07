@@ -30,6 +30,7 @@ class httpProvider():
         """Tries to retrieve the last modification time of a file"""
         crl=pycurl.Curl()
         crl.setopt(pycurl.URL,self.buildURL(filen))
+        #note: not all servers support this query with NOBODY set to 1
         crl.setopt(pycurl.NOBODY, 1)
         crl.perform()
         return crl.getinfo(pycurl.INFO_FILETIME)

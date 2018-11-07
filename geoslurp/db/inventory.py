@@ -41,7 +41,7 @@ class Inventory:
         :type geoslurpConn: geoslurp database connector
         """
         self.db=geoslurpConn
-
+        self._ses=self.db.Session()
         #creates the inventory table if it doesn't exists
         if not geoslurpConn.dbeng.has_table('inventory'):
             GSBase.metadata.create_all(geoslurpConn.dbeng )
