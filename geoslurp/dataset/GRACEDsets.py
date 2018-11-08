@@ -20,8 +20,9 @@ from geoslurp.datapull.webdav import Crawler as WbCrawler
 from geoslurp.config import Log
 from sqlalchemy.ext.declarative import declared_attr, as_declarative
 from sqlalchemy import MetaData
-from sqlalchemy import Column,Integer,String, Boolean
-
+from sqlalchemy import Column,Integer,String, Boolean,Float
+from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
+from glob import glob
 #define a declarative baseclass for level2 GRACE data
 @as_declarative(metadata=MetaData(schema='gravity'))
 class GRACEL2TBase(object):
@@ -30,15 +31,27 @@ class GRACEL2TBase(object):
         #strip of the 'Table' from the class name
         return cls.__name__[:-5].lower()
     id = Column(Integer, primary_key=True)
-    #COlumns to be added..
+    lastupdate=Column(TIMESTAMP)
+    tstart=Column(TIMESTAMP)
+    tend=Column(TIMESTAMP)
+    nmax=Column(Integer)
+    type=Column(String)
+    uri=Column(String, unique=True,index=True)
+    gm=Column(Float)
+    re=Column(Float)
+    tidesystem=Column(String)
+    data=Column(JSONB)
 
-
+def graceMetaExtractor(uri):
+    """Extract meta information from a GRACE file"""
+    pass
 
 class GRACEL2Base(DataSet):
     """Derived type representing GRACE spherical harmonic coefficients on the podaac server"""
     release=None
     center=None
     table=None
+    updated=None
     def __init__(self,scheme):
         super().__init__(scheme)
         #initialize postgreslq table
@@ -48,10 +61,22 @@ class GRACEL2Base(DataSet):
         cred=self.scheme.conf.authCred("podaac")
         url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/L2/"+self.center+"/"+self.release
         webdav=WbCrawler(url,auth=cred,pattern='G.*gz')
-        webdav.parallelDownload(self.dataDir(),check=True)
+        self.updated=webdav.parallelDownload(self.dataDir(),check=True)
 
     def register(self):
-        pass
+
+        #create a list of files which need to be (re)registered
+        if self.updated:
+            files=self.updated
+        else:
+            files=glob(self.dataDir()+'/G*gz')
+
+        #loop over files
+        for grcfile in files:
+            meta=graceMetaExtractor(grcfile)
+
+
+
 
     def purge(self):
         pass

@@ -60,6 +60,7 @@ class Uri(UriBase):
                 logging.info("Already Downloaded, skipping %s"%(uri.url))
                 return uri,False
 
+        logging.info("Downloading %s"%(uri.url))
         self.webdav.download(self.fname, uri.url)
 
         #change modification and access time to that provided by the ftp server

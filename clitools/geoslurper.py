@@ -26,6 +26,7 @@ from geoslurp.config import SlurpConf
 from geoslurp.db import GeoslurpConnector
 from geoslurp.schema import allSchemes, schemeFromName
 import json
+import logging
 
 def main(argv):
     usage=" Program to download and manage Earth Science data"
@@ -80,7 +81,7 @@ def main(argv):
         for ds in scheme:
             print("Schema and dataset: %s.%s"%(scheme._schema,ds.name))
             dsentry=ds.info()
-            for ky,val in dsentry.items():
+            for ky,val in dsentry.xmlitems():
                 print("\t\t%s = "%(ky),end="")
                 print(val)
 
@@ -136,6 +137,15 @@ class JsonParseAction(argparse.Action):
             dct=True
         setattr(namespace, self.dest, dct)
 
+class increaseVerboseAction(argparse.Action):
+    """Parse multiple v's to increase the level of the verbosity"""
+    def __init__(self, option_strings, dest, nargs, **kwargs):
+        super(increaseVerboseAction, self).__init__(option_strings, dest,nargs, **kwargs)
+    def __call__(self, parser=None, namespace=None, values=None, option_string=None):
+        setattr(namespace,self.dest,namespace.verbose+values.count('v'))
+        levels=[logging.CRITICAL, logging.ERROR, logging.WARNING, logging.INFO,logging.DEBUG]
+        logging.basicConfig(level=levels[min(namespace.verbose,4)])
+
 def addCommandLineArgs(parser):
         """Add top level command line arguments (and request arguments from the loaded schema)"""
         parser.add_argument('-h','--help',action='store_true',
@@ -165,6 +175,9 @@ def addCommandLineArgs(parser):
         # parser.add_argument('--cleancache',action='store_true',
         #                     help="Clean up the cache directory associated with a scheme/dataset")
 
+        parser.add_argument("-v","--verbose", action=increaseVerboseAction, nargs="?",const='',default=1,
+                            help="Increase verbosity of the output one cvan use multiple v's after another (e.g. -vv) "
+                                 "to increase verbosity. The default prints errors only")
         #also add datasource options
         parser.add_argument("-d","--dset",metavar="SCHEME[.DATASET]",nargs="?",action=SplitAction,
                             help='Scheme and dataset to select.')
@@ -173,7 +186,7 @@ def addCommandLineArgs(parser):
 def showAvailable():
     """Print available schemes with implemented datasets"""
     print("Allowed scheme and dataset combinations:")
-    for key,cl in allSchemes().items():
+    for key,cl in allSchemes().xmlitems():
         print("\t %s.["%(key),end="")
         sep=""
         for dname in cl.__datasets__:

@@ -73,7 +73,7 @@ class SlurpConf:
     def __setitem__(self, key, val):
        self._confDict[key]=val
 
-    def getDir(self,scheme, dirEntry, dataset=None):
+    def getDir(self,scheme, dirEntry, dataset=None,subdirs=None):
         """
         :param scheme str: name of the database scheme
         :param dataset str: name of the dataset
@@ -97,6 +97,10 @@ class SlurpConf:
             except KeyError:
                 # no problem we can just stick with the default
                 dirpath=getCreateDir(os.path.join(dirpath,dataset))
+
+        #possibly append subdirectories
+        if subdirs:
+            dirpath=getCreateDir(os.path.join(dirpath,subdirs))
 
         return dirpath
 

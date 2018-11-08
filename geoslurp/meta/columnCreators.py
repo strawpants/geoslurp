@@ -27,6 +27,6 @@ def columnsFromDict(indict):
     """ Map the first level entries of a dictionary to POSTGRESQL types"""
     typeMap = {float: Float, int: Integer, dict: JSONB, datetime: TIMESTAMP, str: String}
     cols = [Column('id', Integer, primary_key=True)]
-    for ky, val in indict.items():
+    for ky, val in indict.xmlitems():
         cols.append(Column(ky.lower(), typeMap[type(val)]))
     return cols

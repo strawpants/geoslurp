@@ -34,14 +34,14 @@ class DataSet(ABC):
     def info(self):
         return self._inventData
 
-    def dataDir(self):
+    def dataDir(self,subdirs=None):
         """Returns the specialized data directory of this scheme and dataset
         The directory will be created if it does not exist"""
-        return self.scheme.conf.dataDir(scheme=self.scheme.__class__.__name__, datasets=self.__class__.__name__)
+        return self.scheme.conf.getDir(self.scheme.__class__.__name__, 'DataDir', dataset=self.__class__.__name__,subdirs=subdirs)
 
-    def cacheDir(self):
+    def cacheDir(self,subdirs=None):
         """returns the cache directory of this scheme and dataset"""
-        return self.scheme.conf.cacheDir(scheme=self.scheme.__class__.__name__, datasets=self.__class__.__name__)
+        return self.scheme.conf.getDir(self.scheme.__class__.__name__, 'CacheDir', dataset=self.__class__.__name__,subdirs=subdirs)
 
     @abstractmethod
     def pull(self):

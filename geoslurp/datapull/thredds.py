@@ -16,17 +16,30 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from lxml import etree as XMLTree
-# from geoslurp.datapull import httpProvider
 from geoslurp.datapull.http import Uri as http
-from io  import BytesIO
 import re
 import os
-from geoslurp.config import Log
+import logging
 from collections import namedtuple
 from datetime  import datetime
 from dateutil.parser import parse as isoParser
 
-from geoslurp.datapull import CrawlerBase
+from geoslurp.datapull import UriBase,CrawlerBase
+
+
+class Uri(UriBase):
+    """Thredds URI class"""
+    suburl=None
+    opendap=None
+    def __init__(self,dataxml,services):
+        self.suburl=dataxml.attrib['urlPath']
+
+        self.opendap=services.baseurl+services.opendap+self.suburl
+        #set the main url to the http version
+        super().__init__(services.baseurl+services.http+self.suburl,lastmod=getDate(dataxml))
+
+
+
 
 class ThreddsFilter():
     """Helper class to aid traversing to opendap xml elements"""
@@ -107,7 +120,7 @@ def getDate(xml):
     """extracts the date from a dataset element"""
     for elem in xml:
         if elem.tag.endswith("date"):
-            return isoParser(elem.text)
+            return isoParser(elem.text).replace(tzinfo=None)
 
 def getTagEnding(xml):
     """Strip the leading junk ({...}) from a tag"""
@@ -124,36 +137,38 @@ def getAttrib(xml,regex):
             return val
     return None
 
-class ThreddsCrawler(CrawlerBase):
+class Crawler(CrawlerBase):
     """A class to work with an Opendap server"""
     def __init__(self, catalogurl, filter=ThreddsFilter("dataset", attr="urlPath"), followfilter=ThreddsFilter("catalogRef").OR("dataset")):
         super().__init__(url=catalogurl)
         #load the root catalog
+        self._catalogurl=catalogurl
         self._rootxml=self.getCatalog(catalogurl)
-        self.services=self.getServices(self._rootxml)
+        self.services=self.getServices(self._rootxml,self._catalogurl)
         self._filt=filter
         self._followFilt=followfilter
 
     @staticmethod
     def getCatalog(url):
         """Retrieve a catalogue"""
-        print("getting Opendap catalog: %s"%(url),file=Log)
-        buf=BytesIO()
-        cathttp=http(url)
-        http.downloadFile(buf)
-        # print(buf.getvalue())
+        logging.info("getting Thredds catalog: %s"%(url))
+        buf=http(url).buffer()
         return XMLTree.fromstring(buf.getvalue())
 
 
     @staticmethod
-    def getServices(catalog,depth=2):
+    def getServices(catalog,rooturl,depth=2):
         """Retrieves the root for serving files over http url from a catalogue"""
         compoundfilt=ThreddsFilter("service", attr="serviceType", regex="Compound")
         opendapfilt=ThreddsFilter("service", attr="serviceType", regex="(OpenDAP)|(OPENDAP)|(DODS)")
         httpfilt=ThreddsFilter("service", attr="serviceType", regex="HTTPServer")
         # possibly add other serices if deemed usefull
-        servtuple=namedtuple("Service","opendap http")
+        servtuple=namedtuple("Service","baseurl opendap catalog http")
 
+        proto,url=rooturl.split('://')
+        #also strip off trailing directory to retrieve the root
+        baseurl, tmp=url.split('/', 1)
+        baseurl=proto+"://"+baseurl
         if depth == 0:
             return
         else:
@@ -170,12 +185,13 @@ class ThreddsCrawler(CrawlerBase):
 
                 if compoundfilt.isValid(elem):
                     # allow recursion
-                    return ThreddsCrawler.getServices(elem, depth)
+                    return Crawler.getServices(elem,rooturl, depth)
 
-        return servtuple(opendap=opendap,http=http)
+        catalogbase=rooturl.strip('catalog.xml')[len(baseurl):]
+        return servtuple(baseurl=baseurl,opendap=opendap,catalog=catalogbase,http=http)
 
 
-    def items(self,xmlcatalog=None,url=None ,depth=10):
+    def xmlitems(self, xmlcatalog=None, url=None, depth=10):
         """Generator which returns xml nodes which obey a certain filter
         Nodes which obey the followFilter will be recursively searched"""
 
@@ -218,5 +234,13 @@ class ThreddsCrawler(CrawlerBase):
                     suburl=url
                     subxml=xelem
 
-                yield from self.items(subxml, suburl, depth)
+                yield from self.xmlitems(subxml, suburl, depth)
+
+    def uris(self):
+        """Generates a list of threddsURI's (makes use of xmlitems())"""
+        urlFilt=ThreddsFilter("dataset", attr="urlPath")
+        for xelem in self.xmlitems():
+            if urlFilt.isValid(xelem):
+                yield Uri(xelem,self.services)
+
 
