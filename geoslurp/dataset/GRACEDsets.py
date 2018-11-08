@@ -17,12 +17,18 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.webdav import Crawler as WbCrawler
-from geoslurp.config import Log
+import logging
 from sqlalchemy.ext.declarative import declared_attr, as_declarative
 from sqlalchemy import MetaData
 from sqlalchemy import Column,Integer,String, Boolean,Float
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 from glob import glob
+import gzip
+import yaml
+from geoslurp.datapull import UriFile
+from io  import StringIO
+import os
+from datetime import datetime
 #define a declarative baseclass for level2 GRACE data
 @as_declarative(metadata=MetaData(schema='gravity'))
 class GRACEL2TBase(object):
@@ -32,19 +38,56 @@ class GRACEL2TBase(object):
         return cls.__name__[:-5].lower()
     id = Column(Integer, primary_key=True)
     lastupdate=Column(TIMESTAMP)
-    tstart=Column(TIMESTAMP)
-    tend=Column(TIMESTAMP)
+    tstart=Column(TIMESTAMP,index=True)
+    tend=Column(TIMESTAMP,index=True)
     nmax=Column(Integer)
-    type=Column(String)
-    uri=Column(String, unique=True,index=True)
+    omax=Column(Integer)
     gm=Column(Float)
     re=Column(Float)
     tidesystem=Column(String)
+    format=Column(String)
+    type=Column(String)
+    uri=Column(String, unique=True,index=True)
     data=Column(JSONB)
 
 def graceMetaExtractor(uri):
     """Extract meta information from a GRACE file"""
-    pass
+    buf=StringIO()
+    with gzip.open(uri.url,'rt') as fid:
+        logging.info("Extracting info from %s"%(uri.url))
+        for ln in fid:
+            if '# End of YAML header' in ln:
+                break
+            else:
+                buf.write(ln)
+    hdr=yaml.safe_load(buf.getvalue())["header"]
+    nonstand=hdr["non-standard_attributes"]
+
+
+    meta={"nmax":hdr["dimensions"]["degree"],
+          "omax":hdr["dimensions"]["order"],
+          "tstart":hdr["global_attributes"]["time_coverage_start"],
+          "tend":hdr["global_attributes"]["time_coverage_end"],
+          "lastupdate":uri.lastmod,
+          "format":nonstand["format_id"]["short_name"],
+          "gm":nonstand["earth_gravity_param"]["value"],
+          "re":nonstand["mean_equator_radius"]["value"],
+          "uri":uri.url,
+          "type":nonstand["product_id"][0:3],
+          "data":{"description":hdr["global_attributes"]["title"]}
+          }
+
+    #add tide system
+    try:
+        tmp=nonstand["permanent_tide_flag"]
+        if re.search('inclusive',tmp):
+            meta["tidesystem"]="zero-tide"
+        elif re.search('exclusive'):
+            meta["tidesystem"]="tide-free"
+    except:
+        pass
+
+    return meta
 
 class GRACEL2Base(DataSet):
     """Derived type representing GRACE spherical harmonic coefficients on the podaac server"""
@@ -52,6 +95,7 @@ class GRACEL2Base(DataSet):
     center=None
     table=None
     updated=None
+    __version__=(0,0)
     def __init__(self,scheme):
         super().__init__(scheme)
         #initialize postgreslq table
@@ -69,11 +113,44 @@ class GRACEL2Base(DataSet):
         if self.updated:
             files=self.updated
         else:
-            files=glob(self.dataDir()+'/G*gz')
+            files=[UriFile(file) for file in glob(self.dataDir()+'/G*gz')]
 
+        ses=self.scheme.db.Session()
+        i=0
         #loop over files
-        for grcfile in files:
-            meta=graceMetaExtractor(grcfile)
+        for uri in files:
+            try:
+                base=os.path.basename(uri.url)
+                qResult=ses.query(self.table).filter(self.table.uri.like('%'+base+'%')).first()
+                if qResult.lastupdate >= uri.lastmod:
+                    logging.info("No Update needed, skipping %s"%(base))
+                    continue
+                else:
+                    #delete the entries which need updating
+                    ses.delete(qResult)
+                    ses.commit()
+            except Exception as e:
+                # Fine no entries found
+                pass
+
+            meta=graceMetaExtractor(uri)
+            try:
+                entry=self.table(**meta)
+                ses.add(entry)
+
+                if i > 10:
+                    # commit every so many rows
+                    ses.commit()
+                    i=0
+                else:
+                    i+=1
+            except Exception as e:
+                pass
+        self._inventData["lastupdate"]=datetime.now().isoformat()
+        self._inventData["version"]=self.__version__
+        self.updateInvent()
+
+        ses.commit()
 
 
 

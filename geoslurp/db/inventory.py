@@ -16,7 +16,6 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 #contains a class to work with  the geoslurp inventory table
-from geoslurp.config import Log
 from sqlalchemy import Column,Integer,String,Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import TIMESTAMP, ARRAY,JSONB

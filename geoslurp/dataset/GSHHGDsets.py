@@ -18,11 +18,10 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.ftp import Crawler as ftp
-from geoslurp.config import Log
 from geoslurp.meta import fillGeoTable
 from zipfile import ZipFile
 from datetime import datetime
-from dateutil.parser import parse as fromisoformat
+import logging
 import re
 import os
 
@@ -68,7 +67,7 @@ class GSHHGBase(DataSet):
             self._inventData["GSHHGversion"]=newestver
 
         else:
-            print(self.name+": Already at newest version",file=Log)
+            logging.info(self.name+": Already at newest version")
             return
 
     def register(self):

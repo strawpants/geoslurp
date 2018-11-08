@@ -26,8 +26,6 @@ def getCreateDir(returndir):
         os.makedirs(returndir)
     return returndir
 
-Log=sys.stdout
-
 Credentials=namedtuple("Credentials","user passw alias")
 
 class SlurpConf:
@@ -35,7 +33,6 @@ class SlurpConf:
     def __init__(self, conffile):
         self.confyaml=conffile
         self._confDict=self.read(self.confyaml)
-        self.setLogger()
 
     def printDefault(self,out=sys.stderr):
         """Write the default configuration """
@@ -104,11 +101,3 @@ class SlurpConf:
 
         return dirpath
 
-
-    def setLogger(self):
-        """set where to output log info"""
-        try:
-            logfile=self._confDict['Logger']
-            Log=open(logfile, 'w')
-        except:
-            Log=sys.stdout

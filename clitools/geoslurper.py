@@ -81,7 +81,7 @@ def main(argv):
         for ds in scheme:
             print("Schema and dataset: %s.%s"%(scheme._schema,ds.name))
             dsentry=ds.info()
-            for ky,val in dsentry.xmlitems():
+            for ky,val in dsentry.items():
                 print("\t\t%s = "%(ky),end="")
                 print(val)
 
@@ -186,7 +186,7 @@ def addCommandLineArgs(parser):
 def showAvailable():
     """Print available schemes with implemented datasets"""
     print("Allowed scheme and dataset combinations:")
-    for key,cl in allSchemes().xmlitems():
+    for key,cl in allSchemes().items():
         print("\t %s.["%(key),end="")
         sep=""
         for dname in cl.__datasets__:
