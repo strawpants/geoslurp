@@ -17,7 +17,7 @@
 
 
 from geoslurp.dataset import DataSet
-from geoslurp.datapull import ftpProvider as ftp
+from geoslurp.datapull.ftp import Crawler as ftp
 from geoslurp.config import Log
 from geoslurp.meta import fillGeoTable
 from zipfile import ZipFile
@@ -45,31 +45,25 @@ class GSHHGBase(DataSet):
 
     def pull(self, force=False):
         """Pulls the entire GSHHG archive from the ftp server"""
-        ftplist=self.ftpt.getftplist('gshhg-shp.*zip')
+        ftpdir=ftp('ftp://ftp.soest.hawaii.edu/gshhg/','gshhg-shp.*zip')
         #first find out the newest version
         vregex=re.compile('gshhg-shp-([0-9]\.[0-9]\.[0-9]).*zip')
         newestver=(0,0,0)
-        getf=''
 
         #find out the newest version
-        for t,fname in ftplist:
-            match=vregex.findall(fname)
+        for uri in ftpdir.uris():
+            match=vregex.findall(os.path.basename(uri.url))
+
             ver=tuple(int(x) for x in match[0].split('.'))
             if ver > newestver:
                 newestver=ver
-                getf=fname
+                geturi=uri
 
         #now determine whether to retrieve the file
-        if force or (newestver > self._inventData["GSHHGversion"] and t > fromisoformat(self._inventData["lastupdate"])):
-            fout=os.path.join(self.scheme.cache,getf)
-            if os.path.exists(fout) and not force:
-                print (self.name+":File already in cache no need to download",file=Log)
-            else:
-                with open(fout,'wb') as fid:
-                    print(self.name+":Downloading "+getf,file=Log)
-                    self.ftpt.downloadFile(fid,getf)
+        if force or newestver > self._inventData["GSHHGversion"]:
+            furi=geturi.download(self.scheme.cache,True)
 
-            with ZipFile(fout,'r') as zp:
+            with ZipFile(furi.url,'r') as zp:
                 zp.extractall(self.scheme.cache)
             self._inventData["GSHHGversion"]=newestver
 

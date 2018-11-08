@@ -20,6 +20,8 @@ from datetime import datetime
 import pycurl,re
 import time
 from io  import BytesIO
+import logging
+
 
 def timeFromStamp(stamp):
     tinfo = stamp
@@ -31,6 +33,42 @@ def timeFromStamp(stamp):
         dt=t0+datetime.timedelta(0,tinfo)
     return dt
 
+def setFtime(file,modTime=None):
+    """change modification and access time of a file"""
+    if modTime:
+        mtime=time.mktime(modTime.timetuple())
+        os.utime(file,(mtime,mtime))
+
+def curlDownload(url,fileorfid,mtime=None):
+    """
+    Download  the content of an url to an open file or buffer using pycurl
+    :param url: url to download from
+    :param fileorfid: filename or open file or buffer
+    :param mtimee: explicitly set the modification time to this (usefull when modification times are not supported
+    b the server)
+    :return: modification time of remote file
+    """
+    if type(fileorfid) == str:
+        fid=open(fileorfid,'wb')
+    else:
+        fid=fileorfid
+
+    crl=pycurl.Curl()
+    crl.setopt(pycurl.URL,url)
+    crl.setopt(pycurl.FOLLOWLOCATION, 1)
+    crl.setopt(pycurl.WRITEDATA,fid)
+    crl.perform()
+    modtime=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
+    if mtime:
+        #force the modification time to that provided
+        modtime=mtime
+
+    #close file if input was a filename
+    if type(fileorfid) == str:
+        fid.close()
+        setFtime(fileorfid,modtime)
+
+    return modtime
 
 
 class UriBase():
@@ -38,88 +76,58 @@ class UriBase():
     url=None
     lastmod=None
     auth=None #link to a certain authentification alias
-    buf=None # possibly an in memory buffer or open file to hold the resource
-    def __init__(self,url,lastmod=None):
+    def __init__(self,url,lastmod=None,auth=None):
         self.url=url
         self.lastmod=lastmod
+        self.auth=auth
 
     def updateModTime(self):
-        """retrieves the last modification time"""
-        pass
+        """Tries to retrieve the last modification time of a file
+        Note: his is often not supported by the server"""
+        crl=pycurl.Curl()
+        crl.setopt(pycurl.URL,self.url)
+        #note: not all servers support this query with NOBODY set to 1
+        crl.setopt(pycurl.NOBODY, 1)
+        crl.setopt(crl.WRITEFUNCTION,lambda x: None)
+        crl.perform()
+        self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
+        return self.lastmod
 
-    def download(self,direc, check=False):
-        """Download file to a certain directory and returns the new UriBase"""
-        pass
+    def download(self,direc,check=False):
+        """Download file into directory and possibly check the modification time"""
+        #setup the output uri
+        uri=UriFile(url=os.path.join(direc,os.path.basename(self.url)))
+        if check and self.lastmod and uri.lastmod:
+            if self.lastmod <= uri.lastmod:
+                #no need to download the file
+                logging.info("Already Downloaded, skipping %s"%(uri.url))
+                return uri,False
+        logging.info("Downloading %s"%(uri.url))
+        if self.lastmod:
+            curlDownload(self.url,uri.url,self.lastmod)
+        else:
+            self.lastmod=curlDownload(self.url,uri.url)
+        uri.lastmod=self.lastmod
+        return uri,True
+
+    def buffer(self):
+        """Download file into a buffer (default uses curl)"""
+        buf=BytesIO()
+        curlDownload(self.url,buf)
+        return buf
 
 class UriFile(UriBase):
         def __init__(self,url,lastmod=None):
-           super().__init__(url,lastmod)
+            super().__init__(url,lastmod)
+            #Lets set lastmod straight away if the file exists
+            if os.path.exists(url):
+                self.updateModTime()
 
         def updateModTime(self):
             self.lastmod = datetime.fromtimestamp(os.path.getmtime(self.url))
             return self.lastmod
 
-class UriHttp(UriBase):
-    buf=None
-    def __init__(self,url):
-        super().__init__(url)
-        if not bool(re.match('^https?://',url)):
-            raise Exception("URL does not seem to be a valid http(s) address")
-
-    def updateModTime(self):
-        """Tries to retrieve the last modification time of a file"""
-        crl=pycurl.Curl()
-        crl.setopt(pycurl.URL,self.url)
-        #note: not all servers support this query with NOBODY set to 1
-        crl.setopt(pycurl.NOBODY, 1)
-        crl.perform()
-        self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
-        return self.lastmod
-
-    def download(self,direc,buffer=False,check=False):
-        """Download file into directory and possibly check the modification time"""
-        #setup the output uri
-        if buffer:
-            uri=UriFile(url='').Buffer()
-        else:
-            uri=UriFile(url=os.path.join(direc,os.path.basename(self.url)))
-        if check and os.path.exists(uri.url):
-            # print("File already Downloaded, skipping")
-            #quick return (file is already downloaded)
-            return uri
-
-        crl=pycurl.Curl()
-        crl.setopt(pycurl.URL,self.url)
-        crl.setopt(pycurl.FOLLOWLOCATION, 1)
-        if buffer:
-            crl.setopt(pycurl.WRITEDATA,uri.buf)
-            crl.perform()
-            self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
-            uri.lastmod=self.lastmod
-        else:
-            with open(uri.url,'wb') as fid:
-                crl.setopt(pycurl.WRITEDATA,fid)
-                crl.perform()
-
-            self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
-            #change modification and access time to that provided by the http server (does not always work)
-            mtime=time.mktime(self.lastmod.timetuple())
-            os.utime(uri.url,(mtime,mtime))
-            uri.lastmod=self.lastmod
+        def buffer(self):
+            pass
 
 
-        return uri
-
-
-
-# class UriFtp(UriBase):
-#     def __init__(self,url):
-#         super().__init__(url)
-#         if not bool(re.match('^ftp?://',url)):
-#             raise Exception("URL does not seem to be a valid ftp address")
-
-
-class UriCollection():
-    """Holds various alternatives to a resource"""
-    def __init__(self):
-        self.data=[]

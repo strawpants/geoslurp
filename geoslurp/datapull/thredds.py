@@ -17,7 +17,7 @@
 
 from lxml import etree as XMLTree
 # from geoslurp.datapull import httpProvider
-from geoslurp.datapull import UriHttp as http
+from geoslurp.datapull.http import Uri as http
 from io  import BytesIO
 import re
 import os
@@ -26,7 +26,7 @@ from collections import namedtuple
 from datetime  import datetime
 from dateutil.parser import parse as isoParser
 
-from geoslurp.datapull import BaseCrawler
+from geoslurp.datapull import CrawlerBase
 
 class ThreddsFilter():
     """Helper class to aid traversing to opendap xml elements"""
@@ -124,7 +124,7 @@ def getAttrib(xml,regex):
             return val
     return None
 
-class ThreddsCrawler(BaseCrawler):
+class ThreddsCrawler(CrawlerBase):
     """A class to work with an Opendap server"""
     def __init__(self, catalogurl, filter=ThreddsFilter("dataset", attr="urlPath"), followfilter=ThreddsFilter("catalogRef").OR("dataset")):
         super().__init__(url=catalogurl)

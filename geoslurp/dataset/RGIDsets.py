@@ -17,7 +17,7 @@
 
 
 from geoslurp.dataset import DataSet
-from geoslurp.datapull import UriHttp as http
+from geoslurp.datapull.http import Uri as http
 from geoslurp.config import Log
 from geoslurp.meta import fillGeoTable, fillCSVTable
 from sqlalchemy import Integer, String, Float

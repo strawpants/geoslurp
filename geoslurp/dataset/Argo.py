@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataset import DataSet
-from geoslurp.datapull import ThreddsCrawler,ThreddsFilter,getDate, getAttrib
+from geoslurp.datapull.thredds import ThreddsCrawler,ThreddsFilter,getDate, getAttrib
 from geoalchemy2.types import Geography
 from geoalchemy2.elements import WKBElement
 from sqlalchemy import Column,Integer,String, Boolean

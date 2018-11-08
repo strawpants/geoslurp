@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataset import DataSet
-from geoslurp.datapull import WebdavProvider
+from geoslurp.datapull.webdav import Crawler as WbCrawler
 from geoslurp.config import Log
 from sqlalchemy.ext.declarative import declared_attr, as_declarative
 from sqlalchemy import MetaData
@@ -41,14 +41,14 @@ class GRACEL2Base(DataSet):
     table=None
     def __init__(self,scheme):
         super().__init__(scheme)
-        self.url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/L2/"+self.center+"/"+self.release
         #initialize postgreslq table
         GRACEL2TBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
 
     def pull(self):
         cred=self.scheme.conf.authCred("podaac")
-        webdav=WebdavProvider(self.url,user=cred.user,passw=cred.passw)
-        webdav.updateFiles(self.dataDir(),"/G.*gz",log=Log)
+        url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/L2/"+self.center+"/"+self.release
+        webdav=WbCrawler(url,auth=cred,pattern='G.*gz')
+        webdav.parallelDownload(self.dataDir(),check=True)
 
     def register(self):
         pass

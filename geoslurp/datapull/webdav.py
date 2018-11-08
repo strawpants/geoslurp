@@ -20,84 +20,80 @@ import re
 import os
 import time
 from datetime import datetime
-from concurrent.futures import ThreadPoolExecutor
-
+from geoslurp.datapull import UriBase, UriFile, setFtime
+from geoslurp.datapull import CrawlerBase
+import logging
 #python 3 hacks for easywebdav (see https://stackoverflow.com/questions/26130644/how-to-overcome-python-3-4-nameerror-name-basestring-is-not-defined)
 easywebdav.basestring = str
 easywebdav.client.basestring = str
 
-class WebdavProvider():
-    """
-    Get files from a webdav capable server
-    """
-    def __init__(self, rooturl, user=None, passw=None):
-        """
-        Initialize the webdav
-        :param rooturl:  top url to start off from
-        :param user: Username
-        :param passw: password
-        """
-
+class Uri(UriBase):
+    """"Webdav URI"""
+    webdav=None
+    def __init__(self,rooturl,lastmod=None,auth=None):
+        super().__init__(rooturl,lastmod,auth=auth)
         #extract protocol from url
-        proto,url=rooturl.split('://')
-        #also strip off direectory
-        url, direc=url.split('/', 1)
-        self.webdav = easywebdav.connect(url, username=user, password=passw, protocol=proto)
+        self.proto,url=rooturl.split('://')
+        #also strip off directory
+        self.baseurl, tmp=url.split('/', 1)
+        self.direc=os.path.dirname(tmp)
+        self.fname=os.path.basename(tmp)
+
+    def connect(self):
+        self.webdav = easywebdav.connect(self.baseurl, username=self.auth.user, password=self.auth.passw, protocol=self.proto)
         #change directory
-        self.webdav.cd(direc)
-        #maximum amount fo connections for downloading
-        self.maxc=4
+        self.webdav.cd(self.direc)
+    def ls(self):
+        if not self.webdav:
+            self.connect()
+        return self.webdav.ls('.')
 
-    def ls(self,arg='.'):
-        return self.webdav.ls(arg)
+    def download(self,direc,check=False):
+        if not self.webdav:
+            self.connect()
 
-    def downloadFileByName(self,fileout:str,filen,log=None,modtime=None):
-        """Download file by name and set modification time to remote modification"""
-        print("Downloading %s"%(os.path.basename(filen)),file=log)
-        self.webdav.download(filen, fileout)
+        uri=UriFile(url=os.path.join(direc,self.fname))
+
+        if check and self.lastmod and uri.lastmod:
+            if self.lastmod <= uri.lastmod:
+                #no need to download the file
+                logging.info("Already Downloaded, skipping %s"%(uri.url))
+                return uri,False
+
+        self.webdav.download(self.fname, uri.url)
 
         #change modification and access time to that provided by the ftp server
-        if modtime != None:
-            mtime=time.mktime(modtime.timetuple())
-            os.utime(fileout,(mtime,mtime))
+        setFtime(uri.url,self.lastmod)
+        return uri,True
 
-    def updateFiles(self,outdir,pattern,log=None):
-        """
-        Download files but only update those which have newer remote versions
-        :param outdir: Where to put/check for downloaded files
-        :param pattern: pattern to apply to directory listing
-        :param log: write messages here
-        :returns: nothing
-        """
+    def subUri(self,remf):
+        """Returns a webdav URI derived from this one"""
+        tmp=self
 
-        updated=[]
-        regex=re.compile(pattern)
+        #get modification time of the remote file
+        tmp.lastmod=datetime.strptime(remf.mtime, "%a, %d %b %Y %H:%M:%S %Z")
 
-        with ThreadPoolExecutor(max_workers=self.maxc) as connectionPool:
-            #list remote files and loop over them
-            for remf in self.ls():
-                if not regex.search(remf.name):
-                    continue
+        #check if file already exists and whether it is too old
+        tmp.fname=os.path.basename(remf.name)
+        tmp.url=self.proto+"://"+self.baseurl+"/"+self.direc+"/"+tmp.fname
+        return tmp
 
-                #get modification time of the remote file
-                t=datetime.strptime(remf.mtime, "%a, %d %b %Y %H:%M:%S %Z")
+class Crawler(CrawlerBase):
+    """Webdav Crawler"""
+    pattern=None
+    webdavroot=None
+    def __init__(self,rooturl,pattern,auth):
+        if not rooturl.endswith('/'):
+            rooturl+='/'
+        super().__init__(rooturl)
+        self.webdavroot=Uri(rooturl,auth=auth)
+        self.pattern=pattern
 
-                #check if file already exists and whether it is too old
-                fbase=os.path.basename(remf.name)
+    def uris(self):
+        regex=re.compile(self.pattern)
+        for remfile in self.webdavroot.ls():
+            if not regex.search(remfile.name):
+                continue
 
-                outf=os.path.join(outdir,fbase)
-                try:
-                    ctime=datetime.fromtimestamp(os.path.getctime(outf))
-                    if t <= ctime:
-                        #no need to download
-                        if log:
-                            print("already at newest version: "+fbase,file=log)
-                        continue
+            yield self.webdavroot.subUri(remfile)
 
-                except os.error: #OK file does not exist
-                    pass
-
-                #download file
-                connectionPool.submit(self.downloadFileByName,outf,remf.name,log,t)
-                updated.append(fbase)
-        return updated

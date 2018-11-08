@@ -17,8 +17,9 @@
 
 
 from abc import ABC, abstractmethod
-
-class BaseCrawler(ABC):
+from concurrent.futures import ThreadPoolExecutor
+import os
+class CrawlerBase(ABC):
     rooturl=None
     def __init__(self,url):
         self.rooturl=url
@@ -28,11 +29,24 @@ class BaseCrawler(ABC):
         """Generator which returns uri's to requested datasets"""
         pass
 
-    def parallelDownload(self,direc,check=False,maxconn=8):
+    def parallelDownload(self,outdir,check=False,maxconn=8):
         """
         Download uris in parallel
         :param direc: directory to download to
         :param check: Only download when newer or non-existent (default to False)
         :param maxconn: amount of parallel downloads to execute
         """
-        pass
+        """Download/Update files in a given directory (returns a list of updated files)
+        Note the download is executed in parallel"""
+
+        #create directory if it does not exist
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+
+        updated=[]
+        with ThreadPoolExecutor(max_workers=maxconn) as connectionPool:
+            for uri in self.uris():
+                futureRes=connectionPool.submit(uri.download,outdir,check)
+                if futureRes.result()[1]:
+                    updated.append(futureRes.result()[0])
+        return updated
