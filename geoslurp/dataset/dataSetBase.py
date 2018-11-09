@@ -58,3 +58,7 @@ class DataSet(ABC):
         """Delete data and database entries"""
         pass
 
+    @abstractmethod
+    def halt(self):
+        pass
+

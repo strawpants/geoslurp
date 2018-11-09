@@ -98,7 +98,10 @@ def main(argv):
             opts={}
 
         for ds in scheme:
-            ds.pull(**opts)
+            try:
+                ds.pull(**opts)
+            except KeyboardInterrupt:
+                ds.halt()
 
 
     if args.register or args.update:
@@ -109,9 +112,18 @@ def main(argv):
         else:
             opts={}
 
-        for ds in scheme:
-            ds.register(**opts)
-
+        try:
+            for ds in scheme:
+                ds.register(**opts)
+        except KeyboardInterrupt:
+            #try shutting down gracefully
+            for ds in scheme:
+                try:
+                    ds.halt()
+                except Exception as e:
+                    #OK move on to the next dataset
+                    pass
+            sys.exit(1)
 
 
 

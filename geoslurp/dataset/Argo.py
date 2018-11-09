@@ -132,8 +132,9 @@ class Argo(DataSet):
         # Create table if it doesn't exist
         # import pdb;pdb.set_trace()
         OceanObsTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
-        self._uriqueue=Queue(maxsize=100)
+        self._uriqueue=Queue(maxsize=300)
         self._killUpdate=False
+        self.thrd=None
         #set Argo mirrors and datacenters
         #add thredds catalogs when non-existent
         if 'thredds' not in self._inventData:
@@ -146,16 +147,19 @@ class Argo(DataSet):
                 servdict=crwl.services._asdict()
                 servdict['centers']=[getAttrib(el,'title') for el in crwl.xmlitems()]
                 self._inventData['thredds'].append(servdict)
+        if 'resume' not in self._inventData:
+            self._inventData["resume"]={}
 
     def pull(self):
         """Stub because the actual pulling takes place in a separate thread in the register function"""
         pass
 
-    def register(self,center=None,mirror=0):
+    def register(self,center=None,mirror=0,resume=False):
         """Extracts metadata from the float and registers it in the database
             :param center: specifies the processing center to screen (default takes all available)
                 currently avalaible are: aoml, bodc, coriolis, csio, csiro, incois, jma, kma, kordi, meds, nmdis
             :param mirror: use mirror 0: https://tds0.ifremer.fr (default) or mirror 1: https://data.nodc.noaa.gov
+            :param resume: boolean: resume indexing from last attempt
         """
 
         #first retrieve a list of catalogrefs  (i.e. datacenters)
@@ -168,7 +172,22 @@ class Argo(DataSet):
         else:
             centers=self._inventData['thredds'][mirror]['centers']
 
+        if resume:
+            try:
+                #make a list of remaining centers
+                cntr=self._inventData["resume"]["center"]
+                floatid=self._inventData["resume"]["floatid"]
+                centers=centers[centers.index(cntr):]
+                resumefilt=ThreddsFilter("catalogRef",attr="ID",regex=".*"+cntr+"/"+floatid+".*")
+            except Exception as e:
+                logging.warning("no resume information found, so starting from the beginning")
+                pass
+        else:
+            resumefilt=None
+
+
         for cent in centers:
+            self._inventData["resume"]["center"]=cent
             #loop over all processing centers
             logging.info("Getting catalog of processing center %s"%(cent))
             #determine center catalog url
@@ -176,8 +195,13 @@ class Argo(DataSet):
             filt = ThreddsFilter("dataset", attr="urlPath", regex=".*profiles.*")
 
             # let's start a thread which will start quering the threddsserver and queues jobs
-            t=Thread(target=self.pullWorker, kwargs={"conn":Crawler(catalogurl, filter=filt)})
-            t.start()
+            crwl=Crawler(catalogurl, filter=filt)
+            if(resume):
+                #set a resume point but only follow datasets (i.e. don't download subcatalogues)
+                crwl.setResumePoint(resumefilt,followfilt=ThreddsFilter("dataset"))
+
+            self.thrd=Thread(target=self.pullWorker, kwargs={"conn":crwl})
+            self.thrd.start()
 
             #create a dedicated database session
             ses=self.scheme.db.Session()
@@ -188,6 +212,7 @@ class Argo(DataSet):
                     if uri == None:
                         # done
                         break
+
                     # Check whether an entry already exists inthe database which is up to date
                     try:
                         qResult=ses.query(ArgoTable).filter(ArgoTable.uri.like('%'+uri.suburl+'%')).first()
@@ -209,17 +234,15 @@ class Argo(DataSet):
                         if i > 10:
                             # commit every so many rows
                             ses.commit()
+                            #extract the current floatid (needed for storing resume info)
+                            self._inventData["resume"]["floatid"]=uri.url.split("/")[-3]
                             i=0
                         else:
                             i+=1
                     self._uriqueue.task_done()
-                except RuntimeWarning as e:
-                    logging.warning(e)
-                    logging.warning("Skipping record")
-                    continue
                 except Exception as e2:
-                    # let the threddscrawler come to a gracefull halt
-                   self.stopUpdate()
+                    # let the threddscrawler come to a graceful halt
+                   self.halt()
 
             ses.commit()
             #also update the inventory
@@ -230,24 +253,32 @@ class Argo(DataSet):
 
 
             self.updateInvent()
-            t.join()
+            self.thrd.join()
 
     def purge(self):
         pass
 
-    def stopUpdate(self):
+    def halt(self):
         logging.error("Stopping update")
         self._killUpdate=True
+        # indicate a done task n the queue in order to allow the pullWorker thread to stop gracefully
+        #empty queue
+        while not self._uriqueue.empty():
+            self._uriqueue.get()
+            self._uriqueue.task_done()
+        #also synchronize inventory info (e.g. resume information)
+        self.updateInvent()
+        raise RuntimeWarning("Argo dataset processing stopped")
 
     def pullWorker(self,conn):
         """ Pulls valid opendap URI's from a thredds server and queue them"""
 
-        try:
-            for uri in conn.uris():
-                self._uriqueue.put(uri)
-        except Exception as e:
-            self._uriqueue.put(None)
-            raise RuntimeError("Pulling of Argo URI's stopped")
+        for uri in conn.uris():
+            logging.info("queuing %s",uri.url)
+            self._uriqueue.put(uri)
+            if self._killUpdate:
+                logging.warning("Pulling of Argo URI's stopped")
+                return
         #signal the end of the queue by adding a none
         self._uriqueue.put(None)
 

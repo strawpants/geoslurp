@@ -21,7 +21,6 @@ import re
 import os
 import logging
 from collections import namedtuple
-from datetime  import datetime
 from dateutil.parser import parse as isoParser
 
 from geoslurp.datapull import UriBase,CrawlerBase
@@ -147,6 +146,30 @@ class Crawler(CrawlerBase):
         self.services=self.getServices(self._rootxml,self._catalogurl)
         self._filt=filter
         self._followFilt=followfilter
+        self.resuming=False
+    def setResumePoint(self,filter,followfilt=None):
+        """Sets the filters after which the normal filters will be applied."""
+        # stores a copy of the normal filter and set the resume filter to the normal filter
+        self._filtcopy=self._filt
+        self._filt=filter
+
+        if followfilt:
+            self._followFiltcopy=self._followFilt
+            self._followFilt=followfilt
+        self.resuming=True
+
+    def unsetResumePoint(self):
+        """Unset resume point"""
+        if not self.resuming:
+            return
+
+        self._filt=self._filtcopy
+        self._filtcopy=None
+
+        if self._followFiltcopy:
+            self._followFilt=self._followFiltcopy
+            self._followFiltcopy=None
+        self.resuming=False
 
     @staticmethod
     def getCatalog(url):
@@ -209,6 +232,13 @@ class Crawler(CrawlerBase):
         for xelem in xmlcatalog:
 
             if self._filt.isValid(xelem):
+
+                #special check whether we're considering a resume here
+                if self.resuming:
+                    self.unsetResumePoint()
+                    # we're going to continue with the element after this one
+                    continue
+
                 # Allright we can return this entry straight away
                 yield xelem
                 # Also continue with the loop after yielding
@@ -221,13 +251,14 @@ class Crawler(CrawlerBase):
             if self._followFilt.isValid(xelem):
                 # If this is the case we may need a recursive search in either a
                 if xelem.tag.endswith("catalogRef"):
-                    # We treat CatalogRefs in a special way by retrieving the subcatalog from the OpenDap server
+
+                    # We treat CatalogRefs in a special way by retrieving the subcatalog from the thredds server
                     suburl=os.path.dirname(url)+"/"+gethref(xelem)
                     try:
                         subxml=self.getCatalog(suburl)
                     except:
                         # Just ignore this catalog entry upon exceptions
-                        print("Ignoring failed CatalogRef %s"%(suburl),file=Log)
+                        logging.warning("Ignoring failed CatalogRef %s"%(suburl))
                         continue
                 else:
                     # Otherwise we're just going to look in the children of the current element
