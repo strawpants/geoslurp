@@ -109,6 +109,9 @@ class RGIBase(DataSet):
         self._inventData["version"]=self.__version__
         self.updateInvent()
 
+    def halt(self):
+        pass
+
     def purge(self):
         pass
 

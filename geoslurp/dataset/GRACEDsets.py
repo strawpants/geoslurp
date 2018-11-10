@@ -131,7 +131,7 @@ class GRACEL2Base(DataSet):
                     ses.commit()
             except Exception as e:
                 # Fine no entries found
-                pass
+               pass
 
             meta=graceMetaExtractor(uri)
             try:
@@ -154,6 +154,8 @@ class GRACEL2Base(DataSet):
 
 
 
+    def halt(self):
+        pass
 
     def purge(self):
         pass
