@@ -18,10 +18,6 @@
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.webdav import Crawler as WbCrawler
 import logging
-from sqlalchemy.ext.declarative import declared_attr, as_declarative
-from sqlalchemy import MetaData
-from sqlalchemy import Column,Integer,String, Boolean,Float
-from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 from glob import glob
 import gzip
 import yaml
@@ -29,9 +25,15 @@ from geoslurp.datapull import UriFile
 from io  import StringIO
 import os
 from datetime import datetime
+from sqlalchemy.ext.declarative import declared_attr, as_declarative
+from sqlalchemy import MetaData
+from sqlalchemy import Column,Integer,String, Boolean,Float
+from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
+
+
 #define a declarative baseclass for level2 GRACE data
 @as_declarative(metadata=MetaData(schema='gravity'))
-class GRACEL2TBase(object):
+class GravitySHTBase(object):
     @declared_attr
     def __tablename__(cls):
         #strip of the 'Table' from the class name
@@ -99,7 +101,7 @@ class GRACEL2Base(DataSet):
     def __init__(self,scheme):
         super().__init__(scheme)
         #initialize postgreslq table
-        GRACEL2TBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+        GravitySHTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
 
     def pull(self):
         cred=self.scheme.conf.authCred("podaac")
@@ -163,7 +165,7 @@ class GRACEL2Base(DataSet):
 def GRACEL2ClassFactory(clsName):
     """Dynamically construct GRACE Level 2 dataset classes"""
     base,center,release=clsName.split("_")
-    table=type(clsName+"Table",(GRACEL2TBase,),{})
+    table=type(clsName +"Table", (GravitySHTBase,), {})
     return type(clsName, (GRACEL2Base,), {"release": release, "center":center,"table":table})
 
 # setup GRACE datasets

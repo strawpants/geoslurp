@@ -19,11 +19,12 @@
 
 import os
 from geoslurp.schema import Schema
-from geoslurp.dataset import GRACEdict
+from geoslurp.dataset import GRACEdict,ICGEM_static
+
 
 class Gravity(Schema):
     """A scheme which contains datasets related to gravity fields"""
-    __datasets__=GRACEdict()
+    __datasets__={**GRACEdict(), "ICGEM_static":ICGEM_static}
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
 
