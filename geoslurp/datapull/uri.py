@@ -81,10 +81,12 @@ class UriBase():
     url=None
     lastmod=None
     auth=None #link to a certain authentification alias
-    def __init__(self,url,lastmod=None,auth=None):
+    subdirs='' #create these subdrectories when downloading the file
+    def __init__(self,url,lastmod=None,auth=None,subdirs=''):
         self.url=url
         self.lastmod=lastmod
         self.auth=auth
+        self.subdirs=subdirs
 
     def updateModTime(self):
         """Tries to retrieve the last modification time of a file
@@ -103,9 +105,13 @@ class UriBase():
         ":param gzip: additionally gzips the file (adds .gz to file name)"""
         #setup the output uri
         if gzip:
-            outf=os.path.join(direc,os.path.basename(self.url))+'.gz'
+            outf=os.path.join(direc,self.subdirs,os.path.basename(self.url))+'.gz'
         else:
-            outf=os.path.join(direc,os.path.basename(self.url))
+            outf=os.path.join(direc,self.subdirs,os.path.basename(self.url))
+
+        #create directory if it does not exist
+        if not os.path.exists(os.path.dirname(outf)):
+            os.makedirs(os.path.dirname(outf))
 
         uri=UriFile(url=outf)
         if check and self.lastmod and uri.lastmod:

@@ -17,16 +17,37 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.ftp import Crawler as ftpCrawler
+from geoslurp.config import findFiles
 import logging
-from glob import glob
-import gzip
 import yaml
 from geoslurp.datapull import UriFile
 from io  import StringIO
 import os
 from datetime import datetime
 from geoslurp.meta.gravity import GravitySHTBase, icgemMetaExtractor
+import re
 
+def enhanceMeta(meta):
+    """Extract addtional timestamps from the TU graz data"""
+    #from the TU GRAZ files one can extract the time period information
+    yyyymm_match=re.match(".*([0-9]{4})-([0-9]{2})$",meta["data"]["name"])
+    if yyyymm_match:
+        yr=int(yyyymm_match.group(1))
+        mn=int(yyyymm_match.group(2))
+        meta["tstart"]=datetime(yr,mn,1)
+        if mn ==12:
+            meta['tend']=datetime(yr+1,1,1)
+        else:
+            meta["tend"]=datetime(yr,mn+1,1)
+    else:
+        yyyymmdd_match=re.match(".*([0-9]{4})-([0-9]{2})-([0-9]{2})$",meta["data"]["name"])
+        if yyyymmdd_match:
+            yr=int(yyyymmdd_match.group(1))
+            mn=int(yyyymmdd_match.group(2))
+            dd=int(yyyymmdd_match.group(3))
+            meta['tstart']=datetime(yr,mn,dd)
+            meta['tend']=datetime(yr,mn,dd,23,59)
+    return meta
 
 class TUGRAZGRACEL2Base(DataSet):
     """Derived type representing GRACE spherical harmonic coefficients from the TU GRAZ"""
@@ -40,8 +61,8 @@ class TUGRAZGRACEL2Base(DataSet):
 
     def pull(self):
         url="ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/"+self.__class__.__name__
-        ftp=ftpCrawler(url,pattern='.*gfc',followpattern='monthly_.*')
-        self.updated=ftp.parallelDownload(self.dataDir(),check=True)
+        ftp=ftpCrawler(url,pattern='.*2002-11-01.gfc',followpattern='(monthly_?)|(daily)|([0-9]{4})')
+        self.updated=ftp.parallelDownload(self.dataDir(),check=True,gzip=True)
 
     def register(self):
 
@@ -49,7 +70,8 @@ class TUGRAZGRACEL2Base(DataSet):
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in glob(self.dataDir()+'/*.gfc.gz')]
+            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*gfc.gz')]
+
 
         #loop over files
         for uri in files:
@@ -59,7 +81,7 @@ class TUGRAZGRACEL2Base(DataSet):
                 continue
 
             meta=icgemMetaExtractor(uri)
-
+            meta=enhanceMeta(meta)
             self.addEntry(meta)
 
         self._inventData["lastupdate"]=datetime.now().isoformat()
@@ -78,7 +100,7 @@ class TUGRAZGRACEL2Base(DataSet):
 
 def TUGRAZGRACEL2ClassFactory(clsName):
     """Dynamically construct GRACE Level 2 dataset classes"""
-    table=type(clsName +"Table", (GravitySHTBase,), {})
+    table=type(clsName.replace('-',"_") +"Table", (GravitySHTBase,), {})
     return type(clsName, (TUGRAZGRACEL2Base,), {"release": clsName, "table":table})
 
 # setup GRACE datasets

@@ -19,7 +19,10 @@ from sqlalchemy.ext.declarative import declared_attr, as_declarative
 from sqlalchemy import MetaData
 from sqlalchemy import Column,Integer,String, Boolean,Float
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
-
+import gzip as gz
+import logging
+import re
+from datetime import datetime
 
 #define a declarative baseclass for spherical harmonics gravity  data
 @as_declarative(metadata=MetaData(schema='gravity'))
@@ -84,8 +87,6 @@ def icgemMetaExtractor(uri):
             meta["tidesystem"]="tide-free"
     except:
         pass
-
-    #from the TU GRAZ files one can extract the time period information
 
     return meta
 

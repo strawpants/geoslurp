@@ -19,6 +19,7 @@ import os.path
 import yaml
 import sys
 from collections import namedtuple
+import re
 
 def getCreateDir(returndir):
     """creates a directory when not existent and return it"""
@@ -27,6 +28,16 @@ def getCreateDir(returndir):
     return returndir
 
 Credentials=namedtuple("Credentials","user passw alias")
+
+def findFiles(dir,pattern):
+    """Generator to recursively search adirecctor (returns a generator)"""
+    for dpath,dnames,files in os.walk(dir):
+        # for subdir in dnames:
+        #     yield from findFiles(os.path.join(dir,subdir),pattern)
+
+        for file in files:
+            if re.search(pattern,file):
+                yield os.path.join(dpath,file)
 
 class SlurpConf:
     """ Class which reads and writes configure data in yaml format and contains a database connector"""
