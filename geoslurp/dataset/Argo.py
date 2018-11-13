@@ -29,6 +29,7 @@ from queue import Queue
 from threading import Thread
 import logging
 import os
+import time
 # To do:  etract meta information with a threadpool
 #from concurrent.futures import ThreadPoolExecutor
 
@@ -74,7 +75,14 @@ def argoMetaExtractor(uri,cachedir=False):
     meta=[]
     try:
 
-        ncArgo=ncDset(uri.opendap)
+        try:
+            ncArgo=ncDset(uri.opendap)
+        except OSError as e:
+            #sometimes the opendap server doesn't like the pounding
+            logging.info("Opendap server seems overloaded, waiting for 2 minutes")
+            time.sleep(120) #sleep for 2 minutes before trying again
+            ncArgo=ncDset(uri.opendap)
+
         url=uri.opendap
         #test whether the dataset has zero dimensions (fails for opendap)
         ncreplace=None
@@ -254,6 +262,8 @@ class Argo(DataSet):
 
             self.updateInvent()
             self.thrd.join()
+            #set resume to false after sucessfully processing one center
+            resume=False
 
     def purge(self):
         pass

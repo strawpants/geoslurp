@@ -25,32 +25,7 @@ from geoslurp.datapull import UriFile
 from io  import StringIO
 import os
 from datetime import datetime
-from sqlalchemy.ext.declarative import declared_attr, as_declarative
-from sqlalchemy import MetaData
-from sqlalchemy import Column,Integer,String, Boolean,Float
-from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
-
-
-#define a declarative baseclass for level2 GRACE data
-@as_declarative(metadata=MetaData(schema='gravity'))
-class GravitySHTBase(object):
-    @declared_attr
-    def __tablename__(cls):
-        #strip of the 'Table' from the class name
-        return cls.__name__[:-5].lower()
-    id = Column(Integer, primary_key=True)
-    lastupdate=Column(TIMESTAMP)
-    tstart=Column(TIMESTAMP,index=True)
-    tend=Column(TIMESTAMP,index=True)
-    nmax=Column(Integer)
-    omax=Column(Integer)
-    gm=Column(Float)
-    re=Column(Float)
-    tidesystem=Column(String)
-    format=Column(String)
-    type=Column(String)
-    uri=Column(String, unique=True,index=True)
-    data=Column(JSONB)
+from geoslurp.meta.gravity import GravitySHTBase
 
 def graceMetaExtractor(uri):
     """Extract meta information from a GRACE file"""
@@ -95,7 +70,6 @@ class GRACEL2Base(DataSet):
     """Derived type representing GRACE spherical harmonic coefficients on the podaac server"""
     release=None
     center=None
-    table=None
     updated=None
     __version__=(0,0)
     def __init__(self,scheme):

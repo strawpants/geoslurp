@@ -124,8 +124,9 @@ def allSchemes():
     return dict( [ (x.__name__,x) for x in Schema.__subclasses__()])
 
 
-def mergeDicts(dict1,dict2):
+def mergeDicts(dict1,*vardict):
     """Convenience function which allows inline merging of dicts for python versions < 3.5 (3.5 supports {**dict1,**dict2}"""
     x=dict1.copy()
-    x.update(dict2)
+    for dictadd in vardict:
+        x.update(dictadd)
     return x

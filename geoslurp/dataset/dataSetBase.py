@@ -16,9 +16,14 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from abc import ABC, abstractmethod
+import os
+import logging
 
 class DataSet(ABC):
     """Abstract Base class which hold a dataset (corresponding to a database table"""
+    table=None
+    ses=None
+    commitCounter=0
     def __init__(self,scheme):
         self.name=self.__class__.__name__.lower()
         self.scheme=scheme
@@ -62,3 +67,32 @@ class DataSet(ABC):
     def halt(self):
         pass
 
+    def uriNeedsUpdate(self, urilikestr,lastmod=None):
+        """Query for a URI in the table based on a alike string and delete the entry when older than lastmod"""
+        if not self.ses:
+            self.ses=self.scheme.db.Session()
+
+        try:
+            qResult=self.ses.query(self.table).filter(self.table.uri.like('%'+urilikestr+'%')).first()
+            if qResult.lastupdate >= lastmod:
+                logging.info("No Update needed, skipping %s"%(qResult.uri))
+                return False
+            else:
+                #delete the entries which need updating
+                self.ses.delete(qResult)
+                self.ses.commit()
+        except Exception as e:
+            # Fine no entries found
+            pass
+        return True
+
+    def addEntry(self,metadict):
+            entry=self.table(**metadict)
+            self.ses.add(entry)
+
+            if self.commitCounter > 10:
+                # commit every so many rows
+                self.ses.commit()
+                self.commitCounter=0
+            else:
+                self.commitCounter+=1

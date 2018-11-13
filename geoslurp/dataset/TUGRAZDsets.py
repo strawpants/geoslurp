@@ -14,60 +14,42 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
-# provides a dataset and table for static gravity fields from the icgem website
 
-
-
-from geoslurp.dataset import DataSet,GravitySHTBase
-from geoslurp.datapull.icgem import  Crawler as IcgemCrawler
-import re
-import gzip as gz
+from geoslurp.dataset import DataSet
+from geoslurp.datapull.ftp import Crawler as ftpCrawler
 import logging
 from glob import glob
+import gzip
+import yaml
 from geoslurp.datapull import UriFile
+from io  import StringIO
 import os
 from datetime import datetime
-from geoslurp.meta.gravity import icgemMetaExtractor
+from geoslurp.meta.gravity import GravitySHTBase, icgemMetaExtractor
 
-class ICGEM_static(DataSet):
-    """Manages the static gravity fields which are hosted at http://icgem.gfz-potsdam.de/tom_longtime"""
-    table=type("ICGEM_staticTable",(GravitySHTBase,), {})
+
+class TUGRAZGRACEL2Base(DataSet):
+    """Derived type representing GRACE spherical harmonic coefficients from the TU GRAZ"""
+    table=None
+    updated=None
     __version__=(0,0)
-    def __init__(self, scheme):
+    def __init__(self,scheme):
         super().__init__(scheme)
         #initialize postgreslq table
         GravitySHTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
-        self.updated=[]
-    def pull(self,pattern=None,list=False):
-        """Pulls static gravity fields from the icgem website
-        :param pattern: only download files whose name obeys this regular expression
-        :param list (bool): only list available models"""
-        self.updated=[]
-        crwl=IcgemCrawler()
-        if pattern:
-            regex=re.compile(pattern)
-        outdir=self.dataDir()
-        if list:
-            print("%12s %5s %4s"%("name","nmax", "year"))
-        for uri in crwl.uris():
-            if pattern:
-                if not regex.search(uri.name):
-                    continue
-            if list:
-                #only list available models
-                print("%-12s %5d %4d"%(uri.name,uri.nmax,uri.lastmod.year))
-            else:
-                tmp,upd=uri.download(outdir,check=True, gzip=True)
-                if upd:
-                    self.updated.append(tmp)
 
-    def register(self,pattern=None):
+    def pull(self):
+        url="ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/"+self.__class__.__name__
+        ftp=ftpCrawler(url,pattern='.*gfc',followpattern='monthly_.*')
+        self.updated=ftp.parallelDownload(self.dataDir(),check=True)
+
+    def register(self):
 
         #create a list of files which need to be (re)registered
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in glob(self.dataDir()+'/*.gz')]
+            files=[UriFile(file) for file in glob(self.dataDir()+'/*.gfc.gz')]
 
         #loop over files
         for uri in files:
@@ -94,3 +76,14 @@ class ICGEM_static(DataSet):
     def purge(self):
         pass
 
+def TUGRAZGRACEL2ClassFactory(clsName):
+    """Dynamically construct GRACE Level 2 dataset classes"""
+    table=type(clsName +"Table", (GravitySHTBase,), {})
+    return type(clsName, (TUGRAZGRACEL2Base,), {"release": clsName, "table":table})
+
+# setup GRACE datasets
+def TUGRAZGRACEdict():
+    outdict={}
+    for release in ['ITSG-Grace2018']:
+        outdict[release]=TUGRAZGRACEL2ClassFactory(release)
+    return outdict

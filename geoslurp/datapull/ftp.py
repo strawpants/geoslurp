@@ -28,16 +28,22 @@ class Uri(UriBase):
 
 class Crawler(CrawlerBase):
     """Crawler for ftp directories"""
-    def __init__(self,url,pattern):
+    def __init__(self,url,pattern,followpattern=None):
         super().__init__(url)
         self.pattern=pattern
+        self.followpattern=followpattern
 
-    def uris(self, check=False):
+    def uris(self, check=False,inbuf=None):
         """Generate a list files in a directory and return a list of uri"""
         regexdate=re.compile(b'((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{2} +[0-9]{4})')
 
         regexthisyear=re.compile(b'((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{2} +[0-9]{2}:[0-9]{2})')
-        buf=Uri(self.rooturl).buffer()
+
+        if inbuf:
+            buf=inbuf
+        else:
+            buf=Uri(self.rooturl).buffer()
+
         for ln in buf.getvalue().splitlines():
             fname=ln.decode('utf-8').split()[-1]
             #only apply the pattern to the last column
@@ -61,4 +67,6 @@ class Crawler(CrawlerBase):
                     #one can try to get this information through the header informatio too (slower and not always working)
                     uri.updateModTime()
                 yield uri
-
+            # if self.followpattern  and re.search(self.followpattern,fname):
+            #     #also go into subdirectories if requested
+            #     yield self.uris()
