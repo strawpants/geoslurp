@@ -21,7 +21,7 @@ import pycurl,re
 import time
 from io  import BytesIO
 import logging
-
+import gzip as gz
 
 def timeFromStamp(stamp):
     tinfo = stamp
@@ -39,17 +39,22 @@ def setFtime(file,modTime=None):
         mtime=time.mktime(modTime.timetuple())
         os.utime(file,(mtime,mtime))
 
-def curlDownload(url,fileorfid,mtime=None):
+def curlDownload(url,fileorfid,mtime=None,gzip=True):
     """
     Download  the content of an url to an open file or buffer using pycurl
     :param url: url to download from
     :param fileorfid: filename or open file or buffer
     :param mtimee: explicitly set the modification time to this (usefull when modification times are not supported
     b the server)
+    :param gzip: additionally gzip the file on disk
     :return: modification time of remote file
     """
     if type(fileorfid) == str:
-        fid=open(fileorfid,'wb')
+        if gzip:
+            #note this routine does not change the filename!!
+            fid=gz.open(fileorfid,'wb')
+        else:
+            fid=open(fileorfid,'wb')
     else:
         fid=fileorfid
 
@@ -93,10 +98,16 @@ class UriBase():
         self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
         return self.lastmod
 
-    def download(self,direc,check=False):
-        """Download file into directory and possibly check the modification time"""
+    def download(self,direc,check=False,gzip=False):
+        """Download file into directory and possibly check the modification time
+        ":param gzip: additionally gzips the file (adds .gz to file name)"""
         #setup the output uri
-        uri=UriFile(url=os.path.join(direc,os.path.basename(self.url)))
+        if gzip:
+            outf=os.path.join(direc,os.path.basename(self.url))+'.gz'
+        else:
+            outf=os.path.join(direc,os.path.basename(self.url))
+
+        uri=UriFile(url=outf)
         if check and self.lastmod and uri.lastmod:
             if self.lastmod <= uri.lastmod:
                 #no need to download the file
@@ -104,7 +115,7 @@ class UriBase():
                 return uri,False
         logging.info("Downloading %s"%(uri.url))
         if self.lastmod:
-            curlDownload(self.url,uri.url,self.lastmod)
+            curlDownload(self.url,uri.url,self.lastmod,gzip=gzip)
         else:
             self.lastmod=curlDownload(self.url,uri.url)
         uri.lastmod=self.lastmod

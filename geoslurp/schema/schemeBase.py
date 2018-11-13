@@ -123,3 +123,9 @@ def allSchemes():
     """Returns a dictionary of available schemes"""
     return dict( [ (x.__name__,x) for x in Schema.__subclasses__()])
 
+
+def mergeDicts(dict1,dict2):
+    """Convenience function which allows inline merging of dicts for python versions < 3.5 (3.5 supports {**dict1,**dict2}"""
+    x=dict1.copy()
+    x.update(dict2)
+    return x

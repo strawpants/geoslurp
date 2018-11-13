@@ -19,76 +19,60 @@ from geoslurp.datapull import UriBase,CrawlerBase
 from geoslurp.datapull.http import Uri as http
 from html.parser import HTMLParser
 import re
-
-class icgemParser(HTMLParser):
-    entryActive=False
-    rowregex=re.compile('(^tom-row(?!-header))|(^tom-row-odd)')
-    entry={}
-    models=[]
-    dataname=None
-    linkname=None
-    def __init(self,rooturl):
-        pass
-    def handle_starttag(self, tag, attrs):
-        if tag == 'tr' and self.rowregex.match(attrs[0][1]):
-            self.entry={}
-            self.entryActive=True
-
-        if not self.entryActive:
-            return
-
-        if tag == 'a' and self.linkname:
-            if attrs[0][0] =='href':
-                self.entry[self.linkname]=attrs[0][1]
-                self.linkname=None
-
-        if tag =='td' and attrs[0][1] == 'tom-cell-name':
-            self.dataname="name"
-            self.linkname="reference"
-
-        if tag =='td' and attrs[0][1] == 'tom-cell-doilink':
-            #note this will overwrite a previous reference link (i.e. doi is preferred)
-            self.linkname="reference"
-
-        if tag =='td' and attrs[0][1] == 'tom-cell-year':
-            self.dataname="year"
-
-        if tag =='td' and attrs[0][1] == 'tom-cell-degree':
-            self.dataname="nmax"
-
-        if tag =='td' and attrs[0][1] == 'tom-cell-modelfile':
-            self.linkname="url"
-
-    def handle_endtag(self, tag):
-        if self.entryActive and tag == 'tr':
-            self.entryActive=False
-            self.models.append(self.entry)
-            self.entry={}
-
-    def handle_data(self, data):
-        if self.entryActive and self.dataname:
-            if data.strip() == '':
-                return
-            self.entry[self.dataname]=data
-            #reset dataname after entering data int he dict
-            self.dataname=None
-
+from lxml.etree import HTML as HTMLtree
+import os
+from datetime import datetime
 
 class Uri(UriBase):
     """Holds an uri to an icgem static field"""
-    def __init__(self,url,lastmod=None):
+    def __init__(self,url,lastmod=None,name=None,ref=None,nmax=None,year=None):
+        if year and not lastmod:
+            #use year as the last modification time
+            lastmod=datetime(year,12,31)
         super().__init__(url,lastmod)
+        self.name=name
+        self.ref=ref
+        self.nmax=nmax
+
 
 class Crawler(CrawlerBase):
     """Crawl icgem static fields"""
     def __init__(self):
         super().__init__(url="http://icgem.gfz-potsdam.de/tom_longtime")
+        buf=http(self.rooturl).buffer()
+        self._roothtml=HTMLtree(buf.getvalue())
 
     def uris(self):
         """List uris of available static models"""
-        buf=http("http://icgem.gfz-potsdam.de/tom_longtime").buffer()
-        parser=icgemParser()
-        parser.feed(buf.getvalue().decode('utf-8'))
-        for dct in parser.models:
-            print(dct)
 
+        rowregex=re.compile('(^tom-row(?!-header))|(^tom-row-odd)')
+        for elem in self._roothtml.iterfind('.//tr'):
+            uridict={}
+            if not rowregex.match(elem.attrib['class']):
+                continue
+
+            nameelem=elem.find(".//td[@class='tom-cell-name']")
+            if nameelem.text.strip() is not '':
+                #just find the name end strip line ending
+                uridict["name"]=nameelem.text.lstrip()[:-1]
+            else:
+                #find a name and reference
+                nameelem=nameelem.find(".//a[@href]")
+                uridict["name"]=nameelem.text
+                uridict["ref"]=nameelem.attrib['href']
+
+            #find the year, maximum degree, doi etc
+            uridict["year"]=int(elem.find(".//td[@class='tom-cell-year']").text)
+            uridict["nmax"]=int(elem.find(".//td[@class='tom-cell-degree']").text)
+            try:
+                uridict["url"]=os.path.dirname(self.rooturl)+elem.find(".//td[@class='tom-cell-modelfile']").find(".//a[@href]").attrib["href"]
+            except AttributeError:
+                #not avaailable for download so skip this entry
+                continue
+
+            try:
+                uridict["ref"]=elem.find(".//td[@class='tom-cell-doilink']").find(".//a[@href]").attrib["href"]
+            except AttributeError:
+                #no problem as this entry is optional just pass
+                pass
+            yield Uri(**uridict)
