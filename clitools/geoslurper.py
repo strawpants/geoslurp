@@ -187,7 +187,7 @@ def addCommandLineArgs(parser):
         # parser.add_argument('--cleancache',action='store_true',
         #                     help="Clean up the cache directory associated with a scheme/dataset")
 
-        parser.add_argument("-v","--verbose", action=increaseVerboseAction, nargs="?",const='',default=1,
+        parser.add_argument("-v","--verbose", action=increaseVerboseAction, nargs="?",const='',default=2,
                             help="Increase verbosity of the output one cvan use multiple v's after another (e.g. -vv) "
                                  "to increase verbosity. The default prints errors only")
         #also add datasource options

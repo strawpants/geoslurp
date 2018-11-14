@@ -17,6 +17,9 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.thredds import Crawler,ThreddsFilter, getAttrib
+from geoslurp.datapull.ftp import Crawler as ftpCrawler
+from geoslurp.datapull.ftp import Uri as ftpUri
+from geoslurp.datapull import UriFile
 from geoalchemy2.types import Geography
 from geoalchemy2.elements import WKBElement
 from sqlalchemy import Column,Integer,String, Boolean
@@ -27,13 +30,36 @@ from osgeo import ogr
 from datetime import datetime,timedelta
 from queue import Queue
 from threading import Thread
+import gzip as gz
 import logging
 import os
 import time
+import re
+from geoslurp.config import findFiles
 # To do:  etract meta information with a threadpool
 #from concurrent.futures import ThreadPoolExecutor
 
 from sqlalchemy.ext.declarative import declarative_base
+
+
+class ArgoftpCrawler(ftpCrawler):
+    """Adapted ftpcrawler class to get speedier (concurrent) downloads for argo files
+    Takes advantage of the argo index files"""
+    def uris(self):
+        """This creates a list of _prof.nc files without having to list subdirectories"""
+
+        buf=ftpUri(self.rooturl+"ar_index_global_meta.txt.gz").buffer()
+        regex=re.compile('^([a-z]+/[0-9]+/)([0-9]+_meta.nc),[0-9]+,.{2},([0-9]+)')
+        for ln in gz.decompress(buf.getvalue()).splitlines():
+            mtch=regex.search(ln.decode('utf-8'))
+            if not re.match(self.pattern,ln.decode('utf-8')):
+                continue
+            if mtch:
+                subdir=mtch.group(1)
+                fname=mtch.group(2).replace('meta','prof')
+                t=datetime.strptime(mtch.group(3),"%Y%m%d%H%M%S")
+                yield ftpUri(os.path.join(self.rooturl,'dac',subdir,fname),lastmod=t,subdirs=subdir)
+
 
 #create a custom exception which describes netcdf datasets with dimensions of zero length
 class ZeroDimException(Exception):
@@ -64,6 +90,7 @@ class ArgoTable(OceanObsTBase):
     geom=Column(geoPointtype)
     data=Column(JSONB)
 
+
 def ncStr(ncelem):
     """extracts a utf-8 encoded string from a  netcdf character variable and strips trailing junk"""
     return b"".join(ncelem).decode('utf-8').strip("\0")
@@ -74,34 +101,36 @@ def argoMetaExtractor(uri,cachedir=False):
 
     meta=[]
     try:
+        url=uri.url
+        ncArgo=ncDset(url)
 
-        try:
-            ncArgo=ncDset(uri.opendap)
-        except OSError as e:
-            #sometimes the opendap server doesn't like the pounding
-            logging.info("Opendap server seems overloaded, waiting for 2 minutes")
-            time.sleep(120) #sleep for 2 minutes before trying again
-            ncArgo=ncDset(uri.opendap)
+        # url=uri.opendap
+        # try:
+        #     ncArgo=ncDset(url)
+        # except OSError as e:
+        #     #sometimes the opendap server doesn't like the pounding
+        #     logging.info("Opendap server seems overloaded, waiting for 2 minutes")
+        #     time.sleep(120) #sleep for 2 minutes before trying again
+        #     ncArgo=ncDset(url)
 
-        url=uri.opendap
-        #test whether the dataset has zero dimensions (fails for opendap)
-        ncreplace=None
-        for ky,val in ncArgo.dimensions.items():
-            if val.size == 0:
-                if ky == 'N_HISTORY' and cachedir:
-                    # HACK: allright many argo profiles suffer from a zero dimension N_HISTORY
-                    # which cannot currently be loaded using opendap
-                    # in that case we download the file an reopen the netcdf file locally
-                    urilocal,succ=uri.download(cachedir,True)
-                    url=urilocal.url # this now points to a local file
-                    ncreplace=ncDset(url)
-                    break
-                else:
-                    # we can't cope with this
-                    raise ZeroDimException('Netcdf dimension '+ky+' is zero for '+url)
-        if ncreplace:
-            ncArgo.close()
-            ncArgo=ncreplace
+        # #test whether the dataset has zero dimensions (fails for opendap)
+        # ncreplace=None
+        # for ky,val in ncArgo.dimensions.items():
+        #     if val.size == 0:
+        #         if ky == 'N_HISTORY' and cachedir:
+        #             # HACK: allright many argo profiles suffer from a zero dimension N_HISTORY
+        #             # which cannot currently be loaded using opendap
+        #             # in that case we download the file an reopen the netcdf file locally
+        #             urilocal,succ=uri.download(cachedir,True)
+        #             url=urilocal.url # this now points to a local file
+        #             ncreplace=ncDset(url)
+        #             break
+        #         else:
+        #             # we can't cope with this
+        #             raise ZeroDimException('Netcdf dimension '+ky+' is zero for '+url)
+        # if ncreplace:
+        #     ncArgo.close()
+        #     ncArgo=ncreplace
 
         logging.info("Extracting meta info from: %s"%(url))
 
@@ -134,9 +163,10 @@ def argoMetaExtractor(uri,cachedir=False):
 class Argo(DataSet):
     """Argo table"""
     __version__=(0,0,0)
+    table=ArgoTable
     def __init__(self,scheme):
         super().__init__(scheme)
-
+        self.updated=[]
         # Create table if it doesn't exist
         # import pdb;pdb.set_trace()
         OceanObsTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
@@ -145,134 +175,172 @@ class Argo(DataSet):
         self.thrd=None
         #set Argo mirrors and datacenters
         #add thredds catalogs when non-existent
-        if 'thredds' not in self._inventData:
-            catalogs= ["http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/", "https://data.nodc.noaa.gov/thredds/catalog/argo/gdac/"]
-            self._inventData['thredds']=[]
-            filt=ThreddsFilter("catalogRef")
-            followfilt=ThreddsFilter("dataset")
-            for cat in catalogs:
-                crwl=Crawler(cat+'catalog.xml',filter=filt,followfilter=followfilt)
-                servdict=crwl.services._asdict()
-                servdict['centers']=[getAttrib(el,'title') for el in crwl.xmlitems()]
-                self._inventData['thredds'].append(servdict)
+        # if 'thredds' not in self._inventData:
+        #     catalogs= ["http://tds0.ifremer.fr/thredds/catalog/CORIOLIS-ARGO-GDAC-OBS/", "https://data.nodc.noaa.gov/thredds/catalog/argo/gdac/"]
+            # self._inventData['thredds']=[]
+            # filt=ThreddsFilter("catalogRef")
+            # followfilt=ThreddsFilter("dataset")
+            # for cat in catalogs:
+            #     crwl=Crawler(cat+'catalog.xml',filter=filt,followfilter=followfilt)
+            #     servdict=crwl.services._asdict()
+            #     servdict['centers']=[getAttrib(el,'title') for el in crwl.xmlitems()]
+            #     self._inventData['thredds'].append(servdict)
         if 'resume' not in self._inventData:
             self._inventData["resume"]={}
 
-    def pull(self):
-        """Stub because the actual pulling takes place in a separate thread in the register function"""
-        pass
-
-    def register(self,center=None,mirror=1,resume=False):
-        """Extracts metadata from the float and registers it in the database
-            :param center: specifies the processing center to screen (default takes all available)
-                currently avalaible are: aoml, bodc, coriolis, csio, csiro, incois, jma, kma, kordi, meds, nmdis
-            :param mirror: use mirror 0: https://tds0.ifremer.fr (default) or mirror 1: https://data.nodc.noaa.gov
-            :param resume: boolean: resume indexing from last attempt
+    def pull(self,center=None,mirror=0):
+        """ Pulls the combined *_prof.nc files from the ftp server
+        :param center (string): only pull data from a specific datacenter
+        :param mirror (0 or 1): use ifremer (0) or usgodae (1) mirror
         """
+        ftpmirrors=["ftp://ftp.ifremer.fr/ifremer/argo/","ftp://usgodae.org/pub/outgoing/argo/"]
 
-        #first retrieve a list of catalogrefs  (i.e. datacenters)
-        # make a list of all available centers
+        #since crawling thought the ftp directories takes relatively much time we're going to speed up
         if center:
-            #only consider a specific center
-            if center not in self._inventData['thredds'][mirror]['centers']:
-                raise RuntimeError('Datacenter not found')
-            centers=[center]
+            ftpcrwl=ArgoftpCrawler(ftpmirrors[mirror],center)
         else:
-            centers=self._inventData['thredds'][mirror]['centers']
+            ftpcrwl=ArgoftpCrawler(ftpmirrors[mirror])
+        self.updated=ftpcrwl.parallelDownload(self.dataDir(),check=True,maxconn=20)
 
-        if resume:
-            try:
-                #make a list of remaining centers
-                cntr=self._inventData["resume"]["center"]
-                floatid=self._inventData["resume"]["floatid"]
-                centers=centers[centers.index(cntr):]
-                resumefilt=ThreddsFilter("catalogRef",attr="ID",regex=".*"+cntr+"/"+floatid+".*")
-            except Exception as e:
-                logging.warning("no resume information found, so starting from the beginning")
-                pass
+
+    def register(self,center=None):
+        """register downloaded commbined prof files"""
+
+        #create a list of files which need to be (re)registered
+        if self.updated:
+            files=self.updated
         else:
-            resumefilt=None
+            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*nc')]
 
-        for cent in centers:
-            self._inventData["resume"]["center"]=cent
-            #loop over all processing centers
-            logging.info("Getting catalog of processing center %s"%(cent))
-            #determine center catalog url
-            catalogurl=self._inventData['thredds'][mirror]['baseurl']+self._inventData['thredds'][mirror]['catalog']+cent+'/catalog.xml'
-            filt = ThreddsFilter("dataset", attr="urlPath", regex=".*_prof.nc")
+        #loop over files
+        for uri in files:
+            if center and not re.search(center,uri.url):
+                continue
 
-            followf=ThreddsFilter("catalogRef",attr="ID",regex='.*'+cent+'(?!\/[0-9]+\/profiles)',).OR("dataset")
-            # let's start a thread which will start quering the threddsserver and queues jobs
-            crwl=Crawler(catalogurl, filter=filt,followfilter=followf)
-            if(resume):
-                #set a resume point but only follow datasets (i.e. don't download subcatalogues)
-                crwl.setResumePoint(resumefilt,followfilt=ThreddsFilter("dataset"))
+            urilike=uri.url
 
-            self.thrd=Thread(target=self.pullWorker, kwargs={"conn":crwl})
-            self.thrd.start()
+            if not self.uriNeedsUpdate(urilike,uri.lastmod):
+                continue
+            for meta in argoMetaExtractor(uri):
+                self.addEntry(meta)
 
-            #create a dedicated database session
-            ses=self.scheme.db.Session()
-            i=0
-            while not self._killUpdate:
-                try:
-                    uri=self._uriqueue.get()
-                    if uri == None:
-                        # done
-                        break
+        self._inventData["lastupdate"]=datetime.now().isoformat()
+        self._inventData["version"]=self.__version__
+        self.updateInvent()
 
-                    # Check whether entries already exists in the database which is up to date
-                    try:
-                        noupdate=False
-                        qResults=ses.query(ArgoTable).filter(ArgoTable.uri.like('%'+uri.suburl+'%'))
-                        for qres in qResults:
-                            if qres.lastupdate >= uri.lastmod:
-                                logging.info("No Update needed, skipping %s"%(uri.suburl))
-                                self._uriqueue.task_done()
-                                noupdate=True
-                            else:
-                                noupdate=False
-                                #delete the entries which need updating
-                                # ses.query(ArgoTable).filter(ArgoTable.uri.like('%'+uri.suburl+'%')).delete()
-                                ses.delete(qres)
-
-                        if noupdate:
-                            continue
-                    except:
-                        # Fine no entries found
-                        pass
-
-                    for metadict in argoMetaExtractor(uri,self.cacheDir(os.path.dirname(uri.suburl))):
-                        entry=ArgoTable(**metadict)
-                        ses.add(entry)
-                        if i > 10:
-                            # commit every so many rows
-                            ses.commit()
-                            #extract the current floatid (needed for storing resume info)
-                            self._inventData["resume"]["floatid"]=uri.url.split("/")[-3]
-                            i=0
-                        else:
-                            i+=1
-                    self._uriqueue.task_done()
-                except Exception as e2:
-                    # let the threddscrawler come to a graceful halt
-                   self.halt()
-
-            ses.commit()
-            #also update the inventory
-            self._inventData["lastupdate"]=datetime.now().isoformat()
-            self._inventData["version"]=self.__version__
-            if cent not in self._inventData['thredds'][mirror]['centers']:
-                self._inventData['centers'].append(cent)
+        self.ses.commit()
 
 
-            self.updateInvent()
-            self.thrd.join()
-            #set resume to false after sucessfully processing one center
-            resume=False
 
-    def purge(self):
-        pass
+    # def thredssregister(self,center=None,mirror=1,resume=False):
+    #     """Extracts metadata from the float and registers it in the database
+    #         :param center: specifies the processing center to screen (default takes all available)
+    #             currently avalaible are: aoml, bodc, coriolis, csio, csiro, incois, jma, kma, kordi, meds, nmdis
+    #         :param mirror: use mirror 0: https://tds0.ifremer.fr (default) or mirror 1: https://data.nodc.noaa.gov
+    #         :param resume: boolean: resume indexing from last attempt
+    #     """
+    #
+    #     #first retrieve a list of catalogrefs  (i.e. datacenters)
+    #     # make a list of all available centers
+    #     if center:
+    #         #only consider a specific center
+    #         if center not in self._inventData['thredds'][mirror]['centers']:
+    #             raise RuntimeError('Datacenter not found')
+    #         centers=[center]
+    #     else:
+    #         centers=self._inventData['thredds'][mirror]['centers']
+    #
+    #     if resume:
+    #         try:
+    #             #make a list of remaining centers
+    #             cntr=self._inventData["resume"]["center"]
+    #             floatid=self._inventData["resume"]["floatid"]
+    #             centers=centers[centers.index(cntr):]
+    #             resumefilt=ThreddsFilter("catalogRef",attr="ID",regex=".*"+cntr+"/"+floatid+".*")
+    #         except Exception as e:
+    #             logging.warning("no resume information found, so starting from the beginning")
+    #             pass
+    #     else:
+    #         resumefilt=None
+    #
+    #     for cent in centers:
+    #         self._inventData["resume"]["center"]=cent
+    #         #loop over all processing centers
+    #         logging.info("Getting catalog of processing center %s"%(cent))
+    #         #determine center catalog url
+    #         catalogurl=self._inventData['thredds'][mirror]['baseurl']+self._inventData['thredds'][mirror]['catalog']+cent+'/catalog.xml'
+    #         filt = ThreddsFilter("dataset", attr="urlPath", regex=".*_prof.nc")
+    #
+    #         followf=ThreddsFilter("catalogRef",attr="ID",regex='.*'+cent+'(?!\/[0-9]+\/profiles)',).OR("dataset")
+    #         # let's start a thread which will start quering the threddsserver and queues jobs
+    #         crwl=Crawler(catalogurl, filter=filt,followfilter=followf)
+    #         if(resume):
+    #             #set a resume point but only follow datasets (i.e. don't download subcatalogues)
+    #             crwl.setResumePoint(resumefilt,followfilt=ThreddsFilter("dataset"))
+    #
+    #         self.thrd=Thread(target=self.pullWorker, kwargs={"conn":crwl})
+    #         self.thrd.start()
+    #
+    #         #create a dedicated database session
+    #         ses=self.scheme.db.Session()
+    #         i=0
+    #         while not self._killUpdate:
+    #             try:
+    #                 uri=self._uriqueue.get()
+    #                 if uri == None:
+    #                     # done
+    #                     break
+    #
+    #                 # Check whether entries already exists in the database which is up to date
+    #                 try:
+    #                     noupdate=False
+    #                     qResults=ses.query(self.table).filter(self.table.uri.like('%'+uri.suburl+'%'))
+    #                     for qres in qResults:
+    #                         if qres.lastupdate >= uri.lastmod:
+    #                             logging.info("No Update needed, skipping %s"%(uri.suburl))
+    #                             self._uriqueue.task_done()
+    #                             noupdate=True
+    #                         else:
+    #                             noupdate=False
+    #                             #delete the entries which need updating
+    #                             # ses.query(ArgoTable).filter(ArgoTable.uri.like('%'+uri.suburl+'%')).delete()
+    #                             ses.delete(qres)
+    #
+    #                     if noupdate:
+    #                         continue
+    #                 except:
+    #                     # Fine no entries found
+    #                     pass
+    #
+    #                 for metadict in argoMetaExtractor(uri,self.cacheDir(os.path.dirname(uri.suburl))):
+    #                     entry=self.table(**metadict)
+    #                     ses.add(entry)
+    #                     if i > 10:
+    #                         # commit every so many rows
+    #                         ses.commit()
+    #                         #extract the current floatid (needed for storing resume info)
+    #                         self._inventData["resume"]["floatid"]=uri.url.split("/")[-3]
+    #                         i=0
+    #                     else:
+    #                         i+=1
+    #                 self._uriqueue.task_done()
+    #             except Exception as e2:
+    #                 # let the threddscrawler come to a graceful halt
+    #                self.halt()
+    #
+    #         ses.commit()
+    #         #also update the inventory
+    #         self._inventData["lastupdate"]=datetime.now().isoformat()
+    #         self._inventData["version"]=self.__version__
+    #         if cent not in self._inventData['thredds'][mirror]['centers']:
+    #             self._inventData['centers'].append(cent)
+    #
+    #
+    #         self.updateInvent()
+    #         self.thrd.join()
+    #         #set resume to false after sucessfully processing one center
+    #         resume=False
+
 
     def halt(self):
         logging.error("Stopping update")

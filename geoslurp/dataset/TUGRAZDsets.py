@@ -92,11 +92,6 @@ class TUGRAZGRACEL2Base(DataSet):
 
 
 
-    def halt(self):
-        pass
-
-    def purge(self):
-        pass
 
 def TUGRAZGRACEL2ClassFactory(clsName):
     """Dynamically construct GRACE Level 2 dataset classes"""

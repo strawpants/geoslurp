@@ -32,7 +32,7 @@ from glob import glob
 import logging
 import re
 
-geotracktype = Geography(geometry_type="LINESTRINGZ", srid='4326', spatial_index=True,dimension=3)
+geotracktype = Geography(geometry_type="MULTILINESTRINGZ", srid='4326', spatial_index=True, dimension=3)
 
 @as_declarative(metadata=MetaData(schema='altim'))
 class RadsTBase(object):
@@ -54,12 +54,20 @@ class RadsTBase(object):
 
 def radsMetaDataExtractor(uri):
     """Extract a dictionary with rads antries for the database"""
-    logging.info("extracting dta from %s"%(uri.url))
+    logging.info("extracting data from %s"%(uri.url))
     ncrads=ncDset(uri.url)
-    track=ogr.Geometry(ogr.wkbLineString)
-
+    track=ogr.Geometry(ogr.wkbMultiLineString)
+    trackseg=ogr.Geometry(ogr.wkbLineString)
+    lonprev=ncrads["lon"][0]
     for lon,lat in zip(ncrads["lon"][:],ncrads["lat"][:]):
-        track.AddPoint(float(lon),float(lat))
+        if abs(lonprev-lon) > 180:
+            #start a new segment
+            track.AddGeometry(trackseg)
+            trackseg=ogr.Geometry(ogr.wkbLineString)
+        trackseg.AddPoint(float(lon),float(lat),0)
+        lonprev=lon
+    if trackseg.GetPointCount():
+        track.AddGeometry(trackseg)
     #reference time for rads
     t0=datetime(1985,1,1)
     mtch=re.search("p([0-9]+)c([0-9]+).nc",uri.url)
@@ -70,7 +78,8 @@ def radsMetaDataExtractor(uri):
           "apass":int(mtch.group(1)),
           "uri":uri.url,
           "data":{},
-          "geom":WKBElement(track.ExportToWkb(),srid=4326,extended=True)
+          # "geom":track.ExportToIsoWkt()
+          "geom":WKBElement(track.ExportToIsoWkb(),srid=4326,extended=True)
           }
 
     return meta
@@ -100,7 +109,7 @@ class RadsBase(DataSet):
         url="rads.tudelft.nl::rads/data"
 
         #pull configuration data (xml files)
-        rsync(url+"/conf",auth=cred).parallelDownload(radsdir,True)
+        rsync(url+"/conf",auth=cred).parallelDownload(self.radsdir,True)
 
         srcurl=os.path.join(url,self.sat,self.phase)
         desturl=os.path.join(self.radsdir,self.sat)
@@ -160,11 +169,6 @@ class RadsBase(DataSet):
 
 
 
-    def purge(self):
-        pass
-
-    def halt(self):
-        pass
 
 # Factory method to dynamically create classes
 def radsclassFactory(clnm):

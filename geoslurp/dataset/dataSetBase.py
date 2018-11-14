@@ -58,33 +58,45 @@ class DataSet(ABC):
         """Register the downloaded dataset in the database"""
         pass
 
-    @abstractmethod
     def purge(self):
-        """Delete data and database entries"""
-        pass
+        """Delete dataset entry"""
+        self._inventData={None}
+        del self.scheme._dbinvent.datasets[self.name]
+        self.scheme._ses.commit()
+        self.scheme.dropTable(self.name)
 
-    @abstractmethod
     def halt(self):
         pass
 
-    def uriNeedsUpdate(self, urilikestr,lastmod=None):
+    def uriNeedsUpdate(self, urilikestr,lastmod):
         """Query for a URI in the table based on a alike string and delete the entry when older than lastmod"""
         if not self.ses:
             self.ses=self.scheme.db.Session()
 
+        needsupdate=True
         try:
-            qResult=self.ses.query(self.table).filter(self.table.uri.like('%'+urilikestr+'%')).first()
-            if qResult.lastupdate >= lastmod:
-                logging.info("No Update needed, skipping %s"%(qResult.uri))
-                return False
+            qResults=self.ses.query(self.table).filter(self.table.uri.like('%'+urilikestr+'%'))
+            if qResults.count() == 0:
+                return True
+            needsupdate=False
+            #check if at least one needs updating
+            for qres in qResults:
+                if qres.lastupdate < lastmod:
+                    needsupdate=True
+                    break
+
+            if needsupdate:
+                for qres in qResults:
+                    #delete the entries which need updating
+                    self.ses.delete(qres)
+                    self.ses.commit()
             else:
-                #delete the entries which need updating
-                self.ses.delete(qResult)
-                self.ses.commit()
+                logging.info("No Update needed, skipping %s"%(urilikestr))
+
         except Exception as e:
             # Fine no entries found
             pass
-        return True
+        return needsupdate
 
     def addEntry(self,metadict):
             entry=self.table(**metadict)
