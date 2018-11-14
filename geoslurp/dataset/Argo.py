@@ -162,7 +162,7 @@ class Argo(DataSet):
         """Stub because the actual pulling takes place in a separate thread in the register function"""
         pass
 
-    def register(self,center=None,mirror=0,resume=False):
+    def register(self,center=None,mirror=1,resume=False):
         """Extracts metadata from the float and registers it in the database
             :param center: specifies the processing center to screen (default takes all available)
                 currently avalaible are: aoml, bodc, coriolis, csio, csiro, incois, jma, kma, kordi, meds, nmdis
@@ -193,17 +193,17 @@ class Argo(DataSet):
         else:
             resumefilt=None
 
-
         for cent in centers:
             self._inventData["resume"]["center"]=cent
             #loop over all processing centers
             logging.info("Getting catalog of processing center %s"%(cent))
             #determine center catalog url
             catalogurl=self._inventData['thredds'][mirror]['baseurl']+self._inventData['thredds'][mirror]['catalog']+cent+'/catalog.xml'
-            filt = ThreddsFilter("dataset", attr="urlPath", regex=".*profiles.*")
+            filt = ThreddsFilter("dataset", attr="urlPath", regex=".*_prof.nc")
 
+            followf=ThreddsFilter("catalogRef",attr="ID",regex='.*'+cent+'(?!\/[0-9]+\/profiles)',).OR("dataset")
             # let's start a thread which will start quering the threddsserver and queues jobs
-            crwl=Crawler(catalogurl, filter=filt)
+            crwl=Crawler(catalogurl, filter=filt,followfilter=followf)
             if(resume):
                 #set a resume point but only follow datasets (i.e. don't download subcatalogues)
                 crwl.setResumePoint(resumefilt,followfilt=ThreddsFilter("dataset"))
@@ -221,17 +221,23 @@ class Argo(DataSet):
                         # done
                         break
 
-                    # Check whether an entry already exists inthe database which is up to date
+                    # Check whether entries already exists in the database which is up to date
                     try:
-                        qResult=ses.query(ArgoTable).filter(ArgoTable.uri.like('%'+uri.suburl+'%')).first()
-                        if qResult.lastupdate >= uri.lastmod:
-                            logging.info("No Update needed, skipping %s"%(uri.suburl))
-                            self._uriqueue.task_done()
+                        noupdate=False
+                        qResults=ses.query(ArgoTable).filter(ArgoTable.uri.like('%'+uri.suburl+'%'))
+                        for qres in qResults:
+                            if qres.lastupdate >= uri.lastmod:
+                                logging.info("No Update needed, skipping %s"%(uri.suburl))
+                                self._uriqueue.task_done()
+                                noupdate=True
+                            else:
+                                noupdate=False
+                                #delete the entries which need updating
+                                # ses.query(ArgoTable).filter(ArgoTable.uri.like('%'+uri.suburl+'%')).delete()
+                                ses.delete(qres)
+
+                        if noupdate:
                             continue
-                        else:
-                            #delete the entries which need updating
-                            ses.query(ArgoTable).filter(ArgoTable.uri.like('%'+uri.suburl+'%')).delete()
-                            # ses.delete(qResult)
                     except:
                         # Fine no entries found
                         pass

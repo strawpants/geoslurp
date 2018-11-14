@@ -52,7 +52,7 @@ class Crawler(CrawlerBase):
             #try to parse the date from the buffer line
             match=regexdate.search(ln)
             if match:
-                t=datetime.strptime(match.gmeroup(1).decode('utf-8'),'%b %d %Y')
+                t=datetime.strptime(match.group(1).decode('utf-8'),'%b %d %Y')
             else:
                 #try to see if the date contains HH:MM (this year)
                 match=regexthisyear.search(ln)

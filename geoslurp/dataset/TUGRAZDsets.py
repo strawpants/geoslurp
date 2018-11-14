@@ -61,8 +61,8 @@ class TUGRAZGRACEL2Base(DataSet):
 
     def pull(self):
         url="ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/"+self.__class__.__name__
-        ftp=ftpCrawler(url,pattern='.*2002-11-01.gfc',followpattern='(monthly_?)|(daily)|([0-9]{4})')
-        self.updated=ftp.parallelDownload(self.dataDir(),check=True,gzip=True)
+        ftp=ftpCrawler(url,pattern='.*.gfc',followpattern='(monthly_?)|(daily)|([0-9]{4})')
+        self.updated=ftp.parallelDownload(self.dataDir(),check=True,gzip=True, maxconn=20)
 
     def register(self):
 

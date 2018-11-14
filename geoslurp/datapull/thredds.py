@@ -267,10 +267,10 @@ class Crawler(CrawlerBase):
 
                 yield from self.xmlitems(subxml, suburl, depth)
 
-    def uris(self):
+    def uris(self,depth=10):
         """Generates a list of threddsURI's (makes use of xmlitems())"""
         urlFilt=ThreddsFilter("dataset", attr="urlPath")
-        for xelem in self.xmlitems():
+        for xelem in self.xmlitems(depth=depth):
             if urlFilt.isValid(xelem):
                 yield Uri(xelem,self.services)
 

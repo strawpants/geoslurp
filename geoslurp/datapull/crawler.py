@@ -41,9 +41,13 @@ class CrawlerBase(ABC):
 
 
         updated=[]
+        futures=[]
         with ThreadPoolExecutor(max_workers=maxconn) as connectionPool:
             for uri in self.uris():
-                futureRes=connectionPool.submit(uri.download,outdir,check,gzip)
-                if futureRes.result()[1]:
-                    updated.append(futureRes.result()[0])
+                futures.append(connectionPool.submit(uri.download,outdir,check,gzip))
+
+        for future in futures:
+            if future.result()[1]:
+                updated.append(future.result()[0])
+
         return updated
