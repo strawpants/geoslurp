@@ -39,7 +39,7 @@ def setFtime(file,modTime=None):
         mtime=time.mktime(modTime.timetuple())
         os.utime(file,(mtime,mtime))
 
-def curlDownload(url,fileorfid,mtime=None,gzip=True):
+def curlDownload(url,fileorfid,mtime=None,gzip=False):
     """
     Download  the content of an url to an open file or buffer using pycurl
     :param url: url to download from
@@ -100,14 +100,19 @@ class UriBase():
         self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
         return self.lastmod
 
-    def download(self,direc,check=False,gzip=False):
+    def download(self,direc,check=False,gzip=False,outfile=None):
         """Download file into directory and possibly check the modification time
         ":param gzip: additionally gzips the file (adds .gz to file name)"""
         #setup the output uri
-        if gzip:
-            outf=os.path.join(direc,self.subdirs,os.path.basename(self.url))+'.gz'
+        if outfile:
+            outf=os.path.join(direc,self.subdirs,outfile)
         else:
-            outf=os.path.join(direc,self.subdirs,os.path.basename(self.url))
+            if gzip:
+                outf=os.path.join(direc,self.subdirs,os.path.basename(self.url))+'.gz'
+            else:
+                outf=os.path.join(direc,self.subdirs,os.path.basename(self.url))
+
+
 
         #create directory if it does not exist
         if not os.path.exists(os.path.dirname(outf)):
@@ -123,7 +128,7 @@ class UriBase():
         if self.lastmod:
             curlDownload(self.url,uri.url,self.lastmod,gzip=gzip)
         else:
-            self.lastmod=curlDownload(self.url,uri.url)
+            self.lastmod=curlDownload(self.url,uri.url,gzip=gzip)
         uri.lastmod=self.lastmod
         return uri,True
 

@@ -14,20 +14,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
-# Schema which stores Argo data (links)
+# Schema which stores various global gis datasets
 from geoslurp.schema import Schema
-from geoslurp.dataset import Argo, getPSMSLDicts
-from geoslurp.schema import mergeDicts
-
-class OceanObs(Schema):
-    """A scheme to download and manage oceanographic insitu data.
-    Currently the following datasets can be registered:
-    Argo data from the CORLIOLIS Opendap server
+from geoslurp.dataset import WriBasin
+class globalGIS(Schema):
+    """A scheme to download and manage various gis data .
     """
-    __datasets__=mergeDicts({"Argo":Argo},getPSMSLDicts())
+    __datasets__={"WriBasin":WriBasin}
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
-
-
 
 

@@ -25,7 +25,7 @@ class DataSet(ABC):
     ses=None
     commitCounter=0
     def __init__(self,scheme):
-        self.name=self.__class__.__name__.lower()
+        self.name=self.__class__.__name__.lower().replace('-',"_")
         self.scheme=scheme
         #retrieve the Dataset entry (in the form of a dictionary) from the Inventory
         try:

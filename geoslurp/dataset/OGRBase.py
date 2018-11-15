@@ -15,20 +15,15 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-#some datapull to work with ogr vector files
-# NOTE This file will be made obsolete , better use the OGRBaseDset
-# RGIDsets and GSHHBase needs updating
-
-from geoalchemy2.elements import WKBElement
+from geoslurp.dataset import DataSet
 from osgeo import ogr
-from geoalchemy2 import Geography
 import logging
-from geoslurp.db import tableMapFactory
+from geoalchemy2 import WKBElement,Geography
 from sqlalchemy import Table,Column, Integer, String, Float
-from geoalchemy2.elements import WKBElement
-import re
+from geoslurp.db import tableMapFactory
+from datetime import datetime
 
-def columnsFromFeat(feat, spatindex=True, forceGType=None):
+def columnsFromOgrFeat(feat, spatindex=True, forceGType=None):
     """Returns a list of columns from a osgeo feature"""
     gisMap = {'String': String, 'Integer': Integer, 'Real': Float, 'Float': Float}
     df = feat.GetDefnRef()
@@ -47,11 +42,10 @@ def columnsFromFeat(feat, spatindex=True, forceGType=None):
     else:
         gType = feat.geometry().GetGeometryName()
     geomtype = Geography(gType, srid='4326', spatial_index=spatindex)
-    # geomtype = Geometry(gType, srid='4326', spatial_index=spatindex)
     cols.append(Column('geom', geomtype))
     return cols
 
-def valuesFromFeat(feat):
+def valuesFromOgrFeat(feat):
     """Returns a dictionary with loaded values from a feature"""
     df=feat.GetDefnRef()
 
@@ -71,44 +65,50 @@ def valuesFromFeat(feat):
     vals['geom']=WKBElement(feat.geometry().ExportToWkb(),srid=4326)
     return vals
 
-def fillGeoTable(folder, tablename, scheme, regex=None, forceGType=None):
-    """Update/populate a database table (creates one if it doesn't exist)
-    This function reads all layers in the shapefile directory whose name obeys
-    the regex and puts them in a single table.
-    :param folder: Folder containing shapefiles
-    :param tablename: name of the resulting table
-    :param scheme: An instance of a derived class fom schemeBase
-    :param regex (string,optional): a layer regex to allow selecting a subseet of layers (defauult takes all layers)
-    :param forceGType (optional): a geometry type to be used as the "geom" column
-    :returns nothing
-    """
+class OGRBase(DataSet):
+    """Base class which downloads a single OGR layer (e.g. shapefile) and registers it as a postgis table"""
     table=None
-    ses=scheme.db.Session()
-    # currently we can only cope with updating the entire table as a whole
-    scheme.dropTable(tablename)
-    # if self.dbeng.has_table(tablename,schema=schema):
-    loggging.info("Filling POSTGIS table %s.%s with data from %s" % (scheme._schema, tablename, folder))
-    #open shapefile directory
-    shpf=ogr.Open(folder)
-    for il in range(shpf.GetLayerCount()):
-        #check for regex
-        if regex:
-            if not bool(re.search(regex,shpf[il].GetName())):
-                continue
-        for ift in range(shpf[il].GetFeatureCount()):
-            #we need to make a emporary clone here as osgeo will cause a segfault otherwise
-            feat=shpf[il][ift].Clone()
+    gtype=None
+    ogrfile=None
+    def __init__(self,scheme):
+        super().__init__(scheme)
 
-            if table == None:
-                cols=columnsFromFeat(feat,forceGType=forceGType)
-                table=Table(tablename, scheme.db.mdata, *cols, schema=scheme._schema)
-                table.create(checkfirst=True)
-                tableMap=tableMapFactory(tablename,table)
-            values=valuesFromFeat(feat)
+    def register(self):
+        """Update/populate a database table (creates one if it doesn't exist)
+        This function reads all layers in the shapefile directory whose name obeys
+        the regex and puts them in a single table.
+        :param ogrfile: gdal dataset (e.g. shapefile)
+        :param forceGType (optional): a geometry type to be used as the "geom" column
+        :returns nothing (but sets the internal qlalchemy table)
+        """
+        ses=self.scheme.db.Session()
+        # currently we can only cope with updating the entire table as a whole
+        self.scheme.dropTable(self.name)
+
+        logging.info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme._schema, self.name, self.ogrfile))
+        #open shapefile directory
+        shpf=ogr.Open(self.ogrfile)
+        if shpf.GetLayerCount() != 1:
+            raise RuntimeError("Don't know which layer to load")
+        shpflayer=shpf[0]
+        for ift in range(shpflayer.GetFeatureCount()):
+            #we need to make a temporary clone here as osgeo will cause a segfault otherwise
+            feat=shpflayer[ift].Clone()
+
+            if self.table == None:
+                cols=columnsFromOgrFeat(feat,forceGType=self.gtype)
+                self.table=Table(self.name, self.scheme.db.mdata, *cols, schema=self.scheme._schema)
+                self.table.create(checkfirst=True)
+                tableMap=tableMapFactory(self.name,self.table)
+            values=valuesFromOgrFeat(feat)
             try:
                 ses.add(tableMap(**values))
             except:
                 pass
-    ses.commit()
-    ses.close()
+        ses.commit()
+        ses.close()
+
+        #also update data entry from the inventory table
+        self._inventData["lastupdate"]=datetime.now().isoformat(),
+        self.updateInvent()
 

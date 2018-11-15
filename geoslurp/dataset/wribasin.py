@@ -14,20 +14,23 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
-# Schema which stores Argo data (links)
-from geoslurp.schema import Schema
-from geoslurp.dataset import Argo, getPSMSLDicts
-from geoslurp.schema import mergeDicts
 
-class OceanObs(Schema):
-    """A scheme to download and manage oceanographic insitu data.
-    Currently the following datasets can be registered:
-    Argo data from the CORLIOLIS Opendap server
-    """
-    __datasets__=mergeDicts({"Argo":Argo},getPSMSLDicts())
-    def __init__(self,InventInstance, conf):
-        super().__init__(InventInstance, conf)
+from geoslurp.dataset import OGRBase
+from geoslurp.datapull.http import Uri as http
+import urllib.request
+from zipfile import ZipFile
+import os
 
+class WriBasin(OGRBase):
+    """Base class for """
+    def __init__(self,scheme):
+        super().__init__(scheme)
+        self.ogrfile=os.path.join(self.cacheDir(),"wribasin.shp")
 
+    def pull(self):
+        """Pulls the wribasin data from the internet and unpacks it in the cache directory"""
+        fzip=os.path.join(self.cacheDir(),"wri_basin.zip")
+        urllib.request.urlretrieve("http://www.fao.org/geonetwork/srv/en/resources.get?id=30914&fname=wri_basins.zip&access=private",fzip)
 
-
+        with ZipFile(os.path.join(self.cacheDir(),"wri_basin.zip"),'r') as zp:
+            zp.extractall(self.cacheDir())

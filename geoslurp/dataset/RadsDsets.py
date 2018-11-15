@@ -58,18 +58,22 @@ def radsMetaDataExtractor(uri):
     track=ogr.Geometry(ogr.wkbMultiLineString)
     trackseg=ogr.Geometry(ogr.wkbLineString)
     lonprev=ncrads["lon"][0]
+    tprev=ncrads["time"][0]
     if lonprev > 180:
         lonprev-=360
-    for lon,lat in zip(ncrads["lon"][:],ncrads["lat"][:]):
+    for t,lon,lat in zip(ncrads["time"][:],ncrads["lon"][:],ncrads["lat"][:]):
         if lon > 180:
             #make sure longitude goes from -180 to 180
             lon-=360
-        if abs(lonprev-lon) > 180:
+            #create a new segment with a gap larger than 100 seconds
+        if abs(lonprev-lon) > 180 or t-tprev > 100:
             #start a new segment
             track.AddGeometry(trackseg)
             trackseg=ogr.Geometry(ogr.wkbLineString)
         trackseg.AddPoint(float(lon),float(lat),0)
         lonprev=lon
+        tprev=t
+
     if trackseg.GetPointCount():
         track.AddGeometry(trackseg)
     #reference time for rads
