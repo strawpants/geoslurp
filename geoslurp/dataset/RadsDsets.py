@@ -46,7 +46,6 @@ class RadsTBase(object):
     tend=Column(TIMESTAMP,index=True)
     cycle=Column(Integer)
     apass=Column(Integer)
-    direction=Column(String)
     uri=Column(String, unique=True,index=True)
     data=Column(JSONB)
     geom=Column(geotracktype)
@@ -59,7 +58,12 @@ def radsMetaDataExtractor(uri):
     track=ogr.Geometry(ogr.wkbMultiLineString)
     trackseg=ogr.Geometry(ogr.wkbLineString)
     lonprev=ncrads["lon"][0]
+    if lonprev > 180:
+        lonprev-=360
     for lon,lat in zip(ncrads["lon"][:],ncrads["lat"][:]):
+        if lon > 180:
+            #make sure longitude goes from -180 to 180
+            lon-=360
         if abs(lonprev-lon) > 180:
             #start a new segment
             track.AddGeometry(trackseg)
@@ -120,46 +124,32 @@ class RadsBase(DataSet):
             os.makedirs(desturl)
         self.updated=rsync(srcurl,auth=cred).parallelDownload(desturl,True)
 
-    def register(self):
+    def register(self,cycle=None):
 
         #create a list of files which need to be (re)registered
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in glob(os.path.join(self.radsdir,self.sat,self.phase,'*/*.nc'))]
+            if cycle:
+                files=[UriFile(file) for file in glob(os.path.join(self.radsdir,self.sat,self.phase,"c%03d"%(cycle),'*.nc'))]
+            else:
+                files=[UriFile(file) for file in glob(os.path.join(self.radsdir,self.sat,self.phase,'*/*.nc'))]
 
 
         ses=self.scheme.db.Session()
 
 
         for uri in files:
-            try:
-                base=os.path.basename(uri.url)
-                qResult=ses.query(self.table).filter(self.table.uri.like('%'+base+'%')).first()
-                if qResult.lastupdate >= uri.lastmod:
-                    logging.info("No Update needed, skipping %s"%(base))
-                    continue
-                else:
-                    #delete the entries which need updating
-                    ses.delete(qResult)
-                    ses.commit()
-            except Exception as e:
-                # Fine no entries found
-                pass
+            base=os.path.basename(uri.url)
+
+            if not self.uriNeedsUpdate(base, uri.lastmod):
+                continue
+
 
             meta=radsMetaDataExtractor(uri)
-            try:
-                entry=self.table(**meta)
-                ses.add(entry)
+            self.addEntry(meta)
 
-                if i > 10:
-                    # commit every so many rows
-                    ses.commit()
-                    i=0
-                else:
-                    i+=1
-            except Exception as e:
-                pass
+
         self._inventData["lastupdate"]=datetime.now().isoformat()
         self._inventData["version"]=self.__version__
         self.updateInvent()
