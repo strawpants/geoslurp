@@ -116,6 +116,7 @@ class Schema(ABC):
          :param tableName (str) : name of the table to be dropped"""
         self.db.dropTable(tableName,self._schema)
 
+
 def schemeFromName(name):
     return allSchemes()[name]
 

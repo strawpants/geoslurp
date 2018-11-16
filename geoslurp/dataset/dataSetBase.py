@@ -99,12 +99,24 @@ class DataSet(ABC):
         return needsupdate
 
     def addEntry(self,metadict):
-            entry=self.table(**metadict)
-            self.ses.add(entry)
+        entry=self.table(**metadict)
+        if not self.ses:
+            self.ses=self.scheme.db.Session()
 
-            if self.commitCounter > 10:
-                # commit every so many rows
-                self.ses.commit()
-                self.commitCounter=0
-            else:
-                self.commitCounter+=1
+        self.ses.add(entry)
+
+        if self.commitCounter > 10:
+            # commit every so many rows
+            self.ses.commit()
+            self.commitCounter=0
+        else:
+            self.commitCounter+=1
+
+
+    def clearTable(self):
+        """Clears all entries in a table"""
+        if not self.ses:
+            self.ses=self.scheme.db.Session()
+        allrows=self.ses.query(self.table)
+        for res in allrows:
+            self.ses.delete(res)

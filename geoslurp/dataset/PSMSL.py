@@ -22,10 +22,11 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 from geoslurp.datapull.http import Uri as http
 from geoalchemy2.types import Geography
 from geoalchemy2.elements import WKBElement
-from datetime import datetime
+from datetime import datetime,timedelta
 import os
 from zipfile import ZipFile
 from osgeo import ogr
+import logging
 
 geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
 
@@ -35,24 +36,43 @@ class PSMSLTBase(object):
     @declared_attr
     def __tablename__(cls):
         #strip of the 'Table' from the class name
-        return cls.__name__[:-5].lower()
+        return cls.__name__[:-5].replace("-","_").lower()
     id = Column(Integer, primary_key=True)
+    statname=Column(String)
     lastupdate=Column(TIMESTAMP)
     tstart=Column(TIMESTAMP,index=True)
     tend=Column(TIMESTAMP,index=True)
-    nmax=Column(Integer)
-    omax=Column(Integer)
-    gm=Column(Float)
-    re=Column(Float)
-    tidesystem=Column(String)
-    format=Column(String)
-    type=Column(String)
-    uri=Column(String, unique=True,index=True)
+    ndat=Column(Integer)
+    countrycode=Column(String)
+    formerid=Column(String)
     data=Column(JSONB)
+    geom=Column(geoPointtype)
+
+def decyear2dt(decyear):
+    """Convert a decimal year to a datetime object"""
+    year=int(decyear)
+    jan1=datetime(year,1,1)
+    return jan1+(decyear-year)*(datetime(year+1,1,1)-jan1)
+
+def dt2monthlyinterval (dtin):
+        if dtin.month is not 12:
+            endofmonth=datetime(dtin.year,dtin.month+1,1)-timedelta(seconds=1)
+        else:
+            endofmonth=datetime(dtin.year+1,1,1)-timedelta(seconds=1)
+        return datetime(dtin.year,dtin.month,1),endofmonth
+
+def dt2yearlyinterval(dtin):
+    return datetime(dtin.year,1,1),datetime(dtin.year+1,1,1)-timedelta(seconds=1)
 
 class PSMSLBase(DataSet):
     """Base class to store RLR/MET annual and monthly data"""
     url=None
+    typ=None
+    freq=None
+    def __init__(self,scheme):
+        super().__init__(scheme)
+        PSMSLTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+
     def pull(self):
         http(self.url).download(self.cacheDir())
         zpf=os.path.join(self.cacheDir(),os.path.basename(self.url))
@@ -61,31 +81,69 @@ class PSMSLBase(DataSet):
             zp.extractall(self.cacheDir())
 
     def register(self):
+
+        #currently deletes all entries in the table
+        self.clearTable()
+
         #open main index file and read
-        zipdir=self.cacheDir()+"/"+self.__class__.__name__[6:]
+        zipdir=self.cacheDir()+"/"+self.typ+"_"+self.freq
 
         with open(os.path.join(zipdir,'filelist.txt'),'r') as fid:
             for ln in fid:
                 lnspl=ln.split(";")
                 lat=float(lnspl[1])
                 lon=float(lnspl[2])
+                id=int(lnspl[0])
+                logging.info("Indexing %s"%(lnspl[3]))
 
                 geoLoc=ogr.Geometry(ogr.wkbPoint)
                 geoLoc.AddPoint(lon,lat)
                 meta={
-                    "id":int(lnspl[0]),
-                    "name":lnspl[3],
+                    "id":id,
+                    "statname":lnspl[3],
                     "countrycode":lnspl[4],
-                    "formerID":lnspl[5],
-                    "geom":WKBElement(geoLoc.ExportToWkb(),srid=4326,extended=True),"data":{}})
+                    "formerid":lnspl[5],
+                    "geom":WKBElement(geoLoc.ExportToWkb(),srid=4326,extended=True),
                 }
+
+                #also open data file
+                data={"time":[],"sl":[]}
+                tmin=datetime.max
+                tmax=datetime.min
+                with open(os.path.join(zipdir,'data',"%d.%sdata"%(id,self.typ))) as dfid:
+                    for dln in dfid:
+                        tyear,valmm,dum1,dum2=dln.split(";")
+                        dt=decyear2dt(float(tyear))
+                        if self.freq == 'monthly':
+                            dstart,dend=dt2monthlyinterval(dt)
+                        else:
+                            #yearly
+                            dstart,dend=dt2yearlyinterval(dt)
+                        tmin=min(dt,tmin)
+                        tmax=max(dt,tmax)
+
+                        data["time"].append(dt.isoformat())
+                        data["sl"].append(1e3*int(valmm))
+
+                #open documentation files
+                with open(os.path.join(zipdir,'docu',"%d.txt"%(id))) as docid:
+                    data["doc"]=docid.readlines()
+                #open auth file
+                with open(os.path.join(zipdir,'docu',"%d_auth.txt"%(id))) as docid:
+                    data["auth"]=docid.readlines()
+
+                meta['tstart']=tmin
+                meta["tend"]=tmax
+                meta["data"]=data
+
+                self.addEntry(meta)
 
 
 def PSMSLClassFactory(clsName):
     dum,typ,freq=clsName.lower().split("_")
     url="http://www.psmsl.org/data/obtaining/"+typ+"."+freq+".data/"+typ+"_"+freq+".zip"
     table=type(clsName +"Table", (PSMSLTBase,), {})
-    return type(clsName, (PSMSLBase,), {"url": url, "table":table})
+    return type(clsName, (PSMSLBase,), {"url": url, "table":table,"typ":typ,"freq":freq})
 
 
 def getPSMSLDicts():
