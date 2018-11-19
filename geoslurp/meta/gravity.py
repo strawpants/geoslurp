@@ -67,8 +67,8 @@ def icgemMetaExtractor(uri):
                 hdr[spl[0]]=spl[1]
 
 
-
-    meta={"nmax":int(hdr["max_degree"]),
+    try:
+        meta={"nmax":int(hdr["max_degree"]),
           "lastupdate":uri.lastmod,
           "format":"icgem",
           "gm":float(hdr["earth_gravity_constant"]),
@@ -77,6 +77,8 @@ def icgemMetaExtractor(uri):
           "type":"GSM",
           "data":{"name":hdr["modelname"]}
           }
+    except:
+        pass
 
     #add tide system
     try:

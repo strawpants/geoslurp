@@ -28,9 +28,9 @@ from geoslurp.meta.gravity import GravitySHTBase, icgemMetaExtractor
 import re
 
 def enhanceMeta(meta):
-    """Extract addtional timestamps from the TU graz data"""
+    """Extract addtional timestamps from the TU graz filename data"""
     #from the TU GRAZ files one can extract the time period information
-    yyyymm_match=re.match(".*([0-9]{4})-([0-9]{2})$",meta["data"]["name"])
+    yyyymm_match=re.match(".*([0-9]{4})-([0-9]{2})\.gfc\.gz$",meta["uri"])
     if yyyymm_match:
         yr=int(yyyymm_match.group(1))
         mn=int(yyyymm_match.group(2))
@@ -40,7 +40,7 @@ def enhanceMeta(meta):
         else:
             meta["tend"]=datetime(yr,mn+1,1)
     else:
-        yyyymmdd_match=re.match(".*([0-9]{4})-([0-9]{2})-([0-9]{2})$",meta["data"]["name"])
+        yyyymmdd_match=re.match(".*([0-9]{4})-([0-9]{2})-([0-9]{2})\.gfc\.gz$",meta["uri"])
         if yyyymmdd_match:
             yr=int(yyyymmdd_match.group(1))
             mn=int(yyyymmdd_match.group(2))
