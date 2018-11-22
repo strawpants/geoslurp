@@ -24,12 +24,16 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 class GeoslurpConnector():
     """Holds a connector to a geoslurp database"""
 
-    def __init__(self, dburl):
+    def __init__(self, host, user, passwd):
         """
         establishes a database engine whoch provides the base
         for creating sessions (ORM) or connections (SQL expressions)
         :param dburl: url of the database e.g.: postgresql+psycopg2://geoslurp:password@host/geoslurp
         """
+        self.user=user
+        self.passw=passwd
+        self.host=host
+        dburl="postgresql+psycopg2://"+user+":"+passwd+"@"+host+"/geoslurp"
         self.dbeng = create_engine(dburl, echo=False)
         self.Session = sessionmaker(bind=self.dbeng)
         self.mdata = MetaData(bind=self.dbeng)

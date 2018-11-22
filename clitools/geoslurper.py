@@ -32,6 +32,7 @@ def main(argv):
     usage=" Program to download and manage Earth Science data"
     parser = argparse.ArgumentParser(description=usage,add_help=False)
 
+
     conf=SlurpConf(os.path.join(os.path.expanduser('~'), '.geoslurp.yaml'))
 
     # add various arguments to the program
@@ -186,6 +187,16 @@ def addCommandLineArgs(parser):
         # parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
         # parser.add_argument('--cleancache',action='store_true',
         #                     help="Clean up the cache directory associated with a scheme/dataset")
+
+        parser.add_argument("--host",metavar="hostname",type=str,
+                            help='Select host where the postgresql is running')
+
+        parser.add_argument("--user",metavar="user",type=str,
+                            help='Select postgresql user')
+
+
+        parser.add_argument("--password",metavar="password",type=str,
+                            help='Select password for the postgresql user')
 
         parser.add_argument("-v","--verbose", action=increaseVerboseAction, nargs="?",const='',default=3,
                             help="Increase verbosity of the output one cvan use multiple v's after another (e.g. -vv) "
