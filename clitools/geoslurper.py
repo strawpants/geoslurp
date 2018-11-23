@@ -27,19 +27,22 @@ from geoslurp.db import GeoslurpConnector
 from geoslurp.schema import allSchemes, schemeFromName
 import json
 import logging
+from geoslurp.db import Settings
+import yaml
+from datetime import datetime
+import keyring
 
 def main(argv):
     usage=" Program to download and manage Earth Science data"
     parser = argparse.ArgumentParser(description=usage,add_help=False)
 
 
-    conf=SlurpConf(os.path.join(os.path.expanduser('~'), '.geoslurp.yaml'))
-
     # add various arguments to the program
     addCommandLineArgs(parser)
 
     args = parser.parse_args(argv[1:])
     check_args(args,parser)
+
 
 
     # Process common options
@@ -49,12 +52,23 @@ def main(argv):
 
     # We need a point of contact to communicate with the database
     try:
-        DbConn=GeoslurpConnector(conf['dburl'])
+
+        DbConn=GeoslurpConnector(args.host,args.user,args.password)
         # Initializes an object which holds the current inventory
         slurpInvent=Inventory(DbConn)
+        conf=Settings(DbConn,args.user,args.password)
+
     except Exception as e:
         print("Cannot connect to postgresql database, quitting")
         sys.exit(1)
+
+    if args.settings:
+        #register settings in the database
+        conf.update(args.settings)
+
+    if args.auth:
+        conf.updateAuth(args.auth)
+
 
     if not args.dset and args.info:
         #list the inventory of all the registered schemas but don't list info on the datasets
@@ -184,12 +198,20 @@ def addCommandLineArgs(parser):
         parser.add_argument("--update", metavar="JSON", action=JsonParseAction, nargs="?",const=False,default=False,
                             help="Implies both --pull and --register, but applies only to the updated data (accepts JSON options)")
 
+
+        parser.add_argument("--settings", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
+                            help="Register settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
+
+
+        parser.add_argument("--auth", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
+                            help="Register (and encrypt in the database) authentification services "
+                                 "(pass as a JSON dict, e.g. {\"servicename\":{\"user\":..,\"passw\":...})")
         # parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
         # parser.add_argument('--cleancache',action='store_true',
         #                     help="Clean up the cache directory associated with a scheme/dataset")
 
         parser.add_argument("--host",metavar="hostname",type=str,
-                            help='Select host where the postgresql is running')
+                            help='Select host where the PostgreSQL/PostGIS server is running')
 
         parser.add_argument("--user",metavar="user",type=str,
                             help='Select postgresql user')
@@ -197,6 +219,10 @@ def addCommandLineArgs(parser):
 
         parser.add_argument("--password",metavar="password",type=str,
                             help='Select password for the postgresql user')
+
+        parser.add_argument("--usekeyring",action='store_true',
+                            help='Set and get the system keyring to store the database password (alternatives are '
+                                 'using --password or the environment variable GEOSLURP_PGPASS')
 
         parser.add_argument("-v","--verbose", action=increaseVerboseAction, nargs="?",const='',default=3,
                             help="Increase verbosity of the output one cvan use multiple v's after another (e.g. -vv) "
@@ -235,7 +261,79 @@ def check_args(args,parser):
                 print("\t%s.register:\n\t%s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].register.__doc__))
 
         sys.exit(0)
+    #also fillout last options with defaults from the last call
+    getUpdateLastOptions(args)
 
+def getUpdateLastOptions(args):
+    """Retireves last """
+    settingsFile=os.path.join(os.path.expanduser('~'),'.geoslurp_last.yaml')
+    #read last used settings
+    if os.path.exists(settingsFile):
+        #Read parameters from yaml file
+        with open(settingsFile, 'r') as fid:
+            lastOpts=yaml.safe_load(fid)
+    else:
+            lastOpts={}
+
+    isUpdated=False
+
+    #update dict with provided options from args
+    if args.host:
+        lastOpts["dbhost"]=args.host
+        isUpdated=True
+    else:
+        #update options
+        try:
+            args.host=lastOpts["dbhost"]
+        except KeyError:
+            print("--host option is needed for initialization",file=sys.stderr)
+            sys.exit(1)
+
+    if args.user:
+        lastOpts["dbuser"]=args.user
+        isUpdated=True
+    else:
+        try:
+            args.user=lastOpts["dbuser"]
+        except KeyError:
+            print("--user option is needed for initialization",file=sys.stderr)
+            sys.exit(1)
+
+    if args.usekeyring:
+        lastOpts["useKeyring"]=True
+        isUpdated=True
+    else:
+        try:
+            args.usekeyring=lastOpts["useKeyring"]
+        except KeyError:
+            #don't use the keyring
+            pass
+
+    #write out  options to file to store these settings
+    if isUpdated:
+        lastOpts["lastupdate"]=datetime.now()
+        with open(settingsFile,'w') as fid:
+            yaml.dump(lastOpts, fid, default_flow_style=False)
+
+
+    # we take a different strategy for the password as we don't want to store this in a file
+    if not args.password:
+        if args.usekeyring:
+            args.password=keyring.get_password("geoslurp","dbpassword")
+            if not args.password:
+                print("could not retrieve password from keyring, use --password PASSWORD to store it, quitting",file=sys.stderr)
+                sys.exit(1)
+        else:
+        #try checking the environment variable GEOSLURP_PGPASS
+            try:
+                args.password=os.environ["GEOSLURP_PGPASS"]
+            except KeyError:
+                print("Database password is not set, quitting",file=sys.stderr)
+                sys.exit(1)
+    else:
+        #update keyring
+        if args.usekeyring:
+            keyring.set_password("geoslurp","dbpassword",args.password)
 
 
 if __name__ == "__main__":

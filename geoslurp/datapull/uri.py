@@ -23,6 +23,17 @@ from io  import BytesIO
 import logging
 import gzip as gz
 
+
+def findFiles(dir,pattern):
+    """Generator to recursively search adirecctor (returns a generator)"""
+    for dpath,dnames,files in os.walk(dir):
+        # for subdir in dnames:
+        #     yield from findFiles(os.path.join(dir,subdir),pattern)
+
+        for file in files:
+            if re.search(pattern,file):
+                yield os.path.join(dpath,file)
+
 def timeFromStamp(stamp):
     tinfo = stamp
 
@@ -125,10 +136,13 @@ class UriBase():
                 logging.info("Already Downloaded, skipping %s"%(uri.url))
                 return uri,False
         logging.info("Downloading %s"%(uri.url))
-        if self.lastmod:
-            curlDownload(self.url,uri.url,self.lastmod,gzip=gzip)
-        else:
-            self.lastmod=curlDownload(self.url,uri.url,gzip=gzip)
+        try:
+            if self.lastmod:
+                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip)
+            else:
+                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip)
+        except Exception as e:
+            raise e
         uri.lastmod=self.lastmod
         return uri,True
 

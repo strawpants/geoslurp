@@ -48,7 +48,7 @@ class Uri(UriBase):
             self.connect()
         return self.webdav.ls('.')
 
-    def download(self,direc,check=False):
+    def download(self,direc,check=False,gzip=False):
         if not self.webdav:
             self.connect()
 

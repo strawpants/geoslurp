@@ -17,7 +17,7 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.ftp import Crawler as ftpCrawler
-from geoslurp.config import findFiles
+from geoslurp.datapull import findFiles
 import logging
 import yaml
 from geoslurp.datapull import UriFile

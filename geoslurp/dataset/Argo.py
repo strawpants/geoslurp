@@ -19,6 +19,7 @@ from geoslurp.dataset import DataSet
 from geoslurp.datapull.thredds import Crawler,ThreddsFilter, getAttrib
 from geoslurp.datapull.ftp import Crawler as ftpCrawler
 from geoslurp.datapull.ftp import Uri as ftpUri
+from geoslurp.datapull import findFiles
 from geoslurp.datapull import UriFile
 from geoalchemy2.types import Geography
 from geoalchemy2.elements import WKBElement
@@ -35,7 +36,6 @@ import logging
 import os
 import time
 import re
-from geoslurp.config import findFiles
 # To do:  etract meta information with a threadpool
 #from concurrent.futures import ThreadPoolExecutor
 
@@ -200,7 +200,7 @@ class Argo(DataSet):
             ftpcrwl=ArgoftpCrawler(ftpmirrors[mirror],center)
         else:
             ftpcrwl=ArgoftpCrawler(ftpmirrors[mirror])
-        self.updated=ftpcrwl.parallelDownload(self.dataDir(),check=True,maxconn=20)
+        self.updated=ftpcrwl.parallelDownload(self.dataDir(),check=True,maxconn=10)
 
 
     def register(self,center=None):
