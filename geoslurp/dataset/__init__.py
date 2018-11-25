@@ -9,3 +9,4 @@ from .RadsDsets import *
 from .TUGRAZDsets import *
 from .wribasin import *
 from .PSMSL import *
+from .DuacsGriddedDsets import *

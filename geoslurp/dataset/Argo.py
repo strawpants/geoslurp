@@ -16,7 +16,6 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataset import DataSet
-from geoslurp.datapull.thredds import Crawler,ThreddsFilter, getAttrib
 from geoslurp.datapull.ftp import Crawler as ftpCrawler
 from geoslurp.datapull.ftp import Uri as ftpUri
 from geoslurp.datapull import findFiles
@@ -30,11 +29,9 @@ from netCDF4 import Dataset as ncDset
 from osgeo import ogr
 from datetime import datetime,timedelta
 from queue import Queue
-from threading import Thread
 import gzip as gz
 import logging
 import os
-import time
 import re
 # To do:  etract meta information with a threadpool
 #from concurrent.futures import ThreadPoolExecutor

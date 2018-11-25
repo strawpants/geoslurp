@@ -50,7 +50,7 @@ def setFtime(file,modTime=None):
         mtime=time.mktime(modTime.timetuple())
         os.utime(file,(mtime,mtime))
 
-def curlDownload(url,fileorfid,mtime=None,gzip=False):
+def curlDownload(url,fileorfid,mtime=None,gzip=False,auth=None):
     """
     Download  the content of an url to an open file or buffer using pycurl
     :param url: url to download from
@@ -73,6 +73,9 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False):
     crl.setopt(pycurl.URL,url)
     crl.setopt(pycurl.FOLLOWLOCATION, 1)
     crl.setopt(pycurl.WRITEDATA,fid)
+    if auth:
+        #use authentification
+        crl.setopt(pycurl.USERPWD,auth.user+":"+auth.passw)
     crl.perform()
     modtime=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
     if mtime:
@@ -138,9 +141,9 @@ class UriBase():
         logging.info("Downloading %s"%(uri.url))
         try:
             if self.lastmod:
-                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip)
+                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,auth=self.auth)
             else:
-                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip)
+                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,auth=self.auth)
         except Exception as e:
             raise e
         uri.lastmod=self.lastmod
@@ -149,7 +152,7 @@ class UriBase():
     def buffer(self):
         """Download file into a buffer (default uses curl)"""
         buf=BytesIO()
-        curlDownload(self.url,buf)
+        curlDownload(self.url,buf,auth=self.auth)
         return buf
 
 class UriFile(UriBase):

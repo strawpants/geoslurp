@@ -22,7 +22,6 @@ import sys
 import argparse
 import os.path
 from geoslurp.db import Inventory
-from geoslurp.config import SlurpConf
 from geoslurp.db import GeoslurpConnector
 from geoslurp.schema import allSchemes, schemeFromName
 import json

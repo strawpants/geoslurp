@@ -15,12 +15,13 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 # Schema which stores Argo data (links)
-from geoslurp.schema import Schema
+from geoslurp.schema import Schema,mergeDicts
 from geoslurp.dataset import getRADSdict
+from geoslurp.dataset import getDuacsDict
 class Altim(Schema):
     """A scheme to download and manage radar atlimetry datae .
     """
-    __datasets__=getRADSdict()
+    __datasets__=mergeDicts(getRADSdict(),getDuacsDict())
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
 

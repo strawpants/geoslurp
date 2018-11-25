@@ -19,8 +19,8 @@ import os
 from geoslurp.datapull import UriBase
 
 class Uri(UriBase):
-    def __init__(self,url,lastmod=None):
-        super().__init__(url,lastmod)
+    def __init__(self,url,lastmod=None,auth=None):
+        super().__init__(url,lastmod,auth)
         if not bool(re.match('^https?://',url)):
             raise Exception("URL does not seem to be a valid http(s) address")
 
