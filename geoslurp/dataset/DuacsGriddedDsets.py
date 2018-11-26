@@ -98,8 +98,11 @@ class Duacs(DataSet):
     def pull(self, name=None, west=None,east=None,north=None,south=None):
         """Pulls a subset of a gridded dataset as netcdf from the cmems copernicus server
         This routine calls the internal routines of the motuclient python client
-        :param name: Name of the  output netcdf
-        :param bbox: named tuple/class containing coordinates in degree of the region to select (i.e. bbox.w, bbox.e
+        :param name: Name of the  output datatset (file will be 'named name.nc')
+        :param west: most western longitude of the bounding box
+        :param east: most eastern longitude of the bounding box
+        :param south: most southern latitude of the bounding box
+        :param north: most northern longitude of the bounding box
         bbox.n,bbox.s)
         """
 

@@ -204,7 +204,7 @@ def addCommandLineArgs(parser):
 
         parser.add_argument("--auth", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register (and encrypt in the database) authentification services "
-                                 "(pass as a JSON dict, e.g. {\"servicename\":{\"user\":..,\"passw\":...})")
+                                 "(pass as a JSON dict, e.g. {\"servicename\":{\"user\":..,\"passw\":...}})")
         # parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
         # parser.add_argument('--cleancache',action='store_true',
         #                     help="Clean up the cache directory associated with a scheme/dataset")
