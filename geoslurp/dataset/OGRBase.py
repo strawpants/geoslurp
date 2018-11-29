@@ -45,7 +45,7 @@ def columnsFromOgrFeat(feat, spatindex=True, forceGType=None):
     cols.append(Column('geom', geomtype))
     return cols
 
-def valuesFromOgrFeat(feat):
+def valuesFromOgrFeat(feat, encoding='iso-8859-1'):
     """Returns a dictionary with loaded values from a feature"""
     df=feat.GetDefnRef()
 
@@ -58,7 +58,7 @@ def valuesFromOgrFeat(feat):
             continue
         if fld.GetTypeName() =='String':
             # vals[name.lower()]=feat.GetFieldAsBinary(i).decode('iso-8859-1')
-            vals[name.lower()]=feat.GetFieldAsBinary(i).decode('utf-8')
+            vals[name.lower()]=feat.GetFieldAsBinary(i).decode(encoding)
         else:
             vals[name.lower()]=feat.GetField(i)
 
@@ -71,6 +71,7 @@ class OGRBase(DataSet):
     table=None
     gtype=None
     ogrfile=None
+    encoding='iso-8859-1' #default for shapefiles
     def __init__(self,scheme):
         super().__init__(scheme)
 
@@ -87,11 +88,6 @@ class OGRBase(DataSet):
 
         logging.info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme._schema, self.name, self.ogrfile))
         #open shapefile directory
-        # if self.ogrfile.endswith(".geojson"):
-        #     driver= ogr.GetDriverByName("GeoJSON")
-        #     shpf=driver.Open(self.ogrfile,0)
-        # else:
-        #     shpf=ogr.Open(self.ogrfile)
 
         shpf=gdal.OpenEx(self.ogrfile,0)
         if shpf.GetLayerCount() != 1:
@@ -100,7 +96,7 @@ class OGRBase(DataSet):
         count=0
 
         for feat in shpflayer:
-
+            count+=1
             #we need to make a temporary clone here as osgeo will cause a segfault otherwise
             if self.table == None:
                 cols=columnsFromOgrFeat(feat,forceGType=self.gtype)
@@ -108,10 +104,9 @@ class OGRBase(DataSet):
                 self.table.create(checkfirst=True)
                 tableMap=tableMapFactory(self.name,self.table)
                 self.table=tableMap
-            values=valuesFromOgrFeat(feat)
+            values=valuesFromOgrFeat(feat,self.encoding)
             try:
                 self.addEntry(values)
-                logging.info(values["name"]+" "+values["name_alt"])
             except:
                 pass
             #commit every X times

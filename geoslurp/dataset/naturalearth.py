@@ -56,11 +56,16 @@ def getNaturalEarthDict(conf):
             catalog=yaml.safe_load(fid)
     else:
         #retrieve from github and store for later use
-        cred=conf.authCred("github")
+        try:
+            cred=conf.authCred("github")
+            token=cred.oauthtoken
+        except:
+            token=None
+
         crwl=ghCrawler("nvkelso/natural-earth-vector","bf7720b54dd9ac2d4d7f735174901b3862b5362a",
                        filter=ghfilter({"type":"blob","path":"\.geojson"}),
                        followfilt=ghfilter({"type":"tree","path":"geojson"}),
-                       oauthtoken=cred.oauthtoken)
+                       oauthtoken=token)
 
         catalog={"Description":"Natural Earth vector data catalog version: "+currentversion,"datasets":[]}
         for item in crwl.treeitems(depth=2):
