@@ -10,3 +10,4 @@ from .TUGRAZDsets import *
 from .wribasin import *
 from .PSMSL import *
 from .DuacsGriddedDsets import *
+from .naturalearth import *

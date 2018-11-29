@@ -15,13 +15,19 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 # Schema which stores various global gis datasets
-from geoslurp.schema import Schema
+from geoslurp.schema import Schema,mergeDicts
 from geoslurp.dataset import WriBasin
+from geoslurp.dataset import getNaturalEarthDict
 class globalGIS(Schema):
     """A scheme to download and manage various gis data .
     """
-    __datasets__={"WriBasin":WriBasin}
+    __datasets__={}
     def __init__(self,InventInstance, conf):
         super().__init__(InventInstance, conf)
+
+    @classmethod
+    def initDsetClasses(cls,conf):
+       cls.__datasets__=mergeDicts({"WriBasin":WriBasin},getNaturalEarthDict(conf))
+
 
 

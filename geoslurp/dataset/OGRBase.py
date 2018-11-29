@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataset import DataSet
-from osgeo import ogr
+from osgeo import gdal
 import logging
 from geoalchemy2 import WKBElement,Geography
 from sqlalchemy import Table,Column, Integer, String, Float
@@ -57,7 +57,8 @@ def valuesFromOgrFeat(feat):
             #skip columns with id (will be automatically filled)
             continue
         if fld.GetTypeName() =='String':
-            vals[name.lower()]=feat.GetFieldAsBinary(i).decode('iso-8859-1')
+            # vals[name.lower()]=feat.GetFieldAsBinary(i).decode('iso-8859-1')
+            vals[name.lower()]=feat.GetFieldAsBinary(i).decode('utf-8')
         else:
             vals[name.lower()]=feat.GetField(i)
 
@@ -81,32 +82,41 @@ class OGRBase(DataSet):
         :param forceGType (optional): a geometry type to be used as the "geom" column
         :returns nothing (but sets the internal qlalchemy table)
         """
-        ses=self.scheme.db.Session()
         # currently we can only cope with updating the entire table as a whole
         self.scheme.dropTable(self.name)
 
         logging.info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme._schema, self.name, self.ogrfile))
         #open shapefile directory
-        shpf=ogr.Open(self.ogrfile)
+        # if self.ogrfile.endswith(".geojson"):
+        #     driver= ogr.GetDriverByName("GeoJSON")
+        #     shpf=driver.Open(self.ogrfile,0)
+        # else:
+        #     shpf=ogr.Open(self.ogrfile)
+
+        shpf=gdal.OpenEx(self.ogrfile,0)
         if shpf.GetLayerCount() != 1:
             raise RuntimeError("Don't know which layer to load")
-        shpflayer=shpf[0]
-        for ift in range(shpflayer.GetFeatureCount()):
-            #we need to make a temporary clone here as osgeo will cause a segfault otherwise
-            feat=shpflayer[ift].Clone()
+        shpflayer=shpf.GetLayer(0)
+        count=0
 
+        for feat in shpflayer:
+
+            #we need to make a temporary clone here as osgeo will cause a segfault otherwise
             if self.table == None:
                 cols=columnsFromOgrFeat(feat,forceGType=self.gtype)
                 self.table=Table(self.name, self.scheme.db.mdata, *cols, schema=self.scheme._schema)
                 self.table.create(checkfirst=True)
                 tableMap=tableMapFactory(self.name,self.table)
+                self.table=tableMap
             values=valuesFromOgrFeat(feat)
             try:
-                ses.add(tableMap(**values))
+                self.addEntry(values)
+                logging.info(values["name"]+" "+values["name_alt"])
             except:
                 pass
-        ses.commit()
-        ses.close()
+            #commit every X times
+
+        self.ses.commit()
 
         #also update data entry from the inventory table
         self._inventData["lastupdate"]=datetime.now().isoformat(),

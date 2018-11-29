@@ -32,7 +32,8 @@ def getCreateDir(returndir):
         os.makedirs(returndir)
     return returndir
 
-Credentials=namedtuple("Credentials","user passw alias")
+Credentials=namedtuple("Credentials","user passw alias oauthtoken")
+Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
 
 GSBase=declarative_base()
 

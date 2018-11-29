@@ -44,10 +44,6 @@ def main(argv):
 
 
 
-    # Process common options
-    if args.list:
-       # show available schemes and datasets
-        showAvailable()
 
     # We need a point of contact to communicate with the database
     try:
@@ -60,6 +56,11 @@ def main(argv):
     except Exception as e:
         print("Cannot connect to postgresql database, quitting")
         sys.exit(1)
+
+    # Process common options
+    if args.list:
+        # show available schemes and datasets
+        showAvailable(conf)
 
     if args.settings:
         #register settings in the database
@@ -231,16 +232,14 @@ def addCommandLineArgs(parser):
                             help='Scheme and dataset to select.')
 
 
-def showAvailable():
+def showAvailable(conf):
     """Print available schemes with implemented datasets"""
     print("Allowed scheme and dataset combinations:")
     for key,cl in allSchemes().items():
-        print("\t %s.["%(key),end="")
-        sep=""
-        for dname in cl.__datasets__:
-            print("%s%s"%(sep,dname),end="")
-            sep="|"
-        print("]")
+        print("\t %s"%(key))
+        for dname in cl.listDsets(conf):
+            print("\t\t.%s"%(dname))
+
 
 def check_args(args,parser):
     """Sanity check for input arguments and possibly supply detailed help"""

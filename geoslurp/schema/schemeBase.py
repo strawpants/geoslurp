@@ -104,6 +104,9 @@ class Schema(ABC):
 
     def initDataSets(self,selectDsets=None):
         """Initializes selected datasets"""
+        if not self.__datasets__:
+            self.initDsetClasses(self.conf)
+
         if not selectDsets:
             # default is to select all datasets
             selectDsets=list(self.__datasets__)
@@ -116,6 +119,16 @@ class Schema(ABC):
          :param tableName (str) : name of the table to be dropped"""
         self.db.dropTable(tableName,self._schema)
 
+    @classmethod
+    def listDsets(cls,conf):
+        """List the names of the datasets (possibly dynamically retrieved)"""
+        cls.initDsetClasses(conf)
+        return cls.__datasets__.keys()
+
+    @classmethod
+    def initDsetClasses(cls,conf):
+        """This can be overriden by derived classes to allow for the dynamic retrieval of datasets"""
+        pass
 
 def schemeFromName(name):
     return allSchemes()[name]
