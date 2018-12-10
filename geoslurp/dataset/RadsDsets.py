@@ -52,32 +52,39 @@ class RadsTBase(object):
 
 
 def radsMetaDataExtractor(uri):
-    """Extract a dictionary with rads antries for the database"""
+    """Extract a dictionary with rads entries for the database"""
     logging.info("extracting data from %s"%(uri.url))
     ncrads=ncDset(uri.url)
     track=ogr.Geometry(ogr.wkbMultiLineString)
     trackseg=ogr.Geometry(ogr.wkbLineString)
     lonprev=ncrads["lon"][0]
     tprev=ncrads["time"][0]
+    t0=datetime(1985,1,1)
+    data={"segments":[]}
+    segment={"tstart":None,"tend":None,"istart":0,"iend":0}
     if lonprev > 180:
         lonprev-=360
-    for t,lon,lat in zip(ncrads["time"][:],ncrads["lon"][:],ncrads["lat"][:]):
+    for i,(t,lon,lat) in enumerate(zip(ncrads["time"][:],ncrads["lon"][:],ncrads["lat"][:])):
+        dt=t0+timedelta(seconds=float(t))
         if lon > 180:
             #make sure longitude goes from -180 to 180
             lon-=360
             #create a new segment with a gap larger than 100 seconds
         if abs(lonprev-lon) > 180 or t-tprev > 100:
-            #start a new segment
-            track.AddGeometry(trackseg)
+            #start a new segment upon crosssing the 180 line or when a time gap occurred
+            if trackseg.GetPointCount() > 1:
+                track.AddGeometry(trackseg)
+                segment["tend"]=dt.isoformat()
+                data["segments"].append(segment)
             trackseg=ogr.Geometry(ogr.wkbLineString)
         trackseg.AddPoint(float(lon),float(lat),0)
         lonprev=lon
         tprev=t
 
-    if trackseg.GetPointCount():
+    if trackseg.GetPointCount() > 1:
         track.AddGeometry(trackseg)
+
     #reference time for rads
-    t0=datetime(1985,1,1)
     mtch=re.search("p([0-9]+)c([0-9]+).nc",uri.url)
     meta={"lastupdate":uri.lastmod,
           "tstart":t0+timedelta(seconds=float(ncrads['time'][0].data)),
@@ -86,7 +93,6 @@ def radsMetaDataExtractor(uri):
           "apass":int(mtch.group(1)),
           "uri":uri.url,
           "data":{},
-          # "geom":track.ExportToIsoWkt()
           "geom":WKBElement(track.ExportToIsoWkb(),srid=4326,extended=True)
           }
 
@@ -172,7 +178,7 @@ def radsclassFactory(clnm):
 
 def getRADSdict():
     """Automatically create all classes contained within the GSHHG database"""
-    satphases={"j1":['a',"b"]}
+    satphases={"j1":["a","b","c"],"j2":["a","b","c"],"j3":["a"],}
     outdict={}
     for sat,phases in satphases.items():
         for  phase in phases:
