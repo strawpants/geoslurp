@@ -101,33 +101,6 @@ def argoMetaExtractor(uri,cachedir=False):
         url=uri.url
         ncArgo=ncDset(url)
 
-        # url=uri.opendap
-        # try:
-        #     ncArgo=ncDset(url)
-        # except OSError as e:
-        #     #sometimes the opendap server doesn't like the pounding
-        #     logging.info("Opendap server seems overloaded, waiting for 2 minutes")
-        #     time.sleep(120) #sleep for 2 minutes before trying again
-        #     ncArgo=ncDset(url)
-
-        # #test whether the dataset has zero dimensions (fails for opendap)
-        # ncreplace=None
-        # for ky,val in ncArgo.dimensions.items():
-        #     if val.size == 0:
-        #         if ky == 'N_HISTORY' and cachedir:
-        #             # HACK: allright many argo profiles suffer from a zero dimension N_HISTORY
-        #             # which cannot currently be loaded using opendap
-        #             # in that case we download the file an reopen the netcdf file locally
-        #             urilocal,succ=uri.download(cachedir,True)
-        #             url=urilocal.url # this now points to a local file
-        #             ncreplace=ncDset(url)
-        #             break
-        #         else:
-        #             # we can't cope with this
-        #             raise ZeroDimException('Netcdf dimension '+ky+' is zero for '+url)
-        # if ncreplace:
-        #     ncArgo.close()
-        #     ncArgo=ncreplace
 
         logging.info("Extracting meta info from: %s"%(url))
 
@@ -197,7 +170,7 @@ class Argo(DataSet):
             ftpcrwl=ArgoftpCrawler(ftpmirrors[mirror],center)
         else:
             ftpcrwl=ArgoftpCrawler(ftpmirrors[mirror])
-        self.updated=ftpcrwl.parallelDownload(self.dataDir(),check=True,maxconn=10)
+        self.updated=ftpcrwl.parallelDownload(self.dataDir(),check=True,maxconn=10,continueonError=True)
 
 
     def register(self,center=None):

@@ -57,15 +57,17 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,auth=None):
     :param fileorfid: filename or open file or buffer
     :param mtimee: explicitly set the modification time to this (usefull when modification times are not supported
     b the server)
-    :param gzip: additionally gzip the file on disk
+    :param gzip: additionally gzip the file on disk (note this routine does not append *.gz to the file name)
     :return: modification time of remote file
     """
+
     if type(fileorfid) == str:
+        tmpfile=os.path.join(os.path.dirname(fileorfid),"."+os.path.basename(fileorfid)+".tmp")
         if gzip:
             #note this routine does not change the filename!!
-            fid=gz.open(fileorfid,'wb')
+            fid=gz.open(tmpfile,'wb')
         else:
-            fid=open(fileorfid,'wb')
+            fid=open(tmpfile,'wb')
     else:
         fid=fileorfid
 
@@ -76,7 +78,14 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,auth=None):
     if auth:
         #use authentification
         crl.setopt(pycurl.USERPWD,auth.user+":"+auth.passw)
-    crl.perform()
+    try:
+        crl.perform()
+    except pycurl.error as pyexc:
+        # possibly remove a partly downloaded file
+        if os.path.exists(tmpfile):
+            os.remove(tmpfile)
+        raise pyexc
+
     modtime=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
     if mtime:
         #force the modification time to that provided
@@ -85,6 +94,8 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,auth=None):
     #close file if input was a filename
     if type(fileorfid) == str:
         fid.close()
+        #rename temporary file
+        os.rename(tmpfile,fileorfid)
         setFtime(fileorfid,modtime)
 
     return modtime
@@ -114,9 +125,12 @@ class UriBase():
         self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
         return self.lastmod
 
-    def download(self,direc,check=False,gzip=False,outfile=None):
+    def download(self,direc,check=False,gzip=False,outfile=None,continueonError=False):
         """Download file into directory and possibly check the modification time
-        ":param gzip: additionally gzips the file (adds .gz to file name)"""
+        :param gzip: additionally gzips the file (adds .gz to file name)
+        :param continueonError (bool): don't raise an exception when a download error occurrs
+        """
+
         #setup the output uri
         if outfile:
             outf=os.path.join(direc,self.subdirs,outfile)
@@ -144,6 +158,10 @@ class UriBase():
                 curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,auth=self.auth)
             else:
                 self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,auth=self.auth)
+        except pycurl.error as pyexc:
+            logging.info("Download failed, skipping %s"%(uri.url))
+            if not continueonError:
+                raise pyexc
         except Exception as e:
             raise e
         uri.lastmod=self.lastmod

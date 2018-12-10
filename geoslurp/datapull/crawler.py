@@ -29,12 +29,13 @@ class CrawlerBase(ABC):
         """Generator which returns uri's to requested datasets"""
         pass
 
-    def parallelDownload(self,outdir,check=False,maxconn=8,gzip=False):
+    def parallelDownload(self,outdir,check=False,maxconn=8,gzip=False,continueonError=False):
         """
         Download uris in parallel
         :param direc: directory to download to
         :param check: Only download when newer or non-existent (default to False)
         :param maxconn: amount of parallel downloads to execute
+        :param continueOnError (bool): keep trying
         """
         """Download/Update files in a given directory (returns a list of updated files)
         Note the download is executed in parallel"""
@@ -44,7 +45,7 @@ class CrawlerBase(ABC):
         futures=[]
         with ThreadPoolExecutor(max_workers=maxconn) as connectionPool:
             for uri in self.uris():
-                futures.append(connectionPool.submit(uri.download,outdir,check,gzip))
+                futures.append(connectionPool.submit(uri.download,outdir,check,gzip,None,continueonError))
 
         for future in futures:
             if future.result()[1]:
