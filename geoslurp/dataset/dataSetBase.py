@@ -98,6 +98,38 @@ class DataSet(ABC):
             pass
         return needsupdate
 
+    def entryNeedsUpdate(self,likestr,lastmod,col=None):
+        """Query for a Columns in the table based on a alike string and delete the entry when older than lastmod"""
+        if not self.ses:
+            self.ses=self.scheme.db.Session()
+
+        needsupdate=True
+        try:
+            if not col:
+                col=self.table.uri
+            qResults=self.ses.query(self.table).filter(col.like('%'+likestr+'%'))
+            if qResults.count() == 0:
+                return True
+            needsupdate=False
+            #check if at least one needs updating
+            for qres in qResults:
+                if qres.lastupdate < lastmod:
+                    needsupdate=True
+                    break
+
+            if needsupdate:
+                for qres in qResults:
+                    #delete the entries which need updating
+                    self.ses.delete(qres)
+                    self.ses.commit()
+            else:
+                logging.info("No Update needed, skipping %s"%(likestr))
+
+        except Exception as e:
+            # Fine no entries found
+            pass
+        return needsupdate
+
     def addEntry(self,metadict):
         entry=self.table(**metadict)
         if not self.ses:

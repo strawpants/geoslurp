@@ -23,6 +23,7 @@ from geoslurp.datapull.http import Uri as http
 from geoalchemy2.types import Geography
 from geoalchemy2.elements import WKBElement
 from datetime import datetime,timedelta
+from geoslurp.meta.time import dt2yearlyinterval,dt2monthlyinterval,decyear2dt
 import os
 from zipfile import ZipFile
 from osgeo import ogr
@@ -47,22 +48,6 @@ class PSMSLTBase(object):
     formerid=Column(String)
     data=Column(JSONB)
     geom=Column(geoPointtype)
-
-def decyear2dt(decyear):
-    """Convert a decimal year to a datetime object"""
-    year=int(decyear)
-    jan1=datetime(year,1,1)
-    return jan1+(decyear-year)*(datetime(year+1,1,1)-jan1)
-
-def dt2monthlyinterval (dtin):
-        if dtin.month is not 12:
-            endofmonth=datetime(dtin.year,dtin.month+1,1)-timedelta(seconds=1)
-        else:
-            endofmonth=datetime(dtin.year+1,1,1)-timedelta(seconds=1)
-        return datetime(dtin.year,dtin.month,1),endofmonth
-
-def dt2yearlyinterval(dtin):
-    return datetime(dtin.year,1,1),datetime(dtin.year+1,1,1)-timedelta(seconds=1)
 
 class PSMSLBase(DataSet):
     """Base class to store RLR/MET annual and monthly data"""

@@ -127,6 +127,7 @@ class UriBase():
 
     def download(self,direc,check=False,gzip=False,outfile=None,continueonError=False):
         """Download file into directory and possibly check the modification time
+        :param check : check whether the file needs updating
         :param gzip: additionally gzips the file (adds .gz to file name)
         :param continueonError (bool): don't raise an exception when a download error occurrs
         """

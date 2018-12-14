@@ -10,7 +10,7 @@
 # Lesser General Public License for more details.
 
 # You should have received a copy of the GNU Lesser General Public
-# License along with Frommle; if not, write to the Free Software
+# License along with geoslurp; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
@@ -85,7 +85,7 @@ def icgemMetaExtractor(uri):
         tmp=hdr["tide_system"]
         if re.search('zero_tide',tmp):
             meta["tidesystem"]="zero-tide"
-        elif re.search('tide_free'):
+        elif re.search('tide_free',tmp):
             meta["tidesystem"]="tide-free"
     except:
         pass

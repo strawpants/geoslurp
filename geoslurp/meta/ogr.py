@@ -87,7 +87,7 @@ def fillGeoTable(folder, tablename, scheme, regex=None, forceGType=None):
     # currently we can only cope with updating the entire table as a whole
     scheme.dropTable(tablename)
     # if self.dbeng.has_table(tablename,schema=schema):
-    loggging.info("Filling POSTGIS table %s.%s with data from %s" % (scheme._schema, tablename, folder))
+    logging.info("Filling POSTGIS table %s.%s with data from %s" % (scheme._schema, tablename, folder))
     #open shapefile directory
     shpf=ogr.Open(folder)
     for il in range(shpf.GetLayerCount()):

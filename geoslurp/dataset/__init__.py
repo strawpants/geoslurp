@@ -12,3 +12,4 @@ from .PSMSL import *
 from .DuacsGriddedDsets import *
 from .naturalearth import *
 from .geodesyunr import *
+from .deg1n2 import *
