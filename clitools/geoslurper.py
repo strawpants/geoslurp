@@ -60,7 +60,7 @@ def main(argv):
     # Process common options
     if args.list:
         # show available schemes and datasets
-        showAvailable(conf)
+        showAvailable(conf,scheme=args.dset)
 
     if args.settings:
         #register settings in the database
@@ -148,7 +148,7 @@ class SplitAction(argparse.Action):
         super(SplitAction, self).__init__(option_strings, dest, **kwargs)
     def __call__(self, parser=None, namespace=None, values=None, option_string=None):
             tmpl=values.split(".")
-            val={"scheme":tmpl[0],"datasets":None}
+            val={"scheme":tmpl[0],"datasets":[]}
             if len(tmpl) > 1:
                 val["datasets"]=[tmpl[1]]
             setattr(namespace, self.dest, val)
@@ -232,10 +232,16 @@ def addCommandLineArgs(parser):
                             help='Scheme and dataset to select.')
 
 
-def showAvailable(conf):
+def showAvailable(conf,scheme):
     """Print available schemes with implemented datasets"""
     print("Allowed scheme and dataset combinations:")
-    for key,cl in allSchemes().items():
+
+    if scheme:
+        sdict={scheme["scheme"]:schemeFromName(scheme["scheme"])}
+    else:
+        sdict=allSchemes()
+
+    for key,cl in sdict.items():
         print("\t %s"%(key))
         for dname in cl.listDsets(conf):
             print("\t\t.%s"%(dname))
@@ -252,11 +258,14 @@ def check_args(args,parser):
         if not args.dset:
             parser.print_help()
         else:
-            print("Detailed info on options which may be provided as JSON dictionaries")
-            # print("\n\n %s"%(schemeFromName(args.input["scheme"]).__datasets__[args.input["dataset"]].__doc__))
-            for dSets in args.dset["datasets"]:
-                print("\t%s.pull:\n\t\t %s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].pull.__doc__))
-                print("\t%s.register:\n\t%s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].register.__doc__))
+            print("Scheme %s"%(args.dset["scheme"]))
+            print("\t%s\n"%(schemeFromName(args.dset["scheme"]).__doc__))
+            if args.dset["datasets"]:
+                print("Detailed info on options which may be provided as JSON dictionaries")
+                # print("\n\n %s"%(schemeFromName(args.input["scheme"]).__datasets__[args.input["dataset"]].__doc__))
+                for dSets in args.dset["datasets"]:
+                    print("\t%s.pull:\n\t\t %s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].pull.__doc__))
+                    print("\t%s.register:\n\t%s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].register.__doc__))
 
         sys.exit(0)
     #also fillout last options with defaults from the last call
@@ -280,7 +289,7 @@ def getUpdateLastOptions(args):
         lastOpts["dbhost"]=args.host
         isUpdated=True
     else:
-        #update options
+        #take data from file options
         try:
             args.host=lastOpts["dbhost"]
         except KeyError:
@@ -314,7 +323,7 @@ def getUpdateLastOptions(args):
             yaml.dump(lastOpts, fid, default_flow_style=False)
 
 
-    # we take a different strategy for the password as we don't want to store this in a file
+    # we take a different strategy for the password as we don't want to store this unencrypted in a file
     if not args.password:
         if args.usekeyring:
             args.password=keyring.get_password("geoslurp","dbpassword")
