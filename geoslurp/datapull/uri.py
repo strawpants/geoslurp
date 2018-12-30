@@ -72,7 +72,7 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,auth=None):
         fid=fileorfid
 
     crl=pycurl.Curl()
-    crl.setopt(pycurl.URL,url)
+    crl.setopt(pycurl.URL,url.replace(' ','%20'))
     crl.setopt(pycurl.FOLLOWLOCATION, 1)
     crl.setopt(pycurl.WRITEDATA,fid)
     if auth:

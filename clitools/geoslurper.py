@@ -227,6 +227,7 @@ def addCommandLineArgs(parser):
         parser.add_argument("-v","--verbose", action=increaseVerboseAction, nargs="?",const='',default=3,
                             help="Increase verbosity of the output one cvan use multiple v's after another (e.g. -vv) "
                                  "to increase verbosity. The default prints errors only")
+
         #also add datasource options
         parser.add_argument("-d","--dset",metavar="SCHEME[.DATASET]",nargs="?",action=SplitAction,
                             help='Scheme and dataset to select.')

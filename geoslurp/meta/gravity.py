@@ -77,7 +77,7 @@ def icgemMetaExtractor(uri):
           "type":"GSM",
           "data":{"name":hdr["modelname"]}
           }
-    except:
+    except Exception as e:
         pass
 
     #add tide system
