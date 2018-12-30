@@ -28,6 +28,7 @@ import logging
 import os
 import tarfile
 import re
+from copy import deepcopy
 
 GeocTBase=declarative_base(metadata=MetaData(schema='gravity'))
 
@@ -105,7 +106,7 @@ class Rietbroeketal2016updated(LowdegreeSource):
         for file in files:
             #get files
             with tf.extractfile(file) as fid:
-                singlemeta=self.meta.copy()
+                singlemeta=deepcopy(self.meta)
                 singlemeta['name']=self.meta['name']+'_'+file.split('_')[-1][:-4]
                 singlemeta['data']["citation"]=citation
                 time=[]
