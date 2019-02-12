@@ -19,7 +19,7 @@
 
 from sqlalchemy import Table,Column, Integer
 from geoslurp.db import tableMapFactory
-import logging
+from geoslurp.config.slurplogger import slurplogger
 
 def columnsFromCSV(line, lookup):
     """reads column descriptors from comma separated values and creates a list of sqlalchemy columns"""
@@ -53,7 +53,7 @@ def fillCSVTable(filename,tablename,lookup,scheme,hskip=0):
     scheme.dropTable(tablename)
 
     # if self.dbeng.has_table(tablename,schema=schema):
-    logging.info("Filling CSV table %s:%s "%(scheme._schema,tablename))
+    slurplogger().info("Filling CSV table %s:%s "%(scheme._schema,tablename))
     with open(filename,'r') as fid:
         for i in range(hskip):
             next(fid)

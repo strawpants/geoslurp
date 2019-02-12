@@ -48,7 +48,7 @@ def getNaturalEarthDict(conf):
     """retrieves the available natural earth datasets"""
     currentversion='v4.1.0' # note this correspond to a specific release (the sha hash is taken from the commit)
 
-    cachedCatalog=os.path.join(conf.getDir("tmpfiles","CacheDir"),"naturalearthCatalog"+currentversion+".yaml")
+    cachedCatalog=os.path.join(conf.getDir("NaturalEarth","CacheDir"),"naturalearthCatalog"+currentversion+".yaml")
 
     if os.path.exists(cachedCatalog):
         #read catalog from yaml file

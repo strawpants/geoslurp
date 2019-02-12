@@ -20,7 +20,7 @@ from sqlalchemy import MetaData
 from sqlalchemy import Column,Integer,String, Boolean,Float
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 import gzip as gz
-import logging
+from geoslurp.config.slurplogger import slurplogger
 import re
 from datetime import datetime
 
@@ -52,7 +52,7 @@ def icgemMetaExtractor(uri):
     headstart=False
     hdr={}
     with gz.open(uri.url,'rt') as fid:
-        logging.info("Extracting info from %s"%(uri.url))
+        slurplogger().info("Extracting info from %s"%(uri.url))
         for ln in fid:
             # if "begin_of_head" in ln:
             #     headstart=True

@@ -25,7 +25,7 @@ from geoalchemy2.elements import WKBElement
 from datetime import datetime,timedelta
 import os
 from osgeo import ogr
-import logging
+from geoslurp.config.slurplogger import slurplogger
 import gzip as gz
 
 geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
@@ -53,7 +53,7 @@ def enhancetenv3Meta(meta,file):
 
     # adapt later to extract additional info
     # with gz.open(file,'rt') as fid:
-    #     logging.info("Extracting info from %s"%(file))
+    #     slurplogger().info("Extracting info from %s"%(file))
     #     for cnt,ln in enumerate(fid):
     #         pass
 
@@ -90,9 +90,9 @@ class UNRfinal(DataSet):
 
             localfile=os.path.join(self.dataDir(),os.path.basename(uri["uri"]+".gz"))
             if not os.path.exists(localfile):
-                logging.info("skipping %s"%(localfile))
+                slurplogger().info("skipping %s"%(localfile))
                 continue
-            logging.info("Registering %s"%(localfile))
+            slurplogger().info("Registering %s"%(localfile))
             meta=uri.dict
             meta=enhancetenv3Meta(meta,localfile)
             self.addEntry(meta)

@@ -22,7 +22,7 @@ from geoslurp.dataset import DataSet,GravitySHTBase
 from geoslurp.datapull.icgem import  Crawler as IcgemCrawler
 import re
 import gzip as gz
-import logging
+from geoslurp.config.slurplogger import slurplogger
 from glob import glob
 from geoslurp.datapull import UriFile
 import os

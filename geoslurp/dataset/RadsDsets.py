@@ -29,7 +29,7 @@ from netCDF4 import Dataset as ncDset
 from osgeo import ogr
 from datetime import datetime,timedelta
 from glob import glob
-import logging
+from geoslurp.config.slurplogger import slurplogger
 import re
 
 geotracktype = Geography(geometry_type="MULTILINESTRINGZ", srid='4326', spatial_index=True, dimension=3)
@@ -53,7 +53,7 @@ class RadsTBase(object):
 
 def radsMetaDataExtractor(uri):
     """Extract a dictionary with rads entries for the database"""
-    logging.info("extracting data from %s"%(uri.url))
+    slurplogger().info("extracting data from %s"%(uri.url))
     ncrads=ncDset(uri.url)
     track=ogr.Geometry(ogr.wkbMultiLineString)
     trackseg=ogr.Geometry(ogr.wkbLineString)

@@ -19,7 +19,7 @@ from lxml import etree as XMLTree
 from geoslurp.datapull.http import Uri as http
 import re
 import os
-import logging
+from geoslurp.config.slurplogger import slurplogger
 from collections import namedtuple
 from dateutil.parser import parse as isoParser
 
@@ -174,7 +174,7 @@ class Crawler(CrawlerBase):
     @staticmethod
     def getCatalog(url):
         """Retrieve a catalogue"""
-        logging.info("getting Thredds catalog: %s"%(url))
+        slurplogger().info("getting Thredds catalog: %s"%(url))
         buf=http(url).buffer()
         return XMLTree.fromstring(buf.getvalue())
 
@@ -258,7 +258,7 @@ class Crawler(CrawlerBase):
                         subxml=self.getCatalog(suburl)
                     except:
                         # Just ignore this catalog entry upon exceptions
-                        logging.warning("Ignoring failed CatalogRef %s"%(suburl))
+                        slurplogger().warning("Ignoring failed CatalogRef %s"%(suburl))
                         continue
                 else:
                     # Otherwise we're just going to look in the children of the current element

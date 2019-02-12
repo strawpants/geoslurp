@@ -24,7 +24,7 @@ from geoslurp.datapull.ftp import Uri as ftp
 from geoslurp.datapull.http import Uri as http
 from datetime import datetime
 from geoslurp.meta.time import decyear2dt
-import logging
+from geoslurp.config.slurplogger import slurplogger
 import os
 import tarfile
 import re
@@ -223,7 +223,7 @@ class Deg1n2(DataSet):
             try:
                src=gsource(self.cacheDir())
                metadicts=src.extract()
-               logging.info("registering %s"%(src.meta["name"]))
+               slurplogger().info("registering %s"%(src.meta["name"]))
                for meta in metadicts:
                    if self.entryNeedsUpdate(meta['name'],lastmod=src.meta['lastupdate'],col=self.table.name):
                         self.addEntry(meta)

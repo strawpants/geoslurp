@@ -18,7 +18,7 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.http import Uri as http
-import logging
+from geoslurp.config.slurplogger import slurplogger
 from geoslurp.meta import fillGeoTable, fillCSVTable
 from sqlalchemy import Integer, String, Float
 from zipfile import ZipFile
@@ -71,7 +71,7 @@ class RGIBase(DataSet):
 
                 #now recursively zip the other zip files
                 for zf in glob(zipd+'/*zip'):
-                    logging.info("Unzipping %s"%(zf))
+                    slurplogger().info("Unzipping %s"%(zf))
                     with ZipFile(zf,'r') as zp:
                         zp.extractall(os.path.join(self.scheme.cache,'extract'))
                 #remove zipfiles after extracting
@@ -80,14 +80,14 @@ class RGIBase(DataSet):
 
                 self._inventData["RGIversion"]=newestver
         else:
-            logging.info(self.name+": Already at newest version")
+            slurplogger().info(self.name+": Already at newest version")
             return
 
     def patch(self):
         """Patches one csv file which contains a . instead of a , at one point"""
         #download patch from github
         pf='04_rgi60_ArcticCanadaSouth_hypso.csv.patch'
-        logging.info("Patching csv file %s"%(pf) )
+        slurplogger().info("Patching csv file %s"%(pf) )
         httpget=http("https://raw.githubusercontent.com/strawpants/geoslurp/master/patches/"+pf)
         uri=httpget.download(os.path.join(self.scheme.cache,'extract'),check=True)
         #apply patch

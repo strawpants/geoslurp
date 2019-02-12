@@ -43,8 +43,6 @@ def main(argv):
     check_args(args,parser)
 
 
-
-
     # We need a point of contact to communicate with the database
     try:
 
@@ -100,9 +98,18 @@ def main(argv):
                 print("\t\t%s = "%(ky),end="")
                 print(val)
 
-    if args.purge:
+    if args.purge_cache:
         for ds in scheme:
-            ds.purge()
+            ds.purgecache(args.purge_cache)
+
+    if args.purge_data:
+        for ds in scheme:
+            ds.purgedata(args.purge_data)
+
+    if args.purge_entry:
+        for ds in scheme:
+            ds.purgeentry(args.purge_entry)
+
 
     if args.pull or args.update:
         if type(args.pull) == dict:
@@ -183,11 +190,17 @@ def addCommandLineArgs(parser):
         parser.add_argument('-l','--list',action='store_true',
                             help="List schemes and datasets which are available to use")
 
-        parser.add_argument('--purge',action='store_true',
-                            help="Purge selected datasets")
-
         parser.add_argument('--purge-scheme',action='store_true',
                             help="Purge selected scheme (This deletes all related datasets as well!")
+
+        parser.add_argument('--purge-cache',type=str, metavar='filter',const='*',nargs='?',
+                            help="Purge the cache of the selected dataset. while optionally applying a filter for the files")
+
+        parser.add_argument('--purge-data',type=str, metavar='filter',const='*',nargs='?',
+                            help="Purge the data of the selected dataset. while optionally applying a filter for the files")
+
+        parser.add_argument('--purge-entry',type=str, metavar='filter',const='*',nargs='?',
+                            help="Purge the database entry of the selected dataset. Optionally applying a filter for the files")
 
         parser.add_argument("--pull", metavar="JSON",action=JsonParseAction, nargs="?",const=False,default=False,
                             help="Pull data from online resource (possibly pass on options as a JSON dict")

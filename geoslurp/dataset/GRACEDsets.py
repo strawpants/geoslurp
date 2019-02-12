@@ -17,7 +17,7 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.webdav import Crawler as WbCrawler
-import logging
+from geoslurp.config.slurplogger import slurplogger
 from glob import glob
 import gzip
 import yaml
@@ -31,7 +31,7 @@ def graceMetaExtractor(uri):
     """Extract meta information from a GRACE file"""
     buf=StringIO()
     with gzip.open(uri.url,'rt') as fid:
-        logging.info("Extracting info from %s"%(uri.url))
+        slurplogger().info("Extracting info from %s"%(uri.url))
         for ln in fid:
             if '# End of YAML header' in ln:
                 break
@@ -99,7 +99,7 @@ class GRACEL2Base(DataSet):
                 base=os.path.basename(uri.url)
                 qResult=ses.query(self.table).filter(self.table.uri.like('%'+base+'%')).first()
                 if qResult.lastupdate >= uri.lastmod:
-                    logging.info("No Update needed, skipping %s"%(base))
+                    slurplogger().info("No Update needed, skipping %s"%(base))
                     continue
                 else:
                     #delete the entries which need updating

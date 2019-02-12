@@ -17,8 +17,10 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.motu import Uri as MotuUri
-from collections import namedtuple
 from geoslurp.datapull.motu import MotuOpts
+from geoslurp.datapull.motu import Btdbox
+from geoslurp.datapull.motu import MotuComposite
+
 import os
 from geoalchemy2.types import Geography
 from sqlalchemy import Column,Integer,String, Boolean
@@ -28,13 +30,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from netCDF4 import Dataset as ncDset
 from datetime import datetime,timedelta
 from geoslurp.datapull import findFiles,UriFile
-import logging
-
-# holds bounding box in geographical coordinates
-Bbox = namedtuple('Bbox', ['w', 'e','n','s'])
-
-#set default arguments to zero
-Bbox.__new__.__defaults__ = (None,) * len(Bbox._fields)
+from geoslurp.config.slurplogger import slurplogger
+import numpy as np
 
 DuacsTBase=declarative_base(metadata=MetaData(schema='altim'))
 
@@ -52,6 +49,79 @@ class DuacsTable(DuacsTBase):
     geom=Column(geoBbox)
     data=Column(JSONB)
 
+def nccopyAtt(ncin,ncout,excl=[]):
+    """Quick function to copy attributes from a netcdf entity to another"""
+    for attnm in ncin.ncattrs():
+        if attnm in excl:
+            continue
+        ncout.setncattr(attnm,ncin.getncattr(attnm))
+
+
+def duacsMergeGrids(name,fromdir,todir):
+    """Merges two grid files which are split on the 0 meridian and convert to -180,180 longitude domain"""
+    #open the first grid and use this as a base
+    left=os.path.join(fromdir,name+'_left.nc')
+    right=os.path.join(fromdir,name+'_right.nc')
+    out=os.path.join(todir,name+'.nc')
+
+    ncleft=ncDset(left,'r')
+    ncright=ncDset(right,'r')
+    ncout=ncDset(out,'w')
+
+    #copy relevant dimensions, attributes and variables from old to new grid
+    nccopyAtt(ncleft,ncout)
+
+    dexcl=['longitude']
+    vexcl=['longitude','sla']
+
+    #copy dimensions (excluding longitude)
+    for nm,dim in ncleft.dimensions.items():
+        if nm in dexcl:
+            continue
+        if dim.isunlimited():
+            ncout.createDimension(nm,None)
+        else:
+            ncout.createDimension(nm,len(dim))
+
+    # copy all file data for variables that are included in the toinclude list
+    for nm, var in ncleft.variables.items():
+        if nm in vexcl:
+            continue
+
+        ncout.createVariable(nm, var.datatype, var.dimensions)
+        ncout[nm][:] = ncleft[nm][:]
+        nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
+
+    #create new longitude dimension and variable
+
+    #adapt longitude to new boundaries
+    lonn = np.concatenate((ncleft['longitude'][:] - 360, ncright["longitude"][:]))
+    nm='longitude'
+    ncout.createDimension(nm,len(lonn))
+    ncout.createVariable(nm,ncleft[nm].datatype,(nm))
+    #copy/adapt attributes
+    nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
+    ncout[nm].setncattr('valid_max',-180.0)
+    ncout[nm].setncattr('valid_min',180.0)
+    ncout[nm][:]=lonn
+
+    #create new sla grid
+    nm='sla'
+    ncout.createVariable(nm,ncleft[nm].datatype,ncleft[nm].dimensions)
+    ncout[nm].set_auto_maskandscale(True)
+    nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
+    for i in range(ncout.dimensions['time'].size):
+        ncout[nm][i,:,:]=np.concatenate((ncleft[nm][i,:,:], ncright[nm][i,:,:]),axis=1)
+
+    #adapt some attributes
+    ncout.setncattr('geospatial_lon_max',max(lonn))
+    ncout.setncattr('geospatial_lon_min',min(lonn))
+
+
+
+    ncout.setncattr('History',ncout.getncattr('History')+'\n Modified by Geoslurp: Merge two grids alongside 0-meridian')
+
+    return UriFile(out),True
 
 def duacsMetaExtractor(uri):
     """Extracts data from a netcdf file"""
@@ -60,7 +130,7 @@ def duacsMetaExtractor(uri):
     url=uri.url
     ncalt=ncDset(url)
 
-    logging.info("Extracting meta info from: %s"%(url))
+    slurplogger().info("Extracting meta info from: %s"%(url))
 
     # Get reference time
     t0=datetime(1950,1,1)
@@ -115,18 +185,57 @@ class Duacs(DataSet):
         if None in [west,east,north,south]:
             raise RuntimeError("Please supply a name and a geographical bounding box")
 
-        ncout=os.path.join(self.cacheDir(),name+".nc")
+        # # convert longitude to 0-360 degree domain
+        # if west <0:
+        #     west+=360
+        # if east < 0:
+        #     east+=360
+
+
+        ncout=name+".nc"
         cred=self.scheme.conf.authCred("cmems")
-        bbox=Bbox(w=west,e=east,s=south,n=north)
+        downloaddir=self.dataDir()
+
+        bbox=Btdbox(w=west, e=east, s=south, n=north)
+
+        mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
+                       product="dataset-duacs-rep-global-merged-allsat-phy-l4",btdbox=bbox,fout=ncout,cache=self.cacheDir(),variables=['sla'],auth=cred)
+        Mcomposite=MotuComposite(mOpts)
+
+        #test whether the zero meridian is within the box (then the request must be split in 2 parts and the grids merged)
+        bbox2=False
+        if east < west:
+            bbox=Btdbox(w=west, e=360, s=south, n=north)
+            ncout=name+"_left.nc"
+            bbox2=Btdbox(w=0, e=east, s=south, n=north)
+            ncout2=name+"_right.nc"
+            downloaddir=self.cacheDir()
 
         #construct an option object which is fed into the motuclient
         mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
-                         product="dataset-duacs-rep-global-merged-allsat-phy-l4",bbox=bbox,fout=ncout,variables=['sla'],auth=cred)
+                         product="dataset-duacs-rep-global-merged-allsat-phy-l4",btdbox=bbox,fout=ncout,cache=self.cacheDir(),variables=['sla'],auth=cred)
 
         #create a MOTU
         uri=MotuUri(mOpts)
+        uri.updateModTime()
+        try:
+            tmpuri,upd=uri.download(downloaddir,check=True)
+        except:
+            raise RuntimeError("Downloading of %s, failed (try again later?)"%(ncout))
 
-        tmpuri,upd=uri.download(self.dataDir(),check=True)
+        if bbox2:
+            #also download the other part and merge the file
+            mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
+                       product="dataset-duacs-rep-global-merged-allsat-phy-l4",bbox=bbox2,fout=ncout2,cache=self.cacheDir(),variables=['sla'],auth=cred)
+            uri2=MotuUri(mOpts)
+            try:
+                tmpuri2,upd=uri2.download(downloaddir,check=True)
+            except:
+                raise RuntimeError("Downloading of %s, failed (try again later?)"%(ncout))
+
+            tmpuri,upd=duacsMergeGrids(name,downloaddir,self.dataDir())
+
+
         if upd:
             self.updated.append(tmpuri)
 

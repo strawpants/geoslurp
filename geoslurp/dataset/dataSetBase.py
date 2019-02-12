@@ -17,7 +17,32 @@
 
 from abc import ABC, abstractmethod
 import os
-import logging
+from geoslurp.config.slurplogger import slurplogger
+import shutil
+import re
+
+def rmfilterdir(ddir,filter='*'):
+    """Remove directories and files based on a certain regex filter"""
+    if filter == '*':
+        if os.path.isdir(ddir):
+            slurplogger().info("Pruning directory %s"%(ddir))
+            shutil.rmtree(ddir)
+    else:
+        #remove partly
+        for root, dirs, files in os.walk(ddir):
+            #possibly remove entire directories with content at once
+            for dd in dirs:
+                if re.search(filter,dd):
+                    slurplogger().info("Pruning directory %s"%(dd))
+                    shutil.rmtree(dd)
+                    #also remove from the file tree so it won't be followed
+                    dirs.remove(dd)
+            #remove filenames
+            for fl in files:
+                if re.search(filter,fl):
+                    file=os.path.join(ddir,root,fl)
+                    slurplogger().info("Removing %s"%(file))
+                    os.remove(file)
 
 class DataSet(ABC):
     """Abstract Base class which hold a dataset (corresponding to a database table"""
@@ -58,8 +83,16 @@ class DataSet(ABC):
         """Register the downloaded dataset in the database"""
         pass
 
-    def purge(self):
-        """Delete dataset entry"""
+    def purgedata(self,filter='*'):
+        """Deletes the data directory of the dataset,optionally applying a directory/filename filter"""
+        rmfilterdir(self.dataDir(),filter)
+
+    def purgecache(self,filter='*'):
+        """Deletes the cache directory of the dataset, optionally applying a directory/filename filter"""
+        rmfilterdir(self.cacheDir(),filter)
+
+    def purgeentry(self,filter):
+        """Delete dataset entry in the database"""
         self._inventData={None}
         del self.scheme._dbinvent.datasets[self.name]
         self.scheme._ses.commit()
@@ -91,7 +124,7 @@ class DataSet(ABC):
                     self.ses.delete(qres)
                     self.ses.commit()
             else:
-                logging.info("No Update needed, skipping %s"%(urilikestr))
+                slurplogger().info("No Update needed, skipping %s"%(urilikestr))
 
         except Exception as e:
             # Fine no entries found
@@ -123,7 +156,7 @@ class DataSet(ABC):
                     self.ses.delete(qres)
                     self.ses.commit()
             else:
-                logging.info("No Update needed, skipping %s"%(likestr))
+                slurplogger().info("No Update needed, skipping %s"%(likestr))
 
         except Exception as e:
             # Fine no entries found

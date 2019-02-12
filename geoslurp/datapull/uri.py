@@ -20,7 +20,7 @@ from datetime import datetime
 import pycurl,re
 import time
 from io  import BytesIO
-import logging
+from geoslurp.config.slurplogger import slurplogger
 import gzip as gz
 
 
@@ -151,16 +151,16 @@ class UriBase():
         if check and self.lastmod and uri.lastmod:
             if self.lastmod <= uri.lastmod:
                 #no need to download the file
-                logging.info("Already Downloaded, skipping %s"%(uri.url))
+                slurplogger().info("Already Downloaded, skipping %s"%(uri.url))
                 return uri,False
-        logging.info("Downloading %s"%(uri.url))
+        slurplogger().info("Downloading %s"%(uri.url))
         try:
             if self.lastmod:
                 curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,auth=self.auth)
             else:
                 self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,auth=self.auth)
         except pycurl.error as pyexc:
-            logging.info("Download failed, skipping %s"%(uri.url))
+            slurplogger().info("Download failed, skipping %s"%(uri.url))
             if not continueonError:
                 raise pyexc
         except Exception as e:

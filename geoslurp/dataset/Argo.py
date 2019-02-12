@@ -30,7 +30,7 @@ from osgeo import ogr
 from datetime import datetime,timedelta
 from queue import Queue
 import gzip as gz
-import logging
+from geoslurp.config.slurplogger import slurplogger
 import os
 import re
 # To do:  etract meta information with a threadpool
@@ -102,7 +102,7 @@ def argoMetaExtractor(uri,cachedir=False):
         ncArgo=ncDset(url)
 
 
-        logging.info("Extracting meta info from: %s"%(url))
+        slurplogger().info("Extracting meta info from: %s"%(url))
 
         # Get reference time
         t0=datetime.strptime(b"".join(ncArgo["REFERENCE_DATE_TIME"][:]).decode("utf-8"),"%Y%m%d%H%M%S")
@@ -228,7 +228,7 @@ class Argo(DataSet):
     #             centers=centers[centers.index(cntr):]
     #             resumefilt=ThreddsFilter("catalogRef",attr="ID",regex=".*"+cntr+"/"+floatid+".*")
     #         except Exception as e:
-    #             logging.warning("no resume information found, so starting from the beginning")
+    #             slurplogger().warning("no resume information found, so starting from the beginning")
     #             pass
     #     else:
     #         resumefilt=None
@@ -236,7 +236,7 @@ class Argo(DataSet):
     #     for cent in centers:
     #         self._inventData["resume"]["center"]=cent
     #         #loop over all processing centers
-    #         logging.info("Getting catalog of processing center %s"%(cent))
+    #         slurplogger().info("Getting catalog of processing center %s"%(cent))
     #         #determine center catalog url
     #         catalogurl=self._inventData['thredds'][mirror]['baseurl']+self._inventData['thredds'][mirror]['catalog']+cent+'/catalog.xml'
     #         filt = ThreddsFilter("dataset", attr="urlPath", regex=".*_prof.nc")
@@ -267,7 +267,7 @@ class Argo(DataSet):
     #                     qResults=ses.query(self.table).filter(self.table.uri.like('%'+uri.suburl+'%'))
     #                     for qres in qResults:
     #                         if qres.lastupdate >= uri.lastmod:
-    #                             logging.info("No Update needed, skipping %s"%(uri.suburl))
+    #                             slurplogger().info("No Update needed, skipping %s"%(uri.suburl))
     #                             self._uriqueue.task_done()
     #                             noupdate=True
     #                         else:
@@ -313,7 +313,7 @@ class Argo(DataSet):
 
 
     def halt(self):
-        logging.error("Stopping update")
+        slurplogger().error("Stopping update")
         self._killUpdate=True
         # indicate a done task n the queue in order to allow the pullWorker thread to stop gracefully
         #empty queue
@@ -328,10 +328,10 @@ class Argo(DataSet):
         """ Pulls valid opendap URI's from a thredds server and queue them"""
 
         for uri in conn.uris():
-            logging.info("queuing %s",uri.url)
+            slurplogger().info("queuing %s",uri.url)
             self._uriqueue.put(uri)
             if self._killUpdate:
-                logging.warning("Pulling of Argo URI's stopped")
+                slurplogger().warning("Pulling of Argo URI's stopped")
                 return
         #signal the end of the queue by adding a none
         self._uriqueue.put(None)

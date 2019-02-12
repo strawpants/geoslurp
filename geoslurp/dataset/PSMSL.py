@@ -27,7 +27,7 @@ from geoslurp.meta.time import dt2yearlyinterval,dt2monthlyinterval,decyear2dt
 import os
 from zipfile import ZipFile
 from osgeo import ogr
-import logging
+from geoslurp.config.slurplogger import slurplogger
 
 geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
 
@@ -79,7 +79,7 @@ class PSMSLBase(DataSet):
                 lat=float(lnspl[1])
                 lon=float(lnspl[2])
                 id=int(lnspl[0])
-                logging.info("Indexing %s"%(lnspl[3]))
+                slurplogger().info("Indexing %s"%(lnspl[3]))
 
                 geoLoc=ogr.Geometry(ogr.wkbPoint)
                 geoLoc.AddPoint(lon,lat)

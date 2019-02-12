@@ -17,7 +17,7 @@
 
 from geoslurp.dataset import DataSet
 from osgeo import gdal
-import logging
+from geoslurp.config.slurplogger import slurplogger
 from geoalchemy2 import WKBElement,Geography
 from sqlalchemy import Table,Column, Integer, String, Float
 from geoslurp.db import tableMapFactory
@@ -86,7 +86,7 @@ class OGRBase(DataSet):
         # currently we can only cope with updating the entire table as a whole
         self.scheme.dropTable(self.name)
 
-        logging.info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme._schema, self.name, self.ogrfile))
+        slurplogger().info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme._schema, self.name, self.ogrfile))
         #open shapefile directory
 
         shpf=gdal.OpenEx(self.ogrfile,0)
