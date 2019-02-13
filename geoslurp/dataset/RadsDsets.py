@@ -71,7 +71,7 @@ def radsMetaDataExtractor(uri):
             lon-=360
             #create a new segment with a gap larger than 100 seconds
         if abs(lonprev-lon) > 180 or t-tprev > 100:
-            #start a new segment upon crosssing the 180 line or when a time gap occurred
+            #start a new segment upon crossing the 180 line or when a time gap occurred
             if trackseg.GetPointCount() > 1:
                 track.AddGeometry(trackseg)
                 segment["tend"]=dt.isoformat()
@@ -177,8 +177,8 @@ def radsclassFactory(clnm):
     return type(clnm, (RadsBase,), {"sat":sat,"phase":phase,"table":table})
 
 def getRADSdict():
-    """Automatically create all classes contained within the GSHHG database"""
-    satphases={"j1":["a","b","c"],"j2":["a","b","c"],"j3":["a"],}
+    """Create all tables for all satellite missions and phases"""
+    satphases={"j1":["a","b","c"],"j2":["a","b","c"],"j3":["a"],"3a":["a"],"c2":["a"],"n1":["b","c"],"sa":["a","b"],"tx":["a","b","n"]}
     outdict={}
     for sat,phases in satphases.items():
         for  phase in phases:
