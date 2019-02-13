@@ -18,8 +18,7 @@
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.motu import Uri as MotuUri
 from geoslurp.datapull.motu import MotuOpts
-from geoslurp.datapull.motu import Btdbox
-from geoslurp.datapull.motu import MotuComposite
+from geoslurp.meta.netcdftools import BtdBox
 
 import os
 from geoalchemy2.types import Geography
@@ -57,71 +56,6 @@ def nccopyAtt(ncin,ncout,excl=[]):
         ncout.setncattr(attnm,ncin.getncattr(attnm))
 
 
-def duacsMergeGrids(name,fromdir,todir):
-    """Merges two grid files which are split on the 0 meridian and convert to -180,180 longitude domain"""
-    #open the first grid and use this as a base
-    left=os.path.join(fromdir,name+'_left.nc')
-    right=os.path.join(fromdir,name+'_right.nc')
-    out=os.path.join(todir,name+'.nc')
-
-    ncleft=ncDset(left,'r')
-    ncright=ncDset(right,'r')
-    ncout=ncDset(out,'w')
-
-    #copy relevant dimensions, attributes and variables from old to new grid
-    nccopyAtt(ncleft,ncout)
-
-    dexcl=['longitude']
-    vexcl=['longitude','sla']
-
-    #copy dimensions (excluding longitude)
-    for nm,dim in ncleft.dimensions.items():
-        if nm in dexcl:
-            continue
-        if dim.isunlimited():
-            ncout.createDimension(nm,None)
-        else:
-            ncout.createDimension(nm,len(dim))
-
-    # copy all file data for variables that are included in the toinclude list
-    for nm, var in ncleft.variables.items():
-        if nm in vexcl:
-            continue
-
-        ncout.createVariable(nm, var.datatype, var.dimensions)
-        ncout[nm][:] = ncleft[nm][:]
-        nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
-
-    #create new longitude dimension and variable
-
-    #adapt longitude to new boundaries
-    lonn = np.concatenate((ncleft['longitude'][:] - 360, ncright["longitude"][:]))
-    nm='longitude'
-    ncout.createDimension(nm,len(lonn))
-    ncout.createVariable(nm,ncleft[nm].datatype,(nm))
-    #copy/adapt attributes
-    nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
-    ncout[nm].setncattr('valid_max',-180.0)
-    ncout[nm].setncattr('valid_min',180.0)
-    ncout[nm][:]=lonn
-
-    #create new sla grid
-    nm='sla'
-    ncout.createVariable(nm,ncleft[nm].datatype,ncleft[nm].dimensions)
-    ncout[nm].set_auto_maskandscale(True)
-    nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
-    for i in range(ncout.dimensions['time'].size):
-        ncout[nm][i,:,:]=np.concatenate((ncleft[nm][i,:,:], ncright[nm][i,:,:]),axis=1)
-
-    #adapt some attributes
-    ncout.setncattr('geospatial_lon_max',max(lonn))
-    ncout.setncattr('geospatial_lon_min',min(lonn))
-
-
-
-    ncout.setncattr('History',ncout.getncattr('History')+'\n Modified by Geoslurp: Merge two grids alongside 0-meridian')
-
-    return UriFile(out),True
 
 def duacsMetaExtractor(uri):
     """Extracts data from a netcdf file"""
@@ -165,7 +99,7 @@ class Duacs(DataSet):
         super().__init__(scheme)
         DuacsTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
 
-    def pull(self, name=None, west=None,east=None,north=None,south=None):
+    def pull(self, name=None, west=None,east=None,north=None,south=None,tstart=None,tend=None):
         """Pulls a subset of a gridded dataset as netcdf from the cmems copernicus server
         This routine calls the internal routines of the motuclient python client
         :param name: Name of the  output datatset (file will be 'named name.nc')
@@ -173,17 +107,30 @@ class Duacs(DataSet):
         :param east: most eastern longitude of the bounding box
         :param south: most southern latitude of the bounding box
         :param north: most northern longitude of the bounding box
+        :param tstart: start date (as yyyy-mm-dd) for the extraction
+        :param tend: end date (as yyyy-mm-dd) for the extraction
         bbox.n,bbox.s)
         """
 
         if not name:
             raise RuntimeError("A name must be supplied to Duacs.pull !!")
 
-        #reserved for code which will check whether an entry allready exists in the database (will extract bounding box from that entry)
-
 
         if None in [west,east,north,south]:
             raise RuntimeError("Please supply a name and a geographical bounding box")
+
+        try:
+            bbox=BtdBox(w=west,e=east,n=north,s=south,ts=tstart,et=tend)
+        except:
+            raise RuntimeError("Invalid bounding box provided to Duacs pull")
+
+        if bbox.isGMTCentered():
+            # split the bounding box in two
+            bboxleft,bboxright=bbox.lonSplit(0.0)
+            bboxleft.to0_360()
+            bboxright.to0_360()
+
+
 
         # # convert longitude to 0-360 degree domain
         # if west <0:
@@ -196,7 +143,7 @@ class Duacs(DataSet):
         cred=self.scheme.conf.authCred("cmems")
         downloaddir=self.dataDir()
 
-        bbox=Btdbox(w=west, e=east, s=south, n=north)
+        # bbox=Btdbox(w=west, e=east, s=south, n=north)
 
         mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
                        product="dataset-duacs-rep-global-merged-allsat-phy-l4",btdbox=bbox,fout=ncout,cache=self.cacheDir(),variables=['sla'],auth=cred)

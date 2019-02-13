@@ -17,6 +17,7 @@
 
 from geoslurp.datapull import CrawlerBase
 from geoslurp.datapull import UriBase,UriFile
+from geoslurp.meta.netcdftools import BtdBox
 from geoslurp.config.slurplogger import slurplogger
 from dateutil.parser import parse as isoParser
 import os
@@ -27,68 +28,6 @@ from collections import namedtuple
 from netCDF4 import num2date
 import copy
 
-# holds bounding box in geographical coordinates, a start/end time, and a depth range
-Btdbox = namedtuple('Bbox', ['w', 'e', 'n', 's', 'ts', 'te', 'zmin', 'zmax'])
-
-#set default arguments to Nones
-Btdbox.__new__.__defaults__ = (None,) * len(Btdbox._fields)
-
-class BtdBox():
-    """Class which holds a geographical bounding box, a vertical depth range and a datetime range"""
-    s=None
-    n=None
-    w=None
-    e=None
-    ts=None
-    te=None
-    zmin=None
-    zmax=None
-    def __init__(self,s=None,n=None,w=None,e=None,ts=None,te=None,zmin=None,zmax=None):
-
-        self.s=s
-        self.n=n
-        self.w=w
-        self.e=e
-        self.ts=ts
-        self.te=te
-        self.zmin=zmin
-        self.zmax=zmax
-        self.check()
-
-    def toGreenwhich(self):
-        """returns an instance with the longitude coordinates to span -180 .. 180"""
-        out=copy.deepcopy(self)
-        if out.e > 180:
-            out.e-=360
-        if out.w > 180:
-            out.w-=360
-        out.check()
-        return out
-
-    def to0_360(self):
-        """Change the longitude coordinates to span 0 .. 360"""
-        out=copy.deepcopy(self)
-        if out.e < 0:
-            out.e+=360
-        if out.w < 0:
-            out.w+=360
-        out
-
-    def check(self):
-        """Check if the ranges are valid """
-        if not (self.s < self.n and self.w < self.e and self.ts < self.te and self.zmin < self.zmax):
-            raise RuntimeError("invalid Bounding box, time range or , z-range")
-
-    def lonSplit(self,lon):
-        """returns 2 bounding boxes from the current one split at a longitude
-        """
-        if lon < self.w or self.e < lon:
-            raise RuntimeError("Splitting longitude not within the bounding box")
-        left=copy.deepcopy(self)
-        left.e=lon
-        right=copy.deepcopy(self)
-        right.w=lon
-        return left,right
 
 class MotuOpts():
     """A class which mimics the options from argparse as used by the motuclient command line program"""
@@ -108,7 +47,7 @@ class MotuOpts():
     variable=None
     out_dir='.'
     cache='.'
-    out_name='dataset'
+    out_name='dataset.nc'
     describe=False
     extraction_geographic=True
     extraction_vertical=False
@@ -122,6 +61,8 @@ class MotuOpts():
     date_min=datetime.min.strftime('%Y-%m-%d %H:%M:%S')
     date_max=datetime.max.strftime('%Y-%m-%d %H:%M:%S')
     user_agent='motu-api-client'
+    #custom variables
+    btdbox=BtdBox()
     def __init__(self, moturoot,service,product,auth,btdbox,fout,cache,variables=None):
         """Sets options"""
         self.motu=moturoot
@@ -129,27 +70,32 @@ class MotuOpts():
         self.product_id=product
         self.user=auth.user
         self.pwd=auth.passw
-        self.latitude_min=btdbox.s
-        self.latitude_max=btdbox.n
-        self.longitude_min=btdbox.w
-        self.longitude_max=btdbox.e
-        if btdbox.ts:
-            self.date_min=btdbox.ts
-        if btdbox.te:
-            self.date_max=btdbox.te
-
+        self.setbtdbox(btdbox)
         self.out_dir=os.path.dirname(fout)
         self.cache=cache
         self.out_name=os.path.basename(fout)
         self.variable=variables
 
+    def syncbtdbox(self,bbox=None):
+        """Sets the internal btdbox and synchronize the corresponding motu variables"""
+        if bbox:
+            self.btdbox=bbox
+
+        self.latitude_min=self.btdbox.s
+        self.latitude_max=self.btdbox.n
+        self.longitude_min=self.btdbox.w
+        self.longitude_max=self.btdbox.e
+        if self.btdbox.ts:
+            self.date_min=self.btdbox.ts
+        if self.btdbox.te:
+            self.date_max=self.btdbox.te
 
 
 class Uri(UriBase):
     kbsize=0
     maxkbsize=0
     info=False
-    maxbtdbox=Btdbox()
+    maxbtdbox=BtdBox()
     def __init__(self,Mopts):
         self.opts=Mopts
         url=os.path.join(Mopts.out_dir,Mopts.out_name)
@@ -189,7 +135,13 @@ class Uri(UriBase):
                 covdict['ts']=num2date(float(axis.attrib['lower']),axis.attrib['units'])
                 covdict['te']=num2date(float(axis.attrib['upper']),axis.attrib['units'])
 
-        self.maxbtdbox=Btdbox(**covdict)
+        self.maxbtdbox=BtdBox(**covdict)
+
+        #Crop/Synchronize the requested bounding box with that what is available
+        self.opts.btdbox.crop(self.maxbtdbox)
+        self.opts.syncbtdbox()
+
+
 
         #hack (change outname back to nc suffix)
         self.opts.out_name=oldnm
@@ -221,6 +173,7 @@ class Uri(UriBase):
         self.maxkbsize=float(xml.getroot().attrib['maxAllowedSize'])
         self.opts.out_name=self.opts.out_name.replace('.xml','.nc')
 
+        return self.kbsize,self.maxkbsize
 
     def download(self,direc,check=False,gzip=False,outfile=None):
         #check whether the file exists and retrive thelast update date
@@ -252,35 +205,29 @@ class Uri(UriBase):
         return uri,True
 
 
-class MotuComposite():
-    """Class which splits up a larger motu request in binary children """
-    A=None
-    B=None
+class MotuRecursive():
+    """Class which recursively downloads netcdf files using motu and patches them together"""
     def __init__(self,mopts):
         self.mopts=mopts
-        # # request information on this request
-        # self.muri=Uri(mopts)
-        # #request datacoverage and update modification time
-        # self.muri.requestInfo()
-        # #check whether the central meridian of the requested and provided data agree
-        # # if self.mopts.latitude_min < 0 && self.muri.maxkbsize > 0:
 
     def download(self):
-        """Download all tiles"""
-        pass
-
-    def patch(self):
-        """patch all tiles into a complete dataset"""
-        pass
-
-    def timeSplit(self):
-        """splits the motu request at the half the time, until the size is small enough """
-        pass
-
-    def greenwhichSplit(self):
-        """Splits the motu request at the 0 meridian"""
+        """Download file"""
         muri=Uri(self.mopts)
-        muri.requestInfo()
+        #check if download is allowed
+        kb,maxkb=muri.updateSize()
+        if kb > maxkb:
+            #split up request and try again
+            muri.requestInfo()
 
-        pass
+
+            #create 2 bounding boxes split on time
+            Abbox,Bbbox=muri.btdbox.timeSplit()
+
+            #download files
+            Amopts=self.mopts.syncbtdbox(Abbox)
+            uriA,upd=Uri(Amopts).download(Abbox.cache,check=True,outfile=Amopts.out_name.replace('.nc','_A.nc'))
+            #patch files together
+
+        else:
+            return muri.download(self.mopts.out_dir,check=True)
 
