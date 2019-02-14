@@ -18,7 +18,7 @@
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.motu import Uri as MotuUri
 from geoslurp.datapull.motu import MotuOpts, MotuRecursive
-from geoslurp.meta.netcdftools import BtdBox
+from geoslurp.meta.netcdftools import BtdBox,ncSwapLongitude,stackNcFiles
 
 import os
 from geoalchemy2.types import Geography
@@ -30,7 +30,7 @@ from netCDF4 import Dataset as ncDset
 from datetime import datetime,timedelta
 from geoslurp.datapull import findFiles,UriFile
 from geoslurp.config.slurplogger import slurplogger
-import numpy as np
+import copy
 
 DuacsTBase=declarative_base(metadata=MetaData(schema='altim'))
 
@@ -118,8 +118,10 @@ class Duacs(DataSet):
 
 
         cred=self.scheme.conf.authCred("cmems")
-        downloaddir=self.dataDir()
+        ncout=os.path.join(self.dataDir(),name+".nc")
 
+        mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
+                       product="dataset-duacs-rep-global-merged-allsat-phy-l4",btdbox=bbox,fout=ncout,cache=self.cacheDir(),variables=['sla'],auth=cred)
 
         if bbox.isGMTCentered():
             # we need 2 downloads and a merging of the grids !
@@ -127,12 +129,37 @@ class Duacs(DataSet):
             bboxleft,bboxright=bbox.lonSplit(0.0)
             bboxleft.to0_360()
             bboxright.to0_360()
+
+            ncoutleft=os.path.join(self.cacheDir(),name+"_left.nc")
+
+            mOptsleft=copy.deepcopy(mOpts)
+            mOptsleft.syncbtdbox(bboxleft)
+            mOptsleft.syncfilename(ncoutleft)
+
+            MotuRecleft=MotuRecursive(mOptsleft)
+            urileft,updleft=MotuRecleft.download()
+
+            ncoutright=os.path.join(self.cacheDir(),name+"_right.nc")
+            mOptsright=copy.deepcopy(mOpts)
+            mOptsright.syncbtdbox(bboxright)
+            mOptsright.syncfilename(ncoutright)
+
+            MotuRecright=MotuRecursive(mOptsright)
+            uriright,updright=MotuRecright.download()
+
+            if updleft or updright:
+                #change the longitude representation to -180..0
+                ncSwapLongitude(urileft.url)
+                # patch files
+                stackNcFiles(ncout,urileft.url,uriright.url)
+                upd=True
+                uri=UriFile(ncout)
+            else:
+                upd=False
+                uri=UriFile(ncout)
         else:
             #we can handle this by a single recursive motu instance
-            ncout=os.path.join(downloaddir,name+".nc")
 
-            mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
-                       product="dataset-duacs-rep-global-merged-allsat-phy-l4",btdbox=bbox,fout=ncout,cache=self.cacheDir(),variables=['sla'],auth=cred)
             MotuRec=MotuRecursive(mOpts)
             uri,upd=MotuRec.download()
 

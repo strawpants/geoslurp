@@ -66,7 +66,7 @@ class BtdBox():
 
     def to0_360(self):
         """Change the longitude coordinates to span 0 .. 360"""
-        if self.e < 0:
+        if self.e <= 0:
             self.e+=360
         if self.w < 0:
             self.w+=360
@@ -145,9 +145,16 @@ def nccopyAtt(ncin,ncout,excl=[]):
             continue
         ncout.setncattr(attnm,ncin.getncattr(attnm))
 
-def ncFileSwapCentralMeridian(ncinout,greenwhich=True):
-    """swap the central meridian of a netcdf file in place"""
-    pass
+def ncSwapLongitude(ncinout,longitudevar='longitude'):
+    """swap the longitude representation to span 0..360 or -180..180"""
+    ncid=ncDset(ncinout,'r+')
+    #find the longitude variable
+    if max(ncid[longitudevar][:]) > 180 :
+        ncid[longitudevar][:][ncid[longitudevar][:]> 180]-=360
+    elif min(ncid[longitudevar][:]) < 0:
+        ncid[longitudevar][:][ncid[longitudevar][:]<0]+=360
+    ncid.close()
+
 
 def stackNcFiles(ncout,ncA,ncB,dimension):
     """Append netcdf file B after file A along the dimension specified"""

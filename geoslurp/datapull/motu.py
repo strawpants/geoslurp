@@ -71,10 +71,9 @@ class MotuOpts():
         self.user=auth.user
         self.pwd=auth.passw
         self.syncbtdbox(btdbox)
-        self.out_dir=os.path.dirname(fout)
         self.cache=cache
-        self.out_name=os.path.basename(fout)
         self.variable=variables
+        self.syncfilename(fout)
 
     def syncbtdbox(self,bbox=None):
         """Sets the internal btdbox and synchronize the corresponding motu variables"""
@@ -89,6 +88,10 @@ class MotuOpts():
             self.date_min=self.btdbox.ts.strftime('%Y-%m-%d %H:%M:%S')
         if self.btdbox.te:
             self.date_max=self.btdbox.te.strftime('%Y-%m-%d %H:%M:%S')
+
+    def syncfilename(self,fout):
+        self.out_dir=os.path.dirname(fout)
+        self.out_name=os.path.basename(fout)
 
     def fullname(self):
         return os.path.join(self.out_dir,self.out_name)
@@ -106,6 +109,10 @@ class Uri(UriBase):
 
     def requestInfo(self):
         """Request info (modification time, size, datacoverage) on this specific query from the server"""
+        if self.info:
+            #quick return when already done
+            return
+
         self.opts.describe=True
         oldd=self.opts.out_dir
         oldnm=self.opts.out_name
@@ -219,7 +226,7 @@ class MotuRecursive():
         muri=Uri(self.mopts)
         #check if download is allowed
         kb,maxkb=muri.updateSize()
-        if kb > maxkb/4:
+        if kb > maxkb:
             #split up request and try again
             muri.requestInfo()
 
@@ -239,6 +246,7 @@ class MotuRecursive():
             Auri,Aupd=AmotuRec.download()
             Buri,Bupd=BmotuRec.download()
 
+            #possible improvement here split a dataset at an unlimited dimensions and append the second one to the new one
             #patch files together (if updated)
             if Aupd or Bupd:
                 stackNcFiles(self.mopts.fullname(),Auri.url,Buri.url,'time')
