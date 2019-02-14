@@ -17,7 +17,10 @@
 import copy
 from datetime import datetime
 import sys
-
+from netCDF4 import Dataset as ncDset
+import numpy as np
+from geoslurp.datapull.uri import UriFile
+from geoslurp.config.slurplogger import slurplogger
 class BtdBox():
     """Class which holds a geographical bounding box, a vertical depth range and a datetime range,
     closely linked to the netcdffile operations below"""
@@ -98,6 +101,7 @@ class BtdBox():
         before.te=t
         after=copy.deepcopy(self)
         after.ts=t
+        return before,after
 
     def isGMTCentered(self):
         if ( self.w < 0 ) or (self.e < 0):
@@ -147,67 +151,47 @@ def ncFileSwapCentralMeridian(ncinout,greenwhich=True):
 
 def stackNcFiles(ncout,ncA,ncB,dimension):
     """Append netcdf file B after file A along the dimension specified"""
-    pass
-    # #open the first grid and use this as a base
-    # left=os.path.join(fromdir,name+'_left.nc')
-    # right=os.path.join(fromdir,name+'_right.nc')
-    # out=os.path.join(todir,name+'.nc')
-    #
-    # ncleft=ncDset(left,'r')
-    # ncright=ncDset(right,'r')
-    # ncout=ncDset(out,'w')
-    #
-    # #copy relevant dimensions, attributes and variables from old to new grid
-    # nccopyAtt(ncleft,ncout)
-    #
-    # dexcl=['longitude']
-    # vexcl=['longitude','sla']
-    #
-    # #copy dimensions (excluding longitude)
-    # for nm,dim in ncleft.dimensions.items():
-    #     if nm in dexcl:
-    #         continue
-    #     if dim.isunlimited():
-    #         ncout.createDimension(nm,None)
-    #     else:
-    #         ncout.createDimension(nm,len(dim))
-    #
-    # # copy all file data for variables that are included in the toinclude list
-    # for nm, var in ncleft.variables.items():
-    #     if nm in vexcl:
-    #         continue
-    #
-    #     ncout.createVariable(nm, var.datatype, var.dimensions)
-    #     ncout[nm][:] = ncleft[nm][:]
-    #     nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
-    #
-    # #create new longitude dimension and variable
-    #
-    # #adapt longitude to new boundaries
-    # lonn = np.concatenate((ncleft['longitude'][:] - 360, ncright["longitude"][:]))
-    # nm='longitude'
-    # ncout.createDimension(nm,len(lonn))
-    # ncout.createVariable(nm,ncleft[nm].datatype,(nm))
-    # #copy/adapt attributes
-    # nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
-    # ncout[nm].setncattr('valid_max',-180.0)
-    # ncout[nm].setncattr('valid_min',180.0)
-    # ncout[nm][:]=lonn
-    #
-    # #create new sla grid
-    # nm='sla'
-    # ncout.createVariable(nm,ncleft[nm].datatype,ncleft[nm].dimensions)
-    # ncout[nm].set_auto_maskandscale(True)
-    # nccopyAtt(ncleft[nm],ncout[nm],['_FillValue'])
-    # for i in range(ncout.dimensions['time'].size):
-    #     ncout[nm][i,:,:]=np.concatenate((ncleft[nm][i,:,:], ncright[nm][i,:,:]),axis=1)
-    #
-    # #adapt some attributes
-    # ncout.setncattr('geospatial_lon_max',max(lonn))
-    # ncout.setncattr('geospatial_lon_min',min(lonn))
-    #
-    #
-    #
-    # ncout.setncattr('History',ncout.getncattr('History')+'\n Modified by Geoslurp: Merge two grids alongside 0-meridian')
-    #
-    # return UriFile(out),True
+    slurplogger().info("Patching files %s %s",ncA,ncB)
+    #open the three netcdf files
+    outid=ncDset(ncout,'w')
+    aid=ncDset(ncA,'r')
+    bid=ncDset(ncB,'r')
+
+    # #copy global attributes
+    nccopyAtt(aid,outid)
+
+    # dimension to be excluded from dimension copy
+    dexcl=[dimension]
+
+    # make a list of variables which need to be appended  and cannot be copied straight away
+    vapp=[ var for var in aid.variables.keys() if dimension in aid.variables[var].dimensions ]
+
+    #copy dimensions (excluding the specified one)
+    for nm,dim in aid.dimensions.items():
+        if nm in dexcl:
+            continue
+        if dim.isunlimited():
+            outid.createDimension(nm,None)
+        else:
+            outid.createDimension(nm,len(dim))
+
+    # copy all variables  and attributes which don't require appending
+    for nm, var in aid.variables.items():
+        if nm in vapp:
+            continue
+        outid.createVariable(nm, var.datatype, var.dimensions)
+        outid[nm][:] = aid[nm][:]
+        nccopyAtt(aid[nm],outid[nm],['_FillValue'])
+
+    #create new dimension
+    outid.createDimension(dimension,aid.dimensions[dimension].size+bid.dimensions[dimension].size)
+
+    #create new appended variables
+    for var in vapp:
+        outid.createVariable(var,aid[var].datatype,bid[var].dimensions)
+        nccopyAtt(aid[var],outid[var],['_FillValue'])
+        dimax=aid[var].dimensions.index(dimension)
+        outid[var][:]=np.concatenate((aid[var][:],bid[var][:]),axis=dimax)
+
+    outid.setncattr('History',outid.getncattr('History')+'\n Modified at %s by Geoslurp: Merge two netcdf files along dimension %s'%(datetime.now(),dimension))
+    return UriFile(ncout),True

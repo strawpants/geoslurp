@@ -17,7 +17,7 @@
 
 from geoslurp.datapull import CrawlerBase
 from geoslurp.datapull import UriBase,UriFile
-from geoslurp.meta.netcdftools import BtdBox
+from geoslurp.meta.netcdftools import BtdBox, stackNcFiles
 from geoslurp.config.slurplogger import slurplogger
 from dateutil.parser import parse as isoParser
 import os
@@ -70,7 +70,7 @@ class MotuOpts():
         self.product_id=product
         self.user=auth.user
         self.pwd=auth.passw
-        self.setbtdbox(btdbox)
+        self.syncbtdbox(btdbox)
         self.out_dir=os.path.dirname(fout)
         self.cache=cache
         self.out_name=os.path.basename(fout)
@@ -86,9 +86,12 @@ class MotuOpts():
         self.longitude_min=self.btdbox.w
         self.longitude_max=self.btdbox.e
         if self.btdbox.ts:
-            self.date_min=self.btdbox.ts
+            self.date_min=self.btdbox.ts.strftime('%Y-%m-%d %H:%M:%S')
         if self.btdbox.te:
-            self.date_max=self.btdbox.te
+            self.date_max=self.btdbox.te.strftime('%Y-%m-%d %H:%M:%S')
+
+    def fullname(self):
+        return os.path.join(self.out_dir,self.out_name)
 
 
 class Uri(UriBase):
@@ -107,12 +110,12 @@ class Uri(UriBase):
         oldd=self.opts.out_dir
         oldnm=self.opts.out_name
         self.opts.out_dir=self.opts.cache
-        self.opts.out_name=self.opts.out_name.replace('.nc','_descr.nc')
-        # try:
-        #     execute_request(self.opts)
-        # except Exception as e:
-        #     slurplogger().error("failed to request info on query")
-        #     raise(e)
+        self.opts.out_name=self.opts.out_name.replace('.nc','_descr.xml')
+        try:
+            execute_request(self.opts)
+        except Exception as e:
+            slurplogger().error("failed to request info on query")
+            raise(e)
 
         self.opts.describe=False
         self.opts.out_dir=oldd
@@ -164,6 +167,7 @@ class Uri(UriBase):
         except Exception as e:
             slurplogger().error("failed to request size: %s",e)
             raise(e)
+        # self.opts.out_name=self.opts.out_name.replace('.nc','.xml')
 
         self.opts.size=False
         self.opts.out_dir=oldd
@@ -215,19 +219,30 @@ class MotuRecursive():
         muri=Uri(self.mopts)
         #check if download is allowed
         kb,maxkb=muri.updateSize()
-        if kb > maxkb:
+        if kb > maxkb/4:
             #split up request and try again
             muri.requestInfo()
 
-
             #create 2 bounding boxes split on time
-            Abbox,Bbbox=muri.btdbox.timeSplit()
+            Abbox,Bbbox=muri.opts.btdbox.timeSplit()
 
-            #download files
-            Amopts=self.mopts.syncbtdbox(Abbox)
-            uriA,upd=Uri(Amopts).download(Abbox.cache,check=True,outfile=Amopts.out_name.replace('.nc','_A.nc'))
-            #patch files together
+            AmotuRec=MotuRecursive(copy.deepcopy(self.mopts))
+            AmotuRec.mopts.syncbtdbox(Abbox)
+            AmotuRec.mopts.out_name=self.mopts.out_name.replace('.nc','_A.nc')
+            AmotuRec.mopts.out_dir=AmotuRec.mopts.cache
 
+            BmotuRec=MotuRecursive(copy.deepcopy(self.mopts))
+            BmotuRec.mopts.syncbtdbox(Bbbox)
+            BmotuRec.mopts.out_name=self.mopts.out_name.replace('.nc','_B.nc')
+            BmotuRec.mopts.out_dir=BmotuRec.mopts.cache
+
+            Auri,Aupd=AmotuRec.download()
+            Buri,Bupd=BmotuRec.download()
+
+            #patch files together (if updated)
+            if Aupd or Bupd:
+                stackNcFiles(self.mopts.fullname(),Auri.url,Buri.url,'time')
+            return UriFile(self.mopts.fullname()),True
         else:
             return muri.download(self.mopts.out_dir,check=True)
 

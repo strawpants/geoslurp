@@ -17,7 +17,7 @@
 
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.motu import Uri as MotuUri
-from geoslurp.datapull.motu import MotuOpts
+from geoslurp.datapull.motu import MotuOpts, MotuRecursive
 from geoslurp.meta.netcdftools import BtdBox
 
 import os
@@ -47,14 +47,6 @@ class DuacsTable(DuacsTBase):
     uri=Column(String)
     geom=Column(geoBbox)
     data=Column(JSONB)
-
-def nccopyAtt(ncin,ncout,excl=[]):
-    """Quick function to copy attributes from a netcdf entity to another"""
-    for attnm in ncin.ncattrs():
-        if attnm in excl:
-            continue
-        ncout.setncattr(attnm,ncin.getncattr(attnm))
-
 
 
 def duacsMetaExtractor(uri):
@@ -120,71 +112,32 @@ class Duacs(DataSet):
             raise RuntimeError("Please supply a name and a geographical bounding box")
 
         try:
-            bbox=BtdBox(w=west,e=east,n=north,s=south,ts=tstart,et=tend)
+            bbox=BtdBox(w=west,e=east,n=north,s=south,ts=tstart,te=tend)
         except:
             raise RuntimeError("Invalid bounding box provided to Duacs pull")
 
+
+        cred=self.scheme.conf.authCred("cmems")
+        downloaddir=self.dataDir()
+
+
         if bbox.isGMTCentered():
+            # we need 2 downloads and a merging of the grids !
             # split the bounding box in two
             bboxleft,bboxright=bbox.lonSplit(0.0)
             bboxleft.to0_360()
             bboxright.to0_360()
+        else:
+            #we can handle this by a single recursive motu instance
+            ncout=os.path.join(downloaddir,name+".nc")
 
-
-
-        # # convert longitude to 0-360 degree domain
-        # if west <0:
-        #     west+=360
-        # if east < 0:
-        #     east+=360
-
-
-        ncout=name+".nc"
-        cred=self.scheme.conf.authCred("cmems")
-        downloaddir=self.dataDir()
-
-        # bbox=Btdbox(w=west, e=east, s=south, n=north)
-
-        mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
-                       product="dataset-duacs-rep-global-merged-allsat-phy-l4",btdbox=bbox,fout=ncout,cache=self.cacheDir(),variables=['sla'],auth=cred)
-        Mcomposite=MotuComposite(mOpts)
-
-        #test whether the zero meridian is within the box (then the request must be split in 2 parts and the grids merged)
-        bbox2=False
-        if east < west:
-            bbox=Btdbox(w=west, e=360, s=south, n=north)
-            ncout=name+"_left.nc"
-            bbox2=Btdbox(w=0, e=east, s=south, n=north)
-            ncout2=name+"_right.nc"
-            downloaddir=self.cacheDir()
-
-        #construct an option object which is fed into the motuclient
-        mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
-                         product="dataset-duacs-rep-global-merged-allsat-phy-l4",btdbox=bbox,fout=ncout,cache=self.cacheDir(),variables=['sla'],auth=cred)
-
-        #create a MOTU
-        uri=MotuUri(mOpts)
-        uri.updateModTime()
-        try:
-            tmpuri,upd=uri.download(downloaddir,check=True)
-        except:
-            raise RuntimeError("Downloading of %s, failed (try again later?)"%(ncout))
-
-        if bbox2:
-            #also download the other part and merge the file
             mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
-                       product="dataset-duacs-rep-global-merged-allsat-phy-l4",bbox=bbox2,fout=ncout2,cache=self.cacheDir(),variables=['sla'],auth=cred)
-            uri2=MotuUri(mOpts)
-            try:
-                tmpuri2,upd=uri2.download(downloaddir,check=True)
-            except:
-                raise RuntimeError("Downloading of %s, failed (try again later?)"%(ncout))
-
-            tmpuri,upd=duacsMergeGrids(name,downloaddir,self.dataDir())
-
+                       product="dataset-duacs-rep-global-merged-allsat-phy-l4",btdbox=bbox,fout=ncout,cache=self.cacheDir(),variables=['sla'],auth=cred)
+            MotuRec=MotuRecursive(mOpts)
+            uri,upd=MotuRec.download()
 
         if upd:
-            self.updated.append(tmpuri)
+            self.updated.append(uri)
 
 
     def register(self):
