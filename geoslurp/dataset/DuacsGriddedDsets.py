@@ -147,11 +147,12 @@ class Duacs(DataSet):
             MotuRecright=MotuRecursive(mOptsright)
             uriright,updright=MotuRecright.download()
 
+            stackNcFiles(ncout,urileft.url,uriright.url,'longitude')
             if updleft or updright:
                 #change the longitude representation to -180..0
                 ncSwapLongitude(urileft.url)
                 # patch files
-                stackNcFiles(ncout,urileft.url,uriright.url)
+                stackNcFiles(ncout,urileft.url,uriright.url,'longitude')
                 upd=True
                 uri=UriFile(ncout)
             else:
