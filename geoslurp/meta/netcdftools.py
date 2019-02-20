@@ -198,7 +198,21 @@ def stackNcFiles(ncout,ncA,ncB,dimension):
         outid.createVariable(var,aid[var].datatype,bid[var].dimensions)
         nccopyAtt(aid[var],outid[var],['_FillValue'])
         dimax=aid[var].dimensions.index(dimension)
-        outid[var][:]=np.concatenate((aid[var][:],bid[var][:]),axis=dimax)
+        iidx=[slice(None)]*outid[var].ndim
+        iidx[dimax]=0
+
+        idx=[slice(None)]*aid[var].ndim
+        idx[dimax]=0
+        for i in range(aid.dimensions[dimension].size):
+            outid[var][iidx]=aid[var][idx]
+            idx[dimax]+=1
+            iidx[dimax]+=1
+
+        idx[dimax]=0
+        for i in range(bid.dimensions[dimension].size):
+            outid[var][iidx]=bid[var][idx]
+            idx[dimax]+=1
+            iidx[dimax]+=1
 
     outid.setncattr('History',outid.getncattr('History')+'\n Modified at %s by Geoslurp: Merge two netcdf files along dimension %s'%(datetime.now(),dimension))
     return UriFile(ncout),True
