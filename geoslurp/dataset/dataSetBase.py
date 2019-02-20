@@ -20,6 +20,9 @@ import os
 from geoslurp.config.slurplogger import slurplogger
 import shutil
 import re
+from geoslurp.db import Inventory,Settings
+from sqlalchemy.orm.exc import NoResultFound
+from datetime import datetime
 
 def rmfilterdir(ddir,filter='*'):
     """Remove directories and files based on a certain regex filter"""
@@ -47,31 +50,59 @@ def rmfilterdir(ddir,filter='*'):
 class DataSet(ABC):
     """Abstract Base class which hold a dataset (corresponding to a database table"""
     table=None
-    ses=None
     commitCounter=0
-    def __init__(self,scheme):
+    scheme=''
+    db=None
+    version=None
+    updatefreq=None
+    def __init__(self,dbcon,schema=None):
         self.name=self.__class__.__name__.lower().replace('-',"_")
-        self.scheme=scheme
-        #retrieve the Dataset entry (in the form of a dictionary) from the Inventory
+        self.db=dbcon
+
+        if schema:
+            self.scheme=schema.lower().replace("-","_")
+        else:
+            #set the schema to the one named after the user (default)
+            self.scheme=self.db.user.lower()
+
+        #Initiate a session for keeping track of the inventory entry
+        self._ses=self.db.Session()
+        invent=Inventory(self.db)
         try:
-            self._inventData=scheme._dbinvent.datasets[self.name]
-        except KeyError:
-            self._inventData={}
+            self._dbinvent=self._ses.query(invent.__table__).filter(invent.__table__.scheme == self.scheme).one()
+            #possibly migrate table
+            self.migrate(self._dbinvent.version)
+        except NoResultFound:
+            #possibly create a schema
+            self.db.CreateSchema(self.scheme)
+            #set defaults for the  inventory
+            self._dbinvent = invent.__table__(scheme=self.scheme, dataset=self.name,
+                                              version=self.version, updatefreq=-1,
+                                              data={},lastupdate=datetime.min)
+            #add the default entry to the database
+            self._ses.add(self._dbinvent)
+            self._ses.commit()
+        #load user settings
+        self.conf=Settings(self.db)
+
+
 
     def updateInvent(self):
-        self.scheme.updateInvent(self.name,self._inventData)
+        self._dbinvent.lastupdate=datetime.now()
+        self._dbinvent.updatefreq=self.updatefreq
+        self._ses.commit()
 
     def info(self):
-        return self._inventData
+        return self._dbinvent
 
     def dataDir(self,subdirs=None):
         """Returns the specialized data directory of this scheme and dataset
         The directory will be created if it does not exist"""
-        return self.scheme.conf.getDir(self.scheme.__class__.__name__, 'DataDir', dataset=self.__class__.__name__,subdirs=subdirs)
+        return self.conf.getDir(self.scheme, 'DataDir', dataset=self.__class__.__name__,subdirs=subdirs)
 
     def cacheDir(self,subdirs=None):
         """returns the cache directory of this scheme and dataset"""
-        return self.scheme.conf.getDir(self.scheme.__class__.__name__, 'CacheDir', dataset=self.__class__.__name__,subdirs=subdirs)
+        return self.conf.getDir(self.scheme, 'CacheDir', dataset=self.__class__.__name__,subdirs=subdirs)
 
     @abstractmethod
     def pull(self):
@@ -99,16 +130,14 @@ class DataSet(ABC):
         self.scheme.dropTable(self.name)
 
     def halt(self):
+        """can be overridden to properly clean up an aborted operation"""
         pass
 
     def uriNeedsUpdate(self, urilikestr,lastmod):
         """Query for a URI in the table based on a alike string and delete the entry when older than lastmod"""
-        if not self.ses:
-            self.ses=self.scheme.db.Session()
-
         needsupdate=True
         try:
-            qResults=self.ses.query(self.table).filter(self.table.uri.like('%'+urilikestr+'%'))
+            qResults=self._ses.query(self.table).filter(self.table.uri.like('%'+urilikestr+'%'))
             if qResults.count() == 0:
                 return True
             needsupdate=False
@@ -121,8 +150,8 @@ class DataSet(ABC):
             if needsupdate:
                 for qres in qResults:
                     #delete the entries which need updating
-                    self.ses.delete(qres)
-                    self.ses.commit()
+                    self._ses.delete(qres)
+                    self._ses.commit()
             else:
                 slurplogger().info("No Update needed, skipping %s"%(urilikestr))
 
@@ -133,14 +162,11 @@ class DataSet(ABC):
 
     def entryNeedsUpdate(self,likestr,lastmod,col=None):
         """Query for a Columns in the table based on a alike string and delete the entry when older than lastmod"""
-        if not self.ses:
-            self.ses=self.scheme.db.Session()
-
         needsupdate=True
         try:
             if not col:
                 col=self.table.uri
-            qResults=self.ses.query(self.table).filter(col.like('%'+likestr+'%'))
+            qResults=self._ses.query(self.table).filter(col.like('%'+likestr+'%'))
             if qResults.count() == 0:
                 return True
             needsupdate=False
@@ -153,8 +179,8 @@ class DataSet(ABC):
             if needsupdate:
                 for qres in qResults:
                     #delete the entries which need updating
-                    self.ses.delete(qres)
-                    self.ses.commit()
+                    self._ses.delete(qres)
+                    self._ses.commit()
             else:
                 slurplogger().info("No Update needed, skipping %s"%(likestr))
 
@@ -165,14 +191,12 @@ class DataSet(ABC):
 
     def addEntry(self,metadict):
         entry=self.table(**metadict)
-        if not self.ses:
-            self.ses=self.scheme.db.Session()
 
-        self.ses.add(entry)
+        self._ses.add(entry)
 
         if self.commitCounter > 10:
             # commit every so many rows
-            self.ses.commit()
+            self._ses.commit()
             self.commitCounter=0
         else:
             self.commitCounter+=1
@@ -180,8 +204,12 @@ class DataSet(ABC):
 
     def clearTable(self):
         """Clears all entries in a table"""
-        if not self.ses:
-            self.ses=self.scheme.db.Session()
-        allrows=self.ses.query(self.table)
+        allrows=self._ses.query(self.table)
         for res in allrows:
-            self.ses.delete(res)
+            self._ses.delete(res)
+
+    def migrate(self,version):
+        """Properly migrate a table between software versions
+        (note this function is supposed to be overridden in a derived class)"""
+        if not version == self.version:
+            raise RuntimeError("No migration implemented")

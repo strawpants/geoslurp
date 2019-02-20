@@ -49,11 +49,11 @@ class SettingsTable(GSBase):
 class Settings():
     """Read and write default and user specific settings to and from the database"""
     table=SettingsTable
-    def __init__(self,dbconn,user,passwd):
+    def __init__(self,dbconn):
         self.db=dbconn
         self.ses=self.db.Session()
-        self.user=user
-        self.passwd=passwd
+        self.user=dbconn.user
+        self.passwd=dbconn.passwd
         #creates the settings table if it doesn't exists
         if not self.db.dbeng.has_table('settings'):
             GSBase.metadata.create_all(self.db.dbeng)

@@ -28,8 +28,14 @@ class InventTable(GSBase):
     __tablename__='inventory'
     id=Column(Integer, primary_key=True)
     scheme=Column(String, unique=True)
-    datasets=Column(MutableDict.as_mutable(JSONB))
-    pgfuncs=Column(MutableDict.as_mutable(JSONB))
+    dataset=Column(String,unique=True)
+    pgfunc=Column(String,unique=True)
+    lastupdate=Column(TIMESTAMP)
+    updatefreq=Column(Integer)
+    version=Column(ARRAY(Integer,as_tuple=True))
+    cache=Column(String)
+    datadir=Column(String)
+    data=Column(MutableDict.as_mutable(JSONB))
 
 class Inventory:
     """Class which provides read/write access to the postgresql inventory table"""
@@ -43,7 +49,7 @@ class Inventory:
         self._ses=self.db.Session()
         #creates the inventory table if it doesn't exists
         if not geoslurpConn.dbeng.has_table('inventory'):
-            GSBase.metadata.create_all(geoslurpConn.dbeng )
+            GSBase.metadata.create_all(geoslurpConn.dbeng)
 
 
     def __iter__(self):
@@ -51,10 +57,10 @@ class Inventory:
         for entry in self._ses.query(InventTable):
             yield entry
 
-    def __getitem__(self, schema):
+    def __getitem__(self, dataset):
         """Retrieves the entry from the inventory table corresponding to the schema"""
         #we need to open up a small sqlalcheny session here
         # note  this will raise a NoResultsFound exception if none was found (should be treated by caller)
-        inventEntry=self._ses.query(InventTable).filter(InventTable.scheme == schema).one()
+        inventEntry=self._ses.query(InventTable).filter(InventTable.dataset == dataset).one()
 
         return inventEntry
