@@ -20,6 +20,7 @@
 
 from geoslurp.dataset import DataSet,GravitySHTBase
 from geoslurp.datapull.icgem import  Crawler as IcgemCrawler
+from geoslurp.datapull.uri import findFiles
 import re
 import gzip as gz
 from geoslurp.config.slurplogger import slurplogger
@@ -28,15 +29,16 @@ from geoslurp.datapull import UriFile
 import os
 from datetime import datetime
 from geoslurp.meta.gravity import icgemMetaExtractor
+from geoslurp.config.register import geoslurpregistry
 
 class ICGEM_static(DataSet):
     """Manages the static gravity fields which are hosted at http://icgem.gfz-potsdam.de/tom_longtime"""
     table=type("ICGEM_staticTable",(GravitySHTBase,), {})
-    __version__=(0,0)
-    def __init__(self, scheme):
-        super().__init__(scheme)
+    scheme='Gravity'
+    def __init__(self, dbconn):
+        super().__init__(dbconn)
         #initialize postgreslq table
-        GravitySHTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+        GravitySHTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
         self.updated=[]
     def pull(self,pattern=None,list=False):
         """Pulls static gravity fields from the icgem website
@@ -62,12 +64,13 @@ class ICGEM_static(DataSet):
                     self.updated.append(tmp)
 
     def register(self,pattern=None):
-
+        if not pattern:
+            pattern='.*\.gz'
         #create a list of files which need to be (re)registered
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in glob(self.dataDir()+'/*.gz')]
+            files=[UriFile(file) for file in findFiles(self.dataDir(),pattern)]
 
         #loop over files
         for uri in files:
@@ -80,17 +83,8 @@ class ICGEM_static(DataSet):
 
             self.addEntry(meta)
 
-        self._inventData["lastupdate"]=datetime.now().isoformat()
-        self._inventData["version"]=self.__version__
         self.updateInvent()
 
-        self.ses.commit()
 
-
-
-    def halt(self):
-        pass
-
-    def purge(self):
-        pass
+geoslurpregistry.registerDataset(ICGEM_static)
 

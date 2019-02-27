@@ -58,7 +58,12 @@ class Crawler(CrawlerBase):
                 match=regexthisyear.search(ln)
                 if match:
                     t=datetime.strptime(match.group(1).decode('utf-8'),'%b %d %H:%M')
-                    t=t.replace(year=datetime.now().year)
+                    if t.month <= datetime.now().month:
+                        t=t.replace(year=datetime.now().year)
+                    else:
+                        #last year
+                        t=t.replace(year=datetime.now().year-1)
+
             name=ln.decode('utf-8').split()[-1]
             if regexdir.match(ln):
                 #append /

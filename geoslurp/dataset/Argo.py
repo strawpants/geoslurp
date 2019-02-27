@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from geoslurp.dataset import DataSet
+from geoslurp.dataset.dataSetBase import DataSet
 from geoslurp.datapull.ftp import Crawler as ftpCrawler
 from geoslurp.datapull.ftp import Uri as ftpUri
 from geoslurp.datapull import findFiles
@@ -31,10 +31,11 @@ from datetime import datetime,timedelta
 from queue import Queue
 import gzip as gz
 from geoslurp.config.slurplogger import slurplogger
+from geoslurp.config.register import geoslurpregistry
 import os
 import re
 # To do:  etract meta information with a threadpool
-#from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -132,14 +133,15 @@ def argoMetaExtractor(uri,cachedir=False):
 
 class Argo(DataSet):
     """Argo table"""
-    __version__=(0,0,0)
+    version=(0,0,0)
     table=ArgoTable
-    def __init__(self,scheme):
-        super().__init__(scheme)
+    scheme='OceanObs'
+    def __init__(self,dbcon):
+        super().__init__(dbcon)
         self.updated=[]
         # Create table if it doesn't exist
         # import pdb;pdb.set_trace()
-        OceanObsTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+        OceanObsTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
         self._uriqueue=Queue(maxsize=300)
         self._killUpdate=False
         self.thrd=None
@@ -155,8 +157,8 @@ class Argo(DataSet):
             #     servdict=crwl.services._asdict()
             #     servdict['centers']=[getAttrib(el,'title') for el in crwl.xmlitems()]
             #     self._inventData['thredds'].append(servdict)
-        if 'resume' not in self._inventData:
-            self._inventData["resume"]={}
+        if 'resume' not in self._dbinvent.data:
+            self._dbinvent.data["resume"]={}
 
     def pull(self,center=None,mirror=0):
         """ Pulls the combined *_prof.nc files from the ftp server
@@ -175,30 +177,32 @@ class Argo(DataSet):
 
     def register(self,center=None):
         """register downloaded commbined prof files"""
-
         #create a list of files which need to be (re)registered
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*nc')]
+            slurplogger().info("Building file list..")
+            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*nc',self._dbinvent.lastupdate)]
 
+        if len(files) == 0:
+            slurplogger().info("Argo: No new files found since last update")
+            return
+
+        filesnew=self.retainnewUris(files)
+        if len(filesnew) == 0:
+            slurplogger().info("Argo: No database update needed")
+            return
         #loop over files
-        for uri in files:
+        for uri in filesnew:
             if center and not re.search(center,uri.url):
-                continue
-
-            urilike=uri.url
-
-            if not self.uriNeedsUpdate(urilike,uri.lastmod):
                 continue
             for meta in argoMetaExtractor(uri):
                 self.addEntry(meta)
 
-        self._inventData["lastupdate"]=datetime.now().isoformat()
-        self._inventData["version"]=self.__version__
+
+
         self.updateInvent()
 
-        self.ses.commit()
 
 
 
@@ -316,12 +320,12 @@ class Argo(DataSet):
         slurplogger().error("Stopping update")
         self._killUpdate=True
         # indicate a done task n the queue in order to allow the pullWorker thread to stop gracefully
-        #empty queue
+        #empty eue
         while not self._uriqueue.empty():
             self._uriqueue.get()
             self._uriqueue.task_done()
-        #also synchronize inventory info (e.g. resume information)
-        self.updateInvent()
+        #also synchronize inventory info (e.g. resume
+        self.updateInvent(False)
         raise RuntimeWarning("Argo dataset processing stopped")
 
     def pullWorker(self,conn):
@@ -336,3 +340,4 @@ class Argo(DataSet):
         #signal the end of the queue by adding a none
         self._uriqueue.put(None)
 
+geoslurpregistry.registerDataset(Argo)

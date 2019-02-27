@@ -49,11 +49,17 @@ class Uri(UriBase):
             self.connect()
         return self.webdav.ls('.')
 
-    def download(self,direc,check=False,gzip=False):
+    def download(self,direc,check=False,gzip=False,outfile=None,continueonError=False):
+        
         if not self.webdav:
             self.connect()
 
-        uri=UriFile(url=os.path.join(direc,self.fname))
+        if outfile:
+            outf=os.path.join(direc,outfile)
+        else:
+            outf=self.fname
+
+        uri=UriFile(url=outf)
 
         if check and self.lastmod and uri.lastmod:
             if self.lastmod <= uri.lastmod:

@@ -31,7 +31,8 @@ from datetime import datetime,timedelta
 from glob import glob
 from geoslurp.config.slurplogger import slurplogger
 import re
-
+from geoslurp.config.register import geoslurpregistry
+from geoslurp.db.settings import getCreateDir
 geotracktype = Geography(geometry_type="MULTILINESTRINGZ", srid='4326', spatial_index=True, dimension=3)
 
 @as_declarative(metadata=MetaData(schema='altim'))
@@ -50,6 +51,12 @@ class RadsTBase(object):
     data=Column(JSONB)
     geom=Column(geotracktype)
 
+def is_set(x,n):
+    """Check if the nth bit of x is set to True"""
+    return x & 1 << n != 0
+
+def flag4_isonLand(x):
+    return is_set(x,4)
 
 def radsMetaDataExtractor(uri):
     """Extract a dictionary with rads entries for the database"""
@@ -59,28 +66,31 @@ def radsMetaDataExtractor(uri):
     trackseg=ogr.Geometry(ogr.wkbLineString)
     lonprev=ncrads["lon"][0]
     tprev=ncrads["time"][0]
+    onlandprev=flag4_isonLand(ncrads["flags"][0])
     t0=datetime(1985,1,1)
     data={"segments":[]}
     segment={"tstart":None,"tend":None,"istart":0,"iend":0}
     if lonprev > 180:
         lonprev-=360
-    for i,(t,lon,lat) in enumerate(zip(ncrads["time"][:],ncrads["lon"][:],ncrads["lat"][:])):
+    for i,(t,lon,lat,flag) in enumerate(zip(ncrads["time"][:],ncrads["lon"][:],ncrads["lat"][:],ncrads['flags'][:])):
         dt=t0+timedelta(seconds=float(t))
         if lon > 180:
             #make sure longitude goes from -180 to 180
             lon-=360
-            #create a new segment with a gap larger than 100 seconds
-        if abs(lonprev-lon) > 180 or t-tprev > 100:
+            #create a new segment with a gap larger than 100 seconds (or when ocean/land flag changes)
+        if abs(lonprev-lon) > 180 or t-tprev > 100 or (onlandprev != flag4_isonLand(flag)):
             #start a new segment upon crossing the 180 line or when a time gap occurred
             if trackseg.GetPointCount() > 1:
                 track.AddGeometry(trackseg)
                 segment["tend"]=dt.isoformat()
                 data["segments"].append(segment)
             trackseg=ogr.Geometry(ogr.wkbLineString)
+        
         trackseg.AddPoint(float(lon),float(lat),0)
         lonprev=lon
         tprev=t
-
+        onlandprev=flag4_isonLand(flag)
+        
     if trackseg.GetPointCount() > 1:
         track.AddGeometry(trackseg)
 
@@ -100,38 +110,42 @@ def radsMetaDataExtractor(uri):
 
 
 class RadsBase(DataSet):
-    """Base class for a satellite in the rads database
+    """Base class for a satellite + phase in the rads database
     """
-    __version__=(0,0)
     table=None
     sat=None
     phase=None
-    def __init__(self,scheme):
-        super().__init__(scheme)
+    scheme='altim'
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
         self.updated=None
-        self.radsdir=self.scheme.conf.getDir("","RadsDir")
 
+        if not self._dbinvent.datadir:
+            if 'RADSDATAROOT' in os.environ:
+                self._dbinvent.datadir=getCreateDir(os.environ['RADSDATAROOT'])
+            else:
+                self._dbinvent.datadir=self.conf.getDir(self.scheme,"DataDir")
+            self.updateInvent(False)
         #initialize postgreslq table
-        RadsTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+        RadsTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
 
     def pull(self, cycle=None):
         """Pulls the data from the rads server
         :param cycle: only pulls data from a specific cycle
         """
-        cred=self.scheme.conf.authCred("rads")
+        cred=self.conf.authCred("rads")
 
         url="rads.tudelft.nl::rads/data"
 
         #pull configuration data (xml files)
-        rsync(url+"/conf",auth=cred).parallelDownload(self.radsdir,True)
+        rsync(url+"/conf",auth=cred).parallelDownload(self._dbinvent.datadir,True)
 
         srcurl=os.path.join(url,self.sat,self.phase)
-        desturl=os.path.join(self.radsdir,self.sat)
+        desturl=os.path.join(self._dbinvent.datadir,self.sat)
         if cycle:
             srcurl=os.path.join(srcurl,"c%03d"%(cycle))
             desturl=os.path.join(desturl,self.phase)
-        if not os.path.exists(desturl):
-            os.makedirs(desturl)
+        getCreateDir(desturl)
         self.updated=rsync(srcurl,auth=cred).parallelDownload(desturl,True)
 
     def register(self,cycle=None):
@@ -141,12 +155,10 @@ class RadsBase(DataSet):
             files=self.updated
         else:
             if cycle:
-                files=[UriFile(file) for file in glob(os.path.join(self.radsdir,self.sat,self.phase,"c%03d"%(cycle),'*.nc'))]
+                files=[UriFile(file) for file in glob(os.path.join(self._dbinvent.datadir,self.sat,self.phase,"c%03d"%(cycle),'*.nc'))]
             else:
-                files=[UriFile(file) for file in glob(os.path.join(self.radsdir,self.sat,self.phase,'*/*.nc'))]
+                files=[UriFile(file) for file in glob(os.path.join(self._dbinvent.data,self.sat,self.phase,'*/*.nc'))]
 
-
-        ses=self.scheme.db.Session()
 
 
         for uri in files:
@@ -159,12 +171,8 @@ class RadsBase(DataSet):
             meta=radsMetaDataExtractor(uri)
             self.addEntry(meta)
 
-
-        self._inventData["lastupdate"]=datetime.now().isoformat()
-        self._inventData["version"]=self.__version__
         self.updateInvent()
 
-        ses.commit()
 
 
 
@@ -176,13 +184,14 @@ def radsclassFactory(clnm):
     table=type(clnm+"Table",(RadsTBase,),{})
     return type(clnm, (RadsBase,), {"sat":sat,"phase":phase,"table":table})
 
-def getRADSdict():
+def getRADSDsets(conf):
     """Create all tables for all satellite missions and phases"""
     satphases={"j1":["a","b","c"],"j2":["a","b","c"],"j3":["a"],"3a":["a"],"c2":["a"],"n1":["b","c"],"sa":["a","b"],"tx":["a","b","n"]}
-    outdict={}
+    out=[]
     for sat,phases in satphases.items():
         for  phase in phases:
             clname="rads_"+sat+"_"+phase
-            outdict[clname]=radsclassFactory(clname)
-    return outdict
+            out.append(radsclassFactory(clname))
+    return out
 
+geoslurpregistry.registerDatasetFactory(getRADSDsets)

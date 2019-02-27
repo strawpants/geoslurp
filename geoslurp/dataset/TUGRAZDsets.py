@@ -19,13 +19,13 @@ from geoslurp.dataset import DataSet
 from geoslurp.datapull.ftp import Crawler as ftpCrawler
 from geoslurp.datapull import findFiles
 from geoslurp.config.slurplogger import slurplogger
-import yaml
 from geoslurp.datapull import UriFile
-from io  import StringIO
-import os
 from datetime import datetime
 from geoslurp.meta.gravity import GravitySHTBase, icgemMetaExtractor
 import re
+import os
+from geoslurp.config.register import geoslurpregistry
+from geoslurp.db.settings import getCreateDir
 
 def enhanceMeta(meta):
     """Extract addtional timestamps from the TU graz filename data"""
@@ -53,16 +53,21 @@ class TUGRAZGRACEL2Base(DataSet):
     """Derived type representing GRACE spherical harmonic coefficients from the TU GRAZ"""
     table=None
     updated=None
-    __version__=(0,0)
-    def __init__(self,scheme):
-        super().__init__(scheme)
+    scheme='Gravity'
+    release=''
+    subdirs=''
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
         #initialize postgreslq table
-        GravitySHTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+        GravitySHTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
+        if not self._dbinvent.datadir:
+            self._dbinvent.datadir=getCreateDir(os.path.join(self.conf.getDir(self.scheme,'DataDir'),self.release,self.subdirs))
 
     def pull(self):
-        url="ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/"+self.__class__.__name__
-        ftp=ftpCrawler(url,pattern='.*.gfc',followpattern='(monthly_?)|(daily)|([0-9]{4})')
-        self.updated=ftp.parallelDownload(self.dataDir(),check=True,gzip=True, maxconn=20)
+        url=os.path.join("ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/",self.release,self.subdirs)
+        ftp=ftpCrawler(url,pattern='.*.gfc',followpattern='([0-9]{4})')
+
+        self.updated=ftp.parallelDownload(self._dbinvent.datadir,check=True,gzip=True, maxconn=20)
 
     def register(self):
 
@@ -70,37 +75,32 @@ class TUGRAZGRACEL2Base(DataSet):
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*gfc.gz')]
+            files=[UriFile(file) for file in findFiles(self._dbinvent.datadir,'.*gfc.gz',since=self._dbinvent.lastupdate)]
 
-
+        newfiles=self.retainnewUris(files)
         #loop over files
-        for uri in files:
-            urilike=os.path.basename(uri.url)
-
-            if not self.uriNeedsUpdate(urilike,uri.lastmod):
-                continue
-
+        for uri in newfiles:
+            slurplogger().info("extracting meta info from %s"%(uri.url))
             meta=icgemMetaExtractor(uri)
             meta=enhanceMeta(meta)
             self.addEntry(meta)
 
-        self._inventData["lastupdate"]=datetime.now().isoformat()
-        self._inventData["version"]=self.__version__
         self.updateInvent()
 
-        self.ses.commit()
 
-
-
-
-def TUGRAZGRACEL2ClassFactory(clsName):
-    """Dynamically construct GRACE Level 2 dataset classes"""
+def TUGRAZGRACEL2ClassFactory(release,subdirs):
+    """Dynamically construct GRACE Level 2 dataset classes for TU GRAZ"""
+    base,gtype=subdirs.split('/')
+    clsName="_".join([release,gtype])
     table=type(clsName.replace('-',"_") +"Table", (GravitySHTBase,), {})
-    return type(clsName, (TUGRAZGRACEL2Base,), {"release": clsName, "table":table})
+    return type(clsName, (TUGRAZGRACEL2Base,), {"release": release, "table":table,"subdirs":subdirs})
 
 # setup GRACE datasets
-def TUGRAZGRACEdict():
-    outdict={}
-    for release in ['ITSG-Grace2018']:
-        outdict[release]=TUGRAZGRACEL2ClassFactory(release)
-    return outdict
+def TUGRAZGRACEDsets(conf):
+    out=[]
+    release='ITSG-Grace2018'
+    for subdirs in ["daily_kalman/daily_background","daily_kalman/daily_n40","monthly/monthly_background","monthly/monthly_n60","monthly/monthly_n96","monthly/monthly_n120"]:
+        out.append(TUGRAZGRACEL2ClassFactory(release,subdirs))
+    return out
+
+geoslurpregistry.registerDatasetFactory(TUGRAZGRACEDsets)

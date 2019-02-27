@@ -29,6 +29,7 @@ import os
 import tarfile
 import re
 from copy import deepcopy
+from geoslurp.config.register import geoslurpregistry
 
 GeocTBase=declarative_base(metadata=MetaData(schema='gravity'))
 
@@ -196,19 +197,20 @@ class GeocTable(GeocTBase):
 
 
 class Deg1n2(DataSet):
-    """Dataset registering several low degree (up to degree 2) estimates including their definitions"""
+    """Dataset registering several low degree (up to degree x) estimates including their definitions"""
     table=GeocTable
     dsources=[Rietbroeketal2016updated, Sun2017Comb, Sun2017Comb_GIArestored]
+    scheme='Gravity'
     # "ftp://ftp.csr.utexas.edu/pub/slr/geocenter/"
     #     # {'name':'Rietbroeketal2016updated','uri':'https://wobbly.earth/data/Geocenter_dec2017.tgz','lastupdate':datetime(2018,10,16)},
     #     # {'name':'SwensonWahr2008','uri':'ftp://podaac.jpl.nasa.gov/allData/tellus/L2/degree_1/deg1_coef.txt','lastupdate':datetime(2018,10,16)},
     #     # {'name':'Sun2017Comb','uri':'https://d1rkab7tlqy5f1.cloudfront.net/CiTG/Over%20faculteit/Afdelingen/Geoscience%20%26%20Remote%20sensing/Research/Gravity/models%20and%20data/3_Deg1_C20_CMB.txt'
     #     #                             ,'lastupdate':datetime(2018,10,16)},
     # ]
-    def __init__(self,scheme):
-        super().__init__(scheme)
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
         # Create table if it doesn't exist
-        self.table.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+        self.table.metadata.create_all(self.db.dbeng, checkfirst=True)
 
     def pull(self):
         """Pulls known geocenter motion estimates from the internet and stores them in the cache"""
@@ -227,16 +229,12 @@ class Deg1n2(DataSet):
                for meta in metadicts:
                    if self.entryNeedsUpdate(meta['name'],lastmod=src.meta['lastupdate'],col=self.table.name):
                         self.addEntry(meta)
-               self.ses.commit()
             except Exception as e:
                #possibly not downloaded but that is ok
                continue
 
-        self._inventData["lastupdate"]=datetime.now().isoformat()
         self.updateInvent()
 
-    def purge(self):
-        """"""
-        pass
 
+geoslurpregistry.registerDataset(Deg1n2)
 

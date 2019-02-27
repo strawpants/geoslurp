@@ -26,7 +26,7 @@ from datetime import datetime,timedelta
 import os
 from osgeo import ogr
 from geoslurp.config.slurplogger import slurplogger
-import gzip as gz
+from geoslurp.config.register import geoslurpregistry
 
 geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
 
@@ -69,9 +69,10 @@ class UNRfinal(DataSet):
     """Base class to store RLR/MET annual and monthly data"""
     table=UNRTable
     updated=None
-    def __init__(self,scheme):
-        super().__init__(scheme)
-        GNSSTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+    scheme='GNSS'
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+        GNSSTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
 
     def pull(self):
         crwl=UnrCrawler(catalogfile=os.path.join(self.dataDir(),'DataHoldings.txt'))
@@ -97,11 +98,10 @@ class UNRfinal(DataSet):
             meta=enhancetenv3Meta(meta,localfile)
             self.addEntry(meta)
 
-        self._inventData["lastupdate"]=datetime.now().isoformat()
-        self._inventData["citation"]="Blewitt, G., W. C. Hammond, and C. Kreemer (2018), " \
+        self._dbinvent.data["citation"]="Blewitt, G., W. C. Hammond, and C. Kreemer (2018), " \
                                      "Harnessing the GPS data explosion for interdisciplinary science, Eos, 99, https://doi.org/10.1029/2018EO104623."
         self.updateInvent()
 
-        self.ses.commit()
+geoslurpregistry.registerDataset(UNRfinal)
 
 

@@ -17,14 +17,16 @@
 
 from geoslurp.dataset import OGRBase
 from geoslurp.datapull.http import Uri as http
+from geoslurp.config.register import geoslurpregistry
 import urllib.request
 from zipfile import ZipFile
 import os
 
 class WriBasin(OGRBase):
-    """Base class for """
-    def __init__(self,scheme):
-        super().__init__(scheme)
+    """Base class for Wribasin watersheds """
+    scheme='globalgis'
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
         self.ogrfile=os.path.join(self.cacheDir(),"wribasin.shp")
 
     def pull(self):
@@ -34,3 +36,5 @@ class WriBasin(OGRBase):
 
         with ZipFile(os.path.join(self.cacheDir(),"wri_basin.zip"),'r') as zp:
             zp.extractall(self.cacheDir())
+
+geoslurpregistry.registerDataset(WriBasin)

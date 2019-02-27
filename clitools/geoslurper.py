@@ -20,16 +20,16 @@
 
 import sys
 import argparse
-import os.path
 from geoslurp.db import Inventory
 from geoslurp.db import GeoslurpConnector
-from geoslurp.schema import allSchemes, schemeFromName
 import json
 import logging
 from geoslurp.db import Settings
-import yaml
-from datetime import datetime
-import keyring
+from geoslurp.config.localsettings import readLocalSettings
+from geoslurp.config.register import geoslurpregistry
+import geoslurp.dataset
+import getpass
+import re
 
 def main(argv):
     usage=" Program to download and manage Earth Science data"
@@ -47,118 +47,118 @@ def main(argv):
     try:
 
         DbConn=GeoslurpConnector(args.host,args.user,args.password)
-        # Initializes an object which holds the current inventory
-        slurpInvent=Inventory(DbConn)
-        conf=Settings(DbConn,args.user,args.password)
-
     except Exception as e:
+        print(e)
         print("Cannot connect to postgresql database, quitting")
         sys.exit(1)
 
-    # Process common options
+
+    # # Process common options
+
+    #Add a new user
+    if args.add_user:
+        passw1=getpass.getpass(prompt='Please enter new password: ')
+        passwcheck=getpass.getpass(prompt='Reenter password: ')
+        if passw1 != passwcheck:
+            print("Passwords do not match, please try again")
+            sys.exit(1)
+        else:
+            DbConn.addUser(args.add_user,passw1)
+
+    #print registered datasets (i.e. tables)
+    if args.info:
+        slurpInvent=Inventory(DbConn)
+        print("Registered datasets (scheme.dataseti, owner, lastupdate):")
+        if args.dset:
+            #print a summary of the inventory
+            dsetpat=re.compile(args.dset)
+            for entry in slurpInvent:
+                if dsetpat.search(entry.scheme+'.'+entry.dataset):
+                    print("%s.%s %s %s"%(entry.scheme,entry.dataset,entry.owner,entry.lastupdate.isoformat()))
+        else:
+            #print a summary of the inventory
+            for entry in slurpInvent:
+                print("%s.%s %s %s"%(entry.scheme,entry.dataset,entry.owner,entry.lastupdate.isoformat()))
+    
+    
+    #change settings in the database
+    
+    # Initializes an object which holds the current settings
+    conf=Settings(DbConn)
+
+    if args.config:
+        #register user settings in the database
+        conf.update(args.config)
+
+    if args.admin_config:
+        #register admin/default settings in the database
+        conf.defaultupdate(args.admin_config)
+
+    if args.auth_config:
+        conf.updateAuth(args.auth_config)
+
+    datasets=geoslurpregistry.getDatasets(conf,args.dset)
+    
     if args.list:
         # show available schemes and datasets
-        showAvailable(conf,scheme=args.dset)
-
-    if args.settings:
-        #register settings in the database
-        conf.update(args.settings)
-
-    if args.auth:
-        conf.updateAuth(args.auth)
-
-
-    if not args.dset and args.info:
-        #list the inventory of all the registered schemas but don't list info on the datasets
-        for row in slurpInvent:
-            print("registered schema:", row.scheme)
-        sys.exit(0)
-
-    if not args.dset:
-        # Nothing to do anymore so exit
-        sys.exit(0)
-    else:
-        # Initialize scheme
-        scheme=schemeFromName(args.dset["scheme"])(slurpInvent, conf)
-        # And the requested Datasets
-        scheme.initDataSets(args.dset["datasets"])
-
-    if args.purge_scheme:
-        scheme.purge()
-        # Exit as there are no datasets to work on anymore
-        sys.exit(0)
-
-
-    if args.info:
-    #info on selected data sources
-        for ds in scheme:
-            print("Schema and dataset: %s.%s"%(scheme._schema,ds.name))
-            dsentry=ds.info()
-            for ky,val in dsentry.items():
-                print("\t\t%s = "%(ky),end="")
-                print(val)
-
-    if args.purge_cache:
-        for ds in scheme:
-            ds.purgecache(args.purge_cache)
-
-    if args.purge_data:
-        for ds in scheme:
-            ds.purgedata(args.purge_data)
-
-    if args.purge_entry:
-        for ds in scheme:
-            ds.purgeentry(args.purge_entry)
-
+        print("Available datasets (SCHEME.DATASET):")
+        for ds in datasets:
+            print("\t%s.%s"%(ds.scheme,ds.__name__))
+    
 
     if args.pull or args.update:
         if type(args.pull) == dict:
-            opts=args.pull
+            pullopts=args.pull
         elif type(args.update) == dict:
-            opts=args.update
+            pullopts=args.update
         else:
-            opts={}
-
-        for ds in scheme:
-            try:
-                ds.pull(**opts)
-            except KeyboardInterrupt:
-                ds.halt()
-
+            pullopts={}
+        args.pull=True
 
     if args.register or args.update:
         if type(args.register) == dict:
-            opts=args.register
+            regopts=args.register
         elif type(args.update) == dict:
-            opts=args.update
+            regopts=args.update
         else:
-            opts={}
+            regopts={}
+        args.register=True
+    
+    if not (args.pull or args.register or args.purge_cache or args.purge_data or args.purge_entry):
+        sys.exit(0)
+    
+    for dsclass in datasets:
+        ds=dsclass(DbConn)
 
-        try:
-            for ds in scheme:
-                ds.register(**opts)
-        except KeyboardInterrupt:
-            #try shutting down gracefully
-            for ds in scheme:
-                try:
-                    ds.halt()
-                except Exception as e:
-                    #OK move on to the next dataset
-                    pass
-            sys.exit(1)
+        if args.data_dir:
+            ds.setDataDir(args.data_dir)
+        
+        if args.cache_dir:
+            ds.setCacheDir(args.cache_dir)
 
+        # import pdb;pdb.set_trace()
+        if args.purge_cache:
+            ds.purgecache(args.purge_cache)
 
+        if args.purge_data:
+            ds.purgedata(args.purge_data)
+        # import pdb;pdb.set_trace()
+        if args.purge_entry:
+            ds.purgeentry(args.purge_entry)
 
-class SplitAction(argparse.Action):
-    """Process input schemes and Split arguments on a dot (this class appears to be somewhat of an overkill currently but is needed by argparse"""
-    def __init__(self, option_strings, dest, nargs, **kwargs):
-        super(SplitAction, self).__init__(option_strings, dest, **kwargs)
-    def __call__(self, parser=None, namespace=None, values=None, option_string=None):
-            tmpl=values.split(".")
-            val={"scheme":tmpl[0],"datasets":[]}
-            if len(tmpl) > 1:
-                val["datasets"]=[tmpl[1]]
-            setattr(namespace, self.dest, val)
+        if args.pull:
+            try:
+                ds.pull(**pullopts)
+            except KeyboardInterrupt:
+                ds.halt()
+
+        if args.register:
+            try:
+                ds.register(**regopts)
+            except KeyboardInterrupt:
+                ds.halt()
+        #We need to explicitly delete the dataset instance or else the database QueuePool gets exhausted 
+        del ds
 
 class JsonParseAction(argparse.Action):
     """Parse Arguments provided as JSON into dictionaries"""
@@ -185,13 +185,13 @@ def addCommandLineArgs(parser):
         parser.add_argument('-h','--help',action='store_true',
                              help="Prints detailed help (may be used in combination with --dset for detailed JSON options)")
         parser.add_argument('-i','--info',action='store_true',
-                            help="Show information about registered schemes and datasets")
+                            help="Show information about selected datasets")
 
         parser.add_argument('-l','--list',action='store_true',
-                            help="List schemes and datasets which are available to use")
+                            help="List datasets which are available to use")
 
-        parser.add_argument('--purge-scheme',action='store_true',
-                            help="Purge selected scheme (This deletes all related datasets as well!")
+        # parser.add_argument('--purge-scheme',action='store_true',
+        #                     help="Purge selected scheme (This deletes all related datasets as well!")
 
         parser.add_argument('--purge-cache',type=str, metavar='filter',const='*',nargs='?',
                             help="Purge the cache of the selected dataset. while optionally applying a filter for the files")
@@ -212,22 +212,25 @@ def addCommandLineArgs(parser):
                             help="Implies both --pull and --register, but applies only to the updated data (accepts JSON options)")
 
 
-        parser.add_argument("--settings", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
-                            help="Register settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
+        parser.add_argument("--config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
+                            help="Register user settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
 
 
-        parser.add_argument("--auth", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
-                            help="Register (and encrypt in the database) authentification services "
+        parser.add_argument("--auth-config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
+                            help="Register (and encrypt on a user basis in the database) authentification services "
                                  "(pass as a JSON dict, e.g. {\"servicename\":{\"user\":..,\"passw\":...}})")
-        # parser.add_argument('--printconfig',action='store_true',help='Prints out default configuration (default file is ~/.geoslurp.yaml)')
-        # parser.add_argument('--cleancache',action='store_true',
-        #                     help="Clean up the cache directory associated with a scheme/dataset")
-
+        
+        parser.add_argument("--admin-config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
+                            help="Register admin/default settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
+       
         parser.add_argument("--host",metavar="hostname",type=str,
                             help='Select host where the PostgreSQL/PostGIS server is running')
 
         parser.add_argument("--user",metavar="user",type=str,
                             help='Select postgresql user')
+
+        parser.add_argument("--add-user",metavar="username",type=str,
+                            help='Add a new postgresql user (you will be prompted for a password)')
 
 
         parser.add_argument("--password",metavar="password",type=str,
@@ -241,24 +244,15 @@ def addCommandLineArgs(parser):
                             help="Increase verbosity of the output one cvan use multiple v's after another (e.g. -vv) "
                                  "to increase verbosity. The default prints errors only")
 
-        #also add datasource options
-        parser.add_argument("-d","--dset",metavar="SCHEME[.DATASET]",nargs="?",action=SplitAction,
-                            help='Scheme and dataset to select.')
+        parser.add_argument('--data-dir',type=str,metavar='DIR',nargs=1,
+                help="Specify (and register) a dataset specific data directory DIR")
+        
+        parser.add_argument('--cache-dir',type=str,metavar='DIR',nargs=1,
+                help="Specify (and register) a dataset specific cache directory DIR")
+        #also look for datasets 
+        parser.add_argument("-d","--dset",metavar="PATTERN",nargs="?",type=str,
+                help='Select datasets or all datasets in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.DATASET)')
 
-
-def showAvailable(conf,scheme):
-    """Print available schemes with implemented datasets"""
-    print("Allowed scheme and dataset combinations:")
-
-    if scheme:
-        sdict={scheme["scheme"]:schemeFromName(scheme["scheme"])}
-    else:
-        sdict=allSchemes()
-
-    for key,cl in sdict.items():
-        print("\t %s"%(key))
-        for dname in cl.listDsets(conf):
-            print("\t\t.%s"%(dname))
 
 
 def check_args(args,parser):
@@ -272,89 +266,15 @@ def check_args(args,parser):
         if not args.dset:
             parser.print_help()
         else:
-            print("Scheme %s"%(args.dset["scheme"]))
-            print("\t%s\n"%(schemeFromName(args.dset["scheme"]).__doc__))
-            if args.dset["datasets"]:
-                print("Detailed info on options which may be provided as JSON dictionaries")
-                # print("\n\n %s"%(schemeFromName(args.input["scheme"]).__datasets__[args.input["dataset"]].__doc__))
-                for dSets in args.dset["datasets"]:
-                    print("\t%s.pull:\n\t\t %s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].pull.__doc__))
-                    print("\t%s.register:\n\t%s"%(dSets,schemeFromName(args.dset["scheme"]).__datasets__[dSets].register.__doc__))
+            datasets=geoslurpregistry.getDatasets(None,args.dset)
+            for ds in datasets:
+                print("Detailed info on %s options which may be provided as JSON dictionaries"%(ds.__name__))
+                print("\t%s.pull:\n\t\t %s"%(ds.__name__,ds.pull.__doc__))
+                print("\t%s.register:\n\t%s"%(ds.__name__,ds.register.__doc__))
 
         sys.exit(0)
     #also fillout last options with defaults from the last call
-    getUpdateLastOptions(args)
-
-def getUpdateLastOptions(args):
-    """Retireves last """
-    settingsFile=os.path.join(os.path.expanduser('~'),'.geoslurp_last.yaml')
-    #read last used settings
-    if os.path.exists(settingsFile):
-        #Read parameters from yaml file
-        with open(settingsFile, 'r') as fid:
-            lastOpts=yaml.safe_load(fid)
-    else:
-            lastOpts={}
-
-    isUpdated=False
-
-    #update dict with provided options from args
-    if args.host:
-        lastOpts["dbhost"]=args.host
-        isUpdated=True
-    else:
-        #take data from file options
-        try:
-            args.host=lastOpts["dbhost"]
-        except KeyError:
-            print("--host option is needed for initialization",file=sys.stderr)
-            sys.exit(1)
-
-    if args.user:
-        lastOpts["dbuser"]=args.user
-        isUpdated=True
-    else:
-        try:
-            args.user=lastOpts["dbuser"]
-        except KeyError:
-            print("--user option is needed for initialization",file=sys.stderr)
-            sys.exit(1)
-
-    if args.usekeyring:
-        lastOpts["useKeyring"]=True
-        isUpdated=True
-    else:
-        try:
-            args.usekeyring=lastOpts["useKeyring"]
-        except KeyError:
-            #don't use the keyring
-            pass
-
-    #write out  options to file to store these settings
-    if isUpdated:
-        lastOpts["lastupdate"]=datetime.now()
-        with open(settingsFile,'w') as fid:
-            yaml.dump(lastOpts, fid, default_flow_style=False)
-
-
-    # we take a different strategy for the password as we don't want to store this unencrypted in a file
-    if not args.password:
-        if args.usekeyring:
-            args.password=keyring.get_password("geoslurp","dbpassword")
-            if not args.password:
-                print("could not retrieve password from keyring, use --password PASSWORD to store it, quitting",file=sys.stderr)
-                sys.exit(1)
-        else:
-        #try checking the environment variable GEOSLURP_PGPASS
-            try:
-                args.password=os.environ["GEOSLURP_PGPASS"]
-            except KeyError:
-                print("Database password is not set, quitting",file=sys.stderr)
-                sys.exit(1)
-    else:
-        #update keyring
-        if args.usekeyring:
-            keyring.set_password("geoslurp","dbpassword",args.password)
+    readLocalSettings(args)
 
 
 if __name__ == "__main__":

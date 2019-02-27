@@ -17,9 +17,14 @@
 
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import exists,select,column,table,text
 from sqlalchemy.schema import CreateSchema, DropSchema
+from sqlalchemy import Table
+from geoslurp.db.initgeoslurpdb import initgeoslurpdb
+from geoslurp.db.tabletools import tableMapFactory
 import re
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from geoslurp.config.slurplogger import  slurplogger
 
 class GeoslurpConnector():
     """Holds a connector to a geoslurp database"""
@@ -37,6 +42,8 @@ class GeoslurpConnector():
         self.dbeng = create_engine(dburl, echo=False)
         self.Session = sessionmaker(bind=self.dbeng)
         self.mdata = MetaData(bind=self.dbeng)
+        initgeoslurpdb(self)
+
 
     def vacuumAnalyze(self, tableName, schema):
         """vacuum and analyze a certain table"""
@@ -45,17 +52,44 @@ class GeoslurpConnector():
         cursor = conn.cursor()
         cursor.execute('VACUUM ANALYZE %s."%s";' % (schema, tableName))
 
-    def CreateSchema(self, schema):
-        try:
-            self.dbeng.execute(CreateSchema(schema.lower()))
-        except:
-            pass
+    def CreateSchema(self, schema,private=False):
+        if private:
+            self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s;"%(schema.lower()))
+        else:
+            self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION geoslurp;"%(schema.lower()))
+            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT ALL PRIVILEGES ON TABLES TO geoslurp;"%((schema.lower())))
+            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geoslurp;"%((schema.lower())))
+
+    def schemaexists(self,name):
+        return self.Session().query(exists(select([column("schema_name")]).select_from(text("information_schema.schemata")).where(text("schema_name = '%s'"%(name))))).scalar()
 
     def dropSchema(self, schema, cascade=False):
         self.dbeng.execute(DropSchema(schema.lower(), cascade=cascade))
 
-    def dropTable(self, tablename, schema):
-        self.dbeng.execute('DROP TABLE IF EXISTS %s."%s";' % (schema, tablename))
+    def createTable(self, tablename,columns,scheme=None,temporary=False,truncate=False):
+        """Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper"""
+
+        if truncate:
+            self.dbeng.execute("TRUNCATE TABLE %s;"%(tablename))
+
+        if tablename in self.mdata.tables:
+            table=self.mdata.tables[tablename]
+        else:
+            if temporary:
+                table = Table(tablename, self.mdata, *columns, prefixes=['TEMPORARY'],postgresql_on_commit='PRESERVE ROWS')
+            else:
+                table = Table(tablename, self.mdata, *columns, schema=scheme)
+            
+            table.create(bind=self.dbeng,checkfirst=True)
+
+        return tableMapFactory(tablename, table)
+
+
+    def dropTable(self, tablename, schema=None):
+        if schema:
+            self.dbeng.execute('DROP TABLE IF EXISTS %s."%s";' % (schema.lower(), tablename.lower()))
+        else:
+            self.dbeng.execute('DROP TABLE IF EXISTS "%s";' % (tablename.lower()))
 
     def updateFunction(self, fname, schema, inpara, outtype, body, language):
         """Updates a stored function"""
@@ -75,3 +109,8 @@ class GeoslurpConnector():
 
         #loop over entries of the TableContentGenerator
         pass
+
+    def addUser(self,name,passw):
+        """Adds a user to the database (note executing this functions requires appropriate database rights"""
+        slurplogger().info("Adding new user: %s"%(name))
+        self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geoslurp;"%(name,passw))

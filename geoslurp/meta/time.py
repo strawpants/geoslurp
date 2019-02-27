@@ -14,7 +14,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
-from datetime import datetime
+from datetime import datetime,timedelta
 
 def decyear2dt(decyear):
     """Convert a decimal year to a datetime object"""

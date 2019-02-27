@@ -1,0 +1,46 @@
+# This file is part of geoslurp.
+# geoslurp is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 3 of the License, or (at your option) any later version.
+
+# geoslurp is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with geoslurp; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
+
+from geoslurp.db.inventory import InventTable
+from geoslurp.db.inventory import GSBase as gsbinv
+from geoslurp.db.settings import SettingsTable
+from geoslurp.db.settings import GSBase as gsbset
+
+
+def initgeoslurpdb(conn):
+    """Initiates main geoslurp admin structure"""
+    #check if the admin schema exists and initiate this otherwise (note the first user who creates this owns it, so better make this an admin user!!)
+    if conn.schemaexists('admin'):
+        #quick return if the schema already exists
+        return
+
+    conn.CreateSchema('admin')
+
+    #create inventory table
+    gsbinv.metadata.create_all(conn.dbeng)
+    conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp;'%(InventTable.__tablename__))
+    #create settings table
+    gsbset.metadata.create_all(conn.dbeng)
+    conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp'%(SettingsTable.__tablename__))
+
+    #create a 'default' entry in the settings table
+    defaultentry=SettingsTable(user='default',conf={"CacheDir":"/tmp","DataDir":"${HOME}/geoslurpdata"})
+    ses=conn.Session()
+    ses.add(defaultentry)
+    ses.commit()
+    #allow the geoslurp user to access the sequence generator
+

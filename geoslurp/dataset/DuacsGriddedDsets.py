@@ -19,6 +19,7 @@ from geoslurp.dataset import DataSet
 from geoslurp.datapull.motu import Uri as MotuUri
 from geoslurp.datapull.motu import MotuOpts, MotuRecursive
 from geoslurp.meta.netcdftools import BtdBox,ncSwapLongitude,stackNcFiles
+from geoslurp.config.register import geoslurpregistry
 
 import os
 from geoalchemy2.types import Geography
@@ -86,38 +87,35 @@ def duacsMetaExtractor(uri):
 class Duacs(DataSet):
     """Downloads subsets of the ducacs gridded multimission altimeter datasets for given regions"""
     table=DuacsTable
+    scheme='altim'
     updated=[]
-    def __init__(self,scheme):
-        super().__init__(scheme)
-        DuacsTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+        DuacsTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
 
-    def pull(self, name=None, west=None,east=None,north=None,south=None,tstart=None,tend=None):
+    def pull(self, name=None, wsne=None,tstart=None,tend=None):
         """Pulls a subset of a gridded dataset as netcdf from the cmems copernicus server
         This routine calls the internal routines of the motuclient python client
-        :param name: Name of the  output datatset (file will be 'named name.nc')
-        :param west: most western longitude of the bounding box
-        :param east: most eastern longitude of the bounding box
-        :param south: most southern latitude of the bounding box
-        :param north: most northern longitude of the bounding box
+        :param name: Name of the  output datatset (file will be named 'name.nc')
+        :param wsne: bounding box of the section of interest as [West,South,North,East]
         :param tstart: start date (as yyyy-mm-dd) for the extraction
         :param tend: end date (as yyyy-mm-dd) for the extraction
-        bbox.n,bbox.s)
         """
 
         if not name:
             raise RuntimeError("A name must be supplied to Duacs.pull !!")
 
 
-        if None in [west,east,north,south]:
-            raise RuntimeError("Please supply a name and a geographical bounding box")
+        if None in wsne:
+            raise RuntimeError("Please supply a geographical bounding box")
 
         try:
-            bbox=BtdBox(w=west,e=east,n=north,s=south,ts=tstart,te=tend)
+            bbox=BtdBox(w=wsne[0],n=wsne[2],s=wsne[1],e=wsne[3],ts=tstart,te=tend)
         except:
             raise RuntimeError("Invalid bounding box provided to Duacs pull")
 
 
-        cred=self.scheme.conf.authCred("cmems")
+        cred=self.conf.authCred("cmems")
         ncout=os.path.join(self.dataDir(),name+".nc")
 
         mOpts=MotuOpts(moturoot="http://my.cmems-du.eu/motu-web/Motu",service='SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS',
@@ -174,24 +172,14 @@ class Duacs(DataSet):
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*nc')]
-
+            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*nc',self._dbinvent.lastupdate)]
+        newfiles=self.retainnewUris(files)
         #loop over files
-        for uri in files:
-
-            urilike=uri.url
-
-            if not self.uriNeedsUpdate(urilike,uri.lastmod):
-                continue
+        for uri in newfiles:
             meta=duacsMetaExtractor(uri)
             self.addEntry(meta)
 
-        self._inventData["lastupdate"]=datetime.now().isoformat()
         self.updateInvent()
 
-        self.ses.commit()
 
-
-def getDuacsDict():
-    """return a dict"""
-    return {"Duacs":Duacs}
+geoslurpregistry.registerDataset(Duacs)

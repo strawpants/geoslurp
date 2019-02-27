@@ -17,76 +17,44 @@
 
 
 from geoslurp.dataset import DataSet
-from geoslurp.datapull.ftp import Crawler as ftp
-from geoslurp.meta import fillGeoTable
+from geoslurp.datapull.ftp import Uri as ftp
+from geoslurp.dataset.OGRBase import OGRBase
 from zipfile import ZipFile
-from datetime import datetime
+from datetime import datetime,timedelta
 from geoslurp.config.slurplogger import slurplogger
 import re
 import os
+from geoslurp.config.register import geoslurpregistry
 
-class GSHHGBase(DataSet):
+class GSHHGBase(OGRBase):
     """Base class for GSHHG datasets. They are all quite similar so letting them inherit from a baseclass
     seems reasonable
     """
-    base=None
-    resolution=None
-    regex=None
-    __version__=(0,0,0)
-    def __init__(self,scheme):
-        super().__init__(scheme)
+    version=(0,0,0)
+    scheme='globalgis'
+    gshhgversion=(2,3,7)
+    updatefreq=365
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+        self.cache=os.path.join(self.conf.getDir(self.scheme,'CacheDir','GSHHG'))
+        self.ogrfile=os.path.join(self.cache,self.path)
         self.ftpt=ftp('ftp://ftp.soest.hawaii.edu/gshhg/')
-        if self._inventData:
-            self._inventData["GSHHGversion"]=tuple(self._inventData["GSHHGversion"])
+        if self._dbinvent.data:
+            self._dbinvent.data["GSHHGversion"]=tuple(self._dbinvent.data["GSHHGversion"])
         else:
-            self._inventData["GSHHGversion"] = (0, 0, 0)
-            self._inventData["lastupdate"]=datetime.min.isoformat()
+            self._dbinvent.data["GSHHGversion"] = self.gshhgversion
 
-    def pull(self, force=False):
+
+    def pull(self):
         """Pulls the entire GSHHG archive from the ftp server"""
-        ftpdir=ftp('ftp://ftp.soest.hawaii.edu/gshhg/','gshhg-shp.*zip')
-        #first find out the newest version
-        vregex=re.compile('gshhg-shp-([0-9]\.[0-9]\.[0-9]).*zip')
-        newestver=(0,0,0)
+        url='ftp://ftp.soest.hawaii.edu/gshhg/gshhg-shp-%d.%d.%d.zip'%self.gshhgversion
+        geturi=ftp(url,lastmod=datetime(2017,6,15))
 
-        #find out the newest version
-        for uri in ftpdir.uris():
-            match=vregex.findall(os.path.basename(uri.url))
-
-            ver=tuple(int(x) for x in match[0].split('.'))
-            if ver > newestver:
-                newestver=ver
-                geturi=uri
-
-        #now determine whether to retrieve the file
-        if force or newestver > self._inventData["GSHHGversion"]:
-            furi=geturi.download(self.scheme.cache,True)
-
+        furi,upd=geturi.download(self.cache,True)
+        if upd:
             with ZipFile(furi.url,'r') as zp:
-                zp.extractall(self.scheme.cache)
-            self._inventData["GSHHGversion"]=newestver
-
-        else:
-            slurplogger().info(self.name+": Already at newest version")
-            return
-
-    def register(self):
-        """Register the (derived table)"""
-        splt=self.name.split("_")
-        folder=os.path.join(self.scheme.cache,self.base+"_shp",self.resolution)
-
-        fillGeoTable(folder,self.name,self.scheme,regex=self.regex)
-
-        #also update data entry from the inventory table
-        self._inventData["lastupdate"]=datetime.now().isoformat(),
-        self._inventData["version"]=self.__version__
-        self.updateInvent()
-
-    def halt(self):
-        pass
-
-    def purge(self):
-        pass
+                zp.extractall(self.cache)
+            self.updateInvent(False)
 
 # Factory method to dynamically create classes
 def GSHHGClassFactory(clsName):
@@ -95,15 +63,17 @@ def GSHHGClassFactory(clsName):
         rgx=splt[1]
     else:
         rgx=None
+    path=splt[0]+"_shp/"+splt[-1]
+    return type(clsName, (GSHHGBase,), {"path":path,"layerregex":rgx})
 
-    return type(clsName, (GSHHGBase,), {"resolution":splt[-1],"regex":rgx,"base":splt[0]})
-
-def getGSHHGdict():
+def getGSHHGDsets(conf):
     """Automatically create all classes contained within the GSHHG database"""
-    outdict={}
+    out=[]
     for nm in ["GSHHS", "WDBII_river","WDBII_border"]:
         for res in ['c', 'l','i','h','f']:
             clsName=nm+"_"+res
-            outdict[clsName]=GSHHGClassFactory(clsName)
-    return outdict
+            out.append(GSHHGClassFactory(clsName))
+    return out
 
+
+geoslurpregistry.registerDatasetFactory(getGSHHGDsets)

@@ -15,11 +15,11 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from geoslurp.dataset import OGRBase
+from geoslurp.dataset.OGRBase import OGRBase
 from geoslurp.datapull.http import Uri as http
 from geoslurp.datapull.github import Crawler as ghCrawler
 from geoslurp.datapull.github import GithubFilter as ghfilter
-from datetime import datetime
+from geoslurp.config.register import geoslurpregistry
 import json
 from zipfile import ZipFile
 import os
@@ -30,8 +30,10 @@ class NaturalEarthBase(OGRBase):
     """Base class for  a Natural Earth dataset (downloads from github) """
     url=None
     path=None
-    def __init__(self,scheme):
-        super().__init__(scheme)
+    scheme='globalgis'
+    version=(0,0,0)
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
         self.ogrfile=os.path.join(self.cacheDir(),os.path.basename(self.path))
         self.gtype='GEOMETRY'
     def pull(self):
@@ -44,7 +46,7 @@ class NaturalEarthBase(OGRBase):
 def NaturalEarthClassFactory(clsName,catentry):
     return type(clsName, (NaturalEarthBase,), {"url":catentry["url"],"path":catentry["path"]})
 
-def getNaturalEarthDict(conf):
+def getNaturalEarthDsets(conf):
     """retrieves the available natural earth datasets"""
     currentversion='v4.1.0' # note this correspond to a specific release (the sha hash is taken from the commit)
 
@@ -70,19 +72,20 @@ def getNaturalEarthDict(conf):
         catalog={"Description":"Natural Earth vector data catalog version: "+currentversion,"datasets":[]}
         for item in crwl.treeitems(depth=2):
             catalog["datasets"].append({"path":os.path.join(item["dirpath"],item["path"]),"url":item["url"]})
-            # basename=os.path.basename(item["path"]).split(".")
-            # if not basename[0] in catalog["datasets"]:
-            # else:
-            #     catalog["datasets"][basename[0]].update({basename[1]:item["url"]})
 
         with open(cachedCatalog,'w') as fid:
             yaml.dump(catalog,fid,default_flow_style=False)
-    outdict={}
-    #create a dictionary of types
+    out=[]
+    #create a list of datasets
     for entry in catalog["datasets"]:
         clsname=os.path.basename(entry["path"]).split(".")[0]
-        outdict[clsname]=NaturalEarthClassFactory(clsname,entry)
+        out.append(NaturalEarthClassFactory(clsname,entry))
 
 
-    return outdict
+    return out
+
+
+geoslurpregistry.registerDatasetFactory(getNaturalEarthDsets)
+
+
 

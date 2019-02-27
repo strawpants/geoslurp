@@ -16,10 +16,11 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 
-from geoslurp.dataset import DataSet
+from geoslurp.dataset.OGRBase import OGRBase
+from geoslurp.dataset.CSVBase import CSVBase
 from geoslurp.datapull.http import Uri as http
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.meta import fillGeoTable, fillCSVTable
+from geoslurp.db.settings import getCreateDir
 from sqlalchemy import Integer, String, Float
 from zipfile import ZipFile
 from datetime import datetime
@@ -28,6 +29,9 @@ import os
 from glob import glob
 import shutil
 from numpy import arange
+from geoslurp.config.register import geoslurpregistry
+from geoslurp.db.settings import getCreateDir
+
 
 def csvLookup():
     """Returns a dictionary which maps columns names in the RGI csv files to sqlalchemy column types"""
@@ -38,34 +42,17 @@ def csvLookup():
         lookup[str(elev)]=Float
     return lookup
 
-class RGIBase(DataSet):
-    """Base class for Randalph Glacier Inventory Datasets. They are all quite similar so letting them inherit from a baseclass
-    seems reasonable
-    """
-    __version__=(0,0,0)
-    ttype=None
-    hskip=0
-    def __init__(self,scheme):
-        super().__init__(scheme)
-        if self._inventData:
-            self._inventData["RGIversion"]=tuple(self._inventData["RGIversion"])
-        else:
-            self._inventData["RGIversion"] = (0, 0)
-
-    def pull(self, force=False):
-        """Pulls the entire RGI 6.0 archive from the web and stores it in a cache"""
-        # getf='00_rgi60.zip'
-        # httpserv=http('http://www.glims.org/RGI/rgi60_files/')
-        httpserv=http('http://www.glims.org/RGI/rgi60_files/00_rgi60.zip')
-
+def pullRGI(downloaddir,comparewithversion):
+        httpserv=http('http://www.glims.org/RGI/rgi60_files/00_rgi60.zip',lastmod=datetime(2018,1,1))
         #Newest version which is supported by this plugin
         newestver=(6,0)
+        upd=False
         #now determine whether to retrieve the file
-        if force or (newestver > self._inventData["RGIversion"]):
-            uri=httpserv.download(self.scheme.cache,check=True)
-            if not os.path.exists(os.path.join(self.scheme.cache,'extract')):
+        if newestver > comparewithversion:
+            uri,upd=httpserv.download(downloaddir,check=True)
+            if not os.path.exists(os.path.join(downloaddir,'extract')):
                 #unzip all the goodies
-                zipd=os.path.join(self.scheme.cache,'zipfiles')
+                zipd=os.path.join(downloaddir,'zipfiles')
                 with ZipFile(uri.url,'r') as zp:
                     zp.extractall(zipd)
 
@@ -73,57 +60,91 @@ class RGIBase(DataSet):
                 for zf in glob(zipd+'/*zip'):
                     slurplogger().info("Unzipping %s"%(zf))
                     with ZipFile(zf,'r') as zp:
-                        zp.extractall(os.path.join(self.scheme.cache,'extract'))
+                        zp.extractall(os.path.join(downloaddir,'extract'))
                 #remove zipfiles after extracting
                 shutil.rmtree(zipd)
-                self.patch()
 
-                self._inventData["RGIversion"]=newestver
+                #Patches one csv file which contains a . instead of a , at one point
+                #download patch from github
+                pf='04_rgi60_ArcticCanadaSouth_hypso.csv.patch'
+                slurplogger().info("Patching csv file %s"%(pf) )
+                httpget=http("https://raw.githubusercontent.com/strawpants/geoslurp/master/patches/"+pf)
+                uri,pupd=httpget.download(os.path.join(downloaddir,'extract'),check=True)
+                #apply patch
+                subprocess.Popen(['patch','-i',pf],cwd=os.path.dirname(uri.url))
         else:
-            slurplogger().info(self.name+": Already at newest version")
-            return
-
-    def patch(self):
-        """Patches one csv file which contains a . instead of a , at one point"""
-        #download patch from github
-        pf='04_rgi60_ArcticCanadaSouth_hypso.csv.patch'
-        slurplogger().info("Patching csv file %s"%(pf) )
-        httpget=http("https://raw.githubusercontent.com/strawpants/geoslurp/master/patches/"+pf)
-        uri=httpget.download(os.path.join(self.scheme.cache,'extract'),check=True)
-        #apply patch
-        subprocess.Popen(['patch','-i',pf],cwd=os.path.dirname(uri.url))
+            slurplogger().info("RGI 6.0 already downloaded")
 
 
-    def register(self):
-        """Register the (derived table: csv or shapefile)"""
-        file=os.path.join(self.scheme.cache,"extract",self.__class__.__name__+"."+self.ttype)
-        if self.ttype == "shp":
-            fillGeoTable(file,tablename=self.name,scheme=self.scheme,forceGType='GEOMETRY')
+        return newestver,upd
+
+class RGIBase(OGRBase):
+    """Base class for the shapefiles from the Randalph Glacier Inventory Datasets. They are all quite similar so letting them inherit from a baseclass
+    seems reasonable
+    """
+    scheme='cryo'
+    filename=''
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+        if "RGIversion"  in self._dbinvent.data:
+            self._dbinvent.data["RGIversion"]=tuple(self._dbinvent.data["RGIversion"])
         else:
-            #csv file
-            fillCSVTable(file, self.name, csvLookup(), self.scheme, hskip=self.hskip)
+            self._dbinvent.data["RGIversion"] = (0, 0)
+        
+        if not self._dbinvent.cache:
+                self._dbinvent.cache=self.conf.getDir(self.scheme,"CacheDir")
 
-        #also update data entry from the inventory table
-        self._inventData["lastupdate"]=datetime.now().isoformat()
-        self._inventData["RGIversion"]=(6,0)
-        self._inventData["version"]=self.__version__
-        self.updateInvent()
 
-    def halt(self):
-        pass
+        self.ogrfile=os.path.join(self.cacheDir(),'extract',self.filename)
 
-    def purge(self):
-        pass
+    def pull(self):
+        """Pulls the entire RGI archive from the web and stores it in a cache"""
+        version,updated=pullRGI(self.cacheDir(),self._dbinvent.data['RGIversion'])
+        
+        if updated:
+            self._dbinvent.data["RGIversion"] = version
+        self.updateInvent(False)
+
+class RGICSVBase(CSVBase):
+    """Base class for the CSV files from the Randalph Glacier Inventory Datasets. They are all quite similar so letting them inherit from a baseclass
+    seems reasonable
+    """
+    scheme='cryo'
+    lookup=csvLookup()
+    filename=''
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+        if "RGIversion"  in self._dbinvent.data:
+            self._dbinvent.data["RGIversion"]=tuple(self._dbinvent.data["RGIversion"])
+        else:
+            self._dbinvent.data["RGIversion"] = (0, 0)
+        
+        if not self._dbinvent.cache:
+                self._dbinvent.cache=self.conf.getDir(self.scheme,"CacheDir")
+        
+        self.csvfile=os.path.join(self.cacheDir(),'extract',self.filename)
+
+    def pull(self):
+        """Pulls the entire RGI archive from the web and stores it in a cache"""
+        version,updated=pullRGI(self.cacheDir(),self._dbinvent.data['RGIversion'])
+        if updated:
+            self._dbinvent.data["RGIversion"] = version
+        self.updateInvent(False)
+
 
 # Factory method to dynamically create classes
-def RGIClassFactory(fileName,hskip=0):
+def RGISHPClassFactory(fileName):
     splt=fileName.split(".")
+    return type(splt[0], (RGIBase,), {"filename":fileName,"gtype":"GEOMETRY"})
 
-    return type(splt[0], (RGIBase,), {"ttype":splt[-1],"hskip":hskip})
+def RGICSVClassFactory(fileName,hskip=0):
+    splt=fileName.split(".")
+    return type(splt[0], (RGICSVBase,), {"filename":fileName,"hskip":hskip})
 
-def getRGIdict():
+
+def getRGIDsets(conf):
     """Automatically create all classes contained within the GSHHG database"""
-    outdict={}
+    out=[]
     regionnames=['01_rgi60_Alaska', '02_rgi60_WesternCanadaUS', '03_rgi60_ArcticCanadaNorth',
                '04_rgi60_ArcticCanadaSouth', '05_rgi60_GreenlandPeriphery', '06_rgi60_Iceland',
                '07_rgi60_Svalbard', '08_rgi60_Scandinavia', '09_rgi60_RussianArctic', '11_rgi60_CentralEurope',
@@ -131,21 +152,22 @@ def getRGIdict():
                '15_rgi60_SouthAsiaEast', '16_rgi60_LowLatitudes', '17_rgi60_SouthernAndes',
                '18_rgi60_NewZealand', '19_rgi60_AntarcticSubantarctic']
 
-    #loop over all shapefiles
-    for nm in ["00_rgi60_O1Regions","00_rgi60_O2Regions"]:
-        outdict[nm]=RGIClassFactory(nm+".shp")
-    outdict["00_rgi60_O1Regions"]=RGIClassFactory("00_rgi60_O1Regions.shp")
-    outdict["00_rgi60_O2Regions"]=RGIClassFactory("00_rgi60_O2Regions.shp")
-    outdict["00_rgi60_summary"]=RGIClassFactory("00_rgi60_summary.csv", 1)
-    outdict["00_rgi60_links"]=RGIClassFactory("00_rgi60_links.csv", 2)
+    
+    out.append(RGISHPClassFactory("00_rgi60_O1Regions.shp"))
+    out.append(RGISHPClassFactory("00_rgi60_O2Regions.shp"))
+    out.append(RGICSVClassFactory("00_rgi60_summary.csv", 1))
+    out.append(RGICSVClassFactory("00_rgi60_links.csv", 2))
 
     for nm in regionnames:
-        outdict[nm]=RGIClassFactory(nm+".shp")
+        out.append(RGISHPClassFactory(nm+".shp"))
 
 
     #also add important csv files
     for nm in regionnames:
-        outdict[nm+'_hypso']=RGIClassFactory(nm+"_hypso.csv")
+        out.append(RGICSVClassFactory(nm+"_hypso.csv"))
 
-    return outdict
+    return out
 
+
+
+geoslurpregistry.registerDatasetFactory(getRGIDsets)

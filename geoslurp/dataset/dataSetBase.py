@@ -23,6 +23,11 @@ import re
 from geoslurp.db import Inventory,Settings
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
+from sqlalchemy import Column,Integer,String
+from sqlalchemy.dialects.postgresql import TIMESTAMP
+from geoslurp.datapull import UriFile
+from sqlalchemy import and_
+from geoslurp.db.settings import getCreateDir
 
 def rmfilterdir(ddir,filter='*'):
     """Remove directories and files based on a certain regex filter"""
@@ -51,34 +56,28 @@ class DataSet(ABC):
     """Abstract Base class which hold a dataset (corresponding to a database table"""
     table=None
     commitCounter=0
-    scheme=''
+    scheme='public'
     db=None
-    version=None
+    version=(0,0,0)
     updatefreq=None
-    def __init__(self,dbcon,schema=None):
+    def __init__(self,dbcon):
         self.name=self.__class__.__name__.lower().replace('-',"_")
         self.db=dbcon
-
-        if schema:
-            self.scheme=schema.lower().replace("-","_")
-        else:
-            #set the schema to the one named after the user (default)
-            self.scheme=self.db.user.lower()
 
         #Initiate a session for keeping track of the inventory entry
         self._ses=self.db.Session()
         invent=Inventory(self.db)
         try:
-            self._dbinvent=self._ses.query(invent.__table__).filter(invent.__table__.scheme == self.scheme).one()
+            self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.scheme ).filter(invent.table.dataset == self.name).one()
             #possibly migrate table
             self.migrate(self._dbinvent.version)
         except NoResultFound:
             #possibly create a schema
             self.db.CreateSchema(self.scheme)
             #set defaults for the  inventory
-            self._dbinvent = invent.__table__(scheme=self.scheme, dataset=self.name,
-                                              version=self.version, updatefreq=-1,
-                                              data={},lastupdate=datetime.min)
+            self._dbinvent = invent.table(scheme=self.scheme, dataset=self.name,
+                    version=self.version, updatefreq=self.updatefreq,data={}, 
+                    lastupdate=datetime.min, owner=self.db.user)
             #add the default entry to the database
             self._ses.add(self._dbinvent)
             self._ses.commit()
@@ -87,8 +86,9 @@ class DataSet(ABC):
 
 
 
-    def updateInvent(self):
-        self._dbinvent.lastupdate=datetime.now()
+    def updateInvent(self,updateTime=True):
+        if updateTime:
+            self._dbinvent.lastupdate=datetime.now()
         self._dbinvent.updatefreq=self.updatefreq
         self._ses.commit()
 
@@ -98,11 +98,25 @@ class DataSet(ABC):
     def dataDir(self,subdirs=None):
         """Returns the specialized data directory of this scheme and dataset
         The directory will be created if it does not exist"""
+        if self._dbinvent.datadir:
+            return getCreateDir(self._dbinvent.datadir)
+        #else try to retrieve the standard path from the configuration
         return self.conf.getDir(self.scheme, 'DataDir', dataset=self.__class__.__name__,subdirs=subdirs)
+    
+    def setDataDir(self,ddir):
+        self._dbinvent.datadir=ddir
+        self.updateInvent(False)
 
     def cacheDir(self,subdirs=None):
         """returns the cache directory of this scheme and dataset"""
+        if self._dbinvent.cache:
+            return getCreateDir(self._dbinvent.cache)
+
         return self.conf.getDir(self.scheme, 'CacheDir', dataset=self.__class__.__name__,subdirs=subdirs)
+    
+    def setCacheDir(self,cdir):
+        self._dbinvent.cachedir=cdir
+        self.updateInvent(False)
 
     @abstractmethod
     def pull(self):
@@ -124,10 +138,10 @@ class DataSet(ABC):
 
     def purgeentry(self,filter):
         """Delete dataset entry in the database"""
-        self._inventData={None}
-        del self.scheme._dbinvent.datasets[self.name]
-        self.scheme._ses.commit()
-        self.scheme.dropTable(self.name)
+        slurplogger().info("Deleting %s entry"%(self.name))
+        self._ses.delete(self._dbinvent)
+        self._ses.commit()
+        self.db.dropTable(self.name,self.scheme)
 
     def halt(self):
         """can be overridden to properly clean up an aborted operation"""
@@ -159,6 +173,39 @@ class DataSet(ABC):
             # Fine no entries found
             pass
         return needsupdate
+
+    def retainnewUris(self,urilist):
+        """Filters those uris which have table entries which are too old or are not present in the database"""
+        #create a temporary table with uri and lastmodification time entries
+        cols=[Column('id', Integer, primary_key=True),Column('uri',String),Column('lastmod',TIMESTAMP)]
+        tmptable=self.db.createTable('tmpuris',cols,truncate=True)
+        # import pdb;pdb.set_trace()
+        #fill the table with the file list and last modification timsstamps
+        count=0
+        for uri in urilist:
+            entry=tmptable(uri=uri.url,lastmod=uri.lastmod)
+            self._ses.add(entry)
+            count+=1
+            if count > 100:
+                self._ses.commit()
+                count=0
+
+        self._ses.commit()
+
+        #delete all entries which require updating
+        # first gather all the ids of expired entries
+        subqry=self._ses.query(self.table.id).join(tmptable, and_(tmptable.uri == self.table.uri,tmptable.lastmod > self.table.lastupdate)).subquery()
+        #then delete those entries from the table
+        # import pdb;pdb.set_trace()
+        delqry=tmptable.__table__.delete().where(self.table.id.in_(subqry))
+        self.db.dbeng.execute(delqry)
+        #now make a list of new uris
+        qrynew=self._ses.query(tmptable).outerjoin(self.table,self.table.uri == tmptable.uri).filter(self.table.uri == None)
+
+
+        #return entried which need updating he entries in the original table which need updating
+        return [UriFile(x.uri,x.lastmod) for x in qrynew]
+
 
     def entryNeedsUpdate(self,likestr,lastmod,col=None):
         """Query for a Columns in the table based on a alike string and delete the entry when older than lastmod"""
@@ -202,6 +249,7 @@ class DataSet(ABC):
             self.commitCounter+=1
 
 
+
     def clearTable(self):
         """Clears all entries in a table"""
         allrows=self._ses.query(self.table)
@@ -211,5 +259,8 @@ class DataSet(ABC):
     def migrate(self,version):
         """Properly migrate a table between software versions
         (note this function is supposed to be overridden in a derived class)"""
-        if not version == self.version:
+        if version < self.version:
             raise RuntimeError("No migration implemented")
+        if version > self.version:
+            raise RuntimeError("Registered database has a higher version number than supported")
+

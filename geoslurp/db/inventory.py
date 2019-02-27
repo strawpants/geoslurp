@@ -20,26 +20,28 @@ from sqlalchemy import Column,Integer,String,Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import TIMESTAMP, ARRAY,JSONB
 from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy import MetaData
 
-GSBase=declarative_base()
+GSBase=declarative_base(metadata=MetaData(schema='admin'))
 
 class InventTable(GSBase):
     """Defines the GEOSLURP POSTGRESQL inventory table"""
     __tablename__='inventory'
     id=Column(Integer, primary_key=True)
-    scheme=Column(String, unique=True)
+    scheme=Column(String)
     dataset=Column(String,unique=True)
     pgfunc=Column(String,unique=True)
+    owner=Column(String)
     lastupdate=Column(TIMESTAMP)
     updatefreq=Column(Integer)
     version=Column(ARRAY(Integer,as_tuple=True))
     cache=Column(String)
     datadir=Column(String)
     data=Column(MutableDict.as_mutable(JSONB))
-
+        
 class Inventory:
     """Class which provides read/write access to the postgresql inventory table"""
-    __table__=InventTable
+    table=InventTable
     def __init__(self,geoslurpConn):
         """
 
@@ -47,9 +49,12 @@ class Inventory:
         """
         self.db=geoslurpConn
         self._ses=self.db.Session()
+
         #creates the inventory table if it doesn't exists
-        if not geoslurpConn.dbeng.has_table('inventory'):
-            GSBase.metadata.create_all(geoslurpConn.dbeng)
+        # if not geoslurpConn.dbeng.has_table(self.table.__tablename__):
+            # GSBase.metadata.create_all(geoslurpConn.dbeng)
+            # #also grant geoslurp all privileges
+            # self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp'%(self.table.__tablename__))
 
 
     def __iter__(self):
@@ -58,9 +63,11 @@ class Inventory:
             yield entry
 
     def __getitem__(self, dataset):
-        """Retrieves the entry from the inventory table corresponding to the schema"""
+        """Retrieves the entry from the inventory table corresponding to the dataset"""
         #we need to open up a small sqlalcheny session here
         # note  this will raise a NoResultsFound exception if none was found (should be treated by caller)
         inventEntry=self._ses.query(InventTable).filter(InventTable.dataset == dataset).one()
 
         return inventEntry
+
+

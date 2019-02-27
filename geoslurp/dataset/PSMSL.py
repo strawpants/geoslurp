@@ -28,6 +28,7 @@ import os
 from zipfile import ZipFile
 from osgeo import ogr
 from geoslurp.config.slurplogger import slurplogger
+from geoslurp.config.register import geoslurpregistry
 
 geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
 
@@ -54,9 +55,10 @@ class PSMSLBase(DataSet):
     url=None
     typ=None
     freq=None
-    def __init__(self,scheme):
-        super().__init__(scheme)
-        PSMSLTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+    scheme='OceanObs'
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+        PSMSLTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
 
     def pull(self):
         http(self.url).download(self.cacheDir())
@@ -122,7 +124,7 @@ class PSMSLBase(DataSet):
                 meta["data"]=data
 
                 self.addEntry(meta)
-
+            self.updateInvent()
 
 def PSMSLClassFactory(clsName):
     dum,typ,freq=clsName.lower().split("_")
@@ -131,9 +133,11 @@ def PSMSLClassFactory(clsName):
     return type(clsName, (PSMSLBase,), {"url": url, "table":table,"typ":typ,"freq":freq})
 
 
-def getPSMSLDicts():
-    outdict={}
+def getPSMSLDsets(conf):
+    out=[]
     for clsName in ["psmsl_rlr_monthly","psmsl_rlr_annual","psmsl_met_monthly"]:
-        outdict[clsName]=PSMSLClassFactory(clsName)
-    return outdict
+        out.append(PSMSLClassFactory(clsName))
+    return out
 
+
+geoslurpregistry.registerDatasetFactory(getPSMSLDsets)

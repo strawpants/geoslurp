@@ -24,15 +24,22 @@ from geoslurp.config.slurplogger import slurplogger
 import gzip as gz
 
 
-def findFiles(dir,pattern):
+def findFiles(dir,pattern,since=None):
     """Generator to recursively search adirecctor (returns a generator)"""
+
+    if not since:
+        since=datetime.min
+
     for dpath,dnames,files in os.walk(dir):
         # for subdir in dnames:
         #     yield from findFiles(os.path.join(dir,subdir),pattern)
 
         for file in files:
             if re.search(pattern,file):
-                yield os.path.join(dpath,file)
+                fullp=os.path.join(dpath,file)
+
+                if since < datetime.fromtimestamp(os.path.getmtime(fullp)):
+                    yield fullp
 
 def timeFromStamp(stamp):
     tinfo = stamp
@@ -178,7 +185,7 @@ class UriFile(UriBase):
         def __init__(self,url,lastmod=None):
             super().__init__(url,lastmod)
             #Lets set lastmod straight away if the file exists
-            if os.path.exists(url):
+            if os.path.exists(url) and not lastmod:
                 self.updateModTime()
 
         def updateModTime(self):

@@ -15,13 +15,13 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from geoslurp.dataset import DataSet
+from geoslurp.dataset.dataSetBase import DataSet
 from osgeo import gdal
 from geoslurp.config.slurplogger import slurplogger
 from geoalchemy2 import WKBElement,Geography
 from sqlalchemy import Table,Column, Integer, String, Float
 from geoslurp.db import tableMapFactory
-from datetime import datetime
+import re
 
 def columnsFromOgrFeat(feat, spatindex=True, forceGType=None):
     """Returns a list of columns from a osgeo feature"""
@@ -72,48 +72,49 @@ class OGRBase(DataSet):
     gtype=None
     ogrfile=None
     encoding='iso-8859-1' #default for shapefiles
-    def __init__(self,scheme):
-        super().__init__(scheme)
-
+    layerregex=None
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+    
     def register(self):
         """Update/populate a database table (creates one if it doesn't exist)
-        This function reads all layers in the shapefile directory whose name obeys
-        the regex and puts them in a single table.
+        This function reads a shapefile and puts it in a single table.
         :param ogrfile: gdal dataset (e.g. shapefile)
         :param forceGType (optional): a geometry type to be used as the "geom" column
         :returns nothing (but sets the internal qlalchemy table)
         """
         # currently we can only cope with updating the entire table as a whole
-        self.scheme.dropTable(self.name)
+        self.db.dropTable(self.name,self.scheme)
 
-        slurplogger().info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme._schema, self.name, self.ogrfile))
+        slurplogger().info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme, self.name, self.ogrfile))
+        
         #open shapefile directory
 
         shpf=gdal.OpenEx(self.ogrfile,0)
-        if shpf.GetLayerCount() != 1:
-            raise RuntimeError("Don't know which layer to load")
-        shpflayer=shpf.GetLayer(0)
+        
         count=0
+        for ithlayer in range(shpf.GetLayerCount()):
+            shpflayer=shpf.GetLayer(ithlayer)
+            if self.layerregex:
+                if not re.search(self.layerregex,shpflayer.GetName()):
+                    continue
+            for feat in shpflayer:
+                count+=1
+                #we need to make a temporary clone here as osgeo will cause a segfault otherwise
+                if self.table == None:
+                    cols=columnsFromOgrFeat(feat,forceGType=self.gtype)
+                    self.table=Table(self.name, self.db.mdata, *cols, schema=self.scheme)
+                    self.table.create(checkfirst=True)
+                    tableMap=tableMapFactory(self.name,self.table)
+                    self.table=tableMap
+                values=valuesFromOgrFeat(feat,self.encoding)
+                try:
+                    self.addEntry(values)
+                except:
+                    pass
+                #commit every X times
+                
 
-        for feat in shpflayer:
-            count+=1
-            #we need to make a temporary clone here as osgeo will cause a segfault otherwise
-            if self.table == None:
-                cols=columnsFromOgrFeat(feat,forceGType=self.gtype)
-                self.table=Table(self.name, self.scheme.db.mdata, *cols, schema=self.scheme._schema)
-                self.table.create(checkfirst=True)
-                tableMap=tableMapFactory(self.name,self.table)
-                self.table=tableMap
-            values=valuesFromOgrFeat(feat,self.encoding)
-            try:
-                self.addEntry(values)
-            except:
-                pass
-            #commit every X times
-
-        self.ses.commit()
-
-        #also update data entry from the inventory table
-        self._inventData["lastupdate"]=datetime.now().isoformat(),
+        #also update entry in the inventory table
         self.updateInvent()
 

@@ -15,9 +15,10 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from geoslurp.dataset import DataSet
+from geoslurp.dataset.dataSetBase import DataSet
 from geoslurp.datapull.webdav import Crawler as WbCrawler
 from geoslurp.config.slurplogger import slurplogger
+from geoslurp.datapull import findFiles
 from glob import glob
 import gzip
 import yaml
@@ -26,6 +27,7 @@ from io  import StringIO
 import os
 from datetime import datetime
 from geoslurp.meta.gravity import GravitySHTBase
+from geoslurp.config.register import geoslurpregistry
 
 def graceMetaExtractor(uri):
     """Extract meta information from a GRACE file"""
@@ -71,14 +73,14 @@ class GRACEL2Base(DataSet):
     release=None
     center=None
     updated=None
-    __version__=(0,0)
-    def __init__(self,scheme):
-        super().__init__(scheme)
+    scheme='Gravity'
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
         #initialize postgreslq table
-        GravitySHTBase.metadata.create_all(self.scheme.db.dbeng, checkfirst=True)
+        GravitySHTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
 
     def pull(self):
-        cred=self.scheme.conf.authCred("podaac")
+        cred=self.conf.authCred("podaac")
         url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/L2/"+self.center+"/"+self.release
         webdav=WbCrawler(url,auth=cred,pattern='G.*gz')
         self.updated=webdav.parallelDownload(self.dataDir(),check=True)
@@ -89,52 +91,17 @@ class GRACEL2Base(DataSet):
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in glob(self.dataDir()+'/G*gz')]
+            files=[UriFile(file) for file in findFiles(self.dataDir(),'G.*\.gz',self._dbinvent.lastupdate)]
 
-        ses=self.scheme.db.Session()
-        i=0
-        #loop over files
-        for uri in files:
-            try:
-                base=os.path.basename(uri.url)
-                qResult=ses.query(self.table).filter(self.table.uri.like('%'+base+'%')).first()
-                if qResult.lastupdate >= uri.lastmod:
-                    slurplogger().info("No Update needed, skipping %s"%(base))
-                    continue
-                else:
-                    #delete the entries which need updating
-                    ses.delete(qResult)
-                    ses.commit()
-            except Exception as e:
-                # Fine no entries found
-               pass
-
+        filesnew=self.retainnewUris(files)
+        
+        #loop over the newer files
+        for uri in filesnew:
             meta=graceMetaExtractor(uri)
-            try:
-                entry=self.table(**meta)
-                ses.add(entry)
-
-                if i > 10:
-                    # commit every so many rows
-                    ses.commit()
-                    i=0
-                else:
-                    i+=1
-            except Exception as e:
-                pass
-        self._inventData["lastupdate"]=datetime.now().isoformat()
-        self._inventData["version"]=self.__version__
+            self.addEntry(meta)
+        
         self.updateInvent()
 
-        ses.commit()
-
-
-
-    def halt(self):
-        pass
-
-    def purge(self):
-        pass
 
 def GRACEL2ClassFactory(clsName):
     """Dynamically construct GRACE Level 2 dataset classes"""
@@ -143,10 +110,12 @@ def GRACEL2ClassFactory(clsName):
     return type(clsName, (GRACEL2Base,), {"release": release, "center":center,"table":table})
 
 # setup GRACE datasets
-def GRACEdict():
-    outdict={}
+def GRACEDsets(conf):
+    out=[]
     for release in ["RL06"]:
         for center in ["CSR", "GFZ", "JPL"]:
             clsName="GRACEL2"+"_"+center+"_"+release
-            outdict[clsName]=GRACEL2ClassFactory(clsName)
-    return outdict
+            out.append(GRACEL2ClassFactory(clsName))
+    return out
+
+geoslurpregistry.registerDatasetFactory(GRACEDsets)
