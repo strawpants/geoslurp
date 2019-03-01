@@ -70,7 +70,7 @@ class GeoslurpConnector():
         """Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper"""
 
         if truncate:
-            self.dbeng.execute("TRUNCATE TABLE %s;"%(tablename))
+            self.truncateTable(tablename,scheme)
 
         if tablename in self.mdata.tables:
             table=self.mdata.tables[tablename]
@@ -84,6 +84,11 @@ class GeoslurpConnector():
 
         return tableMapFactory(tablename, table)
 
+    def truncateTable(self,tablename,scheme=None):
+        if scheme:
+            self.dbeng.execute("TRUNCATE TABLE %s.%s;"%(tablename,scheme))
+        else:
+            self.dbeng.execute("TRUNCATE TABLE %s;"%(tablename))
 
     def dropTable(self, tablename, schema=None):
         if schema:

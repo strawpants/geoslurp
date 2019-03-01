@@ -250,11 +250,9 @@ class DataSet(ABC):
 
 
 
-    def clearTable(self):
-        """Clears all entries in a table"""
-        allrows=self._ses.query(self.table)
-        for res in allrows:
-            self._ses.delete(res)
+    def truncateTable(self):
+        """Truncate all entries in a table"""
+        self.db.truncateTable(self.name,self.scheme.lower())
 
     def migrate(self,version):
         """Properly migrate a table between software versions

@@ -23,6 +23,7 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 from sqlalchemy import MetaData
 from geoslurp.datapull import UriFile
 from geoslurp.datapull.rsync import Crawler as rsync
+from geoslurp.datapull.uri import findFiles
 import os
 from sqlalchemy.ext.declarative import declared_attr, as_declarative
 from netCDF4 import Dataset as ncDset
@@ -63,35 +64,63 @@ def radsMetaDataExtractor(uri):
     slurplogger().info("extracting data from %s"%(uri.url))
     ncrads=ncDset(uri.url)
     track=ogr.Geometry(ogr.wkbMultiLineString)
-    trackseg=ogr.Geometry(ogr.wkbLineString)
-    lonprev=ncrads["lon"][0]
-    tprev=ncrads["time"][0]
-    onlandprev=flag4_isonLand(ncrads["flags"][0])
-    t0=datetime(1985,1,1)
     data={"segments":[]}
-    segment={"tstart":None,"tend":None,"istart":0,"iend":0}
+    
+    #reference time 
+    t0=datetime(1985,1,1)
+    
+    # We need to compare some values fromt he previous loop which we store in the follwoing variables 
+    lonprev=ncrads["lon"][0]
     if lonprev > 180:
         lonprev-=360
+    
+    tprev=ncrads["time"][0]
+    onlandprev=flag4_isonLand(ncrads["flags"][0])
+   
+   #initiate first linestring segment 
+    trackseg=ogr.Geometry(ogr.wkbLineString)
+    #we also store some bookkeeping information on each track segment
+    segment={"tstart":(t0+timedelta(seconds=float(tprev))).isoformat(),"tend":None,"istart":0,"iend":0,"land":int(flag4_isonLand(ncrads["flags"][0]))}
+   
+    
     for i,(t,lon,lat,flag) in enumerate(zip(ncrads["time"][:],ncrads["lon"][:],ncrads["lat"][:],ncrads['flags'][:])):
         dt=t0+timedelta(seconds=float(t))
+        onland=flag4_isonLand(flag)
         if lon > 180:
             #make sure longitude goes from -180 to 180
             lon-=360
-            #create a new segment with a gap larger than 100 seconds (or when ocean/land flag changes)
-        if abs(lonprev-lon) > 180 or t-tprev > 100 or (onlandprev != flag4_isonLand(flag)):
-            #start a new segment upon crossing the 180 line or when a time gap occurred
+            #create a new segment when: (a) crossing the 180 d line, (b) a gap larger than 100 seconds is occurred, (c) or when ocean/land flag changes
+        if abs(lonprev-lon) > 180 or t-tprev > 100 or (onlandprev != onland):
+            #start a new segment upon crossing the 180 line or when a time gap occurredi, or when crossing from land to ocean or lake
+            #Segments which have more than a single point will be added:
             if trackseg.GetPointCount() > 1:
-                track.AddGeometry(trackseg)
+                #gather some end bookkeeping on the previous segment
                 segment["tend"]=dt.isoformat()
-                data["segments"].append(segment)
+                segment["iend"]=i
+   
+                #append segment and bookkeeping data
+                data["segments"].append(segment.copy())
+                # import pdb;pdb.set_trace()
+                track.AddGeometry(trackseg)
+            #initialize new segment
+            segment["tstart"]=dt.isoformat()
+            segment["istart"]=i
+            segment["land"]=int(onland)
             trackseg=ogr.Geometry(ogr.wkbLineString)
         
         trackseg.AddPoint(float(lon),float(lat),0)
         lonprev=lon
         tprev=t
-        onlandprev=flag4_isonLand(flag)
-        
+        onlandprev=onland
+    
+    #also add the last segment
     if trackseg.GetPointCount() > 1:
+        #gather some end bookkeeping on the previous segment
+        segment["tend"]=dt.isoformat()
+        segment["iend"]=i
+
+        #append segment and bookkeeping data
+        data["segments"].append(segment)
         track.AddGeometry(trackseg)
 
     #reference time for rads
@@ -102,7 +131,7 @@ def radsMetaDataExtractor(uri):
           "cycle":int(mtch.group(2)),
           "apass":int(mtch.group(1)),
           "uri":uri.url,
-          "data":{},
+          "data":data,
           "geom":WKBElement(track.ExportToIsoWkb(),srid=4326,extended=True)
           }
 
@@ -127,7 +156,8 @@ class RadsBase(DataSet):
                 self._dbinvent.datadir=self.conf.getDir(self.scheme,"DataDir")
             self.updateInvent(False)
         #initialize postgreslq table
-        RadsTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
+        RadsTBase.metadata.tables[".".join([self.scheme.lower(),self.name])].create(self.db.dbeng,checkfirst=True)
+        # RadsTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
 
     def pull(self, cycle=None):
         """Pulls the data from the rads server
@@ -154,20 +184,20 @@ class RadsBase(DataSet):
         if self.updated:
             files=self.updated
         else:
+            slurplogger().info("Listing files to process (this can take a while)...")
+
             if cycle:
-                files=[UriFile(file) for file in glob(os.path.join(self._dbinvent.datadir,self.sat,self.phase,"c%03d"%(cycle),'*.nc'))]
+                files=[UriFile(file) for file in findFiles(os.path.join(self._dbinvent.datadir,self.sat,self.phase,"c%03d"%(cycle)),'.*\.nc',since=self._dbinvent.lastupdate)]
             else:
-                files=[UriFile(file) for file in glob(os.path.join(self._dbinvent.data,self.sat,self.phase,'*/*.nc'))]
+                files=[UriFile(file) for file in findFiles(os.path.join(self._dbinvent.datadir,self.sat),'.*\.nc',since=self._dbinvent.lastupdate)]
 
+        newfiles=self.retainnewUris(files)
+        if not newfiles:
+            slurplogger().info("Nothing to update")
+            return
 
-
-        for uri in files:
+        for uri in newfiles:
             base=os.path.basename(uri.url)
-
-            if not self.uriNeedsUpdate(base, uri.lastmod):
-                continue
-
-
             meta=radsMetaDataExtractor(uri)
             self.addEntry(meta)
 

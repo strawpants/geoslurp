@@ -98,7 +98,10 @@ def main(argv):
         conf.updateAuth(args.auth_config)
 
     datasets=geoslurpregistry.getDatasets(conf,args.dset)
-    
+    if not datasets:
+        print("No valid datasets selected")
+        sys.exit(1)
+
     if args.list:
         # show available schemes and datasets
         print("Available datasets (SCHEME.DATASET):")
