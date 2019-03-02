@@ -217,18 +217,29 @@ class Uri(UriBase):
 
 
 class MotuRecursive():
-    """Class which recursively downloads netcdf files using motu and patches them together"""
-    def __init__(self,mopts):
+    """Class which recursively downloads netcdf files within the 1GB limit using motu and patches them together"""
+    keepfiles=False
+    def __init__(self,mopts,keepfiles=False):
         self.mopts=mopts
+        self.keepfiles=keepfiles
 
     def download(self):
         """Download file"""
         muri=Uri(self.mopts)
+
+        #check if download is needed
+        muri.requestInfo()
+        uristacked=UriFile(self.mopts.fullname())
+        if uristacked.lastmod:
+            if muri.lastmod <= uristacked.lastmod:
+                slurplogger().info("Already downloaded %s"%(uristacked.url))
+                #quick return when there is no need to merge/download
+                return uristacked,False
+
         #check if download is allowed
         kb,maxkb=muri.updateSize()
         if kb > maxkb:
             #split up request and try again
-            muri.requestInfo()
 
             #create 2 bounding boxes split on time
             Abbox,Bbbox=muri.opts.btdbox.timeSplit()
@@ -246,11 +257,18 @@ class MotuRecursive():
             Auri,Aupd=AmotuRec.download()
             Buri,Bupd=BmotuRec.download()
 
-            #possible improvement here split a dataset at an unlimited dimensions and append the second one to the new one
+            #possible improvement here split a dataset at an unlimited dimensions and append the second one to the first one
             #patch files together (if updated)
-            if Aupd or Bupd:
-                stackNcFiles(self.mopts.fullname(),Auri.url,Buri.url,'time')
-            return UriFile(self.mopts.fullname()),True
+            if Aupd or Bupd or not os.path.exists(self.mopts.fullname()):
+                uristacked,upd=stackNcFiles(self.mopts.fullname(),Auri.url,Buri.url,'time')
+                if not self.keepfiles:
+                    #remove the partial files
+                    os.remove(AmotuRec.mopts.fullname())
+                    os.remove(BmotuRec.mopts.fullname())
+            else:
+                uristacked=UriFile(self.mopts.fullname())
+                upd=False
+            return uristacked, True
         else:
             return muri.download(self.mopts.out_dir,check=True)
 

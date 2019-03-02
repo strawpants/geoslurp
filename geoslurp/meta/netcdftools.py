@@ -148,21 +148,62 @@ def nccopyAtt(ncin,ncout,excl=[]):
 def ncSwapLongitude(ncinout,longitudevar='longitude'):
     """swap the longitude representation to span 0..360 or -180..180"""
     ncid=ncDset(ncinout,'r+')
+    
+    ncid[longitudevar].set_auto_mask(False)
     #find the longitude variable
+
     if max(ncid[longitudevar][:]) > 180 :
-        ncid[longitudevar][:][ncid[longitudevar][:]> 180]-=360
-    elif min(ncid[longitudevar][:]) < 0:
-        ncid[longitudevar][:][ncid[longitudevar][:]<0]+=360
+        ncid[longitudevar].valid_min=-180
+        ncid[longitudevar].valid_max=180
+        ncid[longitudevar][ncid[longitudevar][:]>180]-=360
+    elif min(ncid[longitudevar][:])<0:
+        ncid[longitudevar].valid_min=0
+        ncid[longitudevar].valid_max=360
+        ncid[longitudevar][ncid[longitudevar][:]<0]+=360
+    
+    ncid[longitudevar].set_auto_mask(True)
+    
     ncid.close()
 
+# def appendNcFiles(ncFileA,ncFileB,dimension):
+    # """Append the content of the netcdf file B to netcdf file A along the specified dimension. Note that this is only allowed along a unlimited dimension"""
+    # ncidA=Dataset(ncFileA,'r+')
+    # ncidB=Dataset(ncFileB,'r')
+    
+    # #sanity check on the  dimension in A
+    # try:
+        # isunlimit=ncidA.dimension[dimension].isunlimited()
+    # except KeyError:
+        # raise RuntimeException("dimension %s is not present in %s"(dimension,ncFileA))
+    # #sanity check on the  appending dimension in B
+    # try:
+        # if isunlimit != ncidB.dimension[dimension].isunlimited():
+            # raise RuntimeException("Dimension is not unlimited in file %s"%(ncFileB))
+    # except KeyError:
+        # raise RuntimeException("dimension %s is not present in %s"(dimension,ncFileB))
+    # # make a list of variables which need to be appended 
+    # vapp=[ var for var in ncidA.variables.keys() if dimension in ncidA.variables[var].dimensions ]
+    # if isunlimit:
+        # for var in vapp:
+            # slurplogger().info("appending to var %s"%(var))
+    
+    # ncidA.setncattr('History',ncidA.getncattr('History')+'\n Modified at %s by Geoslurp: append netcdf file %s along dimension %s'%(datetime.now(),ncFileB,dimension))
+    # ncidA.close()
+    # return UriFile(ncidA),True
+
+
+    
 
 def stackNcFiles(ncout,ncA,ncB,dimension):
     """Append netcdf file B after file A along the dimension specified"""
     slurplogger().info("Patching files %s %s",ncA,ncB)
     #open the three netcdf files
-    outid=ncDset(ncout,'w')
+    outid=ncDset(ncout,'w',clobber=True)
     aid=ncDset(ncA,'r')
     bid=ncDset(ncB,'r')
+    
+    #copy arrays in parts when larger than the choplimit
+    choplimit=1024*1024*1024
 
     # #copy global attributes
     nccopyAtt(aid,outid)
@@ -187,6 +228,7 @@ def stackNcFiles(ncout,ncA,ncB,dimension):
         if nm in vapp:
             continue
         outid.createVariable(nm, var.datatype, var.dimensions)
+        outid[nm].set_auto_mask(False)
         outid[nm][:] = aid[nm][:]
         nccopyAtt(aid[nm],outid[nm],['_FillValue'])
 
@@ -196,23 +238,39 @@ def stackNcFiles(ncout,ncA,ncB,dimension):
     #create new appended variables
     for var in vapp:
         outid.createVariable(var,aid[var].datatype,bid[var].dimensions)
+        outid[var].set_auto_mask(False)
         nccopyAtt(aid[var],outid[var],['_FillValue'])
+   
+        #find out which axis is the to be appended dimension
         dimax=aid[var].dimensions.index(dimension)
-        iidx=[slice(None)]*outid[var].ndim
-        iidx[dimax]=0
+    
+        idxA=[]
+        for dim in outid[var].dimensions:
+            idxA.append(slice(0,outid.dimensions[dim].size))
 
-        idx=[slice(None)]*aid[var].ndim
-        idx[dimax]=0
-        for i in range(aid.dimensions[dimension].size):
-            outid[var][iidx]=aid[var][idx]
-            idx[dimax]+=1
-            iidx[dimax]+=1
-
-        idx[dimax]=0
-        for i in range(bid.dimensions[dimension].size):
-            outid[var][iidx]=bid[var][idx]
-            idx[dimax]+=1
-            iidx[dimax]+=1
+        idxA[dimax]=slice(0,aid.dimensions[dimension].size)
+        
+        if aid[var][:].nbytes < choplimit:
+            outid[var][idxA]=aid[var][:]
+        else:
+            #loop over the first dimension (matrix is too big)
+            ia=0
+            for i in range(idxA[0].start,idxA[0].stop):
+                # import pdb;pdb.set_trace()
+                outid[var][[i]+ idxA[1:]]=aid[var][[ia,slice(None),slice(None)]]
+                ia+=1
+        
+        idxB=idxA.copy()
+        idxB[dimax]=slice(aid.dimensions[dimension].size,outid.dimensions[dimension].size)
+        if bid[var][:].nbytes < choplimit:
+            outid[var][idxB]=bid[var][:]
+        else:
+            #loop over the first dimension (matrix is too big)
+            ib=0
+            for i in range(idxB[0].start,idxB[0].stop):
+                outid[var][[i]+ idxB[1:]]=bid[var][[ib,slice(None),slice(None)]]
+                ib+=1
+        
 
     outid.setncattr('History',outid.getncattr('History')+'\n Modified at %s by Geoslurp: Merge two netcdf files along dimension %s'%(datetime.now(),dimension))
     return UriFile(ncout),True

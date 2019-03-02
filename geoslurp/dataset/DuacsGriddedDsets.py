@@ -150,9 +150,7 @@ class Duacs(DataSet):
                 #change the longitude representation to -180..0
                 ncSwapLongitude(urileft.url)
                 # patch files
-                stackNcFiles(ncout,urileft.url,uriright.url,'longitude')
-                upd=True
-                uri=UriFile(ncout)
+                uri,upd=stackNcFiles(ncout,urileft.url,uriright.url,'longitude')
             else:
                 upd=False
                 uri=UriFile(ncout)

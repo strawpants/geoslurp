@@ -126,8 +126,8 @@ def radsMetaDataExtractor(uri):
     #reference time for rads
     mtch=re.search("p([0-9]+)c([0-9]+).nc",uri.url)
     meta={"lastupdate":uri.lastmod,
-          "tstart":t0+timedelta(seconds=float(ncrads['time'][0].data)),
-          "tend":t0+timedelta(seconds=float(ncrads['time'][-1].data)),
+          "tstart":t0+timedelta(seconds=float(ncrads['time'][0])),
+          "tend":t0+timedelta(seconds=float(ncrads['time'][-1])),
           "cycle":int(mtch.group(2)),
           "apass":int(mtch.group(1)),
           "uri":uri.url,
@@ -156,7 +156,8 @@ class RadsBase(DataSet):
                 self._dbinvent.datadir=self.conf.getDir(self.scheme,"DataDir")
             self.updateInvent(False)
         #initialize postgreslq table
-        RadsTBase.metadata.tables[".".join([self.scheme.lower(),self.name])].create(self.db.dbeng,checkfirst=True)
+        self.table.__table__.create(self.db.dbeng,checkfirst=True)
+        # RadsTBase.metadata.tables[".".join([self.scheme.lower(),self.name])].create(self.db.dbeng,checkfirst=True)
         # RadsTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
 
     def pull(self, cycle=None):
@@ -178,8 +179,12 @@ class RadsBase(DataSet):
         getCreateDir(desturl)
         self.updated=rsync(srcurl,auth=cred).parallelDownload(desturl,True)
 
-    def register(self,cycle=None):
-
+    def register(self,cycle=None,since=None):
+        if since:
+           since=datetime.strptime(since,"%Y-%m-%d")
+           print(since)
+        else:
+           since=self._dbinvent.lastupdate
         #create a list of files which need to be (re)registered
         if self.updated:
             files=self.updated
@@ -187,9 +192,12 @@ class RadsBase(DataSet):
             slurplogger().info("Listing files to process (this can take a while)...")
 
             if cycle:
-                files=[UriFile(file) for file in findFiles(os.path.join(self._dbinvent.datadir,self.sat,self.phase,"c%03d"%(cycle)),'.*\.nc',since=self._dbinvent.lastupdate)]
+                files=[UriFile(file) for file in findFiles(os.path.join(self._dbinvent.datadir,self.sat,self.phase,"c%03d"%(cycle)),'.*\.nc',since=since)]
             else:
-                files=[UriFile(file) for file in findFiles(os.path.join(self._dbinvent.datadir,self.sat),'.*\.nc',since=self._dbinvent.lastupdate)]
+                files=[UriFile(file) for file in findFiles(os.path.join(self._dbinvent.datadir,self.sat,self.phase),'.*\.nc',since=since)]
+        if not files:
+           slurplogger().info("No updated files found")
+           return
 
         newfiles=self.retainnewUris(files)
         if not newfiles:
@@ -199,6 +207,10 @@ class RadsBase(DataSet):
         for uri in newfiles:
             base=os.path.basename(uri.url)
             meta=radsMetaDataExtractor(uri)
+            if len(meta["data"]["segments"]) == 0:
+               #don't register empty entries
+               continue
+
             self.addEntry(meta)
 
         self.updateInvent()
