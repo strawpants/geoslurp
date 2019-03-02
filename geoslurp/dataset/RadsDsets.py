@@ -65,7 +65,11 @@ def radsMetaDataExtractor(uri):
     ncrads=ncDset(uri.url)
     track=ogr.Geometry(ogr.wkbMultiLineString)
     data={"segments":[]}
-    
+   
+
+    if ncrads.dimensions['time'].size <3:
+       #no point trying to index empty files
+       return {}
     #reference time 
     t0=datetime(1985,1,1)
     
@@ -122,6 +126,10 @@ def radsMetaDataExtractor(uri):
         #append segment and bookkeeping data
         data["segments"].append(segment)
         track.AddGeometry(trackseg)
+   
+    if not data["segments"]:
+       #return an empty dict when no segments are found
+       return {}
 
     #reference time for rads
     mtch=re.search("p([0-9]+)c([0-9]+).nc",uri.url)
@@ -207,7 +215,7 @@ class RadsBase(DataSet):
         for uri in newfiles:
             base=os.path.basename(uri.url)
             meta=radsMetaDataExtractor(uri)
-            if len(meta["data"]["segments"]) == 0:
+            if not meta:
                #don't register empty entries
                continue
 
