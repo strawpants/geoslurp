@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.datapull.github &mdash; geoslurp Under construction v1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of postgis &amp; the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../clitools.html">Command line tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../apigeoslurp/geoslurp.html">geoslurp package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.datapull.github</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.datapull.github</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with Frommle; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="k">import</span> <span class="n">CrawlerBase</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.http</span> <span class="k">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">http</span>
+
+<div class="viewcode-block" id="GithubFilter"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.github.GithubFilter">[docs]</a><span class="k">class</span> <span class="nc">GithubFilter</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Filter used for testing a certain dict element&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">regexdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;blob&quot;</span><span class="p">}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regexes</span><span class="o">=</span><span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ky</span><span class="p">,</span><span class="n">regex</span> <span class="ow">in</span> <span class="n">regexdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">regexes</span><span class="p">[</span><span class="n">ky</span><span class="p">]</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GithubFilter.isValid"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.github.GithubFilter.isValid">[docs]</a>    <span class="k">def</span> <span class="nf">isValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">elem</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if all of the regex criteria match the elem&quot;&quot;&quot;</span>
+        <span class="n">valid</span><span class="o">=</span><span class="kc">True</span>
+        <span class="k">for</span> <span class="n">ky</span><span class="p">,</span><span class="n">regex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regexes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">elem</span><span class="p">[</span><span class="n">ky</span><span class="p">]):</span>
+                <span class="n">valid</span><span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">valid</span></div></div>
+
+
+
+
+
+<div class="viewcode-block" id="Crawler"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.github.Crawler">[docs]</a><span class="k">class</span> <span class="nc">Crawler</span><span class="p">(</span><span class="n">CrawlerBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Crawls a github repository fixed to a certain commit&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reponame</span><span class="p">,</span><span class="n">commitsha</span><span class="p">,</span><span class="nb">filter</span><span class="o">=</span><span class="n">GithubFilter</span><span class="p">(),</span><span class="n">followfilt</span><span class="o">=</span><span class="n">GithubFilter</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;tree&quot;</span><span class="p">}),</span><span class="n">oauthtoken</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#construct the catalog url</span>
+        <span class="n">catalogurl</span><span class="o">=</span><span class="s2">&quot;https://api.github.com/repos/&quot;</span><span class="o">+</span><span class="n">reponame</span><span class="o">+</span><span class="s2">&quot;/git/trees/&quot;</span><span class="o">+</span><span class="n">commitsha</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">catalogurl</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="o">=</span><span class="nb">filter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">followFilter</span><span class="o">=</span><span class="n">followfilt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repo</span><span class="o">=</span><span class="n">reponame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="o">=</span><span class="n">oauthtoken</span>
+
+<div class="viewcode-block" id="Crawler.getSubTree"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.github.Crawler.getSubTree">[docs]</a>    <span class="k">def</span> <span class="nf">getSubTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
+            <span class="c1">#add the api token to the end</span>
+            <span class="n">url</span><span class="o">+=</span><span class="s2">&quot;?access_token=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">http</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">buffer</span><span class="p">()</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Crawler.uris"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.github.Crawler.uris">[docs]</a>    <span class="k">def</span> <span class="nf">uris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">depth</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;retrieve all &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+        <span class="c1">#add an additional elemet to keep track of the fullpath</span>
+        <span class="c1"># for elem in self.treeitems(depth=depth):</span>
+        <span class="c1">#     print(os.path.join(elem[&quot;dirpath&quot;],elem[&#39;path&#39;]),elem[&#39;url&#39;])</span>
+
+
+
+<div class="viewcode-block" id="Crawler.treeitems"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.github.Crawler.treeitems">[docs]</a>    <span class="k">def</span> <span class="nf">treeitems</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rootelem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">dirpath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; generator which recursively list all elements in a git tree&quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># signals a stopiteration</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">depth</span><span class="o">-=</span><span class="mi">1</span>
+
+        <span class="c1">#set rootelem and dirpath upon first entry</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rootelem</span><span class="p">:</span>
+            <span class="n">rootelem</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getSubTree</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dirpath</span><span class="p">:</span>
+            <span class="n">dirpath</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">repo</span>
+
+        <span class="k">for</span> <span class="n">treelem</span> <span class="ow">in</span> <span class="n">rootelem</span><span class="p">[</span><span class="s1">&#39;tree&#39;</span><span class="p">]:</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">isValid</span><span class="p">(</span><span class="n">treelem</span><span class="p">):</span>
+                <span class="n">treelem</span><span class="p">[</span><span class="s2">&quot;dirpath&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">dirpath</span>
+                <span class="c1">#modify url to link to a arw github file</span>
+
+                <span class="n">treelem</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;https://github.com/&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">repo</span><span class="o">+</span><span class="s2">&quot;/raw/master/&quot;</span><span class="o">+</span><span class="n">treelem</span><span class="p">[</span><span class="s1">&#39;dirpath&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repo</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">treelem</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+                <span class="k">yield</span> <span class="n">treelem</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">followFilter</span><span class="o">.</span><span class="n">isValid</span><span class="p">(</span><span class="n">treelem</span><span class="p">):</span>
+                <span class="c1">#recurse through subtree</span>
+                <span class="n">subtree</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getSubTree</span><span class="p">(</span><span class="n">treelem</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">])</span>
+                <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">treeitems</span><span class="p">(</span><span class="n">subtree</span><span class="p">,</span><span class="n">depth</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span><span class="n">treelem</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

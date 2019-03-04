@@ -1,0 +1,334 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.db package &mdash; geoslurp Under construction v1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="geoslurp.meta package" href="geoslurp.meta.html" />
+    <link rel="prev" title="geoslurp.dataset package" href="geoslurp.dataset.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation of postgis &amp; the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clitools.html">Command line tools</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="geoslurp.html">geoslurp package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="geoslurp.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="geoslurp.datapull.html">geoslurp.datapull package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoslurp.dataset.html">geoslurp.dataset package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">geoslurp.db package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-db-connector-module">geoslurp.db.connector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-db-initgeoslurpdb-module">geoslurp.db.initgeoslurpdb module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-geoslurp.db.inventory">geoslurp.db.inventory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-db-settings-module">geoslurp.db.settings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-db-tabletools-module">geoslurp.db.tabletools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="geoslurp.meta.html">geoslurp.meta package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="geoslurp.html#module-geoslurp">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="geoslurp.html">geoslurp package</a> &raquo;</li>
+        
+      <li>geoslurp.db package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/apigeoslurp/geoslurp.db.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="geoslurp-db-package">
+<h1>geoslurp.db package<a class="headerlink" href="#geoslurp-db-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-db-connector-module">
+<h2>geoslurp.db.connector module<a class="headerlink" href="#geoslurp-db-connector-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-db-initgeoslurpdb-module">
+<h2>geoslurp.db.initgeoslurpdb module<a class="headerlink" href="#geoslurp-db-initgeoslurpdb-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-geoslurp.db.inventory">
+<span id="geoslurp-db-inventory-module"></span><h2>geoslurp.db.inventory module<a class="headerlink" href="#module-geoslurp.db.inventory" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.db.inventory.InventTable">
+<em class="property">class </em><code class="descclassname">geoslurp.db.inventory.</code><code class="descname">InventTable</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/inventory.html#InventTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.inventory.InventTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Defines the GEOSLURP POSTGRESQL inventory table</p>
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.cache">
+<code class="descname">cache</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.data">
+<code class="descname">data</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.datadir">
+<code class="descname">datadir</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.datadir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.dataset">
+<code class="descname">dataset</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.dataset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.id">
+<code class="descname">id</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.lastupdate">
+<code class="descname">lastupdate</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.lastupdate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.owner">
+<code class="descname">owner</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.owner" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.pgfunc">
+<code class="descname">pgfunc</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.pgfunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.scheme">
+<code class="descname">scheme</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.updatefreq">
+<code class="descname">updatefreq</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.updatefreq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.InventTable.version">
+<code class="descname">version</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.db.inventory.Inventory">
+<em class="property">class </em><code class="descclassname">geoslurp.db.inventory.</code><code class="descname">Inventory</code><span class="sig-paren">(</span><em>geoslurpConn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/inventory.html#Inventory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.inventory.Inventory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which provides read/write access to the postgresql inventory table</p>
+<dl class="attribute">
+<dt id="geoslurp.db.inventory.Inventory.table">
+<code class="descname">table</code><a class="headerlink" href="#geoslurp.db.inventory.Inventory.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#geoslurp.db.inventory.InventTable" title="geoslurp.db.inventory.InventTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">InventTable</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="geoslurp-db-settings-module">
+<h2>geoslurp.db.settings module<a class="headerlink" href="#geoslurp-db-settings-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-db-tabletools-module">
+<h2>geoslurp.db.tabletools module<a class="headerlink" href="#geoslurp-db-tabletools-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="geoslurp.meta.html" class="btn btn-neutral float-right" title="geoslurp.meta package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="geoslurp.dataset.html" class="btn btn-neutral" title="geoslurp.dataset package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

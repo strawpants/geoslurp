@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.dataset package &mdash; geoslurp Under construction v1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="geoslurp.db package" href="geoslurp.db.html" />
+    <link rel="prev" title="geoslurp.datapull package" href="geoslurp.datapull.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation of postgis &amp; the module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../clitools.html">Command line tools</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="geoslurp.html">geoslurp package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="geoslurp.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="geoslurp.datapull.html">geoslurp.datapull package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">geoslurp.dataset package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-argo-module">geoslurp.dataset.Argo module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-csvbase-module">geoslurp.dataset.CSVBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-duacsgriddeddsets-module">geoslurp.dataset.DuacsGriddedDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-gracedsets-module">geoslurp.dataset.GRACEDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-gshhgdsets-module">geoslurp.dataset.GSHHGDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-ogrbase-module">geoslurp.dataset.OGRBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-psmsl-module">geoslurp.dataset.PSMSL module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-rgidsets-module">geoslurp.dataset.RGIDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-radsdsets-module">geoslurp.dataset.RadsDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-tugrazdsets-module">geoslurp.dataset.TUGRAZDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-datasetbase-module">geoslurp.dataset.dataSetBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-deg1n2-module">geoslurp.dataset.deg1n2 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-geodesyunr-module">geoslurp.dataset.geodesyunr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-icgemdsets-module">geoslurp.dataset.icgemDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-naturalearth-module">geoslurp.dataset.naturalearth module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geoslurp-dataset-wribasin-module">geoslurp.dataset.wribasin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="geoslurp.db.html">geoslurp.db package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoslurp.meta.html">geoslurp.meta package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="geoslurp.html#module-geoslurp">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="geoslurp.html">geoslurp package</a> &raquo;</li>
+        
+      <li>geoslurp.dataset package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/apigeoslurp/geoslurp.dataset.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="geoslurp-dataset-package">
+<h1>geoslurp.dataset package<a class="headerlink" href="#geoslurp-dataset-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-argo-module">
+<h2>geoslurp.dataset.Argo module<a class="headerlink" href="#geoslurp-dataset-argo-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-csvbase-module">
+<h2>geoslurp.dataset.CSVBase module<a class="headerlink" href="#geoslurp-dataset-csvbase-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-duacsgriddeddsets-module">
+<h2>geoslurp.dataset.DuacsGriddedDsets module<a class="headerlink" href="#geoslurp-dataset-duacsgriddeddsets-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-gracedsets-module">
+<h2>geoslurp.dataset.GRACEDsets module<a class="headerlink" href="#geoslurp-dataset-gracedsets-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-gshhgdsets-module">
+<h2>geoslurp.dataset.GSHHGDsets module<a class="headerlink" href="#geoslurp-dataset-gshhgdsets-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-ogrbase-module">
+<h2>geoslurp.dataset.OGRBase module<a class="headerlink" href="#geoslurp-dataset-ogrbase-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-psmsl-module">
+<h2>geoslurp.dataset.PSMSL module<a class="headerlink" href="#geoslurp-dataset-psmsl-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-rgidsets-module">
+<h2>geoslurp.dataset.RGIDsets module<a class="headerlink" href="#geoslurp-dataset-rgidsets-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-radsdsets-module">
+<h2>geoslurp.dataset.RadsDsets module<a class="headerlink" href="#geoslurp-dataset-radsdsets-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-tugrazdsets-module">
+<h2>geoslurp.dataset.TUGRAZDsets module<a class="headerlink" href="#geoslurp-dataset-tugrazdsets-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-datasetbase-module">
+<h2>geoslurp.dataset.dataSetBase module<a class="headerlink" href="#geoslurp-dataset-datasetbase-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-deg1n2-module">
+<h2>geoslurp.dataset.deg1n2 module<a class="headerlink" href="#geoslurp-dataset-deg1n2-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-geodesyunr-module">
+<h2>geoslurp.dataset.geodesyunr module<a class="headerlink" href="#geoslurp-dataset-geodesyunr-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-icgemdsets-module">
+<h2>geoslurp.dataset.icgemDsets module<a class="headerlink" href="#geoslurp-dataset-icgemdsets-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-naturalearth-module">
+<h2>geoslurp.dataset.naturalearth module<a class="headerlink" href="#geoslurp-dataset-naturalearth-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="geoslurp-dataset-wribasin-module">
+<h2>geoslurp.dataset.wribasin module<a class="headerlink" href="#geoslurp-dataset-wribasin-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="geoslurp.db.html" class="btn btn-neutral float-right" title="geoslurp.db package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="geoslurp.datapull.html" class="btn btn-neutral" title="geoslurp.datapull package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
