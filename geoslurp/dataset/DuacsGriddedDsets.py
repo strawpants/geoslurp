@@ -164,14 +164,25 @@ class Duacs(DataSet):
             self.updated.append(uri)
 
 
-    def register(self):
+    def register(self, since=None):
         """Register regional grids in the database"""
+
+        if since:
+            since=datetime.strptime(since,"%Y-%m-%d")
+            print(since)
+        else:
+            since=self._dbinvent.lastupdate
+
         #create a list of files which need to be (re)registered
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*nc',self._dbinvent.lastupdate)]
+            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*nc$',since)]
         newfiles=self.retainnewUris(files)
+
+        if not newfiles:
+            slurplogger().info("No new Duacs grids found, so nothing to update")
+            return
         #loop over files
         for uri in newfiles:
             meta=duacsMetaExtractor(uri)
