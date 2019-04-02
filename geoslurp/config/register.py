@@ -59,6 +59,9 @@ class DatasetRegister:
                 outdsets.append(ds)
         return outdsets
 
+    def getFuncs(self,conf):
+        """This is currently a stub (returns no functions)"""
+        return []
 #module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )
 geoslurpregistry=DatasetRegister()
 

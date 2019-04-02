@@ -28,6 +28,7 @@ from geoslurp.db import Settings
 from geoslurp.config.localsettings import readLocalSettings
 from geoslurp.config.register import geoslurpregistry
 import geoslurp.dataset
+import geoslurp.dbfunc
 import getpass
 import re
 
@@ -65,6 +66,7 @@ def main(argv):
         else:
             DbConn.addUser(args.add_user,passw1)
 
+
     #print registered datasets (i.e. tables)
     if args.info:
         slurpInvent=Inventory(DbConn)
@@ -98,8 +100,10 @@ def main(argv):
         conf.updateAuth(args.auth_config)
 
     datasets=geoslurpregistry.getDatasets(conf,args.dset)
-    if not datasets:
-        print("No valid datasets selected")
+    funcs=geoslurpregistry.getFuncs(args.func)
+
+    if not ( datasets or funcs ):
+        print("No valid datasets or functions selected")
         sys.exit(1)
 
     if args.list:
@@ -107,7 +111,11 @@ def main(argv):
         print("Available datasets (SCHEME.DATASET):")
         for ds in datasets:
             print("\t%s.%s"%(ds.scheme,ds.__name__))
-    
+        
+        print("Available functions (SCHEME.FUNCTION):")
+        for fn in funcs:
+            print("\t%s.%s"%(fn.scheme,fn.__name__))
+         
 
     if args.pull or args.update:
         if type(args.pull) == dict:
@@ -252,10 +260,12 @@ def addCommandLineArgs(parser):
         
         parser.add_argument('--cache-dir',type=str,metavar='DIR',nargs=1,
                 help="Specify (and register) a dataset specific cache directory DIR")
-        #also look for datasets 
+        #also look for datasets or functions  to manage
         parser.add_argument("-d","--dset",metavar="PATTERN",nargs="?",type=str,
                 help='Select datasets or all datasets in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.DATASET)')
 
+        parser.add_argument("-f","--func",metavar="PATTERN",nargs="?",type=str,
+                help='Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUCNTION)')
 
 
 def check_args(args,parser):

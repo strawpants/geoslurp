@@ -57,7 +57,7 @@ class GeoslurpConnector():
             self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s;"%(schema.lower()))
         else:
             self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION geoslurp;"%(schema.lower()))
-            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT ALL PRIVILEGES ON TABLES TO geoslurp;"%((schema.lower())))
+            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geoslurp;"%((schema.lower())))
             self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geoslurp;"%((schema.lower())))
 
     def schemaexists(self,name):
@@ -86,7 +86,7 @@ class GeoslurpConnector():
 
     def truncateTable(self,tablename,scheme=None):
         if scheme:
-            self.dbeng.execute("TRUNCATE TABLE %s.%s;"%(tablename,scheme))
+            self.dbeng.execute("TRUNCATE TABLE %s.%s;"%(scheme,tablename))
         else:
             self.dbeng.execute("TRUNCATE TABLE %s;"%(tablename))
 
