@@ -22,7 +22,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column,Integer,String
 from geoalchemy2.types import Geography
 from osgeo import ogr
-from geoalchemy2.elements import WKTElement
+from geoalchemy2.elements import WKBElement
 from geoslurp.datapull.http import Uri as http
 from datetime import datetime
 from zipfile import ZipFile
@@ -36,7 +36,7 @@ import os
 FrontsTBase=declarative_base(metadata=MetaData(schema='oceanobs'))
 
 
-geoLineStrType = Geography(geometry_type="LINESTRINGZ", srid='4326', spatial_index=True,dimension=3)
+geoLineStrType = Geography(geometry_type="MULTILINESTRINGZ", srid='4326', spatial_index=True,dimension=3)
 
 class OrsifrontsTable(FrontsTBase):
     """Defines the Orsifonts PostgreSQL table"""
@@ -51,15 +51,20 @@ def orsiMetaExtractor(uri):
     """extract table data from the files"""
     lookup={"stf":"Subtropical front", "saf":"Subantarctic front", "pf":"Polar front","saccf":"Southern Antarctic circumpolar current front", "sbdy":"Southern Boundary of the Antarctic circumpolar current"}
     abbr=os.path.basename(uri.url)[:-4]
-    geofront=ogr.Geometry(ogr.wkbLineString)
+    geofront=ogr.Geometry(ogr.wkbMultiLineString)
+    frontsegment=ogr.Geometry(ogr.wkbLineString)
     recomm=re.compile("^%")
     with open(uri.url,'r') as fid:
         for ln in fid:
             if recomm.search(ln):
+                #everytime we encounter a % we need to start a new segment and possibly update the multilinestring
+                if frontsegment.GetPointCount() > 1:
+                    geofront.AddGeometry(frontsegment)
+                frontsegment=ogr.Geometry(ogr.wkbLineString)
                 continue
             lonlat=ln.split()
-            geofront.AddPoint(float(lonlat[0]),float(lonlat[1]),0)
-    meta={"acronym":abbr,"name":lookup[abbr],"geom":WKTElement(geofront.ExportToWkt(),srid=4326)}
+            frontsegment.AddPoint(float(lonlat[0]),float(lonlat[1]),0)
+    meta={"acronym":abbr,"name":lookup[abbr],"geom":WKBElement(geofront.ExportToIsoWkb(),srid=4326)}
     return meta
 
 
