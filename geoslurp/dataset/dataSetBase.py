@@ -60,7 +60,11 @@ class DataSet(ABC):
     db=None
     version=(0,0,0)
     updatefreq=None
+    commitperN=500
     def __init__(self,dbcon):
+        if re.search("TEMPLATE",".".join([self.scheme,self.__class__.__name__])):
+            raise RuntimeError("Refusing to instantiate templated dataset")
+
         self.name=self.__class__.__name__.lower().replace('-',"_")
         self.db=dbcon
 
@@ -101,7 +105,7 @@ class DataSet(ABC):
         if self._dbinvent.datadir:
             return getCreateDir(self._dbinvent.datadir)
         #else try to retrieve the standard path from the configuration
-        return self.conf.getDir(self.scheme, 'DataDir', dataset=self.__class__.__name__,subdirs=subdirs)
+        return self.conf.getDir(self.scheme, 'DataDir', dataset=self.name,subdirs=subdirs)
     
     def setDataDir(self,ddir):
         self._dbinvent.datadir=ddir
@@ -112,7 +116,7 @@ class DataSet(ABC):
         if self._dbinvent.cache:
             return getCreateDir(self._dbinvent.cache)
 
-        return self.conf.getDir(self.scheme, 'CacheDir', dataset=self.__class__.__name__,subdirs=subdirs)
+        return self.conf.getDir(self.scheme, 'CacheDir', dataset=self.name,subdirs=subdirs)
     
     def setCacheDir(self,cdir):
         self._dbinvent.cachedir=cdir
@@ -186,7 +190,7 @@ class DataSet(ABC):
             entry=tmptable(uri=uri.url,lastmod=uri.lastmod)
             self._ses.add(entry)
             count+=1
-            if count > 100:
+            if count > self.commitperN:
                 self._ses.commit()
                 count=0
 
@@ -241,7 +245,7 @@ class DataSet(ABC):
 
         self._ses.add(entry)
 
-        if self.commitCounter > 10:
+        if self.commitCounter > self.commitperN:
             # commit every so many rows
             self._ses.commit()
             self.commitCounter=0

@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 import re
-
+import sys
 class DatasetRegister:
     #holds dataset classes (not initiated!)
     __dsets__=[]
@@ -43,6 +43,15 @@ class DatasetRegister:
 
     def getDatasets(self,conf,regex=None):
         """retrieves a list of dataset classes possibly obeying a certain regex"""
+
+        #dynamically import relevant datasets
+        modgeo=__import__("geoslurp.dataset")
+
+        if 'userplugins' in conf.userentry.conf:
+            sys.path.append(conf["userplugins"])
+            mod=__import__("userplugins")
+
+
         if conf:
             #also load the dynamic factory-based datasets
             self.load(conf)
@@ -55,13 +64,26 @@ class DatasetRegister:
         outdsets=[]
         regexcomp=re.compile(regex)
         for ds in self.__dsets__:
-            if regexcomp.search(ds.__name__):
+            # note classes which have "TEMPLATE" in their name are treated special
+            if re.search("TEMPLATE",".".join([ds.scheme,ds.__name__])):
+                #reverse the search: turn the TEMPLATE into a regex and assume the regex is a fully qualified name for the class 
+                srch=re.sub("TEMPLATE","([^\\\s]+)","\.".join([ds.scheme,ds.__name__]))
+                if re.search(srch,regex):
+                    #dynamically derive a class from the  template
+                    splt=regex.split(".")
+                    if len(splt) is not 2:
+                        raise NameError("For template datasets a fully qualified sccheme and name must be provided (scheme.dataset)")
+                    
+                    outdsets.append(type(splt[1],(ds,),{"scheme":splt[0]}))
+
+            elif regexcomp.search(".".join([ds.scheme,ds.__name__])):
                 outdsets.append(ds)
         return outdsets
 
     def getFuncs(self,conf):
         """This is currently a stub (returns no functions)"""
         return []
+
 #module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )
 geoslurpregistry=DatasetRegister()
 

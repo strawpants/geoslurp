@@ -213,7 +213,6 @@ class RadsBase(DataSet):
             return
 
         for uri in newfiles:
-            base=os.path.basename(uri.url)
             meta=radsMetaDataExtractor(uri)
             if not meta:
                #don't register empty entries

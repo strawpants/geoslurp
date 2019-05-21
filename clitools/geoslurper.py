@@ -27,8 +27,6 @@ import logging
 from geoslurp.db import Settings
 from geoslurp.config.localsettings import readLocalSettings
 from geoslurp.config.register import geoslurpregistry
-import geoslurp.dataset
-import geoslurp.dbfunc
 import getpass
 import re
 
@@ -70,7 +68,7 @@ def main(argv):
     #print registered datasets (i.e. tables)
     if args.info:
         slurpInvent=Inventory(DbConn)
-        print("Registered datasets (scheme.dataseti, owner, lastupdate):")
+        print("Registered datasets (scheme.dataset, owner, lastupdate):")
         if args.dset:
             #print a summary of the inventory
             dsetpat=re.compile(args.dset)
@@ -91,6 +89,9 @@ def main(argv):
     if args.config:
         #register user settings in the database
         conf.update(args.config)
+
+    if args.show_config:
+        conf.show()
 
     if args.admin_config:
         #register admin/default settings in the database
@@ -225,6 +226,9 @@ def addCommandLineArgs(parser):
 
         parser.add_argument("--config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register user settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
+
+
+        parser.add_argument("--show-config",action='store_true', help="Show user configurations as stored in the database")
 
 
         parser.add_argument("--auth-config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,

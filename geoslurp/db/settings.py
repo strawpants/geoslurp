@@ -27,7 +27,8 @@ from Crypto import Random
 import json
 import os
 from collections import namedtuple
-
+from geoslurp.config.slurplogger import slurplogger
+import sys
 def getCreateDir(returndir):
     """creates a directory when not existent and return it"""
     if not os.path.exists(returndir):
@@ -74,6 +75,9 @@ class Settings():
             self.ses.commit()
 
         self.decryptAuth()
+
+        # self.loaduserplugins()
+
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
     def __getitem__(self, key):
         return self.userentry.conf[key]
@@ -88,6 +92,9 @@ class Settings():
     def setdefault(self,key,val):
         self.userentry.conf[key]=val
 
+    def show(self):
+        """Show the loaded user configuration"""
+        print(self.userentry.conf)
 
     def authCred(self,service):
         """obtains username credentials for a certain service
@@ -105,7 +112,18 @@ class Settings():
         """Update the conf dictionary in postgresql settings table"""
         if indict:
             if self.userentry.conf:
-                self.userentry.conf.update(indict)
+                # check for none values and delete those entries
+                for ky,val in indict.items():
+                    if val == 'None':
+                        try:
+                            del self.userentry.conf[ky]
+                        except KeyError:
+                            slurplogger().warning("Cannot find key: %s in user configuration, ignoring.."%(ky))
+                            pass
+                    else:
+                        self.userentry.conf[ky]=val
+
+                # self.userentry.conf.update(indict)
             else:
                 self.userentry.conf=indict
 
@@ -189,3 +207,5 @@ class Settings():
             dirpath=getCreateDir(os.path.join(dirpath,subdirs))
 
         return dirpath
+
+
