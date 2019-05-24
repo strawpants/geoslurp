@@ -2,3 +2,4 @@
  constructed by other users (unless they forcefully remove 'select' privileges themselves)*/
 CREATE ROLE geoslurp;
 GRANT CREATE ON DATABASE geoslurp TO geoslurp;
+ALTER DATABASE geoslurp SET postgis.gdal_enabled_drivers TO 'ENABLE_ALL';

@@ -23,11 +23,13 @@ import re
 from geoslurp.db import Inventory,Settings
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
-from sqlalchemy import Column,Integer,String
+from sqlalchemy import Table,Column,Integer,String
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from geoslurp.datapull import UriFile
 from sqlalchemy import and_
 from geoslurp.db.settings import getCreateDir
+from geoslurp.db import tableMapFactory
+
 
 def rmfilterdir(ddir,filter='*'):
     """Remove directories and files based on a certain regex filter"""
@@ -257,6 +259,22 @@ class DataSet(ABC):
     def truncateTable(self):
         """Truncate all entries in a table"""
         self.db.truncateTable(self.name,self.scheme.lower())
+
+    def createTable(self,cols=None):
+        """dynamically creates a table (when it does not exists) from a list of colums"""
+        if self.table == None:
+            if cols == None:
+                raise RuntimeError("Creating a dynamic table requires the specification of columns")
+            self.table=Table(self.name, self.db.mdata, *cols, schema=self.scheme)
+            self.table.create(checkfirst=True)
+            tableMap=tableMapFactory(self.name,self.table)
+            self.table=tableMap
+        else:
+            if cols != None:
+                raise RuntimeError("Cannot create static table from dynamic columns ")
+            self.table.__table__.create(self.db.dbeng,checkfirst=True)
+
+
 
     def migrate(self,version):
         """Properly migrate a table between software versions

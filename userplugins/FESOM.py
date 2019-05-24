@@ -139,7 +139,7 @@ class FESOMverticesBase(DataSet):
         super().__init__(dbcon)
         #setup table type
         self.table=type(self.name+"Table",(FesomVertTBase,),{})
-        self.table.__table__.create(self.db.dbeng,checkfirst=True)
+        self.createTable()
 
     def pull(self):
         """No pulling functionality is incorporated"""
@@ -246,7 +246,6 @@ class FESOMRunBase(DataSet):
         newfiles=self.retainnewUris([UriFile(file) for file in findFiles(rundir,pattern)])
 
         for uri in newfiles:
-            base=os.path.basename(uri.url)
             meta=FESOMMetaExtractor(uri)
             if not meta:
                 #don't register empty entries

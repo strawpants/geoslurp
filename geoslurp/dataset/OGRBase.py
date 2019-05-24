@@ -16,16 +16,16 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataset.dataSetBase import DataSet
-from osgeo import gdal
+from osgeo import gdal,osr
 from geoslurp.config.slurplogger import slurplogger
-from geoalchemy2 import WKBElement,Geography
-from sqlalchemy import Table,Column, Integer, String, Float
+from geoalchemy2 import WKBElement,Geography,Geometry
+from sqlalchemy import Table,Column, Integer, String, Float, BigInteger,Date
 from geoslurp.db import tableMapFactory
 import re
 
-def columnsFromOgrFeat(feat, spatindex=True, forceGType=None):
+def columnsFromOgrFeat(feat, spatindex=True, forceGType=None,targetsrid=4326):
     """Returns a list of columns from a osgeo feature"""
-    gisMap = {'String': String, 'Integer': Integer, 'Real': Float, 'Float': Float}
+    gisMap = {'String': String, 'Integer': Integer, 'Real': Float, 'Float': Float, 'Integer64':BigInteger, "Date":Date}
     df = feat.GetDefnRef()
     cols = [Column('id', Integer, primary_key=True)]
     for i in range(feat.GetFieldCount()):
@@ -41,11 +41,15 @@ def columnsFromOgrFeat(feat, spatindex=True, forceGType=None):
         gType = forceGType
     else:
         gType = feat.geometry().GetGeometryName()
-    geomtype = Geography(gType, srid='4326', spatial_index=spatindex)
+    if targetsrid == 4326:
+        geomtype = Geography(gType, srid=targetsrid, spatial_index=spatindex)
+    else:
+        geomtype = Geometry(gType, srid=targetsrid, spatial_index=spatindex)
+
     cols.append(Column('geom', geomtype))
     return cols
 
-def valuesFromOgrFeat(feat, encoding='iso-8859-1'):
+def valuesFromOgrFeat(feat, encoding='iso-8859-1',transform=None,targetsrid=4326):
     """Returns a dictionary with loaded values from a feature"""
     df=feat.GetDefnRef()
 
@@ -63,7 +67,13 @@ def valuesFromOgrFeat(feat, encoding='iso-8859-1'):
             vals[name.lower()]=feat.GetField(i)
 
     #append geometry values
-    vals['geom']=WKBElement(feat.geometry().ExportToWkb(),srid=4326)
+    if transform:
+        transformed=feat.GetGeometryRef()
+        transformed.Transform(transform)
+        vals['geom']=WKBElement(transformed.ExportToWkb(),srid=targetsrid)
+    else:
+        vals['geom']=WKBElement(feat.geometry().ExportToWkb(),srid=targetsrid)
+
     return vals
 
 class OGRBase(DataSet):
@@ -73,9 +83,15 @@ class OGRBase(DataSet):
     ogrfile=None
     encoding='iso-8859-1' #default for shapefiles
     layerregex=None
+    targetprj=None
+    targetsrid=4326
     def __init__(self,dbconn):
         super().__init__(dbconn)
-    
+        #set default target projection if not explicitly set
+        if not self.targetprj:
+            self.targetprj = osr.SpatialReference()
+            self.targetprj.ImportFromEPSG(self.targetsrid)
+
     def register(self):
         """Update/populate a database table (creates one if it doesn't exist)
         This function reads a shapefile and puts it in a single table.
@@ -98,16 +114,18 @@ class OGRBase(DataSet):
             if self.layerregex:
                 if not re.search(self.layerregex,shpflayer.GetName()):
                     continue
+            sourceprj = shpflayer.GetSpatialRef()
+            if sourceprj.IsSame(self.targetprj):
+                transform=None
+            else:
+                transform = osr.CoordinateTransformation(sourceprj, self.targetprj)
+
             for feat in shpflayer:
                 count+=1
-                #we need to make a temporary clone here as osgeo will cause a segfault otherwise
                 if self.table == None:
-                    cols=columnsFromOgrFeat(feat,forceGType=self.gtype)
-                    self.table=Table(self.name, self.db.mdata, *cols, schema=self.scheme)
-                    self.table.create(checkfirst=True)
-                    tableMap=tableMapFactory(self.name,self.table)
-                    self.table=tableMap
-                values=valuesFromOgrFeat(feat,self.encoding)
+                    cols=columnsFromOgrFeat(feat,forceGType=self.gtype,targetsrid=self.targetsrid)
+                    self.createTable(cols)
+                values=valuesFromOgrFeat(feat,self.encoding,transform,self.targetsrid)
                 try:
                     self.addEntry(values)
                 except:
