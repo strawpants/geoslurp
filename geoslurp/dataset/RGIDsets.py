@@ -147,7 +147,7 @@ def getRGIDsets(conf):
     out=[]
     regionnames=['01_rgi60_Alaska', '02_rgi60_WesternCanadaUS', '03_rgi60_ArcticCanadaNorth',
                '04_rgi60_ArcticCanadaSouth', '05_rgi60_GreenlandPeriphery', '06_rgi60_Iceland',
-               '07_rgi60_Svalbard', '08_rgi60_Scandinavia', '09_rgi60_RussianArctic', '11_rgi60_CentralEurope',
+               '07_rgi60_Svalbard', '08_rgi60_Scandinavia', '09_rgi60_RussianArctic','10_rgi60_NorthAsia', '11_rgi60_CentralEurope',
                '12_rgi60_CaucasusMiddleEast', '13_rgi60_CentralAsia', '14_rgi60_SouthAsiaWest',
                '15_rgi60_SouthAsiaEast', '16_rgi60_LowLatitudes', '17_rgi60_SouthernAndes',
                '18_rgi60_NewZealand', '19_rgi60_AntarcticSubantarctic']
