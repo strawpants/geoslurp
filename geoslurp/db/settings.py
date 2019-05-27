@@ -76,6 +76,8 @@ class Settings():
 
         self.decryptAuth()
 
+        if not self.userentry.conf:
+            self.userentry.conf={}
         # self.loaduserplugins()
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items

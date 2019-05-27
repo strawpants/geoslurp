@@ -21,3 +21,6 @@ import logging
 # geoslurp wide logger
 def slurplogger():
     return logging.getLogger("Geoslurp")
+
+def debugging():
+    return slurplogger().getEffectiveLevel() == logging.DEBUG

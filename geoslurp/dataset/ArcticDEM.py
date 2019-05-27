@@ -16,29 +16,30 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 
 
-from geoslurp.dataset import OGRBase, DataSet
+from geoslurp.dataset.OGRBase import OGRBase
+from geoslurp.dataset.RasterBase import RasterBase
 from geoslurp.datapull.http import Uri as http
 from datetime import datetime
 import os
 from zipfile import ZipFile
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.config.register import geoslurpregistry
-from geoalchemy2.types import Raster
-from sqlalchemy.ext.declarative import declared_attr, as_declarative
-from sqlalchemy import Column, Integer, String, MetaData
-from geoslurp.datapull import findFiles
-from geoslurp.datapull.uri import UriFile
+# from geoalchemy2.types import Raster
+# from sqlalchemy.ext.declarative import declared_attr, as_declarative
+# from sqlalchemy import Column, Integer, String, MetaData
+# from geoslurp.datapull import findFiles
+# from geoslurp.datapull.uri import UriFile
 from sqlalchemy import func
 
-@as_declarative(metadata=MetaData(schema='dem'))
-class ArcticRasterTBase(object):
-    @declared_attr
-    def __tablename__(cls):
-        #strip of the 'Table' from the class name
-        return cls.__name__[:-5].lower()
-    id = Column(Integer, primary_key=True)
-    tile=Column(String)
-    rast=Column(Raster)
+# @as_declarative(metadata=MetaData(schema='dem'))
+# class ArcticRasterTBase(object):
+#     @declared_attr
+#     def __tablename__(cls):
+#         #strip of the 'Table' from the class name
+#         return cls.__name__[:-5].lower()
+#     id = Column(Integer, primary_key=True)
+#     tile=Column(String)
+#     rast=Column(Raster)
 
 class Arcticdemindex(OGRBase):
     scheme='dem'
@@ -70,54 +71,36 @@ class Arcticdemindex(OGRBase):
 
 
 def ArcticDEMMetaExtractor(uri):
+    slurplogger().info("Extracting info from raster: %s"%(uri.url))
     with open(uri.url,'rb') as fid:
         fbytes=fid.read()
     meta={"rast":func.ST_FromGDALRaster(fbytes)}
     return meta
 
-class ArcticDemRasterBase(DataSet):
+class ArcticDemRasterBase(RasterBase):
     """"Base class to download/register Arctic DEM Tiff rasters"""
     scheme="dem"
     res=None
-    tiled=False
     rasterfile=None
+    rastregex = '.*\.tif$'
+    srid=3413
+
     def __init__(self,dbconn):
         super().__init__(dbconn)
-        self.table=type(self.name+"Table",(ArcticRasterTBase,),{})
-        self.createTable()
         self.rasterfile="arcticdem_mosaic_"+self.res+"_v3.0.tif"
+        self._dbinvent.data["Description"]="ArcticDEM raster table"
 
     def pull(self):
-
-        downloaddir=self.cacheDir()
-        if not self.tiled:
-            # download the entire mosaic domain in one tif
-            rasteruri=http("http://data.pgc.umn.edu/elev/dem/setsm/ArcticDEM/mosaic/v3.0/"+self.res+"/"+self.rasterfile,lastmod=datetime(2018,9,26))
-            rasterfileuri,upd=rasteruri.download(downloaddir,check=False)
-
-    def register(self):
-        if not self.tiled:
-            #just one row (one tif
-            newfiles=[UriFile(file) for file in findFiles(self.cacheDir(),".*tif")]
-        
-        for uri in newfiles:
-            meta=ArcticDEMMetaExtractor(uri)
-            if not meta:
-                #don't register empty entries
-                continue
-            self.addEntry(meta)
-
-
-
-        self._dbinvent.data["Description"]="ArcticDEM raster table"
-        self.updateInvent()
-
+        # download the entire mosaic domain in one tif
+        rasteruri=http("http://data.pgc.umn.edu/elev/dem/setsm/ArcticDEM/mosaic/v3.0/"+self.res+"/"+self.rasterfile,lastmod=datetime(2018,9,26))
+        rasterfileuri,upd=rasteruri.download(self.srcdir,check=False)
 
 
 def getArcticDems(conf):
     out=[]
     for res in ['1km', '500m', '100m']:
-        out.append(type("arcticdem_mosaic_"+res+"_v3", (ArcticDemRasterBase,), {"res":res}))
+        out.append(type("arcticdem_mosaic_"+res+"_v3", (ArcticDemRasterBase,), {"res":res,"tiles":[100,100]}))
+        # out.append(type("arcticdem_mosaic_"+res+"_v3", (ArcticDemRasterBase,), {"res":res}))
 
     return out
 

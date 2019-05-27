@@ -274,6 +274,8 @@ class DataSet(ABC):
                 raise RuntimeError("Cannot create static table from dynamic columns ")
             self.table.__table__.create(self.db.dbeng,checkfirst=True)
 
+        self._ses.bind_table(self.table,self._ses.get_bind())
+        self._ses.commit()
 
 
     def migrate(self,version):

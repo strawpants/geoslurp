@@ -78,6 +78,8 @@ def readLocalSettings(args):
             args.password=keyring.get_password("geoslurp",args.user)
             if not args.password:
                 args.password=getpass.getpass(prompt='Please enter password: ')
+                # also set password when it is not yer registered
+                keyring.set_password("geoslurp",args.user,args.password)
         else:
             #try checking the environment variable GEOSLURP_PGPASS
             try:

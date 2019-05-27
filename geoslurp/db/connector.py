@@ -24,7 +24,7 @@ from geoslurp.db.initgeoslurpdb import initgeoslurpdb
 from geoslurp.db.tabletools import tableMapFactory
 import re
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from geoslurp.config.slurplogger import  slurplogger
+from geoslurp.config.slurplogger import  slurplogger, debugging
 
 class GeoslurpConnector():
     """Holds a connector to a geoslurp database"""
@@ -38,8 +38,10 @@ class GeoslurpConnector():
         self.user=user
         self.passw=passwd
         self.host=host
+        echo=debugging()
         dburl="postgresql+psycopg2://"+user+":"+passwd+"@"+host+"/geoslurp"
-        self.dbeng = create_engine(dburl, echo=False)
+        self.dbeng = create_engine(dburl, echo=echo)
+        # self.conn=self.dbeng.connect()
         self.Session = sessionmaker(bind=self.dbeng)
         self.mdata = MetaData(bind=self.dbeng)
         initgeoslurpdb(self)
@@ -66,7 +68,7 @@ class GeoslurpConnector():
     def dropSchema(self, schema, cascade=False):
         self.dbeng.execute(DropSchema(schema.lower(), cascade=cascade))
 
-    def createTable(self, tablename,columns,scheme=None,temporary=False,truncate=False):
+    def createTable(self, tablename,columns,scheme=None,temporary=False,truncate=False,session=None):
         """Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper"""
 
         if truncate:
@@ -79,8 +81,12 @@ class GeoslurpConnector():
                 table = Table(tablename, self.mdata, *columns, prefixes=['TEMPORARY'],postgresql_on_commit='PRESERVE ROWS')
             else:
                 table = Table(tablename, self.mdata, *columns, schema=scheme)
-            
-            table.create(bind=self.dbeng,checkfirst=True)
+
+            if session:
+                table.create(bind=session.get_bind(),checkfirst=True)
+                session.commit()
+            else:
+                table.create(bind=self.dbeng,checkfirst=True)
 
         return tableMapFactory(tablename, table)
 
