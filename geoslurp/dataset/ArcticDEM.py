@@ -90,10 +90,13 @@ class ArcticDemRasterBase(RasterBase):
         self.rasterfile="arcticdem_mosaic_"+self.res+"_v3.0.tif"
         self._dbinvent.data["Description"]="ArcticDEM raster table"
 
-    def pull(self):
+    def pull(self, intersect=None):
         # download the entire mosaic domain in one tif
-        rasteruri=http("http://data.pgc.umn.edu/elev/dem/setsm/ArcticDEM/mosaic/v3.0/"+self.res+"/"+self.rasterfile,lastmod=datetime(2018,9,26))
-        rasterfileuri,upd=rasteruri.download(self.srcdir,check=False)
+        if self.res in ['1km','500m','100m']:
+            rasteruri=http("http://data.pgc.umn.edu/elev/dem/setsm/ArcticDEM/mosaic/v3.0/"+self.res+"/"+self.rasterfile,lastmod=datetime(2018,9,26))
+            rasterfileuri,upd=rasteruri.download(self.srcdir,check=False)
+
+        #download only those tiles which are needed
 
 
 def getArcticDems(conf):

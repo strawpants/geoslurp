@@ -62,18 +62,24 @@ class RasterBase(DataSet):
             if len(newfiles) != 1:
                 raise RuntimeError("Don't know how to tile multiple input rasters")
             #possibly create a temporary table for storing the complete raster
-            tmptable=self.db.createTable("tmp_raster",[Column("id",Integer,primary_key=True),Column("rast",Raster(spatial_index=False))],temporary=True,session=self._ses)
+            # we need to get a session which is bound to a single transaction unit so we can make use of temporay tables
+            trans,ses=self.db.transsession()
+
+            tmptable=self.db.createTable("tmp_raster",[Column("id",Integer,primary_key=True),Column("rast",Raster(spatial_index=False))],temporary=True,bind=ses.get_bind())
             meta=self.rastExtract(newfiles[0])
             entry=tmptable(rast=meta["rast"])
-            self._ses.add(entry)
-            self.createTable(self.columns())
-            # setup the new table from the tiles
+            ses.add(entry)
+            # create the table but bind it to this session
+            self.createTable(self.columns(),session=ses)
+            # fill the new table from the tiles
             qry=select([func.ST_Tile(tmptable.rast,self.tiles[0],self.tiles[1]).label('rast')])
-            self._ses.execute(self.table.__table__.insert().from_select(['rast'],qry))
+            ses.execute(self.table.__table__.insert().from_select(['rast'],qry))
             del meta["rast"]
             #also set the other column data
             if meta:
-                self._ses.execute(self.table.__table__.update().values(**meta))
+                ses.execute(self.table.__table__.update().values(**meta))
+            #submit transaction
+            trans.commit()
         else:
 
             for uri in newfiles:
@@ -87,8 +93,13 @@ class RasterBase(DataSet):
                     self.createTable(self.columns())
 
                 self.addEntry(meta)
-        self._ses.commit()
+            self._ses.commit()
 
+        #fix the srid
+        if self.srid:
+            self._ses.execute(
+                text("select UpdateRasterSRID('%s'::name,'%s'::name,'rast'::name,%d)"%(self.scheme,self.name,self.srid))
+            )
 
         #add/compute raster constraints
         self._ses.execute(
@@ -99,11 +110,6 @@ class RasterBase(DataSet):
                 text("select AddRasterConstraints('%s'::name,'%s'::name,'rast'::name,'regular_blocking')"%(self.scheme,self.name))
             )
 
-        #fix the srid
-        if self.srid:
-            self._ses.execute(
-                text("select UpdateRasterSRID('%s'::name,'%s'::name,'rast'::name,%d)"%(self.scheme,self.name,self.srid))
-            )
 
         self.updateInvent()
 

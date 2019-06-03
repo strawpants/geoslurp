@@ -18,7 +18,6 @@
 from geoslurp.dataset.dataSetBase import DataSet
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.config.register import geoslurpregistry
-from pyfesom.load_mesh_data import fesom_mesh
 
 from sqlalchemy.ext.declarative import declared_attr, as_declarative
 from sqlalchemy import MetaData
@@ -146,6 +145,8 @@ class FESOMverticesBase(DataSet):
         pass
 
     def register(self,meshdir=None):
+        #only load when needed
+        from pyfesom.load_mesh_data import fesom_mesh
         if not meshdir:
             raise RuntimeError("A meshdirectory needs to be supplied when registering this dataset")
 

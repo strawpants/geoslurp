@@ -260,7 +260,7 @@ class DataSet(ABC):
         """Truncate all entries in a table"""
         self.db.truncateTable(self.name,self.scheme.lower())
 
-    def createTable(self,cols=None):
+    def createTable(self,cols=None,session=None):
         """dynamically creates a table (when it does not exists) from a list of colums"""
         if self.table == None:
             if cols == None:
@@ -274,8 +274,10 @@ class DataSet(ABC):
                 raise RuntimeError("Cannot create static table from dynamic columns ")
             self.table.__table__.create(self.db.dbeng,checkfirst=True)
 
-        self._ses.bind_table(self.table,self._ses.get_bind())
-        self._ses.commit()
+        if session:
+            # bind the table to a specific session
+            session.bind_table(self.table,session.get_bind())
+            session.commit()
 
 
     def migrate(self,version):

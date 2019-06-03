@@ -46,6 +46,11 @@ class GeoslurpConnector():
         self.mdata = MetaData(bind=self.dbeng)
         initgeoslurpdb(self)
 
+    def transsession(self):
+        """Retrieve a  session which is bound to a connection rather than an engine (e.g. useful for temporary tables)"""
+        conn=self.dbeng.connect()
+        trans=conn.begin()
+        return trans,self.Session(bind=conn)
 
     def vacuumAnalyze(self, tableName, schema):
         """vacuum and analyze a certain table"""
@@ -68,25 +73,28 @@ class GeoslurpConnector():
     def dropSchema(self, schema, cascade=False):
         self.dbeng.execute(DropSchema(schema.lower(), cascade=cascade))
 
-    def createTable(self, tablename,columns,scheme=None,temporary=False,truncate=False,session=None):
+    def createTable(self, tablename,columns,scheme=None,temporary=False,truncate=False,bind=None):
         """Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper"""
+
+        if bind:
+            mdata=MetaData(bind=bind)
+        else:
+            bind=self.dbeng
+            mdata=self.mdata
+
 
         if truncate:
             self.truncateTable(tablename,scheme)
 
-        if tablename in self.mdata.tables:
-            table=self.mdata.tables[tablename]
+        if tablename in mdata.tables:
+            table=mdata.tables[tablename]
         else:
             if temporary:
-                table = Table(tablename, self.mdata, *columns, prefixes=['TEMPORARY'],postgresql_on_commit='PRESERVE ROWS')
+                table = Table(tablename, mdata, *columns, prefixes=['TEMPORARY'],postgresql_on_commit='PRESERVE ROWS')
             else:
-                table = Table(tablename, self.mdata, *columns, schema=scheme)
+                table = Table(tablename, mdata, *columns, schema=scheme)
 
-            if session:
-                table.create(bind=session.get_bind(),checkfirst=True)
-                session.commit()
-            else:
-                table.create(bind=self.dbeng,checkfirst=True)
+            table.create(bind=bind,checkfirst=True)
 
         return tableMapFactory(tablename, table)
 
