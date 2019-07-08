@@ -71,8 +71,8 @@ def icgemMetaExtractor(uri):
         meta={"nmax":int(hdr["max_degree"]),
           "lastupdate":uri.lastmod,
           "format":"icgem",
-          "gm":float(hdr["earth_gravity_constant"]),
-          "re":float(hdr["radius"]),
+          "gm":float(hdr["earth_gravity_constant"].replace('D','E')),
+          "re":float(hdr["radius"].replace('D','E')),
           "uri":uri.url,
           "type":"GSM",
           "data":{"name":hdr["modelname"]}
