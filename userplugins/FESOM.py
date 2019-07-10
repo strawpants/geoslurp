@@ -84,13 +84,16 @@ def FESOMMetaExtractor(uri):
     """Extract meta information from a FESOM output file"""
     slurplogger().info("extracting data from %s"%(uri.url))
 
-    ncFESOM=ncDset(uri.url)
+    try:
+        ncFESOM=ncDset(uri.url)
+    except OSError:
+        slurplogger().error("Cannot open netcdf file, skipping")
+        return None
     tvar=ncFESOM["time"]
 
     if tvar.shape[0] == 0:
         #quick return 
         return None
-
     #parse time
     time=num2date(tvar[:], tvar.units)
     # try to estimate the time step fromt he median
@@ -169,7 +172,8 @@ class FESOMverticesBase(DataSet):
             point=None
 
         self._dbinvent.data["Description"]="FESOM mesh vertices with 0-based indecises for the surface layers"
-        self._dbinvent.data["meshdir"]=os.path.abspath(meshdir)
+        self.setDataDir(os.path.abspath(meshdir))
+        # self._dbinvent.data["meshdir"]=os.path.abspath(meshdir)
         self._dbinvent.data["zlevels"]=[zl for zl in mesh.zlevs]
         self.updateInvent()
 
@@ -193,6 +197,7 @@ class FESOMtinBase(DataSet):
 
         self.truncateTable()
 
+        from pyfesom.load_mesh_data import fesom_mesh
         #load mesh from directory
         mesh=fesom_mesh(meshdir)
         #get rif of the cyclic elements
@@ -218,7 +223,8 @@ class FESOMtinBase(DataSet):
             self.addEntry(meta)
 
         self._dbinvent.data["Description"]="FESOM mesh surface triangles with 0-based node indices"
-        self._dbinvent.data["meshdir"]=os.path.abspath(meshdir)
+        self.setDataDir(os.path.abspath(meshdir))
+        # self._dbinvent.data["meshdir"]=os.path.abspath(meshdir)
 
         self.updateInvent()
 
@@ -257,7 +263,7 @@ class FESOMRunBase(DataSet):
 
 
         self._dbinvent.data["Description"]="FESOM output data table"
-        self.setDataDir(rundir)
+        self.setDataDir(os.path.abspath(rundir))
         self._dbinvent.data["grid"]=self.grid
         self.updateInvent()
 

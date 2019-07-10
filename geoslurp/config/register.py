@@ -47,15 +47,16 @@ class DatasetRegister:
         #dynamically import relevant datasets
         modgeo=__import__("geoslurp.dataset")
 
-        if 'userplugins' in conf.userentry.conf:
-            sys.path.append(conf["userplugins"])
-            mod=__import__("userplugins")
 
 
         if conf:
+            if 'userplugins' in conf.userentry.conf:
+                sys.path.append(conf["userplugins"])
+                mod=__import__("userplugins")
+
             #also load the dynamic factory-based datasets
             self.load(conf)
-        
+
         if not regex:
             #just return everything
             return self.__dsets__

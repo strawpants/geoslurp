@@ -283,6 +283,7 @@ def check_args(args,parser):
         if not args.dset:
             parser.print_help()
         else:
+            #we need some info from the database
             datasets=geoslurpregistry.getDatasets(None,args.dset)
             for ds in datasets:
                 print("Detailed info on %s options which may be provided as JSON dictionaries"%(ds.__name__))
