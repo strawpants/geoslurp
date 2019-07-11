@@ -42,7 +42,7 @@ class GithubFilter():
 
 class Crawler(CrawlerBase):
     """Crawls a github repository fixed to a certain commit"""
-    def __init__(self, reponame,commitsha,filter=GithubFilter(),followfilt=GithubFilter({"type":"tree"}),oauthtoken=None):
+    def __init__(self, reponame,commitsha=None,filter=GithubFilter(),followfilt=GithubFilter({"type":"tree"}),oauthtoken=None):
         #construct the catalog url
         catalogurl="https://api.github.com/repos/"+reponame+"/git/trees/"+commitsha
         super().__init__(catalogurl)
