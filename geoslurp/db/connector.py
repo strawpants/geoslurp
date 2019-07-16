@@ -64,8 +64,8 @@ class GeoslurpConnector():
             self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s;"%(schema.lower()))
         else:
             self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION geoslurp;"%(schema.lower()))
-            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geoslurp;"%((schema.lower())))
-            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geoslurp;"%((schema.lower())))
+            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geobrowse,geoslurp;"%((schema.lower())))
+            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geobrowse,geoslurp;"%((schema.lower())))
 
     def schemaexists(self,name):
         return self.Session().query(exists(select([column("schema_name")]).select_from(text("information_schema.schemata")).where(text("schema_name = '%s'"%(name))))).scalar()
@@ -129,7 +129,11 @@ class GeoslurpConnector():
         #loop over entries of the TableContentGenerator
         pass
 
-    def addUser(self,name,passw):
+    def addUser(self,name,passw,readonly=False):
         """Adds a user to the database (note executing this functions requires appropriate database rights"""
         slurplogger().info("Adding new user: %s"%(name))
-        self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geoslurp;"%(name,passw))
+        if readonly:
+            self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geobrowse;"%(name,passw))
+        else:
+            self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geoslurp;"%(name,passw))
+

@@ -51,10 +51,10 @@ class Inventory:
         self._ses=self.db.Session()
 
         #creates the inventory table if it doesn't exists
-        # if not geoslurpConn.dbeng.has_table(self.table.__tablename__):
-            # GSBase.metadata.create_all(geoslurpConn.dbeng)
-            # #also grant geoslurp all privileges
-            # self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp'%(self.table.__tablename__))
+        if not geoslurpConn.dbeng.has_table(self.table.__tablename__):
+            GSBase.metadata.create_all(geoslurpConn.dbeng)
+            #also grant geoslurp all privileges
+            self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp'%(self.table.__tablename__))
 
 
     def __iter__(self):

@@ -55,14 +55,17 @@ def main(argv):
     # # Process common options
 
     #Add a new user
-    if args.add_user:
+    if args.add_user or args.add_readonly_user:
         passw1=getpass.getpass(prompt='Please enter new password: ')
         passwcheck=getpass.getpass(prompt='Reenter password: ')
         if passw1 != passwcheck:
             print("Passwords do not match, please try again")
             sys.exit(1)
         else:
-            DbConn.addUser(args.add_user,passw1)
+            if args.add_user and not args.add_readonly_user:
+                DbConn.addUser(args.add_user,passw1)
+            else:
+                DbConn.addUser(args.add_readonly_user,passw1,True)
 
 
     #print registered datasets (i.e. tables)
@@ -246,6 +249,9 @@ def addCommandLineArgs(parser):
 
         parser.add_argument("--add-user",metavar="username",type=str,
                             help='Add a new postgresql user (you will be prompted for a password)')
+        
+        parser.add_argument("--add-readonly-user",metavar="username",type=str,
+                            help='Add a new readonly postgresql user (you will be prompted for a password)')
 
 
         parser.add_argument("--password",metavar="password",type=str,

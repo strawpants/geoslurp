@@ -56,11 +56,11 @@ class Settings():
     def __init__(self,dbconn):
         self.db=dbconn
         self.ses=self.db.Session()
-        # #creates the settings table if it doesn't exists
-        # if not self.db.dbeng.has_table('settings'):
-        #     GSBase.metadata.create_all(self.db.dbeng)
-        #     #also grant geoslurp all privileges
-        #     self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp'%(self.table.__tablename__))
+        #creates the settings table if it doesn't exists
+        if not self.db.dbeng.has_table('settings'):
+            GSBase.metadata.create_all(self.db.dbeng)
+            #also grant geoslurp all privileges
+            self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
 
         #extract the default entry
         self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
