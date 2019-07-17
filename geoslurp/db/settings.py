@@ -61,9 +61,13 @@ class Settings():
             GSBase.metadata.create_all(self.db.dbeng)
             #also grant geoslurp all privileges
             self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
-
-        #extract the default entry
-        self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
+            #create a new default entry
+            self.defaultentry=self.table(user='default')
+            self.ses.add(self.defaultentry)
+            self.ses.commit()
+        else:
+            #extract the default entry
+            self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
 
         #retrieve/create a user entry
         try:
