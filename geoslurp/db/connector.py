@@ -64,6 +64,8 @@ class GeoslurpConnector():
             self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s;"%(schema.lower()))
         else:
             self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION geoslurp;"%(schema.lower()))
+            self.dbeng.execute("GRANT USAGE ON SCHEMA %s to geobrowse;"%((schema.lower())))
+
             self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geobrowse,geoslurp;"%((schema.lower())))
             self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geobrowse,geoslurp;"%((schema.lower())))
 

@@ -32,10 +32,13 @@ def initgeoslurpdb(conn):
 
     #create inventory table
     gsbinv.metadata.create_all(conn.dbeng)
-    conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp;'%(InventTable.__tablename__))
+    conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.inventory to geoslurp;')
+    conn.dbeng.execute('GRANT USAGE ON SEQUENCE admin.inventory_id_seq to geoslurp')
+    
     #create settings table
     gsbset.metadata.create_all(conn.dbeng)
-    conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp'%(SettingsTable.__tablename__))
+    conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
+    conn.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
 
     #create a 'default' entry in the settings table
     defaultentry=SettingsTable(user='default',conf={"CacheDir":"/tmp","DataDir":"${HOME}/geoslurpdata"})

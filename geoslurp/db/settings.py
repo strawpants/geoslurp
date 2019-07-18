@@ -57,18 +57,21 @@ class Settings():
         self.db=dbconn
         self.ses=self.db.Session()
         #creates the settings table if it doesn't exists
-        if not self.db.dbeng.has_table('settings'):
-            GSBase.metadata.create_all(self.db.dbeng)
-            #also grant geoslurp all privileges
-            self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
+        # if not self.db.dbeng.has_table('settings',schema='admin'):
+            # GSBase.metadata.create_all(self.db.dbeng)
+            # #also grant geoslurp all privileges
+            # #geoslurp users need to be able to add themselves to the admin.settings table
+            # self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
+            # self.db.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
+
+        try:
+            #extract the default entry
+            self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
+        except:
             #create a new default entry
             self.defaultentry=self.table(user='default')
             self.ses.add(self.defaultentry)
             self.ses.commit()
-        else:
-            #extract the default entry
-            self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
-
         #retrieve/create a user entry
         try:
             self.userentry=self.ses.query(self.table).filter(self.table.user == self.db.user).one()
