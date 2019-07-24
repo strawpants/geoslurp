@@ -85,7 +85,12 @@ def readLocalSettings(args):
             try:
                 args.password=os.environ["GEOSLURP_PGPASS"]
             except KeyError:
-                args.password=getpass.getpass(prompt='Please enter password: ')
+                #check for password in the lastused file (needs to be manually entered)
+                if "passwd" in lastOpts:
+                    args.password=lastOpts["passwd"]
+                else:
+                    #prompt for password
+                    args.password=getpass.getpass(prompt='Please enter password: ')
     else:
         #update keyring
         if args.usekeyring:

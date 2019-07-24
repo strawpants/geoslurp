@@ -31,9 +31,12 @@ from geoslurp.config.slurplogger import slurplogger
 import sys
 def getCreateDir(returndir):
     """creates a directory when not existent and return it"""
-    if not os.path.exists(returndir):
-        os.makedirs(returndir)
-    return returndir
+
+    #possibly expand environment variables in the string
+    returnex=os.path.expandvars(returndir)
+    if not os.path.exists(returnex):
+        os.makedirs(returnex)
+    return returnex
 
 Credentials=namedtuple("Credentials","user passw alias oauthtoken")
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
@@ -57,12 +60,12 @@ class Settings():
         self.db=dbconn
         self.ses=self.db.Session()
         #creates the settings table if it doesn't exists
-        # if not self.db.dbeng.has_table('settings',schema='admin'):
-            # GSBase.metadata.create_all(self.db.dbeng)
-            # #also grant geoslurp all privileges
-            # #geoslurp users need to be able to add themselves to the admin.settings table
-            # self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
-            # self.db.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
+        if not self.db.dbeng.has_table('settings',schema='admin'):
+            GSBase.metadata.create_all(self.db.dbeng)
+            #also grant geoslurp all privileges
+            #geoslurp users need to be able to add themselves to the admin.settings table
+            self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
+            self.db.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
 
         try:
             #extract the default entry
@@ -192,8 +195,7 @@ class Settings():
         else:
             #take the default
             ddir=self.defaultentry.conf[dirEntry]
-
-
+        
         dirpath=getCreateDir(os.path.join(ddir,scheme))
 
         #let's see if there is a specialized 'DataDir' entry for the dataset
