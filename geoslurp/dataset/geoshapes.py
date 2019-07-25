@@ -55,7 +55,8 @@ def getGeoshapesDsets(conf):
 
     #get the first entry (shoudl only be one)
     # import pdb;pdb.set_trace()
-    uri=http("https://raw.githubusercontent.com/strawpants/geoshapes/master/inventory.yaml").download(direc=cachedir,outfile=catalogfile)
+    if not os.path.exists(cachedCatalog):
+        uri=http("https://raw.githubusercontent.com/strawpants/geoshapes/master/inventory.yaml").download(direc=cachedir,outfile=catalogfile)
 
     with open(cachedCatalog,'r') as fid:
         catalog=yaml.safe_load(fid)

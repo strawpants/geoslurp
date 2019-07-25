@@ -114,7 +114,8 @@ class UriBase():
     lastmod=None
     auth=None #link to a certain authentification alias
     subdirs='' #create these subdrectories when downloading the file
-    def __init__(self,url,lastmod=None,auth=None,subdirs=''):
+    basedir=''
+    def __init__(self,url,lastmod=None,auth=None,subdirs='',basedir=''):
         self.url=url
         self.lastmod=lastmod
         self.auth=auth
