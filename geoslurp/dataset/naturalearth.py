@@ -19,6 +19,8 @@ from geoslurp.dataset.OGRBase import OGRBase
 from geoslurp.datapull.http import Uri as http
 from geoslurp.datapull.github import Crawler as ghCrawler
 from geoslurp.datapull.github import GithubFilter as ghfilter
+from geoslurp.datapull.github import cachedGithubCatalogue
+
 from geoslurp.config.register import geoslurpregistry
 import json
 from zipfile import ZipFile
@@ -31,7 +33,7 @@ class NaturalEarthBase(OGRBase):
     url=None
     path=None
     scheme='globalgis'
-    version=(0,0,0)
+    version=(4,1,0)
     def __init__(self,dbconn):
         super().__init__(dbconn)
         self.ogrfile=os.path.join(self.cacheDir(),os.path.basename(self.path))
@@ -48,39 +50,25 @@ def NaturalEarthClassFactory(clsName,catentry):
 
 def getNaturalEarthDsets(conf):
     """retrieves the available natural earth datasets"""
-    currentversion='v4.1.0' # note this correspond to a specific release (the sha hash is taken from the commit)
+    reponame="nvkelso/natural-earth-vector"
+    commitsha="bf7720b54dd9ac2d4d7f735174901b3862b5362a"
+    cachedir=conf.getDir("githubcache","CacheDir")
+    try:
+        cred=conf.authCred("github")
+        token=cred.oauthtoken
+    except:
+        token=None
+    # import pdb;pdb.set_trace() 
+    catalog=cachedGithubCatalogue(reponame,cachedir=cachedir,commitsha=commitsha,
+                       gfilter=ghfilter({"type":"blob","path":"\.geojson"}),
+                       gfollowfilter=ghfilter({"type":"tree","path":"geojson"}),
+                       ghtoken=token)
 
-    cachedCatalog=os.path.join(conf.getDir("NaturalEarth","CacheDir"),"naturalearthCatalog"+currentversion+".yaml")
-
-    if os.path.exists(cachedCatalog):
-        #read catalog from yaml file
-        with open(cachedCatalog, 'r') as fid:
-            catalog=yaml.safe_load(fid)
-    else:
-        #retrieve from github and store for later use
-        try:
-            cred=conf.authCred("github")
-            token=cred.oauthtoken
-        except:
-            token=None
-
-        crwl=ghCrawler("nvkelso/natural-earth-vector","bf7720b54dd9ac2d4d7f735174901b3862b5362a",
-                       filter=ghfilter({"type":"blob","path":"\.geojson"}),
-                       followfilt=ghfilter({"type":"tree","path":"geojson"}),
-                       oauthtoken=token)
-
-        catalog={"Description":"Natural Earth vector data catalog version: "+currentversion,"datasets":[]}
-        for item in crwl.treeitems(depth=2):
-            catalog["datasets"].append({"path":os.path.join(item["dirpath"],item["path"]),"url":item["url"]})
-
-        with open(cachedCatalog,'w') as fid:
-            yaml.dump(catalog,fid,default_flow_style=False)
     out=[]
     #create a list of datasets
     for entry in catalog["datasets"]:
         clsname=os.path.basename(entry["path"]).split(".")[0]
         out.append(NaturalEarthClassFactory(clsname,entry))
-
 
     return out
 

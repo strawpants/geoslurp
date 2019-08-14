@@ -89,7 +89,11 @@ class DataSet(ABC):
             self._ses.commit()
         #load user settings
         self.conf=Settings(self.db)
-
+        
+        #possibly create the table when explictily provided
+        # the table creation will be postponed when no explicit table is provided
+        if self.table:
+            self.createTable()
 
 
     def updateInvent(self,updateTime=True):

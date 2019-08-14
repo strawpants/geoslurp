@@ -19,6 +19,8 @@ import os
 import json
 from geoslurp.datapull import CrawlerBase
 from geoslurp.datapull.http import Uri as http
+import yaml
+from geoslurp.config.slurplogger import  slurplogger
 
 class GithubFilter():
     """Filter used for testing a certain dict element"""
@@ -37,14 +39,14 @@ class GithubFilter():
         return valid
 
 
-
-
-
 class Crawler(CrawlerBase):
     """Crawls a github repository fixed to a certain commit"""
     def __init__(self, reponame,commitsha=None,filter=GithubFilter(),followfilt=GithubFilter({"type":"tree"}),oauthtoken=None):
         #construct the catalog url
-        catalogurl="https://api.github.com/repos/"+reponame+"/git/trees/"+commitsha
+        if commitsha:
+            catalogurl="https://api.github.com/repos/"+reponame+"/git/trees/"+commitsha
+        else:
+            catalogurl="https://api.github.com/repos/"+reponame+"/git/trees"
         super().__init__(catalogurl)
         self.filter=filter
         self.followFilter=followfilt
@@ -58,8 +60,9 @@ class Crawler(CrawlerBase):
         return json.loads(http(url).buffer().getvalue())
 
     def uris(self,depth=10):
-        """retrieve all """
-        pass
+        """Construct Uris from tree nodes"""
+        for item in self.treeitems(depth=depth):
+            yield http(item["url"])    
         #add an additional elemet to keep track of the fullpath
         # for elem in self.treeitems(depth=depth):
         #     print(os.path.join(elem["dirpath"],elem['path']),elem['url'])
@@ -80,6 +83,7 @@ class Crawler(CrawlerBase):
         if not rootelem:
             rootelem=self.getSubTree(url=self.rooturl)
 
+        # import pdb;pdb.set_trace() 
         if not dirpath:
             dirpath=self.repo
 
@@ -89,7 +93,7 @@ class Crawler(CrawlerBase):
                 treelem["dirpath"]=dirpath
                 #modify url to link to a arw github file
 
-                treelem['url']="https://github.com/"+self.repo+"/raw/master/"+treelem['dirpath'].lstrip(self.repo)+"/"+treelem["path"]
+                treelem['url']="https://github.com/"+self.repo+"/raw/master"+treelem['dirpath'].replace(self.repo,"")+"/"+treelem["path"]
                 yield treelem
                 continue
 
@@ -97,3 +101,45 @@ class Crawler(CrawlerBase):
                 #recurse through subtree
                 subtree=self.getSubTree(treelem["url"])
                 yield from self.treeitems(subtree,depth,os.path.join(dirpath,treelem["path"]))
+
+def cachedGithubCatalogue(reponame,cachedir=".",commitsha=None,gfilter=GithubFilter(),gfollowfilter=GithubFilter({"type":"tree"}),depth=2,ghtoken=None):
+    """Caches the result of a github result for later reuse"""
+
+    cachedCatalog=os.path.join(cachedir,reponame.replace("/","_")+".yaml")
+    catalog={}
+    if os.path.exists(cachedCatalog):
+        #check whether the commit sha agrees when explicitly specified
+        if commitsha:
+            #read catalog from yaml file
+            with open(cachedCatalog, 'r') as fid:
+                catalog=yaml.safe_load(fid)
+            # import pdb;pdb.set_trace() 
+            if catalog["commitsha"] != commitsha:
+                #trigger a new download
+                catalog={}
+        else:
+            #always download a newer version
+            catalog={}
+
+    if catalog:
+        slurplogger().info("using cached github catalogue %s"%(cachedCatalog))
+    else:
+        slurplogger().info("downloading github catalogue to cache %s"%(cachedCatalog))
+        #retrieve from github and store for later use
+        crwl=Crawler(reponame,commitsha=commitsha,
+                       filter=gfilter,
+                       followfilt=gfollowfilter,
+                       oauthtoken=ghtoken)
+
+        catalog={"Description":"Cached github crawler results","rooturl":crwl.rooturl
+                ,"commitsha":commitsha,"datasets":[]}
+        # import pdb;pdb.set_trace()
+        for item in crwl.treeitems(depth=depth):
+            catalog["datasets"].append({"path":os.path.join(item["dirpath"],item["path"]),"url":item["url"]})
+        
+        #save the results to a cached file
+        with open(cachedCatalog,'w') as fid:
+            yaml.dump(catalog,fid,default_flow_style=False)
+    
+    return catalog
+

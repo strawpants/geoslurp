@@ -19,6 +19,7 @@ from geoslurp.dataset.OGRBase import OGRBase
 from geoslurp.datapull.http import Uri as http
 from geoslurp.datapull.github import Crawler as ghCrawler
 from geoslurp.datapull.github import GithubFilter as ghfilter
+from geoslurp.datapull.github import cachedGithubCatalogue
 from geoslurp.config.register import geoslurpregistry
 import json
 from zipfile import ZipFile
@@ -44,33 +45,30 @@ class geoshapeBase(OGRBase):
 
 
 def GeoshapeClassFactory(clsName,val):
-    return type(clsName, (geoshapeBase,), {"url":val["url"],"description":val["Description"],"path":val["path"]})
+    return type(clsName, (geoshapeBase,), {"url":val["url"],"path":val["path"]})
 
 def getGeoshapesDsets(conf):
     """retrieves the available geoshapes datasets"""
     currentversion='v1' # note this correspond to a specific release (the sha hash is taken from the commit)
-    catalogfile="geoshapesCatalog"+currentversion+".yaml"
-    cachedir=conf.getDir("geoshapes","CacheDir")
-    cachedCatalog=os.path.join(cachedir,catalogfile)
-
-    #get the first entry (shoudl only be one)
-    # import pdb;pdb.set_trace()
-    if not os.path.exists(cachedCatalog):
-        uri=http("https://raw.githubusercontent.com/strawpants/geoshapes/master/inventory.yaml").download(direc=cachedir,outfile=catalogfile)
-
-    with open(cachedCatalog,'r') as fid:
-        catalog=yaml.safe_load(fid)
+    reponame="strawpants/geoshapes"
+    commitsha="23ab6daab0bf2c6e9a3f3d685bed52cb48ac97ea"
+    cachedir=conf.getDir("githubcache","CacheDir")
+    try:
+        cred=conf.authCred("github")
+        token=cred.oauthtoken
+    except:
+        token=None
+    # import pdb;pdb.set_trace() 
+    catalog=cachedGithubCatalogue(reponame,cachedir=cachedir,commitsha=commitsha,
+                       gfilter=ghfilter({"type":"blob","path":"\.geojson"}),
+                       gfollowfilter=ghfilter({"type":"tree","path":"envelopes"}),
+                       ghtoken=token)
     out=[]
     
-    # add urls
-    for key,val in catalog.items():
-        catalog[key]["url"]="https://raw.githubusercontent.com/strawpants/geoshapes/master/"+key
-        catalog[key]["path"]=key
-
     #create a list of datasets
-    for key,val in catalog.items():
-        clsname=os.path.basename(key).split(".")[0]
-        out.append(GeoshapeClassFactory(clsname,val))
+    for entry in catalog["datasets"]:
+        clsname=os.path.basename(entry["path"]).split(".")[0]
+        out.append(GeoshapeClassFactory(clsname,entry))
 
 
     return out
