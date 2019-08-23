@@ -49,7 +49,7 @@ def columnsFromOgrFeat(feat, spatindex=True, forceGType=None,targetsrid=4326):
     cols.append(Column('geom', geomtype))
     return cols
 
-def valuesFromOgrFeat(feat, encoding='iso-8859-1',transform=None,targetsrid=4326):
+def valuesFromOgrFeat(feat, encoding='iso-8859-1',transform=None,targetsrid=4326,swapxy=False):
     """Returns a dictionary with loaded values from a feature"""
     df=feat.GetDefnRef()
 
@@ -67,13 +67,17 @@ def valuesFromOgrFeat(feat, encoding='iso-8859-1',transform=None,targetsrid=4326
             vals[name.lower()]=feat.GetField(i)
 
     #append geometry values
+    
+    geom=feat.GetGeometryRef()
+    
+    if swapxy: 
+        geom.SwapXY()
+    
     if transform:
-        transformed=feat.GetGeometryRef()
-        transformed.Transform(transform)
-        vals['geom']=WKBElement(transformed.ExportToWkb(),srid=targetsrid)
-    else:
-        vals['geom']=WKBElement(feat.geometry().ExportToWkb(),srid=targetsrid)
-
+        geom.Transform(transform)
+        
+    vals['geom']=WKBElement(geom.ExportToWkb(),srid=targetsrid)
+    
     return vals
 
 class OGRBase(DataSet):
@@ -85,6 +89,7 @@ class OGRBase(DataSet):
     layerregex=None
     targetprj=None
     targetsrid=4326
+    swapxy=False
     def __init__(self,dbconn):
         super().__init__(dbconn)
         #set default target projection if not explicitly set
@@ -119,13 +124,17 @@ class OGRBase(DataSet):
                 transform=None
             else:
                 transform = osr.CoordinateTransformation(sourceprj, self.targetprj)
+            # print(sourceprj)
 
+            # print(self.targetprj)
+            
+            # print(sourceprj.IsSame(self.targetprj))
             for feat in shpflayer:
                 count+=1
                 if self.table == None:
                     cols=columnsFromOgrFeat(feat,forceGType=self.gtype,targetsrid=self.targetsrid)
                     self.createTable(cols)
-                values=valuesFromOgrFeat(feat,self.encoding,transform,self.targetsrid)
+                values=valuesFromOgrFeat(feat,self.encoding,transform,self.targetsrid,self.swapxy)
                 try:
                     self.addEntry(values)
                 except:

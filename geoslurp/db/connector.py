@@ -112,6 +112,10 @@ class GeoslurpConnector():
         else:
             self.dbeng.execute('DROP TABLE IF EXISTS "%s";' % (tablename.lower()))
 
+    def getTable(self,tname,scheme="public"):
+        mdata=MetaData(bind=self.dbeng,schema=scheme)
+        return Table(tname, mdata, autoload=True, autoload_with=self.dbeng)
+
     def updateFunction(self, fname, schema, inpara, outtype, body, language):
         """Updates a stored function"""
         # explicitly add line endings after semicolons in the body when not done already
