@@ -70,7 +70,7 @@ class PSMSLBase(DataSet):
     def register(self):
 
         #currently deletes all entries in the table
-        self.clearTable()
+        self.truncateTable()
 
         #open main index file and read
         zipdir=self.cacheDir()+"/"+self.typ+"_"+self.freq
