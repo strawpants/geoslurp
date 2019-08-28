@@ -57,7 +57,7 @@ class Uri(UriBase):
         if outfile:
             outf=os.path.join(direc,outfile)
         else:
-            outf=self.fname
+            outf=os.path.join(direc,self.fname)
 
         uri=UriFile(url=outf)
 

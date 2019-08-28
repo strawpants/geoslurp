@@ -188,6 +188,7 @@ class UriFile(UriBase):
             #Lets set lastmod straight away if the file exists
             if os.path.exists(url) and not lastmod:
                 self.updateModTime()
+            
 
         def updateModTime(self):
             self.lastmod = datetime.fromtimestamp(os.path.getmtime(self.url))

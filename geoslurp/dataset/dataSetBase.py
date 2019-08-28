@@ -120,7 +120,10 @@ class DataSet(ABC):
     def cacheDir(self,subdirs=None):
         """returns the cache directory of this scheme and dataset"""
         if self._dbinvent.cache:
-            return getCreateDir(self._dbinvent.cache)
+            if subdirs:
+                return getCreateDir(os.path.join(self._dbinvent.cache,subdirs))
+            else:
+                return getCreateDir(self._dbinvent.cache)
 
         return self.conf.getDir(self.scheme, 'CacheDir', dataset=self.name,subdirs=subdirs)
     
@@ -193,6 +196,7 @@ class DataSet(ABC):
         trans,ses=self.db.transsession()
         
         tmptable=self.db.createTable('tmpuris',cols,temporary=True,bind=ses.get_bind())
+        # tmptable=self.db.createTable('tmpuris',cols,temporary=False,bind=ses.get_bind())
         # import pdb;pdb.set_trace()
         #fill the table with the file list and last modification timsstamps
         count=0
@@ -207,12 +211,15 @@ class DataSet(ABC):
         ses.commit()
 
         #delete all entries which require updating
-        # first gather all the ids of expired entries
+        # first gather all the ids of i entries which are expired 
         subqry=ses.query(self.table.id).join(tmptable, and_(tmptable.uri == self.table.uri,tmptable.lastmod > self.table.lastupdate)).subquery()
-        #then delete those entries from the table
+        # #then delete those entries from the table
         # import pdb;pdb.set_trace()
-        delqry=tmptable.__table__.delete().where(self.table.id.in_(subqry))
+        
+        delqry=self.table.__table__.delete().where(self.table.id.in_(subqry))
         ses.execute(delqry)
+
+
         #now make a list of new uris
         qrynew=ses.query(tmptable).outerjoin(self.table,self.table.uri == tmptable.uri).filter(self.table.uri == None)
 

@@ -106,6 +106,7 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'geoslurpdoc'
 
+html_favicon = 'graphics/favicon.ico'
 
 # -- Options for LaTeX output ------------------------------------------------
 
