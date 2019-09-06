@@ -31,6 +31,7 @@ class PandasBase(DataSet):
     skipfooter=0
     ftype="csv"
     dtypes=None
+    encoding=None
     def __init__(self,dbconn):
         super().__init__(dbconn)
     def modify_df(self,df):
@@ -41,7 +42,7 @@ class PandasBase(DataSet):
         """Update/populate a database table from a pandas compatible file) 
     """
         if self.ftype == "csv":
-            df=pd.read_csv(self.pdfile,skipfooter=self.skipfooter)
+            df=pd.read_csv(self.pdfile,skipfooter=self.skipfooter,encoding=self.encoding)
         elif self.ftype == "excel":
             df=pd.read_excel(self.pdfile,skipfooter=self.skipfooter)
 

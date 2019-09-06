@@ -30,7 +30,8 @@ from geoslurp.config.register import geoslurpregistry
 
 geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
 
-GNSSTBase=declarative_base(metadata=MetaData(schema='gnss'))
+scheme='gnss'
+GNSSTBase=declarative_base(metadata=MetaData(schema=scheme))
 
 class UNRTable(GNSSTBase):
     __tablename__='unrfinal'
@@ -69,7 +70,7 @@ class UNRfinal(DataSet):
     """Base class to store RLR/MET annual and monthly data"""
     table=UNRTable
     updated=None
-    scheme='GNSS'
+    scheme=scheme
     def __init__(self,dbconn):
         super().__init__(dbconn)
         GNSSTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
