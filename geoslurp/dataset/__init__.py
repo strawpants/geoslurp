@@ -17,3 +17,4 @@ from .ArcticDEM import *
 from .geoshapes import *
 from .snrei import *
 from .wgms_fog import *
+from .swot_sim import *
