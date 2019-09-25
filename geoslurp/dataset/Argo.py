@@ -124,7 +124,7 @@ def argoMetaExtractor(uri,cachedir=False):
         datacenter=ncStr(ncArgo["DATA_CENTRE"][0])
 
         #get modes for each profile
-        mode=np.array(ncArgo['DATA_MODE'])
+        mode=np.array([x for x in ncStr(ncArgo['DATA_MODE'])])
 
         #get cycles for each profile
         cycle=[int(x) for x in ncArgo['CYCLE_NUMBER'][:]]
