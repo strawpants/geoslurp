@@ -71,14 +71,14 @@ OceanObsTBase=declarative_base(metadata=MetaData(schema=scheme))
 
 # Setup the postgres table
 
-geoTracktype = Geography(geometry_type="LINESTRINGZ", srid='4326', spatial_index=True,dimension=3)
+geoMpointType = Geography(geometry_type="MULTIPOINTZ", srid='4326', spatial_index=True,dimension=3)
 
 class ArgoTable(OceanObsTBase):
     """Defines the Argo PostgreSQL table"""
     __tablename__='argo2'
     id=Column(Integer,primary_key=True)
     wmoid=Column(String)
-    uri=Column(String, index=True)
+    uri=Column(String, index=True,unique=True)
     datacenter=Column(String)
     lastupdate=Column(TIMESTAMP)
     tstart=Column(TIMESTAMP)
@@ -87,7 +87,8 @@ class ArgoTable(OceanObsTBase):
     ascend=Column(ARRAY(Boolean))
     tlocation=Column(ARRAY(TIMESTAMP))
     cycle=Column(ARRAY(Integer))
-    geom=Column(geoTracktype)
+    iprof=Column(ARRAY(Integer))
+    geom=Column(geoMpointType)
 
 
 def ncStr(ncelem):
@@ -116,9 +117,6 @@ def argoMetaExtractor(uri,cachedir=False):
 
         #get the start end end time
 
-        tstart=t0+timedelta(days=float(np.min(ncArgo["JULD_LOCATION"])))
-
-        tend=t0+timedelta(days=float(np.max(ncArgo["JULD_LOCATION"])))
 
         #wmoid's should be the same for all entries, so take the first one
         wmoid=int(ncStr(ncArgo["PLATFORM_NUMBER"][0]))
@@ -132,21 +130,37 @@ def argoMetaExtractor(uri,cachedir=False):
         cycle=[int(x) for x in ncArgo['CYCLE_NUMBER'][:]]
 
         #
-        tlocation=[t0+timedelta(days=float(x)) for x in ncArgo["JULD_LOCATION"]]
+        tlocation=[]
         # which profile is ascending ?
         ascend=ncArgo['DIRECTION'][:]== b"A"
-        geoTrack=ogr.Geometry(ogr.wkbLineString)
 
-        #loop to extract profile track
-        for iprof in range(ncArgo.dimensions["N_PROF"].size):
-            # geographical location
-            geoTrack.AddPoint(float(ncArgo["LONGITUDE"][iprof]), float(ncArgo["LATITUDE"][iprof]))
+        geoMpoints=ogr.Geometry(ogr.wkbMultiPoint)
+        iprof=[]
+        for i,(t,lon,lat) in enumerate(zip(ncArgo["JULD_LOCATION"][:],ncArgo["LONGITUDE"][:],ncArgo["LATITUDE"][:])):
+            if lon > 180:
+                #make sure longitude goes from -180 to 180
+                lon-=360
+            #we don't want nan positions or timetags in the database
+            if np.ma.is_masked(lon) or np.ma.is_masked(lat) or np.ma.is_masked(t):
+                continue
+
+            tdt=t0+timedelta(days=float(t))
+            tlocation.append(tdt)
+            point = ogr.Geometry(ogr.wkbPoint)
+            point.AddPoint(float(lon),float(lat),0)
+            geoMpoints.AddGeometry(point)
+            iprof.append(i)
+
+        if not tlocation:
+            #return an empty dictionary when no valid profiles have been found
+            return {}
+
+        tstart=np.min(tlocation)
+        tend=np.max(tlocation)
 
         meta={"wmoid":wmoid,"uri":url,"datacenter":datacenter,"lastupdate":uri.lastmod,"tstart":tstart,"tend":tend,
-              "mode":mode,"ascend":ascend,"tlocation":tlocation,"cycle":cycle,
-              "geom":WKBElement(geoTrack.ExportToWkb(),srid=4326,extended=True)}
-    except ZeroDimException as e:
-        raise RuntimeWarning(str(e)+", skipping")
+              "mode":mode,"ascend":ascend,"tlocation":tlocation,"cycle":cycle,"iprof":iprof,
+              "geom":WKBElement(geoMpoints.ExportToWkb(),srid=4326,extended=True)}
     except Exception as e:
         raise RuntimeWarning("Cannot extract meta information from "+ url+ str(e))
 
@@ -213,28 +227,28 @@ class Argo2(DataSet):
         self.updateInvent()
 
 
-    def halt(self):
-        slurplogger().error("Stopping update")
-        self._killUpdate=True
-        # indicate a done task n the queue in order to allow the pullWorker thread to stop gracefully
-        #empty eue
-        while not self._uriqueue.empty():
-            self._uriqueue.get()
-            self._uriqueue.task_done()
-        #also synchronize inventory info (e.g. resume
-        self.updateInvent(False)
-        raise RuntimeWarning("Argo dataset processing stopped")
+    # def halt(self):
+        # slurplogger().error("Stopping update")
+        # self._killUpdate=True
+        # # indicate a done task n the queue in order to allow the pullWorker thread to stop gracefully
+        # #empty eue
+        # while not self._uriqueue.empty():
+            # self._uriqueue.get()
+            # self._uriqueue.task_done()
+        # #also synchronize inventory info (e.g. resume
+        # self.updateInvent(False)
+        # raise RuntimeWarning("Argo dataset processing stopped")
 
-    def pullWorker(self,conn):
-        """ Pulls valid opendap URI's from a thredds server and queue them"""
+    # def pullWorker(self,conn):
+        # """ Pulls valid opendap URI's from a thredds server and queue them"""
 
-        for uri in conn.uris():
-            slurplogger().info("queuing %s",uri.url)
-            self._uriqueue.put(uri)
-            if self._killUpdate:
-                slurplogger().warning("Pulling of Argo URI's stopped")
-                return
-        #signal the end of the queue by adding a none
-        self._uriqueue.put(None)
+        # for uri in conn.uris():
+            # slurplogger().info("queuing %s",uri.url)
+            # self._uriqueue.put(uri)
+            # if self._killUpdate:
+                # slurplogger().warning("Pulling of Argo URI's stopped")
+                # return
+        # #signal the end of the queue by adding a none
+        # self._uriqueue.put(None)
 
 geoslurpregistry.registerDataset(Argo2)
