@@ -38,6 +38,14 @@ def getCreateDir(returndir):
         os.makedirs(returnex)
     return returnex
 
+def stripPasswords(d):
+    for serv,dsub in d.items():
+        # print(serv)
+        for ky,v in dsub.items():
+            if ky == "passw" or ky == "oauth":
+                d[serv][ky]="*****"
+    return d
+
 Credentials=namedtuple("Credentials","user passw alias oauthtoken")
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
 
@@ -92,7 +100,13 @@ class Settings():
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
     def __getitem__(self, key):
-        return self.userentry.conf[key]
+        if key in self.userentry.conf:
+            return self.userentry.conf[key]
+        elif key in self.defaultentry.conf:
+            #try finding the key in the defaults
+            return self.defaultentry.conf[key]
+        else:
+            raise RuntimeError("Cannot find setting in user configuration or defaults")
 
     def __setitem__(self, key, val):
         self.userentry.conf[key]=val
@@ -107,11 +121,16 @@ class Settings():
     def show(self):
         """Show the loaded user configuration"""
         print(self.userentry.conf)
+        #also shows the registered authentification services (but don't show passwords
+        print(stripPasswords(self.auth))
 
     def authCred(self,service):
         """obtains username credentials for a certain service
         :param service: name of the service
         :returns a namedtuple with credentials"""
+
+        if service not in self.auth:
+            raise RuntimeError("No credentials for service %s found in the database. Please register your credentials using Settings.updateAuth()"%service)
         return Credentials(alias=service, **self.auth[service])
 
     def updateAuth(self, indict):

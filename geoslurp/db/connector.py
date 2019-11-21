@@ -29,7 +29,7 @@ from geoslurp.config.slurplogger import  slurplogger, debugging
 class GeoslurpConnector():
     """Holds a connector to a geoslurp database"""
 
-    def __init__(self, host, user, passwd):
+    def __init__(self, host, user, passwd, port=5432,readonlyuser=True):
         """
         establishes a database engine whoch provides the base
         for creating sessions (ORM) or connections (SQL expressions)
@@ -39,12 +39,13 @@ class GeoslurpConnector():
         self.passw=passwd
         self.host=host
         echo=debugging()
-        dburl="postgresql+psycopg2://"+user+":"+passwd+"@"+host+"/geoslurp"
+        dburl="postgresql+psycopg2://"+user+":"+passwd+"@"+host+":"+str(port)+"/geoslurp"
         self.dbeng = create_engine(dburl, echo=echo)
         # self.conn=self.dbeng.connect()
         self.Session = sessionmaker(bind=self.dbeng)
         self.mdata = MetaData(bind=self.dbeng)
-        initgeoslurpdb(self)
+        if not readonlyuser:
+            initgeoslurpdb(self)
 
     def transsession(self):
         """Retrieve a  session which is bound to a connection rather than an engine (e.g. useful for temporary tables)"""
@@ -142,4 +143,8 @@ class GeoslurpConnector():
             self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geobrowse;"%(name,passw))
         else:
             self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geoslurp;"%(name,passw))
+
+
+
+
 

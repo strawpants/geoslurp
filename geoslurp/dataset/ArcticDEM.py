@@ -70,12 +70,12 @@ class Arcticdemindex(OGRBase):
 
 
 
-def ArcticDEMMetaExtractor(uri):
-    slurplogger().info("Extracting info from raster: %s"%(uri.url))
-    with open(uri.url,'rb') as fid:
-        fbytes=fid.read()
-    meta={"rast":func.ST_FromGDALRaster(fbytes)}
-    return meta
+# def ArcticDEMMetaExtractor(uri):
+#     slurplogger().info("Extracting info from raster: %s"%(uri.url))
+#     with open(uri.url,'rb') as fid:
+#         fbytes=fid.read()
+#     meta={"rast":func.ST_FromGDALRaster(fbytes)}
+#     return meta
 
 class ArcticDemRasterBase(RasterBase):
     """"Base class to download/register Arctic DEM Tiff rasters"""

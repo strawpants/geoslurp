@@ -74,7 +74,7 @@ class BtdBox():
 
     def check(self):
         """Check if the ranges are valid """
-        if not (self.s < self.n and self.w < self.e and self.ts < self.te and self.zmin < self.zmax):
+        if not (self.s < self.n and self.w < self.e and self.ts <= self.te and self.zmin < self.zmax):
             raise ValueError("invalid Bounding box, time range or , z-range")
 
         if ( self.w < 0 and self.e > 180):
@@ -274,3 +274,5 @@ def stackNcFiles(ncout,ncA,ncB,dimension):
 
     outid.setncattr('History',outid.getncattr('History')+'\n Modified at %s by Geoslurp: Merge two netcdf files along dimension %s'%(datetime.now(),dimension))
     return UriFile(ncout),True
+
+

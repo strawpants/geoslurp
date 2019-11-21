@@ -295,6 +295,8 @@ class DataSet(ABC):
             session.bind_table(self.table,session.get_bind())
             session.commit()
 
+    def dropTable(self):
+        self.db.dropTable(self.name,self.scheme.lower())
 
     def migrate(self,version):
         """Properly migrate a table between software versions

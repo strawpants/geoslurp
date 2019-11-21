@@ -57,7 +57,7 @@ def setFtime(file,modTime=None):
         mtime=time.mktime(modTime.timetuple())
         os.utime(file,(mtime,mtime))
 
-def curlDownload(url,fileorfid,mtime=None,gzip=False,auth=None):
+def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None):
     """
     Download  the content of an url to an open file or buffer using pycurl
     :param url: url to download from
@@ -65,11 +65,20 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,auth=None):
     :param mtimee: explicitly set the modification time to this (usefull when modification times are not supported
     b the server)
     :param gzip: additionally gzip the file on disk (note this routine does not append *.gz to the file name)
+    :param gunzip: automatically gunzip the downloaded file
+    :param auth: supply authentification data (user and passw)
     :return: modification time of remote file
     """
 
+    if gzip and gunzip:
+        raise RuntimeError("cannot gzip and gunzip at the same time")
+
     if type(fileorfid) == str:
-        tmpfile=os.path.join(os.path.dirname(fileorfid),"."+os.path.basename(fileorfid)+".tmp")
+        if gunzip:
+            tmpfile=os.path.join(os.path.dirname(fileorfid),"."+os.path.basename(fileorfid)+".tmp.gz")
+        else:
+            tmpfile=os.path.join(os.path.dirname(fileorfid),"."+os.path.basename(fileorfid)+".tmp")
+
         if gzip:
             #note this routine does not change the filename!!
             fid=gz.open(tmpfile,'wb')
@@ -98,11 +107,19 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,auth=None):
         #force the modification time to that provided
         modtime=mtime
 
-    #close file if input was a filename
+    #close file if input was a filename or unzip data in the output file
     if type(fileorfid) == str:
         fid.close()
-        #rename temporary file
-        os.rename(tmpfile,fileorfid)
+        if gunzip:
+            #decompress the temporary gzipped file in the outputfile
+            with open(fileorfid,'wb') as fidout:
+                with gz.open(tmpfile,'rb') as gzid:
+                    fidout.write(gzid.read())
+            #remove the temporary file
+            os.remove(tmpfile)
+        else:
+            # just rename temporary file
+            os.rename(tmpfile,fileorfid)
         setFtime(fileorfid,modtime)
 
     return modtime
@@ -133,7 +150,7 @@ class UriBase():
         self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
         return self.lastmod
 
-    def download(self,direc,check=False,gzip=False,outfile=None,continueonError=False):
+    def download(self,direc,check=False,gzip=False,gunzip=False,outfile=None,continueonError=False):
         """Download file into directory and possibly check the modification time
         :param check : check whether the file needs updating
         :param gzip: additionally gzips the file (adds .gz to file name)
@@ -146,6 +163,9 @@ class UriBase():
         else:
             if gzip:
                 outf=os.path.join(direc,self.subdirs,os.path.basename(self.url))+'.gz'
+            elif gunzip:
+                #strip gz suffix
+                outf=os.path.splitext(os.path.join(direc,self.subdirs,os.path.basename(self.url)))[0]
             else:
                 outf=os.path.join(direc,self.subdirs,os.path.basename(self.url))
 
@@ -164,9 +184,9 @@ class UriBase():
         slurplogger().info("Downloading %s"%(uri.url))
         try:
             if self.lastmod:
-                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,auth=self.auth)
+                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth)
             else:
-                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,auth=self.auth)
+                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth)
         except pycurl.error as pyexc:
             slurplogger().info("Download failed, skipping %s"%(uri.url))
             if not continueonError:

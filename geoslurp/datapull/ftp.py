@@ -21,19 +21,20 @@ from geoslurp.datapull import UriBase
 from geoslurp.datapull import CrawlerBase
 
 class Uri(UriBase):
-    def __init__(self,url,lastmod=None,subdirs=''):
-        super().__init__(url,lastmod,subdirs=subdirs)
+    def __init__(self,url,lastmod=None,subdirs='',auth=None):
+        super().__init__(url,lastmod,subdirs=subdirs,auth=auth)
         if not bool(re.match('^ftps?://',url)):
             raise Exception("URL does not seem to be a valid ftp(s) address")
 
 class Crawler(CrawlerBase):
     """Crawler for ftp directories"""
-    def __init__(self,url,pattern='.*',followpattern='.*'):
+    def __init__(self,url,pattern='.*',followpattern='.*',auth=None):
         if url[-1] is not '/':
             url+='/'
         super().__init__(url)
         self.pattern=pattern
         self.followpattern=followpattern
+        self.auth=auth
 
     def ls(self,subdirs=''):
         """List directories and files (generator)"""
@@ -45,7 +46,7 @@ class Crawler(CrawlerBase):
         if url[-1] is not '/':
             url+='/'
 
-        buf=Uri(url).buffer()
+        buf=Uri(url,auth=self.auth).buffer()
 
         for ln in buf.getvalue().splitlines():
             t=None
@@ -77,7 +78,7 @@ class Crawler(CrawlerBase):
         for name,t in self.ls(subdirs):
             #only apply the pattern to the last column
             if re.search(self.pattern,name):
-                uri=Uri(os.path.join(self.rooturl,subdirs,name),lastmod=t,subdirs=subdirs)
+                uri=Uri(os.path.join(self.rooturl,subdirs,name),lastmod=t,subdirs=subdirs,auth=self.auth)
 
                 if uri.lastmod == None:
                     #one can try to get this information through the header informatio too (slower and not always working)

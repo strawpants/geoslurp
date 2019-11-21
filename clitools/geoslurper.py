@@ -44,8 +44,7 @@ def main(argv):
 
     # We need a point of contact to communicate with the database
     try:
-
-        DbConn=GeoslurpConnector(args.host,args.user,args.password)
+        DbConn=GeoslurpConnector(args.host,args.user,args.password,readonlyuser=False)
     except Exception as e:
         print(e)
         print("Cannot connect to postgresql database, quitting")
@@ -257,6 +256,9 @@ def addCommandLineArgs(parser):
         parser.add_argument("--password",metavar="password",type=str,
                             help='Select password for the postgresql user')
 
+        parser.add_argument("--port",metavar="port",type=int, default=5432,
+                            help='Select the port where the database is served')
+
         parser.add_argument("--usekeyring",action='store_true',
                             help='Set and get the system keyring to store the database password (alternatives are '
                                  'using --password or the environment variable GEOSLURP_PGPASS')
@@ -298,7 +300,7 @@ def check_args(args,parser):
 
         sys.exit(0)
     #also fillout last options with defaults from the last call
-    readLocalSettings(args)
+    readLocalSettings(args,readonlyuser=False)
 
 
 if __name__ == "__main__":

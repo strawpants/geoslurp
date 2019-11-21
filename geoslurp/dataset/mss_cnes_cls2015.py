@@ -18,17 +18,24 @@
 from geoslurp.config.register import geoslurpregistry
 from geoslurp.dataset.motuGridsBase import MotuGridsBase
 
-class Duacs(MotuGridsBase):
-    """Downloads subsets of the ducacs gridded multimission altimeter datasets for given regions"""
+
+class mss_cls2015(MotuGridsBase):
+    """Downloads the mean sea surface heigth data as netcdf"""
     scheme='altim'
-    variables=["sla"]
+    variables=["mss","mss_err"]
     bandname=variables[0]
-    authalias="cmems"
-    moturoot="http://my.cmems-du.eu/motu-web/Motu"
-    motuservice="SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS"
-    motuproduct="dataset-duacs-rep-global-merged-allsat-phy-l4"
+    # tiles=[1000,1000]
+    # python motuclient.py -u roelof@geod.uni-bonn.de -p your_password(1) -m https://motu.aviso.altimetry.fr/motu-web/Motu -s AvisoMSS -d dataset-mss-cnes-cls15-global -x 20 -X 120 -y -75 -Y 30 -t "2015-01-01" -T "2015-01-01" --outputWritten netcdf4 -v sea_surface_height_above_reference_ellipsoid -v mss_err -o your_output_directory(1) -f your_output_file_name(1) --proxy-server=your_proxy_server_url:your_proxy_port_number(2) --proxy-user=your_proxy_user_login(3) --proxy-pwd=your_proxy_user_password(3)
+    authalias="avisoftp"
+    moturoot="https://motu.aviso.altimetry.fr/motu-web/Motu"
+    motuservice="AvisoMSS"
+    motuproduct="dataset-mss-cnes-cls15-global"
+
+    # regularblocking = True
+    # overviews=[8]
+    #[ulx,xres,xskew,uly,yskew,yres]
+    # geotransform=[0,0,1/60,84,-1/60,0]
     def __init__(self,dbconn):
         super().__init__(dbconn)
 
-
-geoslurpregistry.registerDataset(Duacs)
+geoslurpregistry.registerDataset(mss_cls2015)

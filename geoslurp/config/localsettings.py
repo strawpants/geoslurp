@@ -20,7 +20,33 @@ import yaml
 from datetime import datetime
 import keyring
 import getpass
-def readLocalSettings(args):
+
+class settingsArgs:
+    host=None
+    user=None
+    usekeyring=None
+    password=None
+    port=5432
+    def __init__(self,host=None,user=None,usekeyring=True,password=None,port=None):
+        if host:
+            self.host=host
+
+        if user:
+            self.user=user
+
+        if usekeyring:
+            self.usekeyring=usekeyring
+
+        if password:
+            self.password=password
+
+        if port:
+            self.port=port
+
+
+
+
+def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
     """Retrieves/updates last used settings from the local settings file .geoslurp_lastused.yaml"""
     settingsFile=os.path.join(os.path.expanduser('~'),'.geoslurp_lastused.yaml')
     #read last used settings
@@ -45,12 +71,25 @@ def readLocalSettings(args):
             print("--host option is needed for initialization",file=sys.stderr)
             sys.exit(1)
 
+    if args.port:
+        lastOpts["port"]=args.port
+        isUpdated=True
+    else:
+        lastOpts["port"]=5432
+
     if args.user:
-        lastOpts["user"]=args.user
+        if readonlyuser:
+            lastOpts["readonlyUser"]=args.user
+        else:
+            lastOpts["user"]=args.user
         isUpdated=True
     else:
         try:
-            args.user=lastOpts["user"]
+            if readonlyuser:
+                args.user=lastOpts["readonlyUser"]
+            else:
+                args.user=lastOpts["user"]
+
         except KeyError:
             print("--user option is needed for initialization",file=sys.stderr)
             sys.exit(1)
@@ -65,11 +104,6 @@ def readLocalSettings(args):
             #don't use the keyring
             pass
 
-    #write out  options to file to store these settings
-    if isUpdated:
-        lastOpts["lastupdate"]=datetime.now()
-        with open(settingsFile,'w') as fid:
-            yaml.dump(lastOpts, fid, default_flow_style=False)
 
 
     # we take a different strategy for the password as we don't want to store this unencrypted in a file
@@ -78,21 +112,43 @@ def readLocalSettings(args):
             args.password=keyring.get_password("geoslurp",args.user)
             if not args.password:
                 args.password=getpass.getpass(prompt='Please enter password: ')
-                # also set password when it is not yer registered
-                keyring.set_password("geoslurp",args.user,args.password)
+                if update:
+                    # also set password when it is not yer registered
+                    keyring.set_password("geoslurp",args.user,args.password)
         else:
             #try checking the environment variable GEOSLURP_PGPASS
             try:
-                args.password=os.environ["GEOSLURP_PGPASS"]
+                if readonlyuser:
+                    args.password=os.environ["GEOSLURP_PGPASSRO"]
+                else:
+                    args.password=os.environ["GEOSLURP_PGPASS"]
             except KeyError:
                 #check for password in the lastused file (needs to be manually entered)
-                if "passwd" in lastOpts:
+                if "passwd" in lastOpts and not readonlyuser:
                     args.password=lastOpts["passwd"]
+                elif "readonlyPasswd" in lastOpts and readonlyuser:
+                    args.password=lastOpts["readonlyPasswd"]
                 else:
                     #prompt for password
                     args.password=getpass.getpass(prompt='Please enter password: ')
+                    if update:
+                        print("Warning: user database password will be stored unencrypted in the geoslurp configuration file,"
+                              "consider setting usekeyring=True")
+                        if readonlyuser:
+                            lastOpts["readonlyPasswd"]=args.password
+                        else:
+                            lastOpts["passwd"]=args.password
     else:
         #update keyring
-        if args.usekeyring:
+        if args.usekeyring and update:
             keyring.set_password("geoslurp",args.user,args.password)
 
+
+    #write out  options to file to store these settings
+    if isUpdated and update:
+        lastOpts["lastupdate"]=datetime.now()
+        with open(settingsFile,'w') as fid:
+            yaml.dump(lastOpts, fid, default_flow_style=False)
+
+
+    return args

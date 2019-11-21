@@ -52,7 +52,7 @@ class MotuOpts():
     extraction_geographic=True
     extraction_vertical=False
     proxy_server=None
-    outputWritten=None
+    outputWritten="netcdf4"
     console_mode=False
     socket_timeout=515
     sync=False
