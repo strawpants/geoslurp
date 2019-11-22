@@ -52,7 +52,7 @@ class MotuOpts():
     extraction_geographic=True
     extraction_vertical=False
     proxy_server=None
-    outputWritten="netcdf4"
+    outputWritten="netcdf"
     console_mode=False
     socket_timeout=515
     sync=False
@@ -118,6 +118,7 @@ class Uri(UriBase):
         oldnm=self.opts.out_name
         self.opts.out_dir=self.opts.cache
         self.opts.out_name=self.opts.out_name.replace('.nc','_descr.xml')
+        # import pdb;pdb.set_trace()
         try:
             execute_request(self.opts)
         except Exception as e:

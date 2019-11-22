@@ -21,10 +21,13 @@ from geoslurp.dataset.motuGridsBase import MotuGridsBase
 class Duacs(MotuGridsBase):
     """Downloads subsets of the ducacs gridded multimission altimeter datasets for given regions"""
     scheme='altim'
-    variables=["sla"]
+    variables=["sla","adt"]
     bandname=variables[0]
     authalias="cmems"
+    #http://my.cmems-du.eu/motu-web/Motu --service-id SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS --product-id dataset-duacs-rep-global-merged-allsat-phy-l4 --longitude-min 0.125 --longitude-max -0.125 --latitude-min -89.875 --latitude-max 89.875 --date-min "2019-01-12 00:00:00" --date-max "2019-01-12 00:00:00" --variable sla --variable adt --variable ugos --variable vgos --variable ugosa --variable vgosa --variable err --out-dir <OUTPUT_DIRECTORY> --out-name <OUTPUT_FILENAME> --user <USERNAME> --pwd <PASSWORD>
+
     moturoot="http://my.cmems-du.eu/motu-web/Motu"
+    # moturoot="http://my.cmems-du.eu/motu-web/Motu"
     motuservice="SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS"
     motuproduct="dataset-duacs-rep-global-merged-allsat-phy-l4"
     def __init__(self,dbconn):

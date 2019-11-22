@@ -19,7 +19,7 @@
 from geoslurp.dataset.dataSetBase import DataSet
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.datapull.uri import findFiles, UriFile
-from sqlalchemy import Column,Integer,String
+from sqlalchemy import Column,Integer,String,Float
 from geoalchemy2 import Raster
 from sqlalchemy import func,select,text
 from osgeo import gdal
@@ -50,7 +50,7 @@ class RasterBase(DataSet):
 
     def columns(self):
         #construct the columns
-        cols=[Column("id",Integer,primary_key=True),Column("uri",String)]
+        cols=[Column("id",Integer,primary_key=True),Column("uri",String),Column("add_offset",Float),Column("scale_factor",Float)]
         # possibly add auxiliary columns
         if self.auxcolumns:
             cols.extend(self.auxcolumns)
@@ -163,8 +163,14 @@ class RasterBase(DataSet):
             except:
                 outdbfile=uri.url
 
+            rastb=fraster.GetRasterBand(bandnr)
+            nodata=rastb.GetNoDataValue()
+            scale=rastb.GetScale()
+            offset=rastb.GetOffset()
 
-            meta={"rast":func.ST_AddBand(emptyrast,prefix+outdbfile+suffix,[bandnr],0,fraster.GetRasterBand(bandnr).GetNoDataValue()),"uri":uri.url}
+
+            meta={"rast":func.ST_AddBand(emptyrast,prefix+outdbfile+suffix,[bandnr],0,nodata),
+                  "uri":uri.url,"add_offset":offset,"scale_factor":scale}
             fraster=None
         else:
             #read directly from gdal format

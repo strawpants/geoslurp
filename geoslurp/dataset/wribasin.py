@@ -25,6 +25,7 @@ import os
 class WriBasin(OGRBase):
     """Base class for Wribasin watersheds """
     scheme='globalgis'
+    swapxy=True
     def __init__(self,dbconn):
         super().__init__(dbconn)
         self.ogrfile=os.path.join(self.cacheDir(),"wribasin.shp")
