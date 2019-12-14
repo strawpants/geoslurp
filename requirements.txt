@@ -1,0 +1,13 @@
+pycurl
+lxml
+pandas
+easywebdav
+motuclient
+numpy
+netCDF4
+PyYAML
+GeoAlchemy2
+GDAL
+Shapely
+pyshtools
+SQLAlchemy
