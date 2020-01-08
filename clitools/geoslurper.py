@@ -31,12 +31,9 @@ import getpass
 import re
 
 def main(argv):
-    usage=" Program to download and manage Earth Science data"
-    parser = argparse.ArgumentParser(description=usage,add_help=False)
-
 
     # add various arguments to the program
-    addCommandLineArgs(parser)
+    parser=addCommandLineArgs()
 
     args = parser.parse_args(argv[1:])
     check_args(args,parser)
@@ -194,8 +191,11 @@ class increaseVerboseAction(argparse.Action):
         levels=[logging.CRITICAL, logging.ERROR, logging.WARNING, logging.INFO,logging.DEBUG]
         logging.basicConfig(level=levels[min(namespace.verbose,4)])
 
-def addCommandLineArgs(parser):
+def addCommandLineArgs():
         """Add top level command line arguments (and request arguments from the loaded schema)"""
+        usage=" Program to download and manage Earth Science data"
+        parser = argparse.ArgumentParser(description=usage,add_help=False)
+
         parser.add_argument('-h','--help',action='store_true',
                              help="Prints detailed help (may be used in combination with --dset for detailed JSON options)")
         parser.add_argument('-i','--info',action='store_true',
@@ -279,6 +279,7 @@ def addCommandLineArgs(parser):
         parser.add_argument("-f","--func",metavar="PATTERN",nargs="?",type=str,
                 help='Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUCNTION)')
 
+        return parser
 
 def check_args(args,parser):
     """Sanity check for input arguments and possibly supply detailed help"""
