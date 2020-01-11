@@ -64,7 +64,7 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None):
     :param fileorfid: filename or open file or buffer
     :param mtimee: explicitly set the modification time to this (usefull when modification times are not supported
     b the server)
-    :param gzip: additionally gzip the file on disk (note this routine does not append *.gz to the file name)
+    :param gzip: additionally gzip the file on disk (note this routine does not append \*.gz to the file name)
     :param gunzip: automatically gunzip the downloaded file
     :param auth: supply authentification data (user and passw)
     :return: modification time of remote file

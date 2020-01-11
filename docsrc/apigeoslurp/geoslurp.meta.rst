@@ -28,13 +28,6 @@ geoslurp.meta.netcdftools module
     :undoc-members:
     :show-inheritance:
 
-geoslurp.meta.ogr module
-------------------------
-
-.. automodule:: geoslurp.meta.ogr
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 geoslurp.meta.time module
 -------------------------

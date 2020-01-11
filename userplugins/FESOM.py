@@ -148,6 +148,8 @@ class FESOMverticesBase(DataSet):
         pass
 
     def register(self,meshdir=None):
+        """register vertices in a FESOM mesh directory
+        @param meshdir: directory where the mesh files reside"""
         #only load when needed
         from pyfesom.load_mesh_data import fesom_mesh
         if not meshdir:
@@ -192,6 +194,8 @@ class FESOMtinBase(DataSet):
         pass
 
     def register(self,meshdir=None):
+        """register triangular elements in a FESOM mesh directory
+        @param meshdir: directory where the mesh files reside"""
         if not meshdir:
             raise RuntimeError("A meshdirectory needs to be supplied when registering this dataset")
 
@@ -246,7 +250,9 @@ class FESOMRunBase(DataSet):
         pass
 
     def register(self,rundir=None,pattern='.*\.nc$'):
-
+        """register FESOM netcdf output files
+        @param rundir: directory where the netcdf files reside
+        @param pattern: regular expression which the netcdfiles must obey defaults tkakes all files ending with nc"""
         if not rundir:
             raise RuntimeError("A directory/regex with output data needs to be supplied when registering this dataset")
 

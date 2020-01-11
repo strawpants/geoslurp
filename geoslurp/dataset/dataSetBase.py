@@ -128,7 +128,7 @@ class DataSet(ABC):
         return self.conf.getDir(self.scheme, 'CacheDir', dataset=self.name,subdirs=subdirs)
     
     def setCacheDir(self,cdir):
-        self._dbinvent.cachedir=cdir
+        self._dbinvent.cache=cdir
         self.updateInvent(False)
 
     @abstractmethod

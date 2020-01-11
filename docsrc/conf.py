@@ -14,19 +14,20 @@
 #
 import os
 import sys
+from datetime import datetime
 sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'geoslurp'
-copyright = '2019, Roelof Rietbroek'
+copyright = str(datetime.now().year)+', Roelof Rietbroek'
 author = 'Roelof Rietbroek'
 
 # The short X.Y version
 version = '1.0'
 # The full version, including alpha/beta/rc tags
-release = 'Under construction v1.0'
+release = 'Wannabe v1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -42,6 +43,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
+    'sphinxcontrib.autoprogram',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

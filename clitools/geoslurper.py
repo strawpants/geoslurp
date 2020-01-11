@@ -50,6 +50,8 @@ def main(argv):
 
     # # Process common options
 
+
+
     #Add a new user
     if args.add_user or args.add_readonly_user:
         passw1=getpass.getpass(prompt='Please enter new password: ')
@@ -72,13 +74,13 @@ def main(argv):
             #print a summary of the inventory
             dsetpat=re.compile(args.dset)
             for entry in slurpInvent:
-                if dsetpat.search(entry.scheme+'.'+entry.dataset):
+                if dsetpat.fullmatch(entry.scheme+'.'+entry.dataset):
                     print("%s.%s %s %s"%(entry.scheme,entry.dataset,entry.owner,entry.lastupdate.isoformat()))
         else:
             #print a summary of the inventory
             for entry in slurpInvent:
                 print("%s.%s %s %s"%(entry.scheme,entry.dataset,entry.owner,entry.lastupdate.isoformat()))
-    
+        sys.exit(0) 
     
     #change settings in the database
     
@@ -99,24 +101,42 @@ def main(argv):
     if args.auth_config:
         conf.updateAuth(args.auth_config)
 
+    if args.refresh:
+        geoslurpregistry.refresh(conf)
+
+
+    if args.list:
+        # show available schemes and datasets
+        print("Available datasets (SCHEME.DATASET):")
+        for catentry in geoslurpregistry.listDataSets(conf).keys():
+            print("\t%s"%(catentry))
+        
+        print("Available functions (SCHEME.FUNCTION):")
+        for fn in geoslurpregistry.listFunctions(conf).keys():
+            print("\t%s.%s"%(fn.scheme,fn.__name__))
+        
+    if not args.dset:
+        #OK jsut gracefully exit
+        sys.exit(0)
+
     datasets=geoslurpregistry.getDatasets(conf,args.dset)
-    funcs=geoslurpregistry.getFuncs(args.func)
+
+    funcs=geoslurpregistry.getFuncs(conf,args.func)
 
     if not ( datasets or funcs ):
         print("No valid datasets or functions selected")
         sys.exit(1)
 
-    if args.list:
-        # show available schemes and datasets
-        print("Available datasets (SCHEME.DATASET):")
+    # dataset specific help
+    if args.help and args.dset:
         for ds in datasets:
-            print("\t%s.%s"%(ds.scheme,ds.__name__))
-        
-        print("Available functions (SCHEME.FUNCTION):")
-        for fn in funcs:
-            print("\t%s.%s"%(fn.scheme,fn.__name__))
-         
+            print("Detailed info on %s options which may be provided as JSON dictionaries"%(ds.__name__))
+            print("\t%s.pull:\n\t\t %s"%(ds.__name__,ds.pull.__doc__))
+            print("\t%s.register:\n\t%s"%(ds.__name__,ds.register.__doc__))
 
+        sys.exit(0)
+    
+    
     if args.pull or args.update:
         if type(args.pull) == dict:
             pullopts=args.pull
@@ -139,6 +159,7 @@ def main(argv):
         sys.exit(0)
     
     for dsclass in datasets:
+        #initialize the class
         ds=dsclass(DbConn)
 
         if args.data_dir:
@@ -202,8 +223,10 @@ def addCommandLineArgs():
                             help="Show information about selected datasets")
 
         parser.add_argument('-l','--list',action='store_true',
-                            help="List datasets which are available to use")
+                            help="List all datasets which are available to use")
 
+        parser.add_argument('--refresh',action='store_true',
+                            help="Refresh the cache of the available datasets")
         # parser.add_argument('--purge-scheme',action='store_true',
         #                     help="Purge selected scheme (This deletes all related datasets as well!")
 
@@ -291,15 +314,7 @@ def check_args(args,parser):
     if args.help:
         if not args.dset:
             parser.print_help()
-        else:
-            #we need some info from the database
-            datasets=geoslurpregistry.getDatasets(None,args.dset)
-            for ds in datasets:
-                print("Detailed info on %s options which may be provided as JSON dictionaries"%(ds.__name__))
-                print("\t%s.pull:\n\t\t %s"%(ds.__name__,ds.pull.__doc__))
-                print("\t%s.register:\n\t%s"%(ds.__name__,ds.register.__doc__))
-
-        sys.exit(0)
+            sys.exit(0)
     #also fillout last options with defaults from the last call
     readLocalSettings(args,readonlyuser=False)
 

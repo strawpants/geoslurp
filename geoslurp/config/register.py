@@ -16,13 +16,35 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 import re
 import sys
+import os
+import yaml
+import inspect
+from datetime import datetime
+from geoslurp.config.slurplogger import slurplogger
+from geoslurp.db import Inventory
+
 class DatasetRegister:
     #holds dataset classes (not initiated!)
     __dsets__=[]
     # holds factory methods for dyanamically building datasets
     __dsetfac__=[]
+    __catalogue__=None
+    __dscache__={}
     def __init__(self):
         pass
+    
+    @staticmethod 
+    def getCacheFile(conf):
+        return os.path.join(conf.getDir("Dset","CacheDir"),"Dset_Catalogue.yaml")
+    
+    @staticmethod 
+    def addUserPlugPaths(conf,loadmod=False):
+        if 'userplugins' in conf.userentry.conf:
+            for upath in conf.userentry.conf["userplugins"].split(";"):
+                if sys.path.count(upath) == 0:
+                    sys.path.append(upath)
+                    if loadmod:
+                        mod=__import__(os.path.basename(upath))
 
     def registerDataset(self,datasetcls):
         self.__dsets__.append(datasetcls)
@@ -30,59 +52,151 @@ class DatasetRegister:
     def registerDatasetFactory(self,datasetclsfac):
         self.__dsetfac__.append(datasetclsfac)
 
-    def load(self,conf):
-        """Loads all datasets from the factories and appends them to the __dsets__"""
-        if not self.__dsetfac__:
-            #Quick return when nothing needs to be done
+    def refresh(self,conf):
+        """Refresh the dataset catalogue"""
+        self.registerAllDataSets(conf)
+
+        #load inventory of existing datasets (for the templated)
+        Inv=Inventory(conf.db)
+
+        self.__catalogue__={"datasets":{},"factories":{},"functions":{}}
+        #loop over dataset in the factories
+
+        for ds in self.__dsets__:
+            name=".".join([ds.scheme,ds.__name__])
+            if re.search("TEMPLATE",name):
+                srch=re.sub("TEMPLATE","([^\\\s]+)",name.replace(".","\."))
+                #possibly also add existing datasets so they can be found by regular expressions
+                for entry in Inv:
+                    nameexisting=".".join([entry.scheme,entry.dataset])
+                    if re.search(srch,nameexisting):
+                        #add 
+                        self.__catalogue__["datasets"][nameexisting]={"template":name}
+            self.__catalogue__["datasets"][name]={"module":ds.__module__}
+            self.__dscache__[name]=ds
+
+        for dsfac in self.__dsetfac__:
+            self.__catalogue__["factories"][dsfac.__name__]={"module":dsfac.__module__}
+            for ds in dsfac(conf):
+                name=".".join([ds.scheme,ds.__name__])
+                if re.search("TEMPLATE",name):
+                    srch=re.sub("TEMPLATE","([^\\\s]+)",name.replace(".","\."))
+                    #possibly also add existing datasets so they can be found by regular expressions
+                    for entry in Inv:
+                        nameexisting=".".join([entry.scheme,entry.dataset])
+                        if re.search(srch,nameexisting):
+                            #add 
+                            self.__catalogue__["datasets"][nameexisting]={"template":name}
+                
+                self.__catalogue__["datasets"][name]={"factory":dsfac.__name__}
+                self.__dscache__[name]=ds
+        
+        #also find already existing instances of templated datasets
+
+
+        #save to yaml
+        self.__catalogue__["lastupdate"]=datetime.now()
+        cachefile=self.getCacheFile(conf)
+        slurplogger().info("saving available Dataset catalogue to %s"%cachefile)
+        with open(cachefile,'wt') as fid:
+            yaml.dump(self.__catalogue__, fid, default_flow_style=False)
+    
+    def loadCatalogue(self,conf):
+        if self.__catalogue__:
             return
 
-        for fac in self.__dsetfac__:
-           self.__dsets__.extend(fac(conf)) 
-        #set the factory list to an empty list (everything has been produced)
-        self.__dsetfac__=[]
+        self.addUserPlugPaths(conf)
+        cachefile=self.getCacheFile(conf)
+        if not os.path.exists(cachefile):
+            self.refresh()
+        with open(cachefile,'rt') as fid:
+            self.__catalogue__=yaml.safe_load(fid)
 
-    def getDatasets(self,conf,regex=None):
-        """retrieves a list of dataset classes possibly obeying a certain regex"""
-
-        #dynamically import relevant datasets
+    def registerAllDataSets(self,conf):
+        """load all dataset classes (but don't construct them)"""
+        if self.__dsets__:
+            #already loaded (quick return)
+            return
+        
+        #dynamically import all relevant datasets and class factories (including userplugin datasets)
         modgeo=__import__("geoslurp.dataset")
+        
+        #also load userplugins
+        self.addUserPlugPaths(conf,True)
 
 
 
-        if conf:
-            if 'userplugins' in conf.userentry.conf:
-                sys.path.append(conf["userplugins"])
-                mod=__import__("userplugins")
+    def listDataSets(self,conf):
+        self.loadCatalogue(conf)
+        return self.__catalogue__["datasets"]
 
-            #also load the dynamic factory-based datasets
-            self.load(conf)
+    def listFunctions(self,conf):
+        self.loadCatalogue(conf)
+        return self.__catalogue__["functions"]
 
-        if not regex:
-            #just return everything
-            return self.__dsets__
+    def listFactories(self,conf):
+        self.loadCatalogue(conf)
+        return self.__catalogue__["factories"]
 
-        #otherwise be more picky
-        outdsets=[]
+            
+    def getDsetClass(self,conf,name):
+        """Loads a dataset as an class (but check cache first)"""
+        if name in self.__dscache__:
+            return self.__dscache__[name]
+        else:
+           self.loadCatalogue(conf) 
+           dsentry=self.__catalogue__["datasets"][name]
+           #load isolated class
+           if "factory" in dsentry:
+               #produce all classes in the factory
+               facentry=self.__catalogue__["factories"][dsentry["factory"]]
+               facmod=__import__(facentry["module"])
+               fac=getattr(facmod,dsentry["factory"])
+               for ds in fac(conf):
+                   self.__dscache__[".".join([ds.scheme,ds.__name__])]=ds
+               return self.__dscache__[name]
+           elif "template" in dsentry:
+                #the requested class must be derived from a templated base class
+                dsbase=self.getDsetClass(conf,dsentry["template"])
+                scheme,tbl=name.split(".")
+                ds=type(tbl,(dsbase,),{"scheme":scheme})
+                self.__dscache__[name]=ds
+                return ds
+           else:
+               mod=__import__(dsentry["module"])
+               ds=getattr(mod,name.split(".")[0])
+               self.__dscache__[name]=ds
+               return ds
+        
+    def getDatasets(self,conf,regex):
+        """retrieves a list of dataset classes possibly obeying a certain regex"""
+        self.loadCatalogue(conf)        
+        #get the valid names  
+        outdsets=[] 
         regexcomp=re.compile(regex)
-        for ds in self.__dsets__:
-            # note classes which have "TEMPLATE" in their name are treated special
-            if re.search("TEMPLATE",".".join([ds.scheme,ds.__name__])):
+        for name in self.__catalogue__["datasets"].keys():
+
+            if regexcomp.fullmatch(name):
+                outdsets.append(self.getDsetClass(conf,name))
+                continue  
+            
+            #other case name: is when the regex is a fully specified  scheme.table and  obeys a template
+            if re.fullmatch("^[\w]+(?:\.[\w]+)$",regex) and  re.search("TEMPLATE",name):
                 #reverse the search: turn the TEMPLATE into a regex and assume the regex is a fully qualified name for the class 
-                srch=re.sub("TEMPLATE","([^\\\s]+)","\.".join([ds.scheme,ds.__name__]))
+                srch=re.sub("TEMPLATE","([^\\\s]+)",name.replace(".","\."))
                 if re.search(srch,regex):
                     #dynamically derive a class from the  template
-                    splt=regex.split(".")
-                    if len(splt) is not 2:
-                        raise NameError("For template datasets a fully qualified sccheme and name must be provided (scheme.dataset)")
-                    
-                    outdsets.append(type(splt[1],(ds,),{"scheme":splt[0]}))
-
-            elif regexcomp.search(".".join([ds.scheme,ds.__name__])):
-                outdsets.append(ds)
+                    if regex in self.__dscache__:
+                        outdsets.append(self.__dscache__[regex])
+                    else:
+                        dsbase=self.getDsetClass(conf,name)
+                        scheme,tbl=regex.split(".")
+                        #derive a class from the template class
+                        outdsets.append(type(tbl,(dsbase,),{"scheme":scheme}))
         return outdsets
-
-    def getFuncs(self,conf):
-        """This is currently a stub (returns no functions)"""
+        
+    def getFuncs(self,conf,regex):
+        """This is currently a stub (returns en empty list)"""
         return []
 
 #module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )

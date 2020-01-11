@@ -183,7 +183,7 @@ class Argo2(DataSet):
         self.thrd=None
 
     def pull(self,center=None,mirror=0):
-        """ Pulls the combined *_prof.nc files from the ftp server
+        """ Pulls the combined \*_prof.nc files from the ftp server
         :param center (string): only pull data from a specific datacenter
         :param mirror (0 or 1): use ifremer (0) or usgodae (1) mirror
         """

@@ -1,2 +1,2 @@
-from FESOM import *
+from .FESOM import *
 from .grdc import *
