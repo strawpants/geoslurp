@@ -6,3 +6,4 @@ dist
 build
 *.pyc
 *.gpg
+.ipynb_checkpoints

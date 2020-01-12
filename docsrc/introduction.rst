@@ -1,12 +1,21 @@
 An introduction to Geoslurp
 ===========================
 
-**Geoslurp is a  pure-python module which allows downloading/updating  and querying of different datasets in a spatially aware database.**
+**Geoslurp is a  pure-python module which allows downloading/updating/querying of different datasets in a spatially aware database (PostgreSQL with PostGIS).**
 
-When
-The idea behind geoslurp is to develop a hybrid approach to store data (either as URL's or file links) and corresponding scientific meta information which goes beyond the obvious. Geoslurp therefore has several aims:
-* Have a centralized access point to scientific data (but the data itself may be stored in disctributed ways)
-* Allow advanced queries on the metainfo data (e.g. time and spatial queries, data specific queries)
-* Provide ways to automatically download/update/register datasets
-* Future ideas: Encourage reproducibility by registration of runs (e.g. store links to used datasets/queries and configuration scripts)
-* REST-API to access from external
+
+The idea behind Geoslurp is to centrally manage datasets, which has the following advantages:
+* It provides and encourages a central point to access to various datasets
+* Establshed database functionatility can be exploited by allowing (spatial) queries of the datasets, *joins* (querying a combination of datasets)
+* Sharing is encouraged, users share data by default, making it possible for other users to use the registered data and avoiding copies of large datasets
+* It allows for consistent versioning of datasets
+* The use of an 'off-the-shelf' database provides a standard and mature interface reachable from various programming languages.
+* Large datafiles don't necessarily need to be in the database. The metainformation, required for the queries, will be stored together with a link to where the data can be found (e.g. a local file path or an online url). This allows relatively light-weight databases to be set up. 
+* Provide ways to standardize downloading/updating/registering of datasets
+
+What the future holds
+-----------------------
+At the time of writing, the geoslurp tools are still under development. But taking a look in the future, one may already philosophize about possible features:
+* Manage a geoslurp instance by means of a website-frontend. Currently, the functionatily is provided by a command line script. This may be too cumbersome to learn for occasional users.
+* Hide the database access behind a REST-API. This may be more secure when public instances will be set up and will facilitate the interaction with other webservices.
+* Encourage reproducibility by registering scientific processing pipelines. 

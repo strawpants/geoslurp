@@ -11,7 +11,8 @@ Data management with geoslurp
    :caption: Contents:
 
    introduction
-   installation 
+   installation
+   examples
    clitools
    apigeoslurp/geoslurp
 
