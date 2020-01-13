@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>geoslurp.datapull.crawler &mdash; geoslurp Under construction v1.0 documentation</title>
+  <title>geoslurp.datapull.crawler &mdash; geoslurp Wannabe v1.0 documentation</title>
   
 
   
@@ -27,6 +27,7 @@
         <script type="text/javascript" src="../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -86,9 +87,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of postgis &amp; the module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../clitools.html">Command line tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../apigeoslurp/geoslurp.html">geoslurp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
 
             
@@ -170,20 +172,20 @@
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<div class="viewcode-block" id="CrawlerBase"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.crawler.CrawlerBase">[docs]</a><span class="k">class</span> <span class="nc">CrawlerBase</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="CrawlerBase"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.crawler.CrawlerBase">[docs]</a><span class="k">class</span> <span class="nc">CrawlerBase</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="n">rooturl</span><span class="o">=</span><span class="kc">None</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="o">=</span><span class="n">url</span>
 
-<div class="viewcode-block" id="CrawlerBase.uris"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.crawler.CrawlerBase.uris">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="CrawlerBase.uris"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.crawler.CrawlerBase.uris">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">uris</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generator which returns uri&#39;s to requested datasets&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="CrawlerBase.parallelDownload"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.crawler.CrawlerBase.parallelDownload">[docs]</a>    <span class="k">def</span> <span class="nf">parallelDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outdir</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">maxconn</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">continueonError</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="CrawlerBase.parallelDownload"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.crawler.CrawlerBase.parallelDownload">[docs]</a>    <span class="k">def</span> <span class="nf">parallelDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outdir</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">maxconn</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">continueonError</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Download uris in parallel</span>
 <span class="sd">        :param direc: directory to download to</span>
@@ -218,7 +220,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>

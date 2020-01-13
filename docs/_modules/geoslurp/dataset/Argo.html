@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.dataset.Argo &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.dataset.Argo</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.dataset.Argo</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with Frommle; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
+
+<span class="kn">from</span> <span class="nn">geoslurp.dataset.dataSetBase</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.ftp</span> <span class="kn">import</span> <span class="n">Crawler</span> <span class="k">as</span> <span class="n">ftpCrawler</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.ftp</span> <span class="kn">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">ftpUri</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="kn">import</span> <span class="n">findFiles</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="kn">import</span> <span class="n">UriFile</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2.types</span> <span class="kn">import</span> <span class="n">Geography</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2.elements</span> <span class="kn">import</span> <span class="n">WKBElement</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span><span class="p">,</span> <span class="n">Boolean</span><span class="p">,</span> <span class="n">ARRAY</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">TIMESTAMP</span><span class="p">,</span> <span class="n">JSONB</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span> <span class="k">as</span> <span class="n">ncDset</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">ogr</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span><span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">import</span> <span class="nn">gzip</span> <span class="k">as</span> <span class="nn">gz</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.register</span> <span class="kn">import</span> <span class="n">geoslurpregistry</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># To do:  etract meta information with a threadpool</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+
+<span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;oceanobs&#39;</span>
+
+<div class="viewcode-block" id="ArgoftpCrawler"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.ArgoftpCrawler">[docs]</a><span class="k">class</span> <span class="nc">ArgoftpCrawler</span><span class="p">(</span><span class="n">ftpCrawler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Adapted ftpcrawler class to get speedier (concurrent) downloads for argo files</span>
+<span class="sd">    Takes advantage of the argo index files&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ArgoftpCrawler.uris"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.ArgoftpCrawler.uris">[docs]</a>    <span class="k">def</span> <span class="nf">uris</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This creates a list of _prof.nc files without having to list subdirectories&quot;&quot;&quot;</span>
+
+        <span class="n">buf</span><span class="o">=</span><span class="n">ftpUri</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="o">+</span><span class="s2">&quot;ar_index_global_meta.txt.gz&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">buffer</span><span class="p">()</span>
+        <span class="n">regex</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^([a-z]+/[0-9]+/)([0-9]+_meta.nc),[0-9]+,.</span><span class="si">{2}</span><span class="s1">,([0-9]+)&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">gz</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+            <span class="n">mtch</span><span class="o">=</span><span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">ln</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span><span class="n">ln</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">mtch</span><span class="p">:</span>
+                <span class="n">subdir</span><span class="o">=</span><span class="n">mtch</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">fname</span><span class="o">=</span><span class="n">mtch</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;meta&#39;</span><span class="p">,</span><span class="s1">&#39;prof&#39;</span><span class="p">)</span>
+                <span class="n">t</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">mtch</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">ftpUri</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="p">,</span><span class="s1">&#39;dac&#39;</span><span class="p">,</span><span class="n">subdir</span><span class="p">,</span><span class="n">fname</span><span class="p">),</span><span class="n">lastmod</span><span class="o">=</span><span class="n">t</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdir</span><span class="p">)</span></div></div>
+
+
+<span class="c1">#create a custom exception which describes netcdf datasets with dimensions of zero length</span>
+<div class="viewcode-block" id="ZeroDimException"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.ZeroDimException">[docs]</a><span class="k">class</span> <span class="nc">ZeroDimException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<span class="c1"># A declarative base which can be used to create database tables</span>
+
+<span class="n">OceanObsTBase</span><span class="o">=</span><span class="n">declarative_base</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">scheme</span><span class="p">))</span>
+
+<span class="c1"># Setup the postgres table</span>
+
+<span class="n">geoMpointType</span> <span class="o">=</span> <span class="n">Geography</span><span class="p">(</span><span class="n">geometry_type</span><span class="o">=</span><span class="s2">&quot;MULTIPOINTZ&quot;</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="s1">&#39;4326&#39;</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">dimension</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ArgoTable"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.ArgoTable">[docs]</a><span class="k">class</span> <span class="nc">ArgoTable</span><span class="p">(</span><span class="n">OceanObsTBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Defines the Argo PostgreSQL table&quot;&quot;&quot;</span>
+    <span class="n">__tablename__</span><span class="o">=</span><span class="s1">&#39;argo2&#39;</span>
+    <span class="nb">id</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">wmoid</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">uri</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">datacenter</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">lastupdate</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">)</span>
+    <span class="n">tstart</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">)</span>
+    <span class="n">tend</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">)</span>
+    <span class="n">mode</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">ARRAY</span><span class="p">(</span><span class="n">String</span><span class="p">))</span>
+    <span class="n">ascend</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">ARRAY</span><span class="p">(</span><span class="n">Boolean</span><span class="p">))</span>
+    <span class="n">tlocation</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">ARRAY</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">))</span>
+    <span class="n">cycle</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">ARRAY</span><span class="p">(</span><span class="n">Integer</span><span class="p">))</span>
+    <span class="n">iprof</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">ARRAY</span><span class="p">(</span><span class="n">Integer</span><span class="p">))</span>
+    <span class="n">geom</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">geoMpointType</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ncStr"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.ncStr">[docs]</a><span class="k">def</span> <span class="nf">ncStr</span><span class="p">(</span><span class="n">ncelem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;extracts a utf-8 encoded string from a  netcdf character variable and strips trailing junk&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ncelem</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="argoMetaExtractor"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.argoMetaExtractor">[docs]</a><span class="k">def</span> <span class="nf">argoMetaExtractor</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span><span class="n">cachedir</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract meta information (tracks, etc) as a dictionary from an argo prof file  floats&quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">url</span><span class="o">=</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span>
+        <span class="n">ncArgo</span><span class="o">=</span><span class="n">ncDset</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="c1">#check for minimum amount of profiles</span>
+        <span class="n">minProfs</span><span class="o">=</span><span class="mi">3</span>
+        <span class="k">if</span> <span class="n">ncArgo</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;N_PROF&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="n">minProfs</span><span class="p">:</span>
+            <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;amount of profiles in </span><span class="si">%s</span><span class="s2"> is less then </span><span class="si">%d</span><span class="s2">, skipping&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">minProfs</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+
+
+        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting meta info from: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+
+        <span class="c1"># Get reference time</span>
+        <span class="n">t0</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">ncStr</span><span class="p">(</span><span class="n">ncArgo</span><span class="p">[</span><span class="s2">&quot;REFERENCE_DATE_TIME&quot;</span><span class="p">][:]),</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
+
+        <span class="c1">#get the start end end time</span>
+
+
+        <span class="c1">#wmoid&#39;s should be the same for all entries, so take the first one</span>
+        <span class="n">wmoid</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">ncStr</span><span class="p">(</span><span class="n">ncArgo</span><span class="p">[</span><span class="s2">&quot;PLATFORM_NUMBER&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="n">datacenter</span><span class="o">=</span><span class="n">ncStr</span><span class="p">(</span><span class="n">ncArgo</span><span class="p">[</span><span class="s2">&quot;DATA_CENTRE&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1">#get modes for each profile</span>
+        <span class="n">mode</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ncStr</span><span class="p">(</span><span class="n">ncArgo</span><span class="p">[</span><span class="s1">&#39;DATA_MODE&#39;</span><span class="p">])])</span>
+
+        <span class="c1">#get cycles for each profile</span>
+        <span class="n">cycle</span><span class="o">=</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ncArgo</span><span class="p">[</span><span class="s1">&#39;CYCLE_NUMBER&#39;</span><span class="p">][:]]</span>
+
+        <span class="c1">#</span>
+        <span class="n">tlocation</span><span class="o">=</span><span class="p">[]</span>
+        <span class="c1"># which profile is ascending ?</span>
+        <span class="n">ascend</span><span class="o">=</span><span class="n">ncArgo</span><span class="p">[</span><span class="s1">&#39;DIRECTION&#39;</span><span class="p">][:]</span><span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;A&quot;</span>
+
+        <span class="n">geoMpoints</span><span class="o">=</span><span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbMultiPoint</span><span class="p">)</span>
+        <span class="n">iprof</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,(</span><span class="n">t</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">lat</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ncArgo</span><span class="p">[</span><span class="s2">&quot;JULD_LOCATION&quot;</span><span class="p">][:],</span><span class="n">ncArgo</span><span class="p">[</span><span class="s2">&quot;LONGITUDE&quot;</span><span class="p">][:],</span><span class="n">ncArgo</span><span class="p">[</span><span class="s2">&quot;LATITUDE&quot;</span><span class="p">][:])):</span>
+            <span class="k">if</span> <span class="n">lon</span> <span class="o">&gt;</span> <span class="mi">180</span><span class="p">:</span>
+                <span class="c1">#make sure longitude goes from -180 to 180</span>
+                <span class="n">lon</span><span class="o">-=</span><span class="mi">360</span>
+            <span class="c1">#we don&#39;t want nan positions or timetags in the database</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">is_masked</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">is_masked</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">is_masked</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">tdt</span><span class="o">=</span><span class="n">t0</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+            <span class="n">tlocation</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tdt</span><span class="p">)</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbPoint</span><span class="p">)</span>
+            <span class="n">point</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span><span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">geoMpoints</span><span class="o">.</span><span class="n">AddGeometry</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+            <span class="n">iprof</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tlocation</span><span class="p">:</span>
+            <span class="c1">#return an empty dictionary when no valid profiles have been found</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+        <span class="n">tstart</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">tlocation</span><span class="p">)</span>
+        <span class="n">tend</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">tlocation</span><span class="p">)</span>
+
+        <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;wmoid&quot;</span><span class="p">:</span><span class="n">wmoid</span><span class="p">,</span><span class="s2">&quot;uri&quot;</span><span class="p">:</span><span class="n">url</span><span class="p">,</span><span class="s2">&quot;datacenter&quot;</span><span class="p">:</span><span class="n">datacenter</span><span class="p">,</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">:</span><span class="n">uri</span><span class="o">.</span><span class="n">lastmod</span><span class="p">,</span><span class="s2">&quot;tstart&quot;</span><span class="p">:</span><span class="n">tstart</span><span class="p">,</span><span class="s2">&quot;tend&quot;</span><span class="p">:</span><span class="n">tend</span><span class="p">,</span>
+              <span class="s2">&quot;mode&quot;</span><span class="p">:</span><span class="n">mode</span><span class="p">,</span><span class="s2">&quot;ascend&quot;</span><span class="p">:</span><span class="n">ascend</span><span class="p">,</span><span class="s2">&quot;tlocation&quot;</span><span class="p">:</span><span class="n">tlocation</span><span class="p">,</span><span class="s2">&quot;cycle&quot;</span><span class="p">:</span><span class="n">cycle</span><span class="p">,</span><span class="s2">&quot;iprof&quot;</span><span class="p">:</span><span class="n">iprof</span><span class="p">,</span>
+              <span class="s2">&quot;geom&quot;</span><span class="p">:</span><span class="n">WKBElement</span><span class="p">(</span><span class="n">geoMpoints</span><span class="o">.</span><span class="n">ExportToWkb</span><span class="p">(),</span><span class="n">srid</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span><span class="n">extended</span><span class="o">=</span><span class="kc">True</span><span class="p">)}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeWarning</span><span class="p">(</span><span class="s2">&quot;Cannot extract meta information from &quot;</span><span class="o">+</span> <span class="n">url</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">meta</span></div>
+
+
+<div class="viewcode-block" id="Argo2"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.Argo2">[docs]</a><span class="k">class</span> <span class="nc">Argo2</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Argo table&quot;&quot;&quot;</span>
+    <span class="n">version</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">table</span><span class="o">=</span><span class="n">ArgoTable</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbcon</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbcon</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated</span><span class="o">=</span><span class="p">[]</span>
+        <span class="c1"># Create table if it doesn&#39;t exist</span>
+        <span class="c1"># import pdb;pdb.set_trace()</span>
+        <span class="n">OceanObsTBase</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span> <span class="n">checkfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_uriqueue</span><span class="o">=</span><span class="n">Queue</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_killUpdate</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thrd</span><span class="o">=</span><span class="kc">None</span>
+
+<div class="viewcode-block" id="Argo2.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.Argo2.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">mirror</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Pulls the combined \*_prof.nc files from the ftp server</span>
+<span class="sd">        :param center (string): only pull data from a specific datacenter</span>
+<span class="sd">        :param mirror (0 or 1): use ifremer (0) or usgodae (1) mirror</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ftpmirrors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ftp://ftp.ifremer.fr/ifremer/argo/&quot;</span><span class="p">,</span><span class="s2">&quot;ftp://usgodae.org/pub/outgoing/argo/&quot;</span><span class="p">]</span>
+
+        <span class="c1">#since crawling thought the ftp directories takes relatively much time we&#39;re going to speed this up using the dedicated ArgoftpCrawler</span>
+        <span class="k">if</span> <span class="n">center</span><span class="p">:</span>
+            <span class="n">ftpcrwl</span><span class="o">=</span><span class="n">ArgoftpCrawler</span><span class="p">(</span><span class="n">ftpmirrors</span><span class="p">[</span><span class="n">mirror</span><span class="p">],</span><span class="n">center</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ftpcrwl</span><span class="o">=</span><span class="n">ArgoftpCrawler</span><span class="p">(</span><span class="n">ftpmirrors</span><span class="p">[</span><span class="n">mirror</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated</span><span class="o">=</span><span class="n">ftpcrwl</span><span class="o">.</span><span class="n">parallelDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">maxconn</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">continueonError</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Argo2.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.Argo.Argo2.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;register downloaded commbined prof files&quot;&quot;&quot;</span>
+        <span class="c1">#create a list of files which need to be (re)registered</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">updated</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updated</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Building file list..&quot;</span><span class="p">)</span>
+            <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">UriFile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">findFiles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="s1">&#39;.*nc&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">lastupdate</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Argo: No new files found since last update&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">filesnew</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">retainnewUris</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filesnew</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Argo: No database update needed&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="c1">#loop over files</span>
+        <span class="k">for</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">filesnew</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">center</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">center</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">meta</span><span class="o">=</span><span class="n">argoMetaExtractor</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">meta</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
+
+
+    <span class="c1"># def halt(self):</span>
+        <span class="c1"># slurplogger().error(&quot;Stopping update&quot;)</span>
+        <span class="c1"># self._killUpdate=True</span>
+        <span class="c1"># # indicate a done task n the queue in order to allow the pullWorker thread to stop gracefully</span>
+        <span class="c1"># #empty eue</span>
+        <span class="c1"># while not self._uriqueue.empty():</span>
+            <span class="c1"># self._uriqueue.get()</span>
+            <span class="c1"># self._uriqueue.task_done()</span>
+        <span class="c1"># #also synchronize inventory info (e.g. resume</span>
+        <span class="c1"># self.updateInvent(False)</span>
+        <span class="c1"># raise RuntimeWarning(&quot;Argo dataset processing stopped&quot;)</span>
+
+    <span class="c1"># def pullWorker(self,conn):</span>
+        <span class="c1"># &quot;&quot;&quot; Pulls valid opendap URI&#39;s from a thredds server and queue them&quot;&quot;&quot;</span>
+
+        <span class="c1"># for uri in conn.uris():</span>
+            <span class="c1"># slurplogger().info(&quot;queuing %s&quot;,uri.url)</span>
+            <span class="c1"># self._uriqueue.put(uri)</span>
+            <span class="c1"># if self._killUpdate:</span>
+                <span class="c1"># slurplogger().warning(&quot;Pulling of Argo URI&#39;s stopped&quot;)</span>
+                <span class="c1"># return</span>
+        <span class="c1"># #signal the end of the queue by adding a none</span>
+        <span class="c1"># self._uriqueue.put(None)</span>
+
+<span class="n">geoslurpregistry</span><span class="o">.</span><span class="n">registerDataset</span><span class="p">(</span><span class="n">Argo2</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

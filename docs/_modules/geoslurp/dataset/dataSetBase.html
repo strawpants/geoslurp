@@ -1,0 +1,506 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.dataset.dataSetBase &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.dataset.dataSetBase</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.dataset.dataSetBase</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with Frommle; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="kn">import</span> <span class="n">Inventory</span><span class="p">,</span><span class="n">Settings</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm.exc</span> <span class="kn">import</span> <span class="n">NoResultFound</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span><span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">TIMESTAMP</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="kn">import</span> <span class="n">UriFile</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">and_</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db.settings</span> <span class="kn">import</span> <span class="n">getCreateDir</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="kn">import</span> <span class="n">tableMapFactory</span>
+
+
+<div class="viewcode-block" id="rmfilterdir"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.rmfilterdir">[docs]</a><span class="k">def</span> <span class="nf">rmfilterdir</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove directories and files based on a certain regex filter&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">filter</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">ddir</span><span class="p">):</span>
+            <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Pruning directory </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">ddir</span><span class="p">))</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">ddir</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#remove partly</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">ddir</span><span class="p">):</span>
+            <span class="c1">#possibly remove entire directories with content at once</span>
+            <span class="k">for</span> <span class="n">dd</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">filter</span><span class="p">,</span><span class="n">dd</span><span class="p">):</span>
+                    <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Pruning directory </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dd</span><span class="p">))</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dd</span><span class="p">)</span>
+                    <span class="c1">#also remove from the file tree so it won&#39;t be followed</span>
+                    <span class="n">dirs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">dd</span><span class="p">)</span>
+            <span class="c1">#remove filenames</span>
+            <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">filter</span><span class="p">,</span><span class="n">fl</span><span class="p">):</span>
+                    <span class="n">file</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="n">root</span><span class="p">,</span><span class="n">fl</span><span class="p">)</span>
+                    <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataSet"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet">[docs]</a><span class="k">class</span> <span class="nc">DataSet</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abstract Base class which hold a dataset (corresponding to a database table&quot;&quot;&quot;</span>
+    <span class="n">table</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">commitCounter</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;public&#39;</span>
+    <span class="n">db</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">version</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">updatefreq</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">commitperN</span><span class="o">=</span><span class="mi">500</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbcon</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">])):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Refusing to instantiate templated dataset&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">=</span><span class="n">dbcon</span>
+
+        <span class="c1">#Initiate a session for keeping track of the inventory entry</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">invent</span><span class="o">=</span><span class="n">Inventory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">invent</span><span class="o">.</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">invent</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheme</span> <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">invent</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">dataset</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+            <span class="c1">#possibly migrate table</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NoResultFound</span><span class="p">:</span>
+            <span class="c1">#possibly create a schema</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">CreateSchema</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">)</span>
+            <span class="c1">#set defaults for the  inventory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span> <span class="o">=</span> <span class="n">invent</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">scheme</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">version</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">updatefreq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updatefreq</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="p">{},</span> 
+                    <span class="n">lastupdate</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="c1">#add the default entry to the database</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1">#load user settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">Settings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
+        
+        <span class="c1">#possibly create the table when explictily provided</span>
+        <span class="c1"># the table creation will be postponed when no explicit table is provided</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">createTable</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="DataSet.updateInvent"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.updateInvent">[docs]</a>    <span class="k">def</span> <span class="nf">updateInvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">updateTime</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">updateTime</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">lastupdate</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">updatefreq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updatefreq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataSet.info"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span></div>
+
+<div class="viewcode-block" id="DataSet.dataDir"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.dataDir">[docs]</a>    <span class="k">def</span> <span class="nf">dataDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the specialized data directory of this scheme and dataset</span>
+<span class="sd">        The directory will be created if it does not exist&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">datadir</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">getCreateDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">datadir</span><span class="p">)</span>
+        <span class="c1">#else try to retrieve the standard path from the configuration</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">getDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="s1">&#39;DataDir&#39;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdirs</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DataSet.setDataDir"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.setDataDir">[docs]</a>    <span class="k">def</span> <span class="nf">setDataDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ddir</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">datadir</span><span class="o">=</span><span class="n">ddir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataSet.cacheDir"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.cacheDir">[docs]</a>    <span class="k">def</span> <span class="nf">cacheDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns the cache directory of this scheme and dataset&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">subdirs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">getCreateDir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span><span class="n">subdirs</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">getCreateDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">getDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="s1">&#39;CacheDir&#39;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdirs</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DataSet.setCacheDir"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.setCacheDir">[docs]</a>    <span class="k">def</span> <span class="nf">setCacheDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cdir</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">cache</span><span class="o">=</span><span class="n">cdir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataSet.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.pull">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pulls the necessary data from the online resource&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="DataSet.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.register">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register the downloaded dataset in the database&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="DataSet.purgedata"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.purgedata">[docs]</a>    <span class="k">def</span> <span class="nf">purgedata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deletes the data directory of the dataset,optionally applying a directory/filename filter&quot;&quot;&quot;</span>
+        <span class="n">rmfilterdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="nb">filter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataSet.purgecache"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.purgecache">[docs]</a>    <span class="k">def</span> <span class="nf">purgecache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">filter</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deletes the cache directory of the dataset, optionally applying a directory/filename filter&quot;&quot;&quot;</span>
+        <span class="n">rmfilterdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="nb">filter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataSet.purgeentry"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.purgeentry">[docs]</a>    <span class="k">def</span> <span class="nf">purgeentry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">filter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete dataset entry in the database&quot;&quot;&quot;</span>
+        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting </span><span class="si">%s</span><span class="s2"> entry&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dropTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataSet.halt"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.halt">[docs]</a>    <span class="k">def</span> <span class="nf">halt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;can be overridden to properly clean up an aborted operation&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="DataSet.uriNeedsUpdate"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.uriNeedsUpdate">[docs]</a>    <span class="k">def</span> <span class="nf">uriNeedsUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urilikestr</span><span class="p">,</span><span class="n">lastmod</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Query for a URI in the table based on a alike string and delete the entry when older than lastmod&quot;&quot;&quot;</span>
+        <span class="n">needsupdate</span><span class="o">=</span><span class="kc">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">qResults</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="o">+</span><span class="n">urilikestr</span><span class="o">+</span><span class="s1">&#39;%&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">qResults</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="n">needsupdate</span><span class="o">=</span><span class="kc">False</span>
+            <span class="c1">#check if at least one needs updating</span>
+            <span class="k">for</span> <span class="n">qres</span> <span class="ow">in</span> <span class="n">qResults</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">qres</span><span class="o">.</span><span class="n">lastupdate</span> <span class="o">&lt;</span> <span class="n">lastmod</span><span class="p">:</span>
+                    <span class="n">needsupdate</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">needsupdate</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">qres</span> <span class="ow">in</span> <span class="n">qResults</span><span class="p">:</span>
+                    <span class="c1">#delete the entries which need updating</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">qres</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No Update needed, skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">urilikestr</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Fine no entries found</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">needsupdate</span></div>
+
+<div class="viewcode-block" id="DataSet.retainnewUris"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.retainnewUris">[docs]</a>    <span class="k">def</span> <span class="nf">retainnewUris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">urilist</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filters those uris which have table entries which are too old or are not present in the database&quot;&quot;&quot;</span>
+        <span class="c1">#create a temporary table with uri and lastmodification time entries</span>
+        <span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;uri&#39;</span><span class="p">,</span><span class="n">String</span><span class="p">),</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;lastmod&#39;</span><span class="p">,</span><span class="n">TIMESTAMP</span><span class="p">)]</span>
+
+        <span class="c1">#setup a seperate session  and transaction in order to work with a temporary table</span>
+        <span class="n">trans</span><span class="p">,</span><span class="n">ses</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">transsession</span><span class="p">()</span>
+        
+        <span class="n">tmptable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">createTable</span><span class="p">(</span><span class="s1">&#39;tmpuris&#39;</span><span class="p">,</span><span class="n">cols</span><span class="p">,</span><span class="n">temporary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">bind</span><span class="o">=</span><span class="n">ses</span><span class="o">.</span><span class="n">get_bind</span><span class="p">())</span>
+        <span class="c1"># tmptable=self.db.createTable(&#39;tmpuris&#39;,cols,temporary=False,bind=ses.get_bind())</span>
+        <span class="c1"># import pdb;pdb.set_trace()</span>
+        <span class="c1">#fill the table with the file list and last modification timsstamps</span>
+        <span class="n">count</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">for</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">urilist</span><span class="p">:</span>
+            <span class="n">entry</span><span class="o">=</span><span class="n">tmptable</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="n">uri</span><span class="o">.</span><span class="n">lastmod</span><span class="p">)</span>
+            <span class="n">ses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+            <span class="n">count</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">commitperN</span><span class="p">:</span>
+                <span class="n">ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="n">count</span><span class="o">=</span><span class="mi">0</span>
+
+        <span class="n">ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="c1">#delete all entries which require updating</span>
+        <span class="c1"># first gather all the ids of i entries which are expired </span>
+        <span class="n">subqry</span><span class="o">=</span><span class="n">ses</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmptable</span><span class="p">,</span> <span class="n">and_</span><span class="p">(</span><span class="n">tmptable</span><span class="o">.</span><span class="n">uri</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span><span class="n">tmptable</span><span class="o">.</span><span class="n">lastmod</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">lastupdate</span><span class="p">))</span><span class="o">.</span><span class="n">subquery</span><span class="p">()</span>
+        <span class="c1"># #then delete those entries from the table</span>
+        <span class="c1"># import pdb;pdb.set_trace()</span>
+        
+        <span class="n">delqry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">subqry</span><span class="p">))</span>
+        <span class="n">ses</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">delqry</span><span class="p">)</span>
+
+
+        <span class="c1">#now make a list of new uris</span>
+        <span class="n">qrynew</span><span class="o">=</span><span class="n">ses</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">tmptable</span><span class="p">)</span><span class="o">.</span><span class="n">outerjoin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">uri</span> <span class="o">==</span> <span class="n">tmptable</span><span class="o">.</span><span class="n">uri</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">uri</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1">#submit transaction</span>
+        <span class="n">trans</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="c1">#return entried which need updating he entries in the original table which need updating</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">UriFile</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">lastmod</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">qrynew</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DataSet.entryNeedsUpdate"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.entryNeedsUpdate">[docs]</a>    <span class="k">def</span> <span class="nf">entryNeedsUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">likestr</span><span class="p">,</span><span class="n">lastmod</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Query for a Columns in the table based on a alike string and delete the entry when older than lastmod&quot;&quot;&quot;</span>
+        <span class="n">needsupdate</span><span class="o">=</span><span class="kc">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span><span class="p">:</span>
+                <span class="n">col</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">uri</span>
+            <span class="n">qResults</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="o">+</span><span class="n">likestr</span><span class="o">+</span><span class="s1">&#39;%&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">qResults</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="n">needsupdate</span><span class="o">=</span><span class="kc">False</span>
+            <span class="c1">#check if at least one needs updating</span>
+            <span class="k">for</span> <span class="n">qres</span> <span class="ow">in</span> <span class="n">qResults</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">qres</span><span class="o">.</span><span class="n">lastupdate</span> <span class="o">&lt;</span> <span class="n">lastmod</span><span class="p">:</span>
+                    <span class="n">needsupdate</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">needsupdate</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">qres</span> <span class="ow">in</span> <span class="n">qResults</span><span class="p">:</span>
+                    <span class="c1">#delete the entries which need updating</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">qres</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No Update needed, skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">likestr</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Fine no entries found</span>
+            <span class="k">pass</span>
+        <span class="k">return</span> <span class="n">needsupdate</span></div>
+
+<div class="viewcode-block" id="DataSet.addEntry"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.addEntry">[docs]</a>    <span class="k">def</span> <span class="nf">addEntry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">metadict</span><span class="p">):</span>
+        <span class="n">entry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="o">**</span><span class="n">metadict</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">commitCounter</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">commitperN</span><span class="p">:</span>
+            <span class="c1"># commit every so many rows</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commitCounter</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commitCounter</span><span class="o">+=</span><span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="DataSet.truncateTable"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.truncateTable">[docs]</a>    <span class="k">def</span> <span class="nf">truncateTable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Truncate all entries in a table&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">truncateTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="DataSet.createTable"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.createTable">[docs]</a>    <span class="k">def</span> <span class="nf">createTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;dynamically creates a table (when it does not exists) from a list of colums&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cols</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Creating a dynamic table requires the specification of columns&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">=</span><span class="n">Table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">mdata</span><span class="p">,</span> <span class="o">*</span><span class="n">cols</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">checkfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">tableMap</span><span class="o">=</span><span class="n">tableMapFactory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">=</span><span class="n">tableMap</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cols</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot create static table from dynamic columns &quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span><span class="n">checkfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">session</span><span class="p">:</span>
+            <span class="c1"># bind the table to a specific session</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">bind_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">,</span><span class="n">session</span><span class="o">.</span><span class="n">get_bind</span><span class="p">())</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataSet.dropTable"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.dropTable">[docs]</a>    <span class="k">def</span> <span class="nf">dropTable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dropTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="DataSet.migrate"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.migrate">[docs]</a>    <span class="k">def</span> <span class="nf">migrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">version</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Properly migrate a table between software versions</span>
+<span class="sd">        (note this function is supposed to be overridden in a derived class)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No migration implemented&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Registered database has a higher version number than supported&quot;</span><span class="p">)</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,8 +1,9 @@
+.. _clihelp:
+
 Command line tools
 ==================
 
+.. _geoslurphelp:
 
-Geoslurper
-----------
 .. autoprogram:: clitools.geoslurper:addCommandLineArgs()
    :prog: clitools/geoslurper.py

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>geoslurp.datapull.ftp &mdash; geoslurp Under construction v1.0 documentation</title>
+  <title>geoslurp.datapull.ftp &mdash; geoslurp Wannabe v1.0 documentation</title>
   
 
   
@@ -27,6 +27,7 @@
         <script type="text/javascript" src="../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -86,9 +87,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of postgis &amp; the module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../clitools.html">Command line tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../apigeoslurp/geoslurp.html">geoslurp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
 
             
@@ -169,27 +171,28 @@
 
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="k">import</span> <span class="n">UriBase</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="k">import</span> <span class="n">CrawlerBase</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="kn">import</span> <span class="n">UriBase</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="kn">import</span> <span class="n">CrawlerBase</span>
 
-<div class="viewcode-block" id="Uri"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.ftp.Uri">[docs]</a><span class="k">class</span> <span class="nc">Uri</span><span class="p">(</span><span class="n">UriBase</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdirs</span><span class="p">)</span>
+<div class="viewcode-block" id="Uri"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.ftp.Uri">[docs]</a><span class="k">class</span> <span class="nc">Uri</span><span class="p">(</span><span class="n">UriBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdirs</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;^ftps?://&#39;</span><span class="p">,</span><span class="n">url</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;URL does not seem to be a valid ftp(s) address&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Crawler"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.ftp.Crawler">[docs]</a><span class="k">class</span> <span class="nc">Crawler</span><span class="p">(</span><span class="n">CrawlerBase</span><span class="p">):</span>
+<div class="viewcode-block" id="Crawler"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.ftp.Crawler">[docs]</a><span class="k">class</span> <span class="nc">Crawler</span><span class="p">(</span><span class="n">CrawlerBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Crawler for ftp directories&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;.*&#39;</span><span class="p">,</span><span class="n">followpattern</span><span class="o">=</span><span class="s1">&#39;.*&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;.*&#39;</span><span class="p">,</span><span class="n">followpattern</span><span class="o">=</span><span class="s1">&#39;.*&#39;</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">url</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
             <span class="n">url</span><span class="o">+=</span><span class="s1">&#39;/&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">followpattern</span><span class="o">=</span><span class="n">followpattern</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">=</span><span class="n">auth</span>
 
-<div class="viewcode-block" id="Crawler.ls"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.ftp.Crawler.ls">[docs]</a>    <span class="k">def</span> <span class="nf">ls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Crawler.ls"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.ftp.Crawler.ls">[docs]</a>    <span class="k">def</span> <span class="nf">ls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;List directories and files (generator)&quot;&quot;&quot;</span>
         <span class="n">regexdate</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{1,2} +[0-9]</span><span class="si">{4}</span><span class="s1">)&#39;</span><span class="p">)</span>
 
@@ -199,7 +202,7 @@
         <span class="k">if</span> <span class="n">url</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
             <span class="n">url</span><span class="o">+=</span><span class="s1">&#39;/&#39;</span>
 
-        <span class="n">buf</span><span class="o">=</span><span class="n">Uri</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">buffer</span><span class="p">()</span>
+        <span class="n">buf</span><span class="o">=</span><span class="n">Uri</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span><span class="o">.</span><span class="n">buffer</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
             <span class="n">t</span><span class="o">=</span><span class="kc">None</span>
@@ -225,13 +228,13 @@
 
             <span class="k">yield</span> <span class="n">name</span><span class="p">,</span><span class="n">t</span></div>
 
-<div class="viewcode-block" id="Crawler.uris"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.ftp.Crawler.uris">[docs]</a>    <span class="k">def</span> <span class="nf">uris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Crawler.uris"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.ftp.Crawler.uris">[docs]</a>    <span class="k">def</span> <span class="nf">uris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate a list files in a directory and return a list of uri&quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ls</span><span class="p">(</span><span class="n">subdirs</span><span class="p">):</span>
             <span class="c1">#only apply the pattern to the last column</span>
             <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
-                <span class="n">uri</span><span class="o">=</span><span class="n">Uri</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="p">,</span><span class="n">subdirs</span><span class="p">,</span><span class="n">name</span><span class="p">),</span><span class="n">lastmod</span><span class="o">=</span><span class="n">t</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdirs</span><span class="p">)</span>
+                <span class="n">uri</span><span class="o">=</span><span class="n">Uri</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="p">,</span><span class="n">subdirs</span><span class="p">,</span><span class="n">name</span><span class="p">),</span><span class="n">lastmod</span><span class="o">=</span><span class="n">t</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdirs</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">uri</span><span class="o">.</span><span class="n">lastmod</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1">#one can try to get this information through the header informatio too (slower and not always working)</span>
@@ -254,7 +257,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>

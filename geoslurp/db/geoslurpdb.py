@@ -18,7 +18,10 @@ from geoslurp.config.localsettings import readLocalSettings
 from geoslurp.db.connector import GeoslurpConnector
 
 def geoslurpConnect(args=None,readonlyuser=True,update=False):
-    """Reads settings from configuration file and returns a database connection"""
+    """Return a database connection while taking use of stored settings from the users 
+    configuration file ($HOME/.geoslurp_lastused.yaml).
+    :param args: Class which encapsulates different connection parameters
+    :type args: geoslurp.localsettings.settingsArgs"""
     if args:
         userSettings=readLocalSettings(args=args,update=update,readonlyuser=readonlyuser)
     else:

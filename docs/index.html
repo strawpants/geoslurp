@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data management with geoslurp &mdash; geoslurp Under construction v1.0 documentation</title>
+  <title>Data management with geoslurp &mdash; geoslurp Wannabe v1.0 documentation</title>
   
 
   
@@ -27,6 +27,7 @@
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
         <script type="text/javascript" src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -37,7 +38,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation of postgis &amp; the module" href="installation.html" /> 
+    <link rel="next" title="An introduction to Geoslurp" href="introduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,9 +88,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of postgis &amp; the module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="clitools.html">Command line tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="apigeoslurp/geoslurp.html">geoslurp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Documentation</a></li>
 </ul>
 
             
@@ -154,31 +156,56 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="data-management-with-geoslurp">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="data-management-with-geoslurp">
 <h1>Data management with geoslurp<a class="headerlink" href="#data-management-with-geoslurp" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="philosophy">
-<h2>Philosophy<a class="headerlink" href="#philosophy" title="Permalink to this headline">¶</a></h2>
-<p>The idea behind geoslurp is to develop a hybrid approach to store data (either as URL’s or file links) and corresponding scientific meta information which goes beyond the obvious. Geoslurp therefore has several aims:
-* Have a centralized access point to scientific data (but the data itself may be stored in disctributed ways)
-* Allow advanced queries on the metainfo data (e.g. time and spatial queries, data specific queries)
-* Provide ways to automatically download/update/register datasets
-* Future ideas: Encourage reproducibility by registration of runs (e.g. store links to used datasets/queries and configuration scripts)
-* REST-API to access from external</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of postgis &amp; the module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="clitools.html">Command line tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="clitools.html#geoslurper">Geoslurper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">An introduction to Geoslurp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#what-the-future-holds">What the future holds</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="apigeoslurp/geoslurp.html">geoslurp package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="apigeoslurp/geoslurp.html#subpackages">Subpackages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apigeoslurp/geoslurp.html#module-geoslurp">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-of-the-geoslurp-package">Installation of the geoslurp package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#setting-up-the-postgresql-database">Setting up the PostgreSQL database</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/usingcli.html">Using the command line tool geoslurp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pyexamples.html">Python Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="clitools.html">Command line tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/geoslurp.html">geoslurp package</a></li>
 </ul>
 </li>
 </ul>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -197,7 +224,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation of postgis &amp; the module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="introduction.html" class="btn btn-neutral float-right" title="An introduction to Geoslurp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -207,7 +234,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>

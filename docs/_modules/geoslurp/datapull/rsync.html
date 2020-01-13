@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>geoslurp.datapull.rsync &mdash; geoslurp Under construction v1.0 documentation</title>
+  <title>geoslurp.datapull.rsync &mdash; geoslurp Wannabe v1.0 documentation</title>
   
 
   
@@ -27,6 +27,7 @@
         <script type="text/javascript" src="../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -86,9 +87,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of postgis &amp; the module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../clitools.html">Command line tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../apigeoslurp/geoslurp.html">geoslurp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
 
             
@@ -169,17 +171,17 @@
 
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
-<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="k">import</span> <span class="n">CrawlerBase</span><span class="p">,</span>  <span class="n">UriFile</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="kn">import</span> <span class="n">CrawlerBase</span><span class="p">,</span>  <span class="n">UriFile</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<div class="viewcode-block" id="Crawler"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler">[docs]</a><span class="k">class</span> <span class="nc">Crawler</span><span class="p">(</span><span class="n">CrawlerBase</span><span class="p">):</span>
+<div class="viewcode-block" id="Crawler"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler">[docs]</a><span class="k">class</span> <span class="nc">Crawler</span><span class="p">(</span><span class="n">CrawlerBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Crawler wrapper around the rsync program calls the linux rsync utility&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">auth</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">auth</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">=</span><span class="n">auth</span>
 
-<div class="viewcode-block" id="Crawler.parallelDownload"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler.parallelDownload">[docs]</a>    <span class="k">def</span> <span class="nf">parallelDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outdir</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Crawler.parallelDownload"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler.parallelDownload">[docs]</a>    <span class="k">def</span> <span class="nf">parallelDownload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outdir</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">updated</span><span class="o">=</span><span class="p">[]</span>
         <span class="k">if</span> <span class="n">check</span><span class="p">:</span>
             <span class="n">cmd</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;rsync&#39;</span><span class="p">,</span> <span class="s1">&#39;-avz&#39;</span><span class="p">,</span> <span class="s1">&#39;--del&#39;</span><span class="p">,</span><span class="s1">&#39;--update&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">user</span> <span class="o">+</span><span class="s2">&quot;@&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="p">,</span><span class="n">outdir</span><span class="p">]</span>
@@ -190,7 +192,7 @@
              <span class="n">updated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UriFile</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">updated</span></div>
 
-<div class="viewcode-block" id="Crawler.startrsync"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler.startrsync">[docs]</a>    <span class="k">def</span> <span class="nf">startrsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cmd</span><span class="p">):</span>
+<div class="viewcode-block" id="Crawler.startrsync"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler.startrsync">[docs]</a>    <span class="k">def</span> <span class="nf">startrsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cmd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Start rsync and returns the lsit of files as a generator&quot;&quot;&quot;</span>
         <span class="c1">#start command and catch output</span>
         <span class="n">dryrun</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span><span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;RSYNC_PASSWORD&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">passw</span><span class="p">})</span>
@@ -203,10 +205,10 @@
                 <span class="k">continue</span>
             <span class="k">yield</span> <span class="n">ln</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Crawler.uris"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler.uris">[docs]</a>    <span class="k">def</span>  <span class="nf">uris</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Crawler.uris"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler.uris">[docs]</a>    <span class="k">def</span>  <span class="nf">uris</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Crawler.ls"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler.ls">[docs]</a>    <span class="k">def</span> <span class="nf">ls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Crawler.ls"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.rsync.Crawler.ls">[docs]</a>    <span class="k">def</span> <span class="nf">ls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;list remote content (using dry run)&quot;&quot;&quot;</span>
         <span class="c1">#write a tempoary passowrd file to /tmp</span>
         <span class="n">cmd</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;rsync&#39;</span><span class="p">,</span> <span class="s1">&#39;-avz&#39;</span><span class="p">,</span> <span class="s1">&#39;--del&#39;</span><span class="p">,</span><span class="s1">&#39;--dry-run&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">user</span> <span class="o">+</span><span class="s2">&quot;@&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">]</span>
@@ -225,7 +227,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>

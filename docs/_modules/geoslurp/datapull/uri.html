@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>geoslurp.datapull.uri &mdash; geoslurp Under construction v1.0 documentation</title>
+  <title>geoslurp.datapull.uri &mdash; geoslurp Wannabe v1.0 documentation</title>
   
 
   
@@ -27,6 +27,7 @@
         <script type="text/javascript" src="../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -86,9 +87,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of postgis &amp; the module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../clitools.html">Command line tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../apigeoslurp/geoslurp.html">geoslurp package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
 
             
@@ -170,15 +172,15 @@
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">pycurl</span><span class="o">,</span><span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">io</span>  <span class="k">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">io</span>  <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
 <span class="kn">import</span> <span class="nn">gzip</span> <span class="k">as</span> <span class="nn">gz</span>
 
 
-<div class="viewcode-block" id="findFiles"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.findFiles">[docs]</a><span class="k">def</span> <span class="nf">findFiles</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span><span class="n">pattern</span><span class="p">,</span><span class="n">since</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="findFiles"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.findFiles">[docs]</a><span class="k">def</span> <span class="nf">findFiles</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span><span class="n">pattern</span><span class="p">,</span><span class="n">since</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generator to recursively search adirecctor (returns a generator)&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">since</span><span class="p">:</span>
@@ -195,7 +197,7 @@
                 <span class="k">if</span> <span class="n">since</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">fullp</span><span class="p">)):</span>
                     <span class="k">yield</span> <span class="n">fullp</span></div>
 
-<div class="viewcode-block" id="timeFromStamp"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.timeFromStamp">[docs]</a><span class="k">def</span> <span class="nf">timeFromStamp</span><span class="p">(</span><span class="n">stamp</span><span class="p">):</span>
+<div class="viewcode-block" id="timeFromStamp"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.timeFromStamp">[docs]</a><span class="k">def</span> <span class="nf">timeFromStamp</span><span class="p">(</span><span class="n">stamp</span><span class="p">):</span>
     <span class="n">tinfo</span> <span class="o">=</span> <span class="n">stamp</span>
 
     <span class="k">if</span> <span class="n">tinfo</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -205,25 +207,34 @@
         <span class="n">dt</span><span class="o">=</span><span class="n">t0</span><span class="o">+</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">tinfo</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dt</span></div>
 
-<div class="viewcode-block" id="setFtime"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.setFtime">[docs]</a><span class="k">def</span> <span class="nf">setFtime</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">modTime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="setFtime"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.setFtime">[docs]</a><span class="k">def</span> <span class="nf">setFtime</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">modTime</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;change modification and access time of a file&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">modTime</span><span class="p">:</span>
         <span class="n">mtime</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">modTime</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())</span>
         <span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">file</span><span class="p">,(</span><span class="n">mtime</span><span class="p">,</span><span class="n">mtime</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="curlDownload"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.curlDownload">[docs]</a><span class="k">def</span> <span class="nf">curlDownload</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">fileorfid</span><span class="p">,</span><span class="n">mtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="curlDownload"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.curlDownload">[docs]</a><span class="k">def</span> <span class="nf">curlDownload</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">fileorfid</span><span class="p">,</span><span class="n">mtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download  the content of an url to an open file or buffer using pycurl</span>
 <span class="sd">    :param url: url to download from</span>
 <span class="sd">    :param fileorfid: filename or open file or buffer</span>
 <span class="sd">    :param mtimee: explicitly set the modification time to this (usefull when modification times are not supported</span>
 <span class="sd">    b the server)</span>
-<span class="sd">    :param gzip: additionally gzip the file on disk (note this routine does not append *.gz to the file name)</span>
+<span class="sd">    :param gzip: additionally gzip the file on disk (note this routine does not append \*.gz to the file name)</span>
+<span class="sd">    :param gunzip: automatically gunzip the downloaded file</span>
+<span class="sd">    :param auth: supply authentification data (user and passw)</span>
 <span class="sd">    :return: modification time of remote file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">if</span> <span class="n">gzip</span> <span class="ow">and</span> <span class="n">gunzip</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot gzip and gunzip at the same time&quot;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">tmpfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">),</span><span class="s2">&quot;.&quot;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;.tmp&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gunzip</span><span class="p">:</span>
+            <span class="n">tmpfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">),</span><span class="s2">&quot;.&quot;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;.tmp.gz&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmpfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">),</span><span class="s2">&quot;.&quot;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;.tmp&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">gzip</span><span class="p">:</span>
             <span class="c1">#note this routine does not change the filename!!</span>
             <span class="n">fid</span><span class="o">=</span><span class="n">gz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
@@ -252,30 +263,38 @@
         <span class="c1">#force the modification time to that provided</span>
         <span class="n">modtime</span><span class="o">=</span><span class="n">mtime</span>
 
-    <span class="c1">#close file if input was a filename</span>
+    <span class="c1">#close file if input was a filename or unzip data in the output file</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="c1">#rename temporary file</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span><span class="n">fileorfid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gunzip</span><span class="p">:</span>
+            <span class="c1">#decompress the temporary gzipped file in the outputfile</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">,</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fidout</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">gz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">gzid</span><span class="p">:</span>
+                    <span class="n">fidout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">gzid</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="c1">#remove the temporary file</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># just rename temporary file</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span><span class="n">fileorfid</span><span class="p">)</span>
         <span class="n">setFtime</span><span class="p">(</span><span class="n">fileorfid</span><span class="p">,</span><span class="n">modtime</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">modtime</span></div>
 
 
-<div class="viewcode-block" id="UriBase"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase">[docs]</a><span class="k">class</span> <span class="nc">UriBase</span><span class="p">():</span>
+<div class="viewcode-block" id="UriBase"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase">[docs]</a><span class="k">class</span> <span class="nc">UriBase</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Base class to store uri resource&quot;&quot;&quot;</span>
     <span class="n">url</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">auth</span><span class="o">=</span><span class="kc">None</span> <span class="c1">#link to a certain authentification alias</span>
     <span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span> <span class="c1">#create these subdrectories when downloading the file</span>
     <span class="n">basedir</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">basedir</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">basedir</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">=</span><span class="n">url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">lastmod</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">=</span><span class="n">auth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdirs</span>
 
-<div class="viewcode-block" id="UriBase.updateModTime"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.updateModTime">[docs]</a>    <span class="k">def</span> <span class="nf">updateModTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UriBase.updateModTime"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.updateModTime">[docs]</a>    <span class="k">def</span> <span class="nf">updateModTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tries to retrieve the last modification time of a file</span>
 <span class="sd">        Note: his is often not supported by the server&quot;&quot;&quot;</span>
         <span class="n">crl</span><span class="o">=</span><span class="n">pycurl</span><span class="o">.</span><span class="n">Curl</span><span class="p">()</span>
@@ -287,7 +306,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">timeFromStamp</span><span class="p">(</span><span class="n">crl</span><span class="o">.</span><span class="n">getinfo</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">INFO_FILETIME</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span></div>
 
-<div class="viewcode-block" id="UriBase.download"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">continueonError</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UriBase.download"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">continueonError</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Download file into directory and possibly check the modification time</span>
 <span class="sd">        :param check : check whether the file needs updating</span>
 <span class="sd">        :param gzip: additionally gzips the file (adds .gz to file name)</span>
@@ -300,6 +319,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">gzip</span><span class="p">:</span>
                 <span class="n">outf</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">))</span><span class="o">+</span><span class="s1">&#39;.gz&#39;</span>
+            <span class="k">elif</span> <span class="n">gunzip</span><span class="p">:</span>
+                <span class="c1">#strip gz suffix</span>
+                <span class="n">outf</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">outf</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
 
@@ -318,9 +340,9 @@
         <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Downloading </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="p">:</span>
-                <span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+                <span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="n">gunzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="n">gunzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">pyexc</span><span class="p">:</span>
             <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Download failed, skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">continueonError</span><span class="p">:</span>
@@ -330,25 +352,25 @@
         <span class="n">uri</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span>
         <span class="k">return</span> <span class="n">uri</span><span class="p">,</span><span class="kc">True</span></div>
 
-<div class="viewcode-block" id="UriBase.buffer"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.buffer">[docs]</a>    <span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UriBase.buffer"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.buffer">[docs]</a>    <span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Download file into a buffer (default uses curl)&quot;&quot;&quot;</span>
         <span class="n">buf</span><span class="o">=</span><span class="n">BytesIO</span><span class="p">()</span>
         <span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">buf</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">buf</span></div></div>
 
-<div class="viewcode-block" id="UriFile"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.UriFile">[docs]</a><span class="k">class</span> <span class="nc">UriFile</span><span class="p">(</span><span class="n">UriBase</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UriFile"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriFile">[docs]</a><span class="k">class</span> <span class="nc">UriFile</span><span class="p">(</span><span class="n">UriBase</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="p">)</span>
             <span class="c1">#Lets set lastmod straight away if the file exists</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">lastmod</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">updateModTime</span><span class="p">()</span>
             
 
-<div class="viewcode-block" id="UriFile.updateModTime"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.UriFile.updateModTime">[docs]</a>        <span class="k">def</span> <span class="nf">updateModTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UriFile.updateModTime"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriFile.updateModTime">[docs]</a>        <span class="k">def</span> <span class="nf">updateModTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span></div>
 
-<div class="viewcode-block" id="UriFile.buffer"><a class="viewcode-back" href="../../../apigeoslurp/geoslurp.datapull.html#geoslurp.datapull.uri.UriFile.buffer">[docs]</a>        <span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UriFile.buffer"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriFile.buffer">[docs]</a>        <span class="k">def</span> <span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">pass</span></div></div>
 
 
@@ -364,7 +386,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>

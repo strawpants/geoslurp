@@ -22,9 +22,7 @@ class gs_rads_subsegment(DBFunc):
     """Find subsegments in a rads table with the corresponding indices of the datafiles """
     scheme='altim'
     inargs="segments geom, inpoly geom, data jsonb" # jsonb dictionary, corresponding multipolygon, geometry to compare with"
-    pgbody="BEGIN\n
-        SELECT 1,ST_DumpPoints(segm) from (SELECT ST_dump(geom) as segm)
-        END;\n" 
+    pgbody="BEGIN\nSELECT 1,ST_DumpPoints(segm) from (SELECT ST_dump(geom) as segm)END;\n" 
     language='sql'
     outargs="TABLE(id int, geom geography(LINESTRING))"
     def __init__(self,dbcon):

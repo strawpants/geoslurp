@@ -1,4 +1,0 @@
-Module API documentation
-*****************************
-.. automodule:: geoslurp
-   :members:

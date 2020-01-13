@@ -13,8 +13,7 @@ Data management with geoslurp
    introduction
    installation
    examples
-   clitools
-   apigeoslurp/geoslurp
+   reference
 
 Indices and tables
 ==================
