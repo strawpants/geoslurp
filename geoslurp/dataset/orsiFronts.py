@@ -36,7 +36,7 @@ import os
 FrontsTBase=declarative_base(metadata=MetaData(schema='oceanobs'))
 
 
-geoLineStrType = Geography(geometry_type="MULTILINESTRINGZ", srid='4326', spatial_index=True,dimension=3)
+geoLineStrType = Geography(geometry_type="MULTILINESTRING", srid='4326', spatial_index=True,dimension=2)
 
 class OrsifrontsTable(FrontsTBase):
     """Defines the Orsifonts PostgreSQL table"""
@@ -63,7 +63,8 @@ def orsiMetaExtractor(uri):
                 frontsegment=ogr.Geometry(ogr.wkbLineString)
                 continue
             lonlat=ln.split()
-            frontsegment.AddPoint(float(lonlat[0]),float(lonlat[1]),0)
+            frontsegment.AddPoint(float(lonlat[0]),float(lonlat[1]))
+    geofront.FlattenTo2D()
     meta={"acronym":abbr,"name":lookup[abbr],"geom":WKBElement(geofront.ExportToIsoWkb(),srid=4326)}
     return meta
 

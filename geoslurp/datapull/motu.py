@@ -17,7 +17,8 @@
 
 from geoslurp.datapull import CrawlerBase
 from geoslurp.datapull import UriBase,UriFile
-from geoslurp.meta.netcdftools import BtdBox, stackNcFiles
+from geoslurp.tools.Bounds import BtdBox
+from geoslurp.tools.netcdftools import stackNcFiles
 from geoslurp.config.slurplogger import slurplogger
 from dateutil.parser import parse as isoParser
 import os

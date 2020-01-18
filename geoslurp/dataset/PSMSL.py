@@ -23,7 +23,7 @@ from geoslurp.datapull.http import Uri as http
 from geoalchemy2.types import Geography
 from geoalchemy2.elements import WKBElement
 from datetime import datetime,timedelta
-from geoslurp.meta.time import dt2yearlyinterval,dt2monthlyinterval,decyear2dt
+from geoslurp.tools.time import dt2yearlyinterval,dt2monthlyinterval,decyear2dt
 import os
 from zipfile import ZipFile
 from osgeo import ogr

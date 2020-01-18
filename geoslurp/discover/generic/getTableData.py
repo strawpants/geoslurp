@@ -1,10 +1,10 @@
-# This file is part of geoslurp-tools.
-# geoslurp-tools is free software; you can redistribute it and/or
+# This file is part of geoslurp.
+# geoslurp is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
 # version 3 of the License, or (at your option) any later version.
 
-# geoslurp-tools is distributed in the hope that it will be useful,
+# geoslurp is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Lesser General Public License for more details.
@@ -15,19 +15,15 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 
-
 from sqlalchemy import select,func,asc,and_,literal_column
 
 
-def gisQuery(dbcon,tablename,scheme='globalgis'):
-    """returns the geoslurp gis data froma  certain table"""
+def queryTable(dbcon,tablename,scheme='globalgis'):
+    """returns all the rows in a geoslurp table"""
 
     #retrieve/reflect the table
     tbl=dbcon.getTable(tablename,scheme)
 
-    qry=select([tbl.c.id,literal_column('geom::geometry').label('geom')])
-    # qry=select([tbl.c.uri,tbl.c.geom])
+    qry=select([tbl])
 
     return dbcon.dbeng.execute(qry)
-
-

@@ -21,7 +21,7 @@ from geoslurp.datapull.uri import findFiles
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.datapull import UriFile
 from datetime import datetime
-from geoslurp.meta.gravity import GravitySHTBase, icgemMetaExtractor
+from geoslurp.tools.gravity import GravitySHTBase, icgemMetaExtractor
 import re
 import os
 from geoslurp.config.register import geoslurpregistry

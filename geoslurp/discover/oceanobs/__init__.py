@@ -13,7 +13,4 @@
 # License along with geoslurp; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
-
-
-from .generic.getTableData import queryTable
+# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019  

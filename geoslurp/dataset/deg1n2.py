@@ -23,7 +23,7 @@ from geoslurp.dataset import DataSet
 from geoslurp.datapull.ftp import Uri as ftp
 from geoslurp.datapull.http import Uri as http
 from datetime import datetime
-from geoslurp.meta.time import decyear2dt
+from geoslurp.tools.time import decyear2dt
 from geoslurp.config.slurplogger import slurplogger
 import os
 import tarfile

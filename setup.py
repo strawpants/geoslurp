@@ -21,7 +21,7 @@ from setuptools import find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-print(find_packages("geoslurp"))
+
 setuptools.setup(
     name="geoslurp",
     author="Roelof Rietbroek",
@@ -32,6 +32,7 @@ setuptools.setup(
     packages=find_packages("."),
     package_dir={"":"."},
     scripts=['clitools/geoslurper.py'],
+    install_requires=['SQLAlchemy','pycurl','lxml','pandas','easywebdav','motuclient','numpy','GDAL','Shapely','GeoAlchemy2','pyshtools','PyYAML','netCDF4'],
     classifiers=["Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Operating System :: POSIX :: Linux",

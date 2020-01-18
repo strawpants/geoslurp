@@ -22,6 +22,7 @@ import inspect
 from datetime import datetime
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.db import Inventory
+from importlib import import_module
 
 class DatasetRegister:
     #holds dataset classes (not initiated!)
@@ -150,7 +151,7 @@ class DatasetRegister:
            if "factory" in dsentry:
                #produce all classes in the factory
                facentry=self.__catalogue__["factories"][dsentry["factory"]]
-               facmod=__import__(facentry["module"])
+               facmod=import_module(facentry["module"])
                fac=getattr(facmod,dsentry["factory"])
                for ds in fac(conf):
                    self.__dscache__[".".join([ds.scheme,ds.__name__])]=ds
@@ -163,8 +164,9 @@ class DatasetRegister:
                 self.__dscache__[name]=ds
                 return ds
            else:
-               mod=__import__(dsentry["module"])
-               ds=getattr(mod,name.split(".")[0])
+               mod=import_module(dsentry["module"])
+               # import ipdb;ipdb.set_trace()
+               ds=getattr(mod,name.split(".")[1])
                self.__dscache__[name]=ds
                return ds
         

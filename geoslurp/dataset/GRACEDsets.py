@@ -26,7 +26,7 @@ from geoslurp.datapull import UriFile
 from io  import StringIO
 import os
 from datetime import datetime
-from geoslurp.meta.gravity import GravitySHTBase
+from geoslurp.tools.gravity import GravitySHTBase
 from geoslurp.config.register import geoslurpregistry
 
 def graceMetaExtractor(uri):

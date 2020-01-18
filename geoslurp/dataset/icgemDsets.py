@@ -28,7 +28,7 @@ from glob import glob
 from geoslurp.datapull import UriFile
 import os
 from datetime import datetime
-from geoslurp.meta.gravity import icgemMetaExtractor
+from geoslurp.tools.gravity import icgemMetaExtractor
 from geoslurp.config.register import geoslurpregistry
 
 class ICGEM_static(DataSet):

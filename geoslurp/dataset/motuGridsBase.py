@@ -18,7 +18,8 @@
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.motu import Uri as MotuUri
 from geoslurp.datapull.motu import MotuOpts, MotuRecursive
-from geoslurp.meta.netcdftools import BtdBox,ncSwapLongitude,stackNcFiles
+from geoslurp.tools.Bounds import BtdBox
+from geoslurp.tools.netcdftools import ncSwapLongitude,stackNcFiles
 from geoslurp.config.register import geoslurpregistry
 
 import os
