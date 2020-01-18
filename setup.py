@@ -31,7 +31,7 @@ setuptools.setup(
     url="https://github.com/strawpants/geoslurp",
     packages=find_packages("."),
     package_dir={"":"."},
-    scripts=['clitools/geoslurper.py'],i
+    scripts=['clitools/geoslurper.py'],
     install_requires=['numpy','SQLAlchemy','pycurl','PyYAML','lxml','pandas','easywebdav','motuclient','numpy','netCDF4','GDAL','Shapely','GeoAlchemy2','pyshtools'],
     classifiers=["Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
