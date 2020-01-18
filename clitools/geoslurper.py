@@ -56,7 +56,7 @@ def main(argv):
     if args.add_user:
         addUser(DbConn,args.add_user,False)
 
-    if arg.add_readonly_user:
+    if args.add_readonly_user:
         addUser(DbConn,args.add_readonly_user,True)
 
 
