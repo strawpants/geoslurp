@@ -37,6 +37,9 @@ class GeoslurpConnector():
         """
         self.user=user
         self.passw=passwd
+        if not host:
+            #this will attempt to read from a unix socket
+            host=""
         self.host=host
         echo=debugging()
         dburl="postgresql+psycopg2://"+user+":"+passwd+"@"+host+":"+str(port)+"/geoslurp"
