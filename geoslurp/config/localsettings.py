@@ -68,8 +68,10 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
         try:
             args.host=lastOpts["host"]
         except KeyError:
-            print("--host option is needed for initialization",file=sys.stderr)
-            sys.exit(1)
+            #this will be interpreted as a unix socket
+            args.host=""
+            # print("--host option is needed for initialization",file=sys.stderr)
+            # sys.exit(1)
 
     if args.port:
         lastOpts["port"]=args.port
