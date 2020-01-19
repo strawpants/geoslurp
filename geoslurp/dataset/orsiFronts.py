@@ -33,7 +33,8 @@ from geoslurp.config.register import geoslurpregistry
 import re
 import os
 
-FrontsTBase=declarative_base(metadata=MetaData(schema='oceanobs'))
+scheme="oceanobs"
+FrontsTBase=declarative_base(metadata=MetaData(schema=scheme))
 
 
 geoLineStrType = Geography(geometry_type="MULTILINESTRING", srid='4326', spatial_index=True,dimension=2)
@@ -73,7 +74,7 @@ class Orsifronts(DataSet):
     """Orsifronts table"""
     version=(0,0,0)
     table=OrsifrontsTable
-    scheme='OceanObs'
+    scheme=scheme
     def __init__(self,dbcon):
         super().__init__(dbcon)
         self.table.metadata.create_all(self.db.dbeng, checkfirst=True)

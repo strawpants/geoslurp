@@ -29,11 +29,33 @@ import os
 from collections import namedtuple
 from geoslurp.config.slurplogger import slurplogger
 import sys
-def getCreateDir(returndir):
-    """creates a directory when not existent and return it"""
+
+
+class MirrorMap:
+    def __init__(self,from_mirror,to_mirror):
+        if not (from_mirror.endswith("/") and to_mirror.endswith("/")):
+            raise RuntimeError("The url of the data mirrors used for mapping should end with a '/'") 
+        self.from_mirror=from_mirror
+        self.to_mirror=to_mirror
+    def apply(self,url):
+        return url.replace(self.from_mirror,self.to_mirror)
+    
+    def reverseApply(self,url):
+        return url.replace(self.to_mirror,self.from_mirror)
+    
+    def strip(self,url):
+        return url.replace(self.from_mirror,"")
+
+def getCreateDir(returndir,mirrormapper=None):
+    """creates a directory when not existent and return it
+    When a mirrormapper is specified the base is converted"""
 
     #possibly expand environment variables in the string
     returnex=os.path.expandvars(returndir)
+
+    if mirrormapper:
+        returnex=mirrormapper.apply(returnex)
+
     if not os.path.exists(returnex):
         os.makedirs(returnex)
     return returnex
@@ -64,6 +86,7 @@ class SettingsTable(GSBase):
 class Settings():
     """Read and write default and user specific settings to and from the database"""
     table=SettingsTable
+    mirrorMap=None
     def __init__(self,dbconn):
         self.db=dbconn
         self.ses=self.db.Session()
@@ -96,6 +119,17 @@ class Settings():
 
         if not self.userentry.conf:
             self.userentry.conf={}
+
+        if dbconn.mirror:
+            if dbconn.mirror != "default":
+                #we need to apply a mapping of the directory names for this instance
+                self.mirrorMap=MirrorMap(self.getMirror("default"),self.getMirror(dbconn.mirror))
+        else:
+            #automatically try to figure out whether a mapping is needed by checking the existence of directories
+            for alias,pth in self.defaultentry.conf["MirrorMaps"].items():
+                if os.path.isdir(pth):
+                    self.mirrorMap=MirrorMap(self.getMirror("default"),pth)
+                    break
         # self.loaduserplugins()
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
@@ -162,7 +196,7 @@ class Settings():
         self.ses.commit()
     
     def defaultupdate(self,indict=None):
-        """Update the conf dictionary in postgresql settings table"""
+        """Update the default conf dictionary in postgresql settings table"""
         if indict:
             if self.defaultentry.conf:
                 self.defaultentry.conf.update(indict)
@@ -171,6 +205,12 @@ class Settings():
 
 
         self.ses.commit()
+    
+    def getMirror(self,alias):
+        return self.defaultentry.conf["MirrorMaps"][alias]
+
+    def setMirror(self,alias,mirror):
+        self.defaultupdate({"MirrorMaps":{alias:mirror}})
 
     def encryptAuth(self):
         """Encrypt the authentification credentials to store in the database"""
@@ -199,43 +239,70 @@ class Settings():
             self.auth={}
             return
 
-    def getDir(self,scheme, dirEntry, dataset=None,subdirs=None):
-        """
-        :param scheme str: name of the database scheme
-        :param dataset str: name of the dataset
-        :param dirEntry: type of the directory to look for (CacheDir, or DataDir)
-        :return: the directory (possibly created when it doesn't exist)
-        """
-       
+    def getDataDir(self,scheme,dataset=None,subdirs=None):
+        """Retrieves the data Directory, possibly appended with a dataset and subdirs"""
         #begin with setting the default
-        if dirEntry in self.userentry.conf:
-            #take the entry defined at user level
-            ddir=self.userentry.conf[dirEntry]
-        else:
-            #take the default
-            ddir=self.defaultentry.conf[dirEntry]
-        
-        dirpath=getCreateDir(os.path.join(ddir,scheme))
+        ddir=self.getMirror("default")
+        ddir=os.path.join(ddir,scheme)
 
-        #let's see if there is a specialized 'DataDir' entry for the dataset
+        #Possibly we need to append a dataset directory 
         if dataset:
-            try:
-                dsetpath=getCreateDir(self.userentry.conf[dataset][dirEntry])
-                #upon success let's add a symbolic link in the scheme datadir
-                try:
-                    os.symlink(dsetpath,os.path.join(dirpath,dataset))
-                except:
-                    #ok when it already exists
-                    pass
-                dirpath=dsetpath
-            except KeyError:
-                # no problem we can just stick with the default
-                dirpath=getCreateDir(os.path.join(dirpath,dataset))
+            ddir=os.path.join(ddir,dataset)
 
         #possibly append subdirectories
         if subdirs:
-            dirpath=getCreateDir(os.path.join(dirpath,subdirs))
+            ddir=os.path.join(ddir,subdirs)
 
-        return dirpath
+        #NOTE: this posssibly applies a mapping of the root part of the directory 
+        return getCreateDir(ddir,self.mirrorMap)
+
+    def getCacheDir(self,scheme,dataset=None,subdirs=None):
+        if "CacheDir" in self.userentry.conf:
+            ddir=self.userentry.conf["CacheDir"]
+        else:
+            ddir=self.defaultentry.conf["CacheDir"]
+
+        ddir=os.path.join(ddir,scheme)
+
+        #POssibly we need to append a dataset directory 
+        if dataset:
+            ddir=os.path.join(ddir,dataset)
+
+        #possibly append subdirectories
+        if subdirs:
+            ddir=os.path.join(ddir,subdirs)
+
+        #NOTE: this posssibly applies a mapping of the root part of the directory 
+        return getCreateDir(ddir,self.mirrorMap)
+
+
+    # def getDir(self,scheme, dirEntry, dataset=None,subdirs=None):
+        # """
+        # :param scheme str: name of the database scheme
+        # :param dataset str: name of the dataset
+        # :param dirEntry: type of the directory to look for (CacheDir, or DataDir)
+        # :return: the directory (possibly created when it doesn't exist)
+        # """
+       
+        # #begin with setting the default
+        # if dirEntry in self.userentry.conf:
+            # #take the entry defined at user level
+            # ddir=self.userentry.conf[dirEntry]
+        # else:
+            # #take the default
+            # ddir=self.defaultentry.conf[dirEntry]
+
+        # # dirpath=getCreateDir(os.path.join(ddir,scheme),self.mirrorMap)
+
+        # #POssibly we need to append a dataset directory 
+        # if dataset:
+            # ddir=os.path.join(ddir,dataset))
+
+        # #possibly append subdirectories
+        # if subdirs:
+            # ddir=os.path.join(ddir,subdirs)
+
+        # #NOTE: this posssibly applies a mapping of the root part of the directory 
+        # return getCreateDir(ddir,self.mirrorMap)
 
 

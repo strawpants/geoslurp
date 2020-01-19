@@ -27,7 +27,8 @@ class settingsArgs:
     usekeyring=None
     password=None
     port=5432
-    def __init__(self,host=None,user=None,usekeyring=True,password=None,port=None):
+    mirror=None
+    def __init__(self,host=None,user=None,usekeyring=True,password=None,port=None,mirror=None):
         if host:
             self.host=host
 
@@ -42,7 +43,9 @@ class settingsArgs:
 
         if port:
             self.port=port
-
+        
+        if mirror:
+            self.mirror=mirror
 
 
 
@@ -144,7 +147,15 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
         #update keyring
         if args.usekeyring and update:
             keyring.set_password("geoslurp",args.user,args.password)
-
+    
+    if args.mirror:
+        #register alias to which datamirror to use
+        lastOpts["mirror"]=args.mirror
+    else:
+        if "mirror" in lastOpts:
+            args.mirror=lastOpts["mirror"]
+        else:
+            args.mirror="default"
 
     #write out  options to file to store these settings
     if isUpdated and update:

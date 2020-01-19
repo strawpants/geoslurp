@@ -52,7 +52,7 @@ def getNaturalEarthDsets(conf):
     """retrieves the available natural earth datasets"""
     reponame="nvkelso/natural-earth-vector"
     commitsha="bf7720b54dd9ac2d4d7f735174901b3862b5362a"
-    cachedir=conf.getDir("githubcache","CacheDir")
+    cachedir=conf.getCacheDir("githubcache")
     try:
         cred=conf.authCred("github")
         token=cred.oauthtoken

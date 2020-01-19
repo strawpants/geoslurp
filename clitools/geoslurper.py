@@ -308,6 +308,9 @@ def addCommandLineArgs():
         parser.add_argument("-d","--dset",metavar="PATTERN",nargs="?",type=str,
                 help='Select datasets or all datasets in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.DATASET)')
 
+        parser.add_argument("--mirror",metavar="MIRRORALIAS",nargs="?",type=str,
+                help="Use a different mirror for prepending to relative filename uris, the default uses the mirror registered as 'default' in the database. A mirror can be registered in the database  with --[admin-]config '{\"DataMirrors\":{\"MIRRORALIAS\":\"MIRRORPATH\"}}'.")
+        
         parser.add_argument("-f","--func",metavar="PATTERN",nargs="?",type=str,
                 help='Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUCNTION)')
 

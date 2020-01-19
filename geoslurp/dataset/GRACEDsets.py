@@ -29,6 +29,8 @@ from datetime import datetime
 from geoslurp.tools.gravity import GravitySHTBase
 from geoslurp.config.register import geoslurpregistry
 
+scheme="gravity"
+
 def graceMetaExtractor(uri):
     """Extract meta information from a GRACE file"""
     buf=StringIO()
@@ -73,7 +75,7 @@ class GRACEL2Base(DataSet):
     release=None
     center=None
     updated=None
-    scheme='Gravity'
+    scheme=scheme
     def __init__(self,dbconn):
         super().__init__(dbconn)
         #initialize postgreslq table

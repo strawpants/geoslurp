@@ -36,7 +36,7 @@ class DatasetRegister:
     
     @staticmethod 
     def getCacheFile(conf):
-        return os.path.join(conf.getDir("Dset","CacheDir"),"Dset_Catalogue.yaml")
+        return os.path.join(conf.getCacheDir("Dset"),"Dset_Catalogue.yaml")
     
     @staticmethod 
     def addUserPlugPaths(conf,loadmod=False):

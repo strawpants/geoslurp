@@ -27,6 +27,8 @@ import os
 from geoslurp.config.register import geoslurpregistry
 from geoslurp.db.settings import getCreateDir
 
+scheme='gravity'
+
 def enhanceMeta(meta):
     """Extract addtional timestamps from the TU graz filename data"""
     #from the TU GRAZ files one can extract the time period information
@@ -53,7 +55,7 @@ class TUGRAZGRACEL2Base(DataSet):
     """Derived type representing GRACE spherical harmonic coefficients from the TU GRAZ"""
     table=None
     updated=None
-    scheme='Gravity'
+    scheme=scheme
     release=''
     subdirs=''
     def __init__(self,dbconn):
@@ -61,7 +63,7 @@ class TUGRAZGRACEL2Base(DataSet):
         #initialize postgreslq table
         GravitySHTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
         if not self._dbinvent.datadir:
-            self._dbinvent.datadir=getCreateDir(os.path.join(self.conf.getDir(self.scheme,'DataDir'),self.release,self.subdirs))
+            self._dbinvent.datadir=getCreateDir(os.path.join(self.conf.getDataDir(self.scheme),self.release,self.subdirs,self.conf.mirrorMap))
 
     def pull(self):
         url=os.path.join("ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/",self.release,self.subdirs)

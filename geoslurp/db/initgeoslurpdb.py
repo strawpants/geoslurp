@@ -41,7 +41,8 @@ def initgeoslurpdb(conn):
     conn.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
 
     #create a 'default' entry in the settings table
-    defaultentry=SettingsTable(user='default',conf={"CacheDir":"/tmp","DataDir":"${HOME}/geoslurpdata"})
+    defaultentry=SettingsTable(user='default',conf={"CacheDir":"/tmp","MirrorMaps":{"default":"${HOME}/geoslurpdata"}})
+
     ses=conn.Session()
     ses.add(defaultentry)
     ses.commit()

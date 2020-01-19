@@ -63,6 +63,7 @@ class DataSet(ABC):
     version=(0,0,0)
     updatefreq=None
     commitperN=500
+    stripuri=False
     def __init__(self,dbcon):
         if re.search("TEMPLATE",".".join([self.scheme,self.__class__.__name__])):
             raise RuntimeError("Refusing to instantiate templated dataset")
@@ -109,9 +110,9 @@ class DataSet(ABC):
         """Returns the specialized data directory of this scheme and dataset
         The directory will be created if it does not exist"""
         if self._dbinvent.datadir:
-            return getCreateDir(self._dbinvent.datadir)
-        #else try to retrieve the standard path from the configuration
-        return self.conf.getDir(self.scheme, 'DataDir', dataset=self.name,subdirs=subdirs)
+            return getCreateDir(self._dbinvent.datadir,self.conf.mirrorMap)
+        #else try to retrieve the standard datadir from the configuration
+        return self.conf.geDataDir(self.scheme, dataset=self.name,subdirs=subdirs)
     
     def setDataDir(self,ddir):
         self._dbinvent.datadir=ddir
@@ -121,11 +122,11 @@ class DataSet(ABC):
         """returns the cache directory of this scheme and dataset"""
         if self._dbinvent.cache:
             if subdirs:
-                return getCreateDir(os.path.join(self._dbinvent.cache,subdirs))
+                return getCreateDir(os.path.join(self._dbinvent.cache,subdirs),self.conf.mirrorMap)
             else:
-                return getCreateDir(self._dbinvent.cache)
+                return getCreateDir(self._dbinvent.cache,self.conf.mirrorMap)
 
-        return self.conf.getDir(self.scheme, 'CacheDir', dataset=self.name,subdirs=subdirs)
+        return self.conf.getCacheDir(self.scheme, dataset=self.name,subdirs=subdirs)
     
     def setCacheDir(self,cdir):
         self._dbinvent.cache=cdir
@@ -259,7 +260,11 @@ class DataSet(ABC):
         return needsupdate
 
     def addEntry(self,metadict):
+        if self.stripuri and "uri" in metadict:
+            metadict["uri"]=self.conf.mirrorMap.strip(metadict["uri"])
+
         entry=self.table(**metadict)
+        
 
         self._ses.add(entry)
 

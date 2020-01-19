@@ -52,7 +52,7 @@ def getGeoshapesDsets(conf):
     currentversion='v1' # note this correspond to a specific release (the sha hash is taken from the commit)
     reponame="strawpants/geoshapes"
     commitsha="23ab6daab0bf2c6e9a3f3d685bed52cb48ac97ea"
-    cachedir=conf.getDir("githubcache","CacheDir")
+    cachedir=conf.getCacheDir("githubcache")
     try:
         cred=conf.authCred("github")
         token=cred.oauthtoken

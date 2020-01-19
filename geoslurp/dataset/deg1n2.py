@@ -30,8 +30,8 @@ import tarfile
 import re
 from copy import deepcopy
 from geoslurp.config.register import geoslurpregistry
-
-GeocTBase=declarative_base(metadata=MetaData(schema='gravity'))
+scheme="gravity"
+GeocTBase=declarative_base(metadata=MetaData(schema=scheme))
 
 class LowdegreeSource():
     meta={"data":{}}
@@ -200,7 +200,7 @@ class Deg1n2(DataSet):
     """Dataset registering several low degree (up to degree x) estimates including their definitions"""
     table=GeocTable
     dsources=[Rietbroeketal2016updated, Sun2017Comb, Sun2017Comb_GIArestored]
-    scheme='Gravity'
+    scheme=scheme
     # "ftp://ftp.csr.utexas.edu/pub/slr/geocenter/"
     #     # {'name':'Rietbroeketal2016updated','uri':'https://wobbly.earth/data/Geocenter_dec2017.tgz','lastupdate':datetime(2018,10,16)},
     #     # {'name':'SwensonWahr2008','uri':'ftp://podaac.jpl.nasa.gov/allData/tellus/L2/degree_1/deg1_coef.txt','lastupdate':datetime(2018,10,16)},

@@ -28,8 +28,8 @@ from geoslurp.config.slurplogger import  slurplogger, debugging
 
 class GeoslurpConnector():
     """Holds a connector to a geoslurp database"""
-
-    def __init__(self, host, user, passwd, port=5432,readonlyuser=True):
+    mirror=None
+    def __init__(self, host, user, passwd, port=5432,readonlyuser=True,datamirror=None):
         """
         establishes a database engine whoch provides the base
         for creating sessions (ORM) or connections (SQL expressions)
@@ -49,6 +49,10 @@ class GeoslurpConnector():
         self.mdata = MetaData(bind=self.dbeng)
         if not readonlyuser:
             initgeoslurpdb(self)
+
+        if datamirror:
+            self.mirror=datamirror
+
 
     def transsession(self):
         """Retrieve a  session which is bound to a connection rather than an engine (e.g. useful for temporary tables)"""
