@@ -51,6 +51,7 @@ class settingsArgs:
 
 def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
     """Retrieves/updates last used settings from the local settings file .geoslurp_lastused.yaml"""
+
     settingsFile=os.path.join(os.path.expanduser('~'),'.geoslurp_lastused.yaml')
     #read last used settings
     if os.path.exists(settingsFile):

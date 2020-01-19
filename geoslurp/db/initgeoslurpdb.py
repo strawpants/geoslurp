@@ -15,11 +15,13 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from geoslurp.db.inventory import InventTable
-from geoslurp.db.inventory import GSBase as gsbinv
-from geoslurp.db.settings import SettingsTable
-from geoslurp.db.settings import GSBase as gsbset
+from geoslurp.db.inventory import Inventory
+from geoslurp.db.settings import Settings
 
+# from geoslurp.db.inventory import GSBase as gsbinv
+# from geoslurp.db.settings import SettingsTable
+# from geoslurp.db.settings import GSBase as gsbset
+#test
 
 def initgeoslurpdb(conn):
     """Initiates main geoslurp admin structure"""
@@ -30,21 +32,27 @@ def initgeoslurpdb(conn):
 
     conn.CreateSchema('admin')
 
-    #create inventory table
-    gsbinv.metadata.create_all(conn.dbeng)
-    conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.inventory to geoslurp;')
-    conn.dbeng.execute('GRANT USAGE ON SEQUENCE admin.inventory_id_seq to geoslurp')
+    #initializes the inventory table so it gets created
+    inv=Inventory(conn)
+
+
+    #initializes the settings table so it gets created
+    conf=Settings(conn)
+
+    # gsbinv.metadata.create_all(conn.dbeng)
+    # conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.inventory to geoslurp;')
+    # conn.dbeng.execute('GRANT USAGE ON SEQUENCE admin.inventory_id_seq to geoslurp')
     
-    #create settings table
-    gsbset.metadata.create_all(conn.dbeng)
-    conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
-    conn.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
+    # #create settings table
+    # gsbset.metadata.create_all(conn.dbeng)
+    # conn.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
+    # conn.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
 
     #create a 'default' entry in the settings table
     defaultentry=SettingsTable(user='default',conf={"CacheDir":"/tmp","MirrorMaps":{"default":"${HOME}/geoslurpdata"}})
 
-    ses=conn.Session()
-    ses.add(defaultentry)
-    ses.commit()
+    # ses=conn.Session()
+    # ses.add(defaultentry)
+    # ses.commit()
     #allow the geoslurp user to access the sequence generator
 

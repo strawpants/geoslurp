@@ -54,7 +54,8 @@ class Inventory:
         if not geoslurpConn.dbeng.has_table(self.table.__tablename__):
             GSBase.metadata.create_all(geoslurpConn.dbeng)
             #also grant geoslurp all privileges
-            self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.%s to geoslurp'%(self.table.__tablename__))
+            self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.inventory to geoslurp;')
+            self.db.dbeng.execute('GRANT USAGE ON SEQUENCE admin.inventory_id_seq to geoslurp')
 
 
     def __iter__(self):

@@ -93,8 +93,8 @@ class Settings():
         #creates the settings table if it doesn't exists
         if not self.db.dbeng.has_table('settings',schema='admin'):
             GSBase.metadata.create_all(self.db.dbeng)
-            #also grant geoslurp all privileges
-            #geoslurp users need to be able to add themselves to the admin.settings table
+            # #also grant geoslurp all privileges
+            # #geoslurp users need to be able to add themselves to the admin.settings table
             self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
             self.db.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
 
@@ -103,22 +103,21 @@ class Settings():
             self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
         except:
             #create a new default entry
-            self.defaultentry=self.table(user='default')
+            self.defaultentry=SettingsTable(user='default',conf={"CacheDir":"/tmp","MirrorMaps":{"default":"${HOME}/geoslurpdata"}})
             self.ses.add(self.defaultentry)
             self.ses.commit()
+            #retrieve again
+            self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
         #retrieve/create a user entry
         try:
             self.userentry=self.ses.query(self.table).filter(self.table.user == self.db.user).one()
         except:
             #make a new empty entry
-            self.userentry=self.table(user=self.db.user)
+            self.userentry=self.table(user=self.db.user,conf={})
             self.ses.add(self.userentry)
             self.ses.commit()
 
         self.decryptAuth()
-
-        if not self.userentry.conf:
-            self.userentry.conf={}
 
         if dbconn.mirror:
             if dbconn.mirror != "default":

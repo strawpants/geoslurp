@@ -34,7 +34,6 @@ def main(argv):
 
     # add various arguments to the program
     parser=addCommandLineArgs()
-
     args = parser.parse_args(argv[1:])
     check_args(args,parser)
 
