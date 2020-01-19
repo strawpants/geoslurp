@@ -124,7 +124,7 @@ class Settings():
             if dbconn.mirror != "default":
                 #we need to apply a mapping of the directory names for this instance
                 self.mirrorMap=MirrorMap(self.getMirror("default"),self.getMirror(dbconn.mirror))
-        else:
+        elif "MirrorMaps" in self.defaultentry.conf:
             #automatically try to figure out whether a mapping is needed by checking the existence of directories
             for alias,pth in self.defaultentry.conf["MirrorMaps"].items():
                 if os.path.isdir(pth):
