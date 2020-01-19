@@ -28,6 +28,7 @@ class settingsArgs:
     password=None
     port=5432
     mirror=None
+    local_settings=None
     def __init__(self,host=None,user=None,usekeyring=True,password=None,port=None,mirror=None):
         if host:
             self.host=host
@@ -52,7 +53,10 @@ class settingsArgs:
 def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
     """Retrieves/updates last used settings from the local settings file .geoslurp_lastused.yaml"""
 
-    settingsFile=os.path.join(os.path.expanduser('~'),'.geoslurp_lastused.yaml')
+    if args.local_settings:
+        settingsFile=args.local_settings
+    else:
+        settingsFile=os.path.join(os.path.expanduser('~'),'.geoslurp_lastused.yaml')
     #read last used settings
     if os.path.exists(settingsFile):
         #Read parameters from yaml file

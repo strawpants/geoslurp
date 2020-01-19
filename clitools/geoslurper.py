@@ -131,20 +131,16 @@ def main(argv):
         sys.exit(0)
     
     
-    if args.pull or args.update:
+    if args.pull:
         if type(args.pull) == dict:
             pullopts=args.pull
-        elif type(args.update) == dict:
-            pullopts=args.update
         else:
             pullopts={}
         args.pull=True
 
-    if args.register or args.update:
+    if args.register:
         if type(args.register) == dict:
             regopts=args.register
-        elif type(args.update) == dict:
-            regopts=args.update
         else:
             regopts={}
         args.register=True
@@ -253,9 +249,11 @@ def addCommandLineArgs():
         parser.add_argument("--register", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register data in the database (possibly pass on options as a JSON dict)")
 
-        parser.add_argument("--update", metavar="JSON", action=JsonParseAction, nargs="?",const=False,default=False,
-                            help="Implies both --pull and --register, but applies only to the updated data (accepts JSON options)")
+        # parser.add_argument("--update", metavar="JSON", action=JsonParseAction, nargs="?",const=False,default=False,
+                            # help="Implies both --pull and --register, but applies only to the updated data (accepts JSON options)")
 
+        parser.add_argument("--local-settings",metavar="LOCALSETTINGSFILE",type=str, 
+                            help='Specify a different file to read the local settings from (default= ${HOME}/.geoslurp_lastused.yaml)')
 
         parser.add_argument("--config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register user settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
