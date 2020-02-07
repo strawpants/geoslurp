@@ -21,7 +21,7 @@ from geoslurp.config.register import geoslurpregistry
 
 from sqlalchemy.ext.declarative import declared_attr, as_declarative
 from sqlalchemy import MetaData
-from sqlalchemy import Column,Integer,String,Float
+from sqlalchemy import Column,Integer,String,Float,Boolean
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB,ARRAY
 
 from geoalchemy2.elements import WKBElement
@@ -49,7 +49,7 @@ class FesomVertTBase(object):
     onboundary=Column(Integer)
     topo=Column(Float)
     nodeid=Column(ARRAY(Integer))
-    geom=Column(geovertype)
+    geom=Column(geovertype,nullable=False)
 
 geotritype = Geography(geometry_type="POLYGONZ", srid='4326', spatial_index=True, dimension=3)
 
@@ -61,8 +61,9 @@ class FesomTINTBase(object):
         return cls.__name__[:-5].lower()
     id = Column(Integer, primary_key=True)
     topo=Column(Float)
+    cyclic=Column(Boolean)
     nodeid=Column(ARRAY(Integer))
-    geom=Column(geotritype)
+    geom=Column(geotritype, nullable=False)
 
 @as_declarative(metadata=MetaData(schema='fesom'))
 class FESOMRunTBase(object):
@@ -147,9 +148,10 @@ class FESOMverticesBase(DataSet):
         """No pulling functionality is incorporated"""
         pass
 
-    def register(self,meshdir=None):
+    def register(self,meshdir=None,abg=None):
         """register vertices in a FESOM mesh directory
-        @param meshdir: directory where the mesh files reside"""
+        @param meshdir: directory where the mesh files reside
+        @param abg non-standard Euler angles, defaults to [50, 15, -90]"""
         #only load when needed
         from pyfesom.load_mesh_data import fesom_mesh
         if not meshdir:
@@ -157,7 +159,10 @@ class FESOMverticesBase(DataSet):
 
         self.truncateTable()
         #load mesh from directory
-        mesh=fesom_mesh(meshdir)
+        if abg:
+            mesh=fesom_mesh(meshdir,abg=abg)
+        else:
+            mesh=fesom_mesh(meshdir)
 
         for id, (lon, lat, onbnd) in enumerate(zip(mesh.x2, mesh.y2, mesh.ind2d)):
             # create a point geometry
@@ -187,37 +192,43 @@ class FESOMtinBase(DataSet):
         super().__init__(dbcon)
         #setup table type
         self.table=type(self.name+"Table",(FesomTINTBase,),{})
-        self.table.__table__.create(self.db.dbeng,checkfirst=True)
+        self.createTable()
 
     def pull(self):
         """No pulling functionality is incorporated"""
         pass
 
-    def register(self,meshdir=None):
+    def register(self,meshdir=None,abg=None):
         """register triangular elements in a FESOM mesh directory
         @param meshdir: directory where the mesh files reside"""
         if not meshdir:
             raise RuntimeError("A meshdirectory needs to be supplied when registering this dataset")
-
         self.truncateTable()
 
         from pyfesom.load_mesh_data import fesom_mesh
         #load mesh from directory
-        mesh=fesom_mesh(meshdir)
-        #get rif of the cyclic elements
-        elem2 = mesh.elem[mesh.no_cyclic_elem, :]
-        for i1, i2, i3 in elem2:
+        if abg:
+            mesh=fesom_mesh(meshdir,abg=abg)
+        else:
+            mesh=fesom_mesh(meshdir)
+
+        for i1, i2, i3 in mesh.elem:
+
+            lons=mesh.x2[[i1,i2,i3]]
+            # import ipdb;ipdb.set_trace()
+            iscyclic=(lons.max() - lons.min() )> 100
             ring = ogr.Geometry(ogr.wkbLinearRing)
             tri = ogr.Geometry(ogr.wkbPolygon)
 
-            ring.AddPoint(mesh.x2[i1], mesh.y2[i1])
-            ring.AddPoint(mesh.x2[i2], mesh.y2[i2])
-            ring.AddPoint(mesh.x2[i3], mesh.y2[i3])
+            ring.AddPoint(lons[0], mesh.y2[i1])
+            ring.AddPoint(lons[1], mesh.y2[i2])
+            ring.AddPoint(lons[2], mesh.y2[i3])
             #repeat the first point
-            ring.AddPoint(mesh.x2[i1], mesh.y2[i1])
+            ring.AddPoint(lons[0], mesh.y2[i1])
             tri.AddGeometry(ring)
             meta={
                 "nodeid":[int(i1), int(i2), int(i3)],
+                "cyclic":iscyclic,
                 "topo":(mesh.topo[i1]+mesh.topo[i2]+mesh.topo[i3])/3.0,
                 "geom":WKBElement(tri.ExportToIsoWkb(),srid=4326,extended=True)
             }
@@ -241,7 +252,7 @@ class FESOMRunBase(DataSet):
         super().__init__(dbcon)
         #setup table type
         self.table=type(self.name+"Table",(FESOMRunTBase,),{})
-        self.table.__table__.create(self.db.dbeng,checkfirst=True)
+        self.createTable()
         #extract grid name from table name
         self.grid=self.name.split("_")[3]
 

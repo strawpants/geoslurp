@@ -176,25 +176,43 @@ class DatasetRegister:
         #get the valid names  
         outdsets=[] 
         regexcomp=re.compile(regex)
-        for name in self.__catalogue__["datasets"].keys():
+        #we expect to have only one matching entry when the regex is a fully-qualified scheme.table name
+        singleEntry=re.fullmatch("^[\w]+(?:\.[\w]+)$",regex)
 
+        for name in self.__catalogue__["datasets"].keys():
+            ds=None
             if regexcomp.fullmatch(name):
-                outdsets.append(self.getDsetClass(conf,name))
-                continue  
+                ds=self.getDsetClass(conf,name)
+                if singleEntry:
+                    if not outdsets:
+                        outdsets=[None]
+                    #this possibly overwrites a fitting template class
+                    outdsets[0]=ds
+                    #no need to look any further we found our fit
+                    break
+                else:
+                    outdsets.append(ds)
+                    #note: other datasets may fit so we continue the loop
+                    continue
+
             
             #other case name: is when the regex is a fully specified  scheme.table and  obeys a template
-            if re.fullmatch("^[\w]+(?:\.[\w]+)$",regex) and  re.search("TEMPLATE",name):
+            if singleEntry and  re.search("TEMPLATE",name):
                 #reverse the search: turn the TEMPLATE into a regex and assume the regex is a fully qualified name for the class 
                 srch=re.sub("TEMPLATE","([^\\\s]+)",name.replace(".","\."))
                 if re.search(srch,regex):
+                    #we really should only land in this code area when no outdset has been defined yet
+                    assert not outdsets
                     #dynamically derive a class from the  template
                     if regex in self.__dscache__:
-                        outdsets.append(self.__dscache__[regex])
+                        ds=self.__dscache__[regex]
                     else:
                         dsbase=self.getDsetClass(conf,name)
                         scheme,tbl=regex.split(".")
-                        #derive a class from the template class
-                        outdsets.append(type(tbl,(dsbase,),{"scheme":scheme}))
+                        #derive a new class from the template class
+                        ds=type(tbl,(dsbase,),{"scheme":scheme})
+                    outdsets=[ds]
+
         return outdsets
         
     def getFuncs(self,conf,regex):

@@ -112,7 +112,7 @@ class DataSet(ABC):
         if self._dbinvent.datadir:
             return getCreateDir(self._dbinvent.datadir,self.conf.mirrorMap)
         #else try to retrieve the standard datadir from the configuration
-        return self.conf.geDataDir(self.scheme, dataset=self.name,subdirs=subdirs)
+        return self.conf.getDataDir(self.scheme, dataset=self.name,subdirs=subdirs)
     
     def setDataDir(self,ddir):
         self._dbinvent.datadir=ddir

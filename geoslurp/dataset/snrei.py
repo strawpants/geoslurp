@@ -57,7 +57,7 @@ LLoveTBase=declarative_base(metadata=MetaData(schema=schema))
 
 class LLoveTable(LLoveTBase):
     """Defines the Load Love number PostgreSQL table"""
-    __tablename__='loadlove'
+    __tablename__='llove'
     id=Column(Integer,primary_key=True)
     name=Column(String,unique=True)
     loadtype=Column(String)

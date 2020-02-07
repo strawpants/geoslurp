@@ -68,7 +68,7 @@ def stripPasswords(d):
                 d[serv][ky]="*****"
     return d
 
-Credentials=namedtuple("Credentials","user passw alias oauthtoken")
+Credentials=namedtuple("Credentials","user passw alias oauthtoken url")
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
 
 GSBase=declarative_base(metadata=MetaData(schema='admin'))
@@ -122,7 +122,7 @@ class Settings():
         if dbconn.mirror:
             if dbconn.mirror != "default":
                 #we need to apply a mapping of the directory names for this instance
-                self.mirrorMap=MirrorMap(self.getMirror("default"),self.getMirror(dbconn.mirror))
+                self.mirrorMap=MirrorMap(self.getMirror(dbconn.mirror),self.getMirror("default"))
         elif "MirrorMaps" in self.defaultentry.conf:
             #automatically try to figure out whether a mapping is needed by checking the existence of directories
             for alias,pth in self.defaultentry.conf["MirrorMaps"].items():
@@ -206,7 +206,10 @@ class Settings():
         self.ses.commit()
     
     def getMirror(self,alias):
-        return self.defaultentry.conf["MirrorMaps"][alias]
+        if "MirrorMaps" in self.defaultentry.conf:
+            return self.defaultentry.conf["MirrorMaps"][alias]
+        else:
+            return self.defaultentry.conf["DataDir"]
 
     def setMirror(self,alias,mirror):
         self.defaultupdate({"MirrorMaps":{alias:mirror}})
@@ -273,35 +276,4 @@ class Settings():
 
         #NOTE: this posssibly applies a mapping of the root part of the directory 
         return getCreateDir(ddir,self.mirrorMap)
-
-
-    # def getDir(self,scheme, dirEntry, dataset=None,subdirs=None):
-        # """
-        # :param scheme str: name of the database scheme
-        # :param dataset str: name of the dataset
-        # :param dirEntry: type of the directory to look for (CacheDir, or DataDir)
-        # :return: the directory (possibly created when it doesn't exist)
-        # """
-       
-        # #begin with setting the default
-        # if dirEntry in self.userentry.conf:
-            # #take the entry defined at user level
-            # ddir=self.userentry.conf[dirEntry]
-        # else:
-            # #take the default
-            # ddir=self.defaultentry.conf[dirEntry]
-
-        # # dirpath=getCreateDir(os.path.join(ddir,scheme),self.mirrorMap)
-
-        # #POssibly we need to append a dataset directory 
-        # if dataset:
-            # ddir=os.path.join(ddir,dataset))
-
-        # #possibly append subdirectories
-        # if subdirs:
-            # ddir=os.path.join(ddir,subdirs)
-
-        # #NOTE: this posssibly applies a mapping of the root part of the directory 
-        # return getCreateDir(ddir,self.mirrorMap)
-
 
