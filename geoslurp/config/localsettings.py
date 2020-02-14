@@ -20,6 +20,8 @@ import yaml
 from datetime import datetime
 import keyring
 import getpass
+import copy
+
 
 class settingsArgs:
     host=None
@@ -52,9 +54,9 @@ class settingsArgs:
 
 def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
     """Retrieves/updates last used settings from the local settings file .geoslurp_lastused.yaml"""
-
-    if args.local_settings:
-        settingsFile=args.local_settings
+    argsout=copy.deepcopy(args)
+    if argsout.local_settings:
+        settingsFile=argsout.local_settings
     else:
         settingsFile=os.path.join(os.path.expanduser('~'),'.geoslurp_lastused.yaml')
     #read last used settings
@@ -67,49 +69,48 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
 
     isUpdated=False
 
-    #update dict with provided options from args
-    if args.host:
-        lastOpts["host"]=args.host
+    #update dict with provided options from argsout
+    if argsout.host:
+        lastOpts["host"]=argsout.host
         isUpdated=True
     else:
         #take data from file options
         try:
-            args.host=lastOpts["host"]
+            argsout.host=lastOpts["host"]
         except KeyError:
             #this will be interpreted as a unix socket
-            args.host=""
+            argsout.host=""
             # print("--host option is needed for initialization",file=sys.stderr)
             # sys.exit(1)
 
-    if args.port:
-        lastOpts["port"]=args.port
+    if argsout.port:
+        lastOpts["port"]=argsout.port
         isUpdated=True
     else:
         lastOpts["port"]=5432
-
-    if args.user:
+    if argsout.user:
         if readonlyuser:
-            lastOpts["readonlyUser"]=args.user
+            lastOpts["readonlyUser"]=argsout.user
         else:
-            lastOpts["user"]=args.user
+            lastOpts["user"]=argsout.user
         isUpdated=True
     else:
         try:
             if readonlyuser:
-                args.user=lastOpts["readonlyUser"]
+                argsout.user=lastOpts["readonlyUser"]
             else:
-                args.user=lastOpts["user"]
+                argsout.user=lastOpts["user"]
 
         except KeyError:
             print("--user option is needed for initialization",file=sys.stderr)
             sys.exit(1)
 
-    if args.usekeyring:
+    if argsout.usekeyring:
         lastOpts["useKeyring"]=True
         isUpdated=True
     else:
         try:
-            args.usekeyring=lastOpts["useKeyring"]
+            argsout.usekeyring=lastOpts["useKeyring"]
         except KeyError:
             #don't use the keyring
             pass
@@ -117,48 +118,48 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
 
 
     # we take a different strategy for the password as we don't want to store this unencrypted in a file
-    if not args.password:
-        if args.usekeyring:
-            args.password=keyring.get_password("geoslurp",args.user)
-            if not args.password:
-                args.password=getpass.getpass(prompt='Please enter password for %s: '%(args.user))
-                keyring.set_password("geoslurp",args.user,args.password)
+    if not argsout.password:
+        if argsout.usekeyring:
+            argsout.password=keyring.get_password("geoslurp",argsout.user)
+            if not argsout.password:
+                argsout.password=getpass.getpass(prompt='Please enter password for %s: '%(argsout.user))
+                keyring.set_password("geoslurp",argsout.user,argsout.password)
         else:
             #try checking the environment variable GEOSLURP_PGPASS
             try:
                 if readonlyuser:
-                    args.password=os.environ["GEOSLURP_PGPASSRO"]
+                    argsout.password=os.environ["GEOSLURP_PGPASSRO"]
                 else:
-                    args.password=os.environ["GEOSLURP_PGPASS"]
+                    argsout.password=os.environ["GEOSLURP_PGPASS"]
             except KeyError:
                 #check for password in the lastused file (needs to be manually entered)
                 if "passwd" in lastOpts and not readonlyuser:
-                    args.password=lastOpts["passwd"]
+                    argsout.password=lastOpts["passwd"]
                 elif "readonlyPasswd" in lastOpts and readonlyuser:
-                    args.password=lastOpts["readonlyPasswd"]
+                    argsout.password=lastOpts["readonlyPasswd"]
                 else:
                     #prompt for password
-                    args.password=getpass.getpass(prompt='Please enter password: ')
+                    argsout.password=getpass.getpass(prompt='Please enter password: ')
                     if update:
                         print("Warning: user database password will be stored unencrypted in the geoslurp configuration file,"
                               "consider setting usekeyring=True")
                         if readonlyuser:
-                            lastOpts["readonlyPasswd"]=args.password
+                            lastOpts["readonlyPasswd"]=argsout.password
                         else:
-                            lastOpts["passwd"]=args.password
+                            lastOpts["passwd"]=argsout.password
     else:
         #update keyring
-        if args.usekeyring and update:
-            keyring.set_password("geoslurp",args.user,args.password)
+        if argsout.usekeyring and update:
+            keyring.set_password("geoslurp",argsout.user,argsout.password)
     
-    if args.mirror:
+    if argsout.mirror:
         #register alias to which datamirror to use
-        lastOpts["mirror"]=args.mirror
+        lastOpts["mirror"]=argsout.mirror
     else:
         if "mirror" in lastOpts:
-            args.mirror=lastOpts["mirror"]
+            argsout.mirror=lastOpts["mirror"]
         else:
-            args.mirror="default"
+            argsout.mirror="default"
 
     #write out  options to file to store these settings
     if isUpdated and update:
@@ -167,4 +168,4 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
             yaml.dump(lastOpts, fid, default_flow_style=False)
 
 
-    return args
+    return argsout

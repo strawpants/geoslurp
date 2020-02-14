@@ -143,13 +143,16 @@ class Settings():
 
     def __setitem__(self, key, val):
         self.userentry.conf[key]=val
-    
+
+    def __delitem__(self, key):
+        del self.userentry.conf[key]
+
     def getdefaults(self,key):
         """returns the default"""
-        return self.userentry.conf[key]
+        return self.defaultentry.conf[key]
 
     def setdefault(self,key,val):
-        self.userentry.conf[key]=val
+        self.defaultentry.conf[key]=val
 
     def show(self):
         """Show the loaded user configuration"""

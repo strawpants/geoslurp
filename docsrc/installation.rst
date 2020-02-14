@@ -10,7 +10,7 @@ Geoslurp will only function when a PostGIS enabled database server is reachable.
    :width: 600
 
 Installation of the geoslurp package
-------------------------------------
+====================================
 
 Currently the package is not yet in PyPI (but it hopefully will in the near future). Untill then, please clone the git repository and install using setuptools::
 
@@ -21,11 +21,15 @@ Currently the package is not yet in PyPI (but it hopefully will in the near futu
 For a development install you can replace the final line with ``python3 ./setup.py develop``
 
 Setting up the PostgreSQL database
-----------------------------------
-To setup the database one is (currently) referred to the documentation of `Running geoslurp with docker <https://github.com/strawpants/docker-geoslurp>`_. The basic steps are essentially to (1) install a PostGreSQL instance with the PostGIS extension, (2) add a database called 'geoslurp', (3) set up geoslurp roles and users.
+==================================
+To setup the database one is (currently) referred to the documentation of `Running geoslurp with docker <https://github.com/strawpants/docker-geoslurp>`_. The basic steps are essentially to:
+
+1. install a PostGreSQL instance with the PostGIS extension,
+2. add a database called 'geoslurp',
+3. set up geoslurp roles and users.
 
 Local Configuration settings
-----------------------------
+============================
 The settings which are specific to a client are stored in a yaml file which is expected in the user's home when not indicated otherwise. The file is called ``.geoslurp_lastused.yaml`` and may contain the following entries::
 
    host: hostname_of_database_server
@@ -39,5 +43,10 @@ Note that settings in this file may be overwritten with last used values when us
 
 
 
+Specifying passwords
+--------------------
+There are several ways to specify passwords, some which are more secure than others.
 
+1. **Use a keyring recognized by python keyring**. This requires that `python keyring  is installed with a suitable backend <https://pypi.org/project/keyring/>`_). When the option ``useKeyring=true`` is specified in ``${HOME}.geoslurp_lastused.yaml``, users will be prompted for a  password when they connect for the first time, but subsequent accesses don't require entering a password
+2. **Use an environment variable**. If one specifies
 
