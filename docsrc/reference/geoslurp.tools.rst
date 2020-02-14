@@ -9,6 +9,14 @@ geoslurp.tools package
 Submodules
 ----------
 
+geoslurp.tools.Bounds module
+----------------------------
+
+.. automodule:: geoslurp.tools.Bounds
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 geoslurp.tools.csv module
 -------------------------
 

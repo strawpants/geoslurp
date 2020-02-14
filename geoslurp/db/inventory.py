@@ -64,11 +64,15 @@ class Inventory:
             yield entry
 
     def __getitem__(self, dataset):
-        """Retrieves the entry from the inventory table corresponding to the dataset"""
+        """Retrieves the entry from the inventory table corresponding to the dataset
+        :param dataset: Table to be searched for. This can be either a table name (without the scheme) or as scheme.table"""
         #we need to open up a small sqlalcheny session here
         # note  this will raise a NoResultsFound exception if none was found (should be treated by caller)
-        inventEntry=self._ses.query(InventTable).filter(InventTable.dataset == dataset).one()
-
-        return inventEntry
+        #when a dot is present we also need to check for the scheme
+        spl=dataset.split(".")
+        if len(spl) == 1:
+            return self._ses.query(InventTable).filter(InventTable.dataset == spl[0]).one()
+        else:
+            return self._ses.query(InventTable).filter(InventTable.dataset == spl[1]).filter(InventTable.scheme == spl[0]).one()
 
 

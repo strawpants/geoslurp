@@ -1,7 +1,13 @@
 .. _install:
 
+===========================================================================
 Installation of the geoslurp package and setting up the PostgreSQL instance 
 ===========================================================================
+
+Geoslurp will only function when a PostGIS enabled database server is reachable. The python module geoslurp can be considered as a client and does not require the installation of a PostGreSQL database on the client machine itself. In this way, several hosts, with geoslurp installed as clients, can access the same database and data storage location, as indicated in the diagram below.
+
+.. image:: graphics/geoslurp_network.svg
+   :width: 600
 
 Installation of the geoslurp package
 ------------------------------------
@@ -16,6 +22,22 @@ For a development install you can replace the final line with ``python3 ./setup.
 
 Setting up the PostgreSQL database
 ----------------------------------
-The (meta)data will be stored in a database. 
+To setup the database one is (currently) referred to the documentation of `Running geoslurp with docker <https://github.com/strawpants/docker-geoslurp>`_. The basic steps are essentially to (1) install a PostGreSQL instance with the PostGIS extension, (2) add a database called 'geoslurp', (3) set up geoslurp roles and users.
+
+Local Configuration settings
+----------------------------
+The settings which are specific to a client are stored in a yaml file which is expected in the user's home when not indicated otherwise. The file is called ``.geoslurp_lastused.yaml`` and may contain the following entries::
+
+   host: hostname_of_database_server
+   lastupdate: 2020-02-06 19:30:43.292675
+   port: 5432 #where to contact the server
+   readonlyUser: slurpy # user which has readonly access to the database (This is the preferred user to use when browsing and using the database but not for registering)
+   useKeyring: true #This allows users to store their database password in a system keyring (e.g. kwallet, gnome-keyring, ..) Requires the python package keyring with a sutable backend 
+   user: username #username which also has write access to the database
+
+Note that settings in this file may be overwritten with last used values when using the :ref:`Command line tools <clihelp>`.
+
+
+
 
 

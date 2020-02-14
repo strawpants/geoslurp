@@ -18,7 +18,7 @@ from sqlalchemy import text
 # from geoslurptools.aux.ogrgeom import lonlat2ogr
 from sqlalchemy import select,func,asc,and_,literal_column,between
 from geoalchemy2.functions import ST_Dump
-from geoslurptools.gis.shapelytools import shpextract
+from geoslurp.tools.shapelytools import shpextract
 
 def argoQuery(dbcon,geoWKT=None,tspan=None,withinDmeter=None,tsort=None):
     tbl=dbcon.getTable('argo2','oceanobs')

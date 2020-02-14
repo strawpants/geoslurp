@@ -11,6 +11,7 @@ Subpackages
 
 .. toctree::
 
+   geoslurp.config
    geoslurp.datapull
    geoslurp.dataset
    geoslurp.db

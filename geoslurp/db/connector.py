@@ -25,24 +25,29 @@ from geoslurp.db.tabletools import tableMapFactory
 import re
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from geoslurp.config.slurplogger import  slurplogger, debugging
+import getpass
 
 class GeoslurpConnector():
     """Holds a connector to a geoslurp database"""
     mirror=None
-    def __init__(self, host, user, passwd, port=5432,readonlyuser=True,datamirror=None):
+    def __init__(self, host, user, passwd=None, port=5432,readonlyuser=True,datamirror=None):
         """
         establishes a database engine whoch provides the base
         for creating sessions (ORM) or connections (SQL expressions)
         :param dburl: url of the database e.g.: postgresql+psycopg2://geoslurp:password@host/geoslurp
         """
         self.user=user
-        self.passw=passwd
+        if passwd:
+            self.passw=passwd
+        else:
+            self.passw=getpass.getpass(prompt='Please enter password for %s: '%(user))
+
         if not host:
             #this will attempt to read from a unix socket
             host=""
         self.host=host
         echo=debugging()
-        dburl="postgresql+psycopg2://"+user+":"+passwd+"@"+host+":"+str(port)+"/geoslurp"
+        dburl="postgresql+psycopg2://"+user+":"+self.passw+"@"+host+":"+str(port)+"/geoslurp"
         self.dbeng = create_engine(dburl, echo=echo)
         # self.conn=self.dbeng.connect()
         self.Session = sessionmaker(bind=self.dbeng)

@@ -31,5 +31,5 @@ class gs_rads_subsegment(DBFunc):
 
     def register(self):
         """Register/update the function in the database"""
-       self.createreplace()
+        self.createreplace()
     

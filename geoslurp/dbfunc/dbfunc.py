@@ -78,7 +78,7 @@ class DBFunc(ABC):
     
     def createreplace(self):
         """Creates/replaces the  pgfunction in the database"""
-            fheader=text("CREATE OR REPLACE FUNCTION :pgfunc(%s) RETURNS %s AS $dbff$\n"%(self.inargs,self.outargs))
+        fheader=text("CREATE OR REPLACE FUNCTION :pgfunc(%s) RETURNS %s AS $dbff$\n"%(self.inargs,self.outargs))
 
         pgbody=text(self.pgbody)
         pgfooter=text(";\n$dbff$ LANGUAGE %s;"%(self.language))
