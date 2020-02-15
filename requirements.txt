@@ -1,7 +1,7 @@
 numpy
 SQLAlchemy
 pycurl
-pycrypto
+cryptography
 PyYAML
 lxml
 keyring

@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="geoslurp package" href="reference/geoslurp.html" />
-    <link rel="prev" title="Reference Documentation" href="reference.html" /> 
+    <link rel="prev" title="Conventions on naming tables and their columns" href="tableconventions.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Reference Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tableconventions.html">Conventions on naming tables and their  columns</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Command line tools</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#clitools-geoslurper-py">clitools/geoslurper.py</a></li>
 </ul>
@@ -197,10 +198,10 @@
 <blockquote>
 <div><p>Program to download and manage Earth Science data</p>
 </div></blockquote>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: clitools/geoslurper.py [-h] [-i] [-l] [--refresh] [--purge-cache [filter]] [--purge-data [filter]] [--purge-entry [filter]] [--pull [JSON]]</span>
-<span class="go">                              [--register [JSON]] [--update [JSON]] [--config [JSON]] [--show-config] [--auth-config [JSON]] [--admin-config [JSON]]</span>
-<span class="go">                              [--host hostname] [--user user] [--add-user username] [--add-readonly-user username] [--password password] [--port port]</span>
-<span class="go">                              [--usekeyring] [-v [VERBOSE]] [--data-dir DIR] [--cache-dir DIR] [-d [PATTERN]] [-f [PATTERN]]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: clitools/geoslurper.py [-h] [-i] [-l] [--refresh] [--purge-cache [filter]] [--purge-data [filter]] [--purge-entry [filter]] [--pull [JSON]] [--register [JSON]]</span>
+<span class="go">                              [--local-settings LOCALSETTINGSFILE] [--config [JSON]] [--show-config] [--auth-config [JSON]] [--admin-config [JSON]] [--host hostname]</span>
+<span class="go">                              [--user user] [--add-user username] [--add-readonly-user username] [--password password] [--port port] [--usekeyring] [-v [VERBOSE]]</span>
+<span class="go">                              [--data-dir DIR] [--cache-dir DIR] [-d [PATTERN]] [--mirror [MIRRORALIAS]] [-f [PATTERN]]</span>
 </pre></div>
 </div>
 <dl class="option">
@@ -258,9 +259,9 @@
 </dd></dl>
 
 <dl class="option">
-<dt id="cmdoption-clitools-geoslurper-py-update">
-<code class="sig-name descname">--update</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implies both –pull and –register, but applies only to the updated data (accepts JSON options)</p>
+<dt id="cmdoption-clitools-geoslurper-py-local-settings">
+<code class="sig-name descname">--local-settings</code><code class="sig-prename descclassname"> &lt;localsettingsfile&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-local-settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify a different file to read the local settings from (default= ${HOME}/.geoslurp_lastused.yaml)</p>
 </dd></dl>
 
 <dl class="option">
@@ -302,13 +303,13 @@
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-add-user">
 <code class="sig-name descname">--add-user</code><code class="sig-prename descclassname"> &lt;username&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-add-user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a new postgresql user (you will be prompted for a password)</p>
+<dd><p>Add a new postgresql user (you will be prompted for a password, or you can append the password after a colon e.g. pietje:secretpassword)</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-add-readonly-user">
 <code class="sig-name descname">--add-readonly-user</code><code class="sig-prename descclassname"> &lt;username&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-add-readonly-user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a new readonly postgresql user (you will be prompted for a password)</p>
+<dd><p>Add a new readonly postgresql user (you will be prompted for a password, or you can append the password after a colon e.g. pietje:secretpassword)</p>
 </dd></dl>
 
 <dl class="option">
@@ -354,6 +355,12 @@
 </dd></dl>
 
 <dl class="option">
+<dt id="cmdoption-clitools-geoslurper-py-mirror">
+<code class="sig-name descname">--mirror</code><code class="sig-prename descclassname"> &lt;mirroralias&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-mirror" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a different mirror for prepending to relative filename uris, the default uses the mirror registered as ‘default’ in the database. A mirror can be registered in the database  with –[admin-]config ‘{“DataMirrors”:{“MIRRORALIAS”:”MIRRORPATH”}}’.</p>
+</dd></dl>
+
+<dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-f">
 <code class="sig-name descname">-f</code><code class="sig-prename descclassname"> &lt;pattern&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--func</code><code class="sig-prename descclassname"> &lt;pattern&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUCNTION)</p>
@@ -373,7 +380,7 @@
         <a href="reference/geoslurp.html" class="btn btn-neutral float-right" title="geoslurp package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="reference.html" class="btn btn-neutral float-left" title="Reference Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tableconventions.html" class="btn btn-neutral float-left" title="Conventions on naming tables and their columns" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

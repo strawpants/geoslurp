@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.dataset.geoshapes &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.dataset.geoshapes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.dataset.geoshapes</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with geoslurp; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019</span>
+
+<span class="kn">from</span> <span class="nn">geoslurp.dataset.OGRBase</span> <span class="kn">import</span> <span class="n">OGRBase</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.http</span> <span class="kn">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.github</span> <span class="kn">import</span> <span class="n">Crawler</span> <span class="k">as</span> <span class="n">ghCrawler</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.github</span> <span class="kn">import</span> <span class="n">GithubFilter</span> <span class="k">as</span> <span class="n">ghfilter</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.github</span> <span class="kn">import</span> <span class="n">cachedGithubCatalogue</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.register</span> <span class="kn">import</span> <span class="n">geoslurpregistry</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<div class="viewcode-block" id="geoshapeBase"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geoshapes.geoshapeBase">[docs]</a><span class="k">class</span> <span class="nc">geoshapeBase</span><span class="p">(</span><span class="n">OGRBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for a geoshapes dataset (selection of handrawn shapes) (downloads from github) &quot;&quot;&quot;</span>
+    <span class="n">url</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">path</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;globalgis&#39;</span>
+    <span class="n">version</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ogrfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gtype</span><span class="o">=</span><span class="s1">&#39;GEOMETRY&#39;</span>
+<div class="viewcode-block" id="geoshapeBase.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geoshapes.geoshapeBase.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pulls the geojson data from github and unpacks it in the cache directory&quot;&quot;&quot;</span>
+        <span class="n">uri</span><span class="o">=</span><span class="n">http</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">basename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">uri</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">direc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="n">outfile</span><span class="o">=</span><span class="n">basename</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GeoshapeClassFactory"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geoshapes.GeoshapeClassFactory">[docs]</a><span class="k">def</span> <span class="nf">GeoshapeClassFactory</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span><span class="n">val</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span> <span class="p">(</span><span class="n">geoshapeBase</span><span class="p">,),</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span><span class="n">val</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">],</span><span class="s2">&quot;path&quot;</span><span class="p">:</span><span class="n">val</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]})</span></div>
+
+<div class="viewcode-block" id="getGeoshapesDsets"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geoshapes.getGeoshapesDsets">[docs]</a><span class="k">def</span> <span class="nf">getGeoshapesDsets</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;retrieves the available geoshapes datasets&quot;&quot;&quot;</span>
+    <span class="n">currentversion</span><span class="o">=</span><span class="s1">&#39;v1&#39;</span> <span class="c1"># note this correspond to a specific release (the sha hash is taken from the commit)</span>
+    <span class="n">reponame</span><span class="o">=</span><span class="s2">&quot;strawpants/geoshapes&quot;</span>
+    <span class="n">commitsha</span><span class="o">=</span><span class="s2">&quot;23ab6daab0bf2c6e9a3f3d685bed52cb48ac97ea&quot;</span>
+    <span class="n">cachedir</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">getCacheDir</span><span class="p">(</span><span class="s2">&quot;githubcache&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cred</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">authCred</span><span class="p">(</span><span class="s2">&quot;github&quot;</span><span class="p">)</span>
+        <span class="n">token</span><span class="o">=</span><span class="n">cred</span><span class="o">.</span><span class="n">oauthtoken</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">token</span><span class="o">=</span><span class="kc">None</span>
+    <span class="c1"># import pdb;pdb.set_trace() </span>
+    <span class="n">catalog</span><span class="o">=</span><span class="n">cachedGithubCatalogue</span><span class="p">(</span><span class="n">reponame</span><span class="p">,</span><span class="n">cachedir</span><span class="o">=</span><span class="n">cachedir</span><span class="p">,</span><span class="n">commitsha</span><span class="o">=</span><span class="n">commitsha</span><span class="p">,</span>
+                       <span class="n">gfilter</span><span class="o">=</span><span class="n">ghfilter</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;blob&quot;</span><span class="p">,</span><span class="s2">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;\.geojson&quot;</span><span class="p">}),</span>
+                       <span class="n">gfollowfilter</span><span class="o">=</span><span class="n">ghfilter</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;tree&quot;</span><span class="p">,</span><span class="s2">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;envelopes&quot;</span><span class="p">}),</span>
+                       <span class="n">ghtoken</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+    <span class="n">out</span><span class="o">=</span><span class="p">[]</span>
+    
+    <span class="c1">#create a list of datasets</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">]:</span>
+        <span class="n">clsname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GeoshapeClassFactory</span><span class="p">(</span><span class="n">clsname</span><span class="p">,</span><span class="n">entry</span><span class="p">))</span>
+
+
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<span class="n">geoslurpregistry</span><span class="o">.</span><span class="n">registerDatasetFactory</span><span class="p">(</span><span class="n">getGeoshapesDsets</span><span class="p">)</span>
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

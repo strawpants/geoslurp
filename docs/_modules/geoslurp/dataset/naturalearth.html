@@ -208,7 +208,7 @@
     <span class="sd">&quot;&quot;&quot;retrieves the available natural earth datasets&quot;&quot;&quot;</span>
     <span class="n">reponame</span><span class="o">=</span><span class="s2">&quot;nvkelso/natural-earth-vector&quot;</span>
     <span class="n">commitsha</span><span class="o">=</span><span class="s2">&quot;bf7720b54dd9ac2d4d7f735174901b3862b5362a&quot;</span>
-    <span class="n">cachedir</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">getDir</span><span class="p">(</span><span class="s2">&quot;githubcache&quot;</span><span class="p">,</span><span class="s2">&quot;CacheDir&quot;</span><span class="p">)</span>
+    <span class="n">cachedir</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">getCacheDir</span><span class="p">(</span><span class="s2">&quot;githubcache&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">cred</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">authCred</span><span class="p">(</span><span class="s2">&quot;github&quot;</span><span class="p">)</span>
         <span class="n">token</span><span class="o">=</span><span class="n">cred</span><span class="o">.</span><span class="n">oauthtoken</span>

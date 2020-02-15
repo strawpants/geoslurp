@@ -22,13 +22,14 @@ from sqlalchemy.dialects.postgresql import JSONB, BYTEA
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy import MetaData
 
-from Crypto.Cipher import Blowfish
-from Crypto import Random
 import json
 import os
 from collections import namedtuple
 from geoslurp.config.slurplogger import slurplogger
 import sys
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+
 
 
 class MirrorMap:
@@ -69,7 +70,22 @@ def stripPasswords(d):
     return d
 
 Credentials=namedtuple("Credentials","user passw alias oauthtoken url")
+"""A named tuple to store authentication credentials
+
+Attributes:
+    user (str): Username for the service
+    alias (str): (obligatory) The short name of this service
+    passw (str): The password associated with the username
+    oauthtoken (str): An oauth2 token
+    url (str): The root url which is linked to this service
+"""
+
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
+
+def aliasNDict(cred:Credentials):
+    """return the alias and a dictionary with non-None entries of a Credentials entry"""
+    return cred.alias, dict([(ky,val) for ky,val in zip(t._fields,t) if bool(val) and ky != "alias"])
+
 
 GSBase=declarative_base(metadata=MetaData(schema='admin'))
 
@@ -169,9 +185,15 @@ class Settings():
             raise RuntimeError("No credentials for service %s found in the database. Please register your credentials using Settings.updateAuth()"%service)
         return Credentials(alias=service, **self.auth[service])
 
-    def updateAuth(self, indict):
-        #TODO add sanity check on input dict
-        self.auth.update(indict)
+    def updateAuth(self, cred:Credentials):
+        """register/update a new set of authentication credentials"""
+        self.auth.update({cred.alias:dict([(ky, val) for ky, val in zip(cred._fields, cred) if bool(val) and ky != "alias"])})
+        self.encryptAuth()
+        self.ses.commit()
+
+    def delAuth(self,key):
+        """Delete an authentication entry by specifying it's alias"""
+        del self.auth[key]
         self.encryptAuth()
         self.ses.commit()
 
@@ -219,30 +241,50 @@ class Settings():
 
     def encryptAuth(self):
         """Encrypt the authentification credentials to store in the database"""
-
-        bs = Blowfish.block_size
-        iv=Random.new().read(bs)
-        crypto = Blowfish.new(self.db.passw, Blowfish.MODE_CBC, iv)
-        conf=json.dumps(self.auth)
+        bs = int(algorithms.Blowfish.block_size / 8)
+        backend = default_backend()
+        iv = os.urandom(bs)
+        cipher = Cipher(algorithms.Blowfish(self.db.passw.encode('utf-8')), modes.CBC(iv), backend=backend)
+        encryptor = cipher.encryptor()
+        conf=json.dumps(self.auth).encode('utf-8')
         #padd with spaces to be a multiple of bs
         plen = bs - divmod(len(conf), bs)[1]
-        pad = ' '*plen
-        self.userentry.auth = iv + crypto.encrypt(conf + pad)
-
+        pad = b' '*plen
+        self.userentry.auth = iv + encryptor.update(conf+pad) + encryptor.finalize()
+        # bs = Blowfish.block_size
+        # iv=Random.new().read(bs)
+        # crypto = Blowfish.new(self.db.passw, Blowfish.MODE_CBC, iv)
+        # conf=json.dumps(self.auth)
+        # #padd with spaces to be a multiple of bs
+        # plen = bs - divmod(len(conf), bs)[1]
+        # pad = ' '*plen
+        # self.userentry.auth = iv + crypto.encrypt(conf + pad)
+        #
 
     def decryptAuth(self):
         """Decrypt the authenficiation credentials as stored in the database"""
-        bs = Blowfish.block_size
         if self.userentry.auth:
-            entry=self.userentry.auth
-            iv=self.userentry.auth[0:bs]
+            bs=int(algorithms.Blowfish.block_size/8)
+            backend = default_backend()
+            iv = self.userentry.auth[0:bs]
             encr=self.userentry.auth[bs:]
-            crypto = Blowfish.new(self.db.passw, Blowfish.MODE_CBC, iv)
-            self.auth=json.loads(crypto.decrypt(encr))
+            cipher = Cipher(algorithms.Blowfish(self.db.passw.encode('utf-8')), modes.CBC(iv), backend=backend)
+            decryptor = cipher.decryptor()
+            self.auth=json.loads(decryptor.update(encr) + decryptor.finalize())
         else:
-            #just empty
             self.auth={}
-            return
+
+        # bs = Blowfish.block_size
+        # if self.userentry.auth:
+        #     entry=self.userentry.auth
+        #     iv=self.userentry.auth[0:bs]
+        #     encr=self.userentry.auth[bs:]
+        #     crypto = Blowfish.new(self.db.passw, Blowfish.MODE_CBC, iv)
+        #     self.auth=json.loads(crypto.decrypt(encr))
+        # else:
+        #     #just empty
+        #     self.auth={}
+        #     return
 
     def getDataDir(self,scheme,dataset=None,subdirs=None):
         """Retrieves the data Directory, possibly appended with a dataset and subdirs"""

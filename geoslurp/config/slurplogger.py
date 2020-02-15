@@ -20,7 +20,9 @@ import logging
 
 # geoslurp wide logger
 def slurplogger():
+    """Retrieve the geoslurp specific logger"""
     return logging.getLogger("Geoslurp")
 
 def debugging():
+    """Sets the most detailed logging level to DEBUG"""
     return slurplogger().getEffectiveLevel() == logging.DEBUG

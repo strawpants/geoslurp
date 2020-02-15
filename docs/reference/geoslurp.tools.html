@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="geoslurp.discover.gravity package" href="geoslurp.discover.gravity.html" /> 
+    <link rel="prev" title="geoslurp.discover.oceanobs package" href="geoslurp.discover.oceanobs.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -189,6 +189,103 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-geoslurp.tools.Bounds">
+<span id="geoslurp-tools-bounds-module"></span><h2>geoslurp.tools.Bounds module<a class="headerlink" href="#module-geoslurp.tools.Bounds" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.tools.Bounds.BtdBox">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.tools.Bounds.</code><code class="sig-name descname">BtdBox</code><span class="sig-paren">(</span><em class="sig-param">s=None</em>, <em class="sig-param">n=None</em>, <em class="sig-param">w=None</em>, <em class="sig-param">e=None</em>, <em class="sig-param">ts=None</em>, <em class="sig-param">te=None</em>, <em class="sig-param">zmin=None</em>, <em class="sig-param">zmax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which holds a geographical bounding box, a vertical depth range and a datetime range</p>
+<dl class="method">
+<dt id="geoslurp.tools.Bounds.BtdBox.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the ranges are valid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.tools.Bounds.BtdBox.crop">
+<code class="sig-name descname">crop</code><span class="sig-paren">(</span><em class="sig-param">btdbox</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.crop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crops the bounding box based on the limits available in an other</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.tools.Bounds.BtdBox.e">
+<code class="sig-name descname">e</code><em class="property"> = 360.0</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.e" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.tools.Bounds.BtdBox.isGMTCentered">
+<code class="sig-name descname">isGMTCentered</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.isGMTCentered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.isGMTCentered" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.tools.Bounds.BtdBox.lonSplit">
+<code class="sig-name descname">lonSplit</code><span class="sig-paren">(</span><em class="sig-param">lon=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.lonSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.lonSplit" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns 2 bounding boxes from the current one split at a longitude</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.tools.Bounds.BtdBox.n">
+<code class="sig-name descname">n</code><em class="property"> = 90.0</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.n" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.tools.Bounds.BtdBox.s">
+<code class="sig-name descname">s</code><em class="property"> = -90.0</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.s" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.tools.Bounds.BtdBox.te">
+<code class="sig-name descname">te</code><em class="property"> = datetime.datetime(9999, 12, 31, 23, 59, 59, 999999)</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.te" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.tools.Bounds.BtdBox.timeSplit">
+<code class="sig-name descname">timeSplit</code><span class="sig-paren">(</span><em class="sig-param">t=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.timeSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.timeSplit" title="Permalink to this definition">¶</a></dt>
+<dd><p>return 2 bounding boxes split up at a certain time point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.tools.Bounds.BtdBox.to0_360">
+<code class="sig-name descname">to0_360</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.to0_360"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.to0_360" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the longitude coordinates to span 0 .. 360</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.tools.Bounds.BtdBox.toGreenwhich">
+<code class="sig-name descname">toGreenwhich</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.toGreenwhich"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.toGreenwhich" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns an instance with the longitude coordinates to span -180 .. 180</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.tools.Bounds.BtdBox.ts">
+<code class="sig-name descname">ts</code><em class="property"> = datetime.datetime(1, 1, 1, 0, 0)</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.ts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.tools.Bounds.BtdBox.w">
+<code class="sig-name descname">w</code><em class="property"> = 0.0</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.w" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.tools.Bounds.BtdBox.wkt">
+<code class="sig-name descname">wkt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.wkt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.wkt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a WKT represetation of the geographical bounding box</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.tools.Bounds.BtdBox.zmax">
+<code class="sig-name descname">zmax</code><em class="property"> = 1.7976931348623157e+308</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.zmax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.tools.Bounds.BtdBox.zmin">
+<code class="sig-name descname">zmin</code><em class="property"> = 2.2250738585072014e-308</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.zmin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-geoslurp.tools.csv">
 <span id="geoslurp-tools-csv-module"></span><h2>geoslurp.tools.csv module<a class="headerlink" href="#module-geoslurp.tools.csv" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -221,95 +318,6 @@ This function reads all rows from an open CSV file. The first line is expected t
 </div>
 <div class="section" id="module-geoslurp.tools.netcdftools">
 <span id="geoslurp-tools-netcdftools-module"></span><h2>geoslurp.tools.netcdftools module<a class="headerlink" href="#module-geoslurp.tools.netcdftools" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="geoslurp.tools.netcdftools.BtdBox">
-<em class="property">class </em><code class="sig-prename descclassname">geoslurp.tools.netcdftools.</code><code class="sig-name descname">BtdBox</code><span class="sig-paren">(</span><em class="sig-param">s=None</em>, <em class="sig-param">n=None</em>, <em class="sig-param">w=None</em>, <em class="sig-param">e=None</em>, <em class="sig-param">ts=None</em>, <em class="sig-param">te=None</em>, <em class="sig-param">zmin=None</em>, <em class="sig-param">zmax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#BtdBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class which holds a geographical bounding box, a vertical depth range and a datetime range,
-closely linked to the netcdffile operations below</p>
-<dl class="method">
-<dt id="geoslurp.tools.netcdftools.BtdBox.check">
-<code class="sig-name descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#BtdBox.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.check" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the ranges are valid</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.tools.netcdftools.BtdBox.crop">
-<code class="sig-name descname">crop</code><span class="sig-paren">(</span><em class="sig-param">btdbox</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#BtdBox.crop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.crop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Crops the bounding box based on the limits available in an other</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="geoslurp.tools.netcdftools.BtdBox.e">
-<code class="sig-name descname">e</code><em class="property"> = 360.0</em><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.e" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.tools.netcdftools.BtdBox.isGMTCentered">
-<code class="sig-name descname">isGMTCentered</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#BtdBox.isGMTCentered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.isGMTCentered" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.tools.netcdftools.BtdBox.lonSplit">
-<code class="sig-name descname">lonSplit</code><span class="sig-paren">(</span><em class="sig-param">lon=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#BtdBox.lonSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.lonSplit" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns 2 bounding boxes from the current one split at a longitude</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="geoslurp.tools.netcdftools.BtdBox.n">
-<code class="sig-name descname">n</code><em class="property"> = 90.0</em><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.n" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="geoslurp.tools.netcdftools.BtdBox.s">
-<code class="sig-name descname">s</code><em class="property"> = -90.0</em><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.s" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="geoslurp.tools.netcdftools.BtdBox.te">
-<code class="sig-name descname">te</code><em class="property"> = datetime.datetime(9999, 12, 31, 23, 59, 59, 999999)</em><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.te" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.tools.netcdftools.BtdBox.timeSplit">
-<code class="sig-name descname">timeSplit</code><span class="sig-paren">(</span><em class="sig-param">t=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#BtdBox.timeSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.timeSplit" title="Permalink to this definition">¶</a></dt>
-<dd><p>return 2 bounding boxes split up at a certain time point</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.tools.netcdftools.BtdBox.to0_360">
-<code class="sig-name descname">to0_360</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#BtdBox.to0_360"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.to0_360" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the longitude coordinates to span 0 .. 360</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.tools.netcdftools.BtdBox.toGreenwhich">
-<code class="sig-name descname">toGreenwhich</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#BtdBox.toGreenwhich"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.toGreenwhich" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns an instance with the longitude coordinates to span -180 .. 180</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="geoslurp.tools.netcdftools.BtdBox.ts">
-<code class="sig-name descname">ts</code><em class="property"> = datetime.datetime(1, 1, 1, 0, 0)</em><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.ts" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="geoslurp.tools.netcdftools.BtdBox.w">
-<code class="sig-name descname">w</code><em class="property"> = 0.0</em><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.w" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="geoslurp.tools.netcdftools.BtdBox.zmax">
-<code class="sig-name descname">zmax</code><em class="property"> = 1.7976931348623157e+308</em><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.zmax" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="geoslurp.tools.netcdftools.BtdBox.zmin">
-<code class="sig-name descname">zmin</code><em class="property"> = 2.2250738585072014e-308</em><a class="headerlink" href="#geoslurp.tools.netcdftools.BtdBox.zmin" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="function">
 <dt id="geoslurp.tools.netcdftools.ncSwapLongitude">
 <code class="sig-prename descclassname">geoslurp.tools.netcdftools.</code><code class="sig-name descname">ncSwapLongitude</code><span class="sig-paren">(</span><em class="sig-param">ncinout</em>, <em class="sig-param">longitudevar='longitude'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#ncSwapLongitude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.ncSwapLongitude" title="Permalink to this definition">¶</a></dt>
@@ -381,7 +389,7 @@ closely linked to the netcdffile operations below</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="geoslurp.discover.gravity.html" class="btn btn-neutral float-left" title="geoslurp.discover.gravity package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="geoslurp.discover.oceanobs.html" class="btn btn-neutral float-left" title="geoslurp.discover.oceanobs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

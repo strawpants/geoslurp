@@ -93,6 +93,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation of the geoslurp package and setting up the PostgreSQL instance</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation-of-the-geoslurp-package">Installation of the geoslurp package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-the-postgresql-database">Setting up the PostgreSQL database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-configuration-settings">Local Configuration settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#specifying-passwords">Specifying passwords</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
@@ -187,6 +191,8 @@
 </style>
 <div class="section" id="installation-of-the-geoslurp-package-and-setting-up-the-postgresql-instance">
 <span id="install"></span><h1>Installation of the geoslurp package and setting up the PostgreSQL instance<a class="headerlink" href="#installation-of-the-geoslurp-package-and-setting-up-the-postgresql-instance" title="Permalink to this headline">¶</a></h1>
+<p>Geoslurp will only function when a PostGIS enabled database server is reachable. The python module geoslurp can be considered as a client and does not require the installation of a PostGreSQL database on the client machine itself. In this way, several hosts, with geoslurp installed as clients, can access the same database and data storage location, as indicated in the diagram below.</p>
+<a class="reference internal image-reference" href="_images/geoslurp_network.svg"><img alt="_images/geoslurp_network.svg" src="_images/geoslurp_network.svg" width="600" /></a>
 <div class="section" id="installation-of-the-geoslurp-package">
 <h2>Installation of the geoslurp package<a class="headerlink" href="#installation-of-the-geoslurp-package" title="Permalink to this headline">¶</a></h2>
 <p>Currently the package is not yet in PyPI (but it hopefully will in the near future). Untill then, please clone the git repository and install using setuptools:</p>
@@ -199,7 +205,35 @@
 </div>
 <div class="section" id="setting-up-the-postgresql-database">
 <h2>Setting up the PostgreSQL database<a class="headerlink" href="#setting-up-the-postgresql-database" title="Permalink to this headline">¶</a></h2>
-<p>The (meta)data will be stored in a database.</p>
+<p>To setup the database one is (currently) referred to the documentation of <a class="reference external" href="https://github.com/strawpants/docker-geoslurp">Running geoslurp with docker</a>. The basic steps are essentially to:</p>
+<ol class="arabic simple">
+<li><p>install a PostGreSQL instance with the PostGIS extension,</p></li>
+<li><p>add a database called ‘geoslurp’,</p></li>
+<li><p>set up geoslurp roles and users.</p></li>
+</ol>
+</div>
+<div class="section" id="local-configuration-settings">
+<h2>Local Configuration settings<a class="headerlink" href="#local-configuration-settings" title="Permalink to this headline">¶</a></h2>
+<p>The settings which are specific to a client are stored in a yaml file which is expected in the user’s home when not indicated otherwise. The file is called <code class="docutils literal notranslate"><span class="pre">.geoslurp_lastused.yaml</span></code> and may contain the following entries:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">host</span><span class="p">:</span> <span class="n">hostname_of_database_server</span>
+<span class="n">lastupdate</span><span class="p">:</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">06</span> <span class="mi">19</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mf">43.292675</span>
+<span class="n">port</span><span class="p">:</span> <span class="mi">5432</span> <span class="c1">#where to contact the server</span>
+<span class="n">readonlyUser</span><span class="p">:</span> <span class="n">slurpy</span> <span class="c1"># user which has readonly access to the database (This is the preferred user to use when browsing and using the database but not for registering)</span>
+<span class="n">useKeyring</span><span class="p">:</span> <span class="n">true</span> <span class="c1">#This allows users to store their database password in a system keyring (e.g. kwallet, gnome-keyring, ..) Requires the python package keyring with a sutable backend</span>
+<span class="n">user</span><span class="p">:</span> <span class="n">username</span> <span class="c1">#username which also has write access to the database</span>
+</pre></div>
+</div>
+<p>Note that settings in this file may be overwritten with last used values when using the <a class="reference internal" href="clitools.html#clihelp"><span class="std std-ref">Command line tools</span></a>.</p>
+<div class="section" id="specifying-passwords">
+<h3>Specifying passwords<a class="headerlink" href="#specifying-passwords" title="Permalink to this headline">¶</a></h3>
+<p>There are several ways to specify passwords, some which are more secure than others. The follin</p>
+<ol class="arabic simple">
+<li><p><strong>Use a keyring recognized by python keyring</strong>. This requires that <a class="reference external" href="https://pypi.org/project/keyring/">python keyring  is installed with a suitable backend</a>. When the option <code class="docutils literal notranslate"><span class="pre">useKeyring=true</span></code> is specified in <code class="docutils literal notranslate"><span class="pre">${HOME}/.geoslurp_lastused.yaml</span></code>, users will be prompted for a  password when they connect for the first time, but subsequent accesses don’t require entering a password, and are therefore non-interactive.</p></li>
+<li><p><strong>Use an environment variable</strong>. If <code class="docutils literal notranslate"><span class="pre">useKeyRing=false</span></code>, one can use an environment variable to specify the password e.g.: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASS=&quot;supersecretpassword</span></code>, or <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASSRO</span></code> (for the readonly user).</p></li>
+<li><p>If both methods 1 and 2 fail. one will be interactively prompted for a password</p></li>
+<li><p>As an alternative the constructor of the <a class="reference external" href="reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector">GeoslurpConnector</a> class allows the explicit input of a password.</p></li>
+</ol>
+</div>
 </div>
 </div>
 

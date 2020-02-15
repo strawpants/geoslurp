@@ -185,13 +185,83 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="geoslurp-dataset-package">
-<h1>geoslurp.dataset package<a class="headerlink" href="#geoslurp-dataset-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-geoslurp.dataset">
+<span id="geoslurp-dataset-package"></span><h1>geoslurp.dataset package<a class="headerlink" href="#module-geoslurp.dataset" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="geoslurp-dataset-arcticdem-module">
-<h2>geoslurp.dataset.ArcticDEM module<a class="headerlink" href="#geoslurp-dataset-arcticdem-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.ArcticDEM">
+<span id="geoslurp-dataset-arcticdem-module"></span><h2>geoslurp.dataset.ArcticDEM module<a class="headerlink" href="#module-geoslurp.dataset.ArcticDEM" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.ArcticDEM.ArcticDemRasterBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.ArcticDEM.</code><code class="sig-name descname">ArcticDemRasterBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/ArcticDEM.html#ArcticDemRasterBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.ArcticDemRasterBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.RasterBase.RasterBase" title="geoslurp.dataset.RasterBase.RasterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.RasterBase.RasterBase</span></code></a></p>
+<p>“Base class to download/register Arctic DEM Tiff rasters</p>
+<dl class="method">
+<dt id="geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><em class="sig-param">intersect=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/ArcticDEM.html#ArcticDemRasterBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the necessary data from the online resource</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.rasterfile">
+<code class="sig-name descname">rasterfile</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.rasterfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.rastregex">
+<code class="sig-name descname">rastregex</code><em class="property"> = '.*\\.tif$'</em><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.rastregex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.res">
+<code class="sig-name descname">res</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.res" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'dem'</em><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.srid">
+<code class="sig-name descname">srid</code><em class="property"> = 3413</em><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.ArcticDemRasterBase.srid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.ArcticDEM.Arcticdemindex">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.ArcticDEM.</code><code class="sig-name descname">Arcticdemindex</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/ArcticDEM.html#Arcticdemindex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.Arcticdemindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.OGRBase.OGRBase" title="geoslurp.dataset.OGRBase.OGRBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.OGRBase.OGRBase</span></code></a></p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.ArcticDEM.Arcticdemindex.filebase">
+<code class="sig-name descname">filebase</code><em class="property"> = 'ArcticDEM_Tile_Index_Rel7'</em><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.Arcticdemindex.filebase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.ArcticDEM.Arcticdemindex.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/ArcticDEM.html#Arcticdemindex.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.Arcticdemindex.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the shapefile layers from the server</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.ArcticDEM.Arcticdemindex.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'dem'</em><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.Arcticdemindex.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.ArcticDEM.Arcticdemindex.targetsrid">
+<code class="sig-name descname">targetsrid</code><em class="property"> = 3413</em><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.Arcticdemindex.targetsrid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.ArcticDEM.getArcticDems">
+<code class="sig-prename descclassname">geoslurp.dataset.ArcticDEM.</code><code class="sig-name descname">getArcticDems</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/ArcticDEM.html#getArcticDems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.ArcticDEM.getArcticDems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-geoslurp.dataset.Argo">
 <span id="geoslurp-dataset-argo-module"></span><h2>geoslurp.dataset.Argo module<a class="headerlink" href="#module-geoslurp.dataset.Argo" title="Permalink to this headline">¶</a></h2>
@@ -337,14 +407,161 @@ Takes advantage of the argo index files</p>
 </dd></dl>
 
 </div>
-<div class="section" id="geoslurp-dataset-csvbase-module">
-<h2>geoslurp.dataset.CSVBase module<a class="headerlink" href="#geoslurp-dataset-csvbase-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.CSVBase">
+<span id="geoslurp-dataset-csvbase-module"></span><h2>geoslurp.dataset.CSVBase module<a class="headerlink" href="#module-geoslurp.dataset.CSVBase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.CSVBase.CSVBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.CSVBase.</code><code class="sig-name descname">CSVBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/CSVBase.html#CSVBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.CSVBase.CSVBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Base class which downloads reads in a CSV table and registers it in a db table</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.CSVBase.CSVBase.csvfile">
+<code class="sig-name descname">csvfile</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.CSVBase.CSVBase.csvfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.CSVBase.CSVBase.hskip">
+<code class="sig-name descname">hskip</code><em class="property"> = 0</em><a class="headerlink" href="#geoslurp.dataset.CSVBase.CSVBase.hskip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.CSVBase.CSVBase.lookup">
+<code class="sig-name descname">lookup</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.CSVBase.CSVBase.lookup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.CSVBase.CSVBase.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/CSVBase.html#CSVBase.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.CSVBase.CSVBase.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update/populate a database table  from a CSV file). This function reads all rows from an open CSV file. The first line is expected to hold the COlumn names, which are mapped to types in the lookup string dictionary</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.CSVBase.CSVBase.separator">
+<code class="sig-name descname">separator</code><em class="property"> = ','</em><a class="headerlink" href="#geoslurp.dataset.CSVBase.CSVBase.separator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.CSVBase.CSVBase.table">
+<code class="sig-name descname">table</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.CSVBase.CSVBase.table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.CSVBase.columnsFromCSV">
+<code class="sig-prename descclassname">geoslurp.dataset.CSVBase.</code><code class="sig-name descname">columnsFromCSV</code><span class="sig-paren">(</span><em class="sig-param">line</em>, <em class="sig-param">lookup</em>, <em class="sig-param">sep='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/CSVBase.html#columnsFromCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.CSVBase.columnsFromCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>reads column descriptors from comma separated values and creates a list of sqlalchemy columns</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.CSVBase.valuesFromCSV">
+<code class="sig-prename descclassname">geoslurp.dataset.CSVBase.</code><code class="sig-name descname">valuesFromCSV</code><span class="sig-paren">(</span><em class="sig-param">line</em>, <em class="sig-param">names</em>, <em class="sig-param">sep='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/CSVBase.html#valuesFromCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.CSVBase.valuesFromCSV" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-duacsgriddeddsets-module">
-<h2>geoslurp.dataset.DuacsGriddedDsets module<a class="headerlink" href="#geoslurp-dataset-duacsgriddeddsets-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.DuacsGriddedDsets">
+<span id="geoslurp-dataset-duacsgriddeddsets-module"></span><h2>geoslurp.dataset.DuacsGriddedDsets module<a class="headerlink" href="#module-geoslurp.dataset.DuacsGriddedDsets" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.DuacsGriddedDsets.Duacs">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.DuacsGriddedDsets.</code><code class="sig-name descname">Duacs</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/DuacsGriddedDsets.html#Duacs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.DuacsGriddedDsets.Duacs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase" title="geoslurp.dataset.motuGridsBase.MotuGridsBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.motuGridsBase.MotuGridsBase</span></code></a></p>
+<p>Downloads subsets of the ducacs gridded multimission altimeter datasets for given regions</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.DuacsGriddedDsets.Duacs.authalias">
+<code class="sig-name descname">authalias</code><em class="property"> = 'cmems'</em><a class="headerlink" href="#geoslurp.dataset.DuacsGriddedDsets.Duacs.authalias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.DuacsGriddedDsets.Duacs.bandname">
+<code class="sig-name descname">bandname</code><em class="property"> = 'sla'</em><a class="headerlink" href="#geoslurp.dataset.DuacsGriddedDsets.Duacs.bandname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.DuacsGriddedDsets.Duacs.motuproduct">
+<code class="sig-name descname">motuproduct</code><em class="property"> = 'dataset-duacs-rep-global-merged-allsat-phy-l4'</em><a class="headerlink" href="#geoslurp.dataset.DuacsGriddedDsets.Duacs.motuproduct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.DuacsGriddedDsets.Duacs.moturoot">
+<code class="sig-name descname">moturoot</code><em class="property"> = 'http://my.cmems-du.eu/motu-web/Motu'</em><a class="headerlink" href="#geoslurp.dataset.DuacsGriddedDsets.Duacs.moturoot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.DuacsGriddedDsets.Duacs.motuservice">
+<code class="sig-name descname">motuservice</code><em class="property"> = 'SEALEVEL_GLO_PHY_L4_REP_OBSERVATIONS_008_047-TDS'</em><a class="headerlink" href="#geoslurp.dataset.DuacsGriddedDsets.Duacs.motuservice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.DuacsGriddedDsets.Duacs.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'altim'</em><a class="headerlink" href="#geoslurp.dataset.DuacsGriddedDsets.Duacs.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.DuacsGriddedDsets.Duacs.variables">
+<code class="sig-name descname">variables</code><em class="property"> = ['sla', 'adt']</em><a class="headerlink" href="#geoslurp.dataset.DuacsGriddedDsets.Duacs.variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-gracedsets-module">
-<h2>geoslurp.dataset.GRACEDsets module<a class="headerlink" href="#geoslurp-dataset-gracedsets-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.GRACEDsets">
+<span id="geoslurp-dataset-gracedsets-module"></span><h2>geoslurp.dataset.GRACEDsets module<a class="headerlink" href="#module-geoslurp.dataset.GRACEDsets" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.GRACEDsets.</code><code class="sig-name descname">GRACEDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/GRACEDsets.html#GRACEDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEDsets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEL2Base">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.GRACEDsets.</code><code class="sig-name descname">GRACEL2Base</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/GRACEDsets.html#GRACEL2Base"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEL2Base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Derived type representing GRACE spherical harmonic coefficients on the podaac server</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEL2Base.center">
+<code class="sig-name descname">center</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEL2Base.center" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEL2Base.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/GRACEDsets.html#GRACEL2Base.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEL2Base.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the necessary data from the online resource</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEL2Base.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/GRACEDsets.html#GRACEL2Base.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEL2Base.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the downloaded dataset in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEL2Base.release">
+<code class="sig-name descname">release</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEL2Base.release" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEL2Base.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'gravity'</em><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEL2Base.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEL2Base.updated">
+<code class="sig-name descname">updated</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEL2Base.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.GRACEDsets.GRACEL2ClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.GRACEDsets.</code><code class="sig-name descname">GRACEL2ClassFactory</code><span class="sig-paren">(</span><em class="sig-param">clsName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/GRACEDsets.html#GRACEL2ClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.GRACEL2ClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dynamically construct GRACE Level 2 dataset classes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.GRACEDsets.graceMetaExtractor">
+<code class="sig-prename descclassname">geoslurp.dataset.GRACEDsets.</code><code class="sig-name descname">graceMetaExtractor</code><span class="sig-paren">(</span><em class="sig-param">uri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/GRACEDsets.html#graceMetaExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.GRACEDsets.graceMetaExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract meta information from a GRACE file</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-geoslurp.dataset.GSHHGDsets">
 <span id="geoslurp-dataset-gshhgdsets-module"></span><h2>geoslurp.dataset.GSHHGDsets module<a class="headerlink" href="#module-geoslurp.dataset.GSHHGDsets" title="Permalink to this headline">¶</a></h2>
@@ -394,8 +611,53 @@ seems reasonable</p>
 </dd></dl>
 
 </div>
-<div class="section" id="geoslurp-dataset-icesatdraindiv-module">
-<h2>geoslurp.dataset.IceSatDrainDiv module<a class="headerlink" href="#geoslurp-dataset-icesatdraindiv-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.IceSatDrainDiv">
+<span id="geoslurp-dataset-icesatdraindiv-module"></span><h2>geoslurp.dataset.IceSatDrainDiv module<a class="headerlink" href="#module-geoslurp.dataset.IceSatDrainDiv" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="geoslurp.dataset.IceSatDrainDiv.DrainDivClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.IceSatDrainDiv.</code><code class="sig-name descname">DrainDivClassFactory</code><span class="sig-paren">(</span><em class="sig-param">clsName</em>, <em class="sig-param">fbase</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/IceSatDrainDiv.html#DrainDivClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.IceSatDrainDiv.DrainDivClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.IceSatDrainDiv.</code><code class="sig-name descname">IceSatDDivBase</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/IceSatDrainDiv.html#IceSatDDivBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Icesat Drainage divide table base</p>
+<dl class="method">
+<dt id="geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/IceSatDrainDiv.html#IceSatDDivBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download ascii file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/IceSatDrainDiv.html#IceSatDDivBase.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the drainage divides</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'cryo'</em><a class="headerlink" href="#geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.version">
+<code class="sig-name descname">version</code><em class="property"> = (0, 0, 0)</em><a class="headerlink" href="#geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.IceSatDrainDiv.IceSatPolygons">
+<code class="sig-prename descclassname">geoslurp.dataset.IceSatDrainDiv.</code><code class="sig-name descname">IceSatPolygons</code><span class="sig-paren">(</span><em class="sig-param">fname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/IceSatDrainDiv.html#IceSatPolygons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.IceSatDrainDiv.IceSatPolygons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generatori (co-routine) which reads polygons from a text file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.IceSatDrainDiv.getDrainDivDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.IceSatDrainDiv.</code><code class="sig-name descname">getDrainDivDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/IceSatDrainDiv.html#getDrainDivDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.IceSatDrainDiv.getDrainDivDsets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-geoslurp.dataset.OGRBase">
 <span id="geoslurp-dataset-ogrbase-module"></span><h2>geoslurp.dataset.OGRBase module<a class="headerlink" href="#module-geoslurp.dataset.OGRBase" title="Permalink to this headline">¶</a></h2>
@@ -469,20 +731,352 @@ This function reads a shapefile and puts it in a single table.
 </dd></dl>
 
 </div>
-<div class="section" id="geoslurp-dataset-psmsl-module">
-<h2>geoslurp.dataset.PSMSL module<a class="headerlink" href="#geoslurp-dataset-psmsl-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.PSMSL">
+<span id="geoslurp-dataset-psmsl-module"></span><h2>geoslurp.dataset.PSMSL module<a class="headerlink" href="#module-geoslurp.dataset.PSMSL" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.PSMSL.PSMSLBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.PSMSL.</code><code class="sig-name descname">PSMSLBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/PSMSL.html#PSMSLBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.PSMSL.PSMSLBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Base class to store RLR/MET annual and monthly data</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.PSMSL.PSMSLBase.freq">
+<code class="sig-name descname">freq</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.PSMSL.PSMSLBase.freq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.PSMSL.PSMSLBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/PSMSL.html#PSMSLBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.PSMSL.PSMSLBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the necessary data from the online resource</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.PSMSL.PSMSLBase.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/PSMSL.html#PSMSLBase.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.PSMSL.PSMSLBase.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the downloaded dataset in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.PSMSL.PSMSLBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'oceanobs'</em><a class="headerlink" href="#geoslurp.dataset.PSMSL.PSMSLBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.PSMSL.PSMSLBase.typ">
+<code class="sig-name descname">typ</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.PSMSL.PSMSLBase.typ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.PSMSL.PSMSLBase.url">
+<code class="sig-name descname">url</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.PSMSL.PSMSLBase.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.PSMSL.PSMSLClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.PSMSL.</code><code class="sig-name descname">PSMSLClassFactory</code><span class="sig-paren">(</span><em class="sig-param">clsName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/PSMSL.html#PSMSLClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.PSMSL.PSMSLClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.PSMSL.getPSMSLDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.PSMSL.</code><code class="sig-name descname">getPSMSLDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/PSMSL.html#getPSMSLDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.PSMSL.getPSMSLDsets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-rgidsets-module">
-<h2>geoslurp.dataset.RGIDsets module<a class="headerlink" href="#geoslurp-dataset-rgidsets-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.RGIDsets">
+<span id="geoslurp-dataset-rgidsets-module"></span><h2>geoslurp.dataset.RGIDsets module<a class="headerlink" href="#module-geoslurp.dataset.RGIDsets" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.RGIDsets.RGIBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.RGIDsets.</code><code class="sig-name descname">RGIBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#RGIBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGIBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.OGRBase.OGRBase" title="geoslurp.dataset.OGRBase.OGRBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.OGRBase.OGRBase</span></code></a></p>
+<p>Base class for the shapefiles from the Randalph Glacier Inventory Datasets. They are all quite similar so letting them inherit from a baseclass
+seems reasonable</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.RGIDsets.RGIBase.filename">
+<code class="sig-name descname">filename</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGIBase.filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.RGIDsets.RGIBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#RGIBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGIBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the entire RGI archive from the web and stores it in a cache</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RGIDsets.RGIBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'cryo'</em><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGIBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.RGIDsets.RGICSVBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.RGIDsets.</code><code class="sig-name descname">RGICSVBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#RGICSVBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGICSVBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.CSVBase.CSVBase" title="geoslurp.dataset.CSVBase.CSVBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.CSVBase.CSVBase</span></code></a></p>
+<p>Base class for the CSV files from the Randalph Glacier Inventory Datasets. They are all quite similar so letting them inherit from a baseclass
+seems reasonable</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.RGIDsets.RGICSVBase.filename">
+<code class="sig-name descname">filename</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGICSVBase.filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RGIDsets.RGICSVBase.lookup">
+<code class="sig-name descname">lookup</code><em class="property"> = {'1025': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1075': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '1975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2025': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2075': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '25': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '2975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3025': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3075': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '3975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4025': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4075': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '4975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5025': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5075': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '5975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6025': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6075': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '6975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7025': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7075': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '75': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '7975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8025': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8075': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8125': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8175': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8225': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8275': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8325': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8375': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8425': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8475': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8525': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8575': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8625': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8675': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8725': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8775': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8825': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8875': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '8975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '925': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, '975': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, 'Area': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, 'CenLat': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, 'CenLon': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, 'Count': &lt;class 'sqlalchemy.sql.sqltypes.Integer'&gt;, 'FoGId': &lt;class 'sqlalchemy.sql.sqltypes.String'&gt;, 'GLIMSId': &lt;class 'sqlalchemy.sql.sqltypes.String'&gt;, 'HypArea': &lt;class 'sqlalchemy.sql.sqltypes.Float'&gt;, 'Name': &lt;class 'sqlalchemy.sql.sqltypes.String'&gt;, 'O1': &lt;class 'sqlalchemy.sql.sqltypes.String'&gt;, 'O2': &lt;class 'sqlalchemy.sql.sqltypes.String'&gt;, 'PolUnit': &lt;class 'sqlalchemy.sql.sqltypes.String'&gt;, 'RGIId': &lt;class 'sqlalchemy.sql.sqltypes.String'&gt;, 'Region': &lt;class 'sqlalchemy.sql.sqltypes.String'&gt;}</em><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGICSVBase.lookup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.RGIDsets.RGICSVBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#RGICSVBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGICSVBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the entire RGI archive from the web and stores it in a cache</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RGIDsets.RGICSVBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'cryo'</em><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGICSVBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RGIDsets.RGICSVClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.RGIDsets.</code><code class="sig-name descname">RGICSVClassFactory</code><span class="sig-paren">(</span><em class="sig-param">fileName</em>, <em class="sig-param">hskip=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#RGICSVClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGICSVClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RGIDsets.RGISHPClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.RGIDsets.</code><code class="sig-name descname">RGISHPClassFactory</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#RGISHPClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.RGISHPClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RGIDsets.csvLookup">
+<code class="sig-prename descclassname">geoslurp.dataset.RGIDsets.</code><code class="sig-name descname">csvLookup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#csvLookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.csvLookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary which maps columns names in the RGI csv files to sqlalchemy column types</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RGIDsets.getRGIDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.RGIDsets.</code><code class="sig-name descname">getRGIDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#getRGIDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.getRGIDsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically create all classes contained within the GSHHG database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RGIDsets.pullRGI">
+<code class="sig-prename descclassname">geoslurp.dataset.RGIDsets.</code><code class="sig-name descname">pullRGI</code><span class="sig-paren">(</span><em class="sig-param">downloaddir</em>, <em class="sig-param">comparewithversion</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RGIDsets.html#pullRGI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RGIDsets.pullRGI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-radsdsets-module">
-<h2>geoslurp.dataset.RadsDsets module<a class="headerlink" href="#geoslurp-dataset-radsdsets-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.RadsDsets">
+<span id="geoslurp-dataset-radsdsets-module"></span><h2>geoslurp.dataset.RadsDsets module<a class="headerlink" href="#module-geoslurp.dataset.RadsDsets" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.RadsDsets.RadsBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.RadsDsets.</code><code class="sig-name descname">RadsBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RadsDsets.html#RadsBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RadsDsets.RadsBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Base class for a satellite + phase in the rads database</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.RadsDsets.RadsBase.phase">
+<code class="sig-name descname">phase</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RadsDsets.RadsBase.phase" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.RadsDsets.RadsBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><em class="sig-param">cycle=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RadsDsets.html#RadsBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RadsDsets.RadsBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the data from the rads server
+:param cycle: only pulls data from a specific cycle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.RadsDsets.RadsBase.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param">cycle=None</em>, <em class="sig-param">since=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RadsDsets.html#RadsBase.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RadsDsets.RadsBase.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the downloaded dataset in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RadsDsets.RadsBase.sat">
+<code class="sig-name descname">sat</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RadsDsets.RadsBase.sat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RadsDsets.RadsBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'altim'</em><a class="headerlink" href="#geoslurp.dataset.RadsDsets.RadsBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RadsDsets.RadsBase.table">
+<code class="sig-name descname">table</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RadsDsets.RadsBase.table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RadsDsets.flag4_isonLand">
+<code class="sig-prename descclassname">geoslurp.dataset.RadsDsets.</code><code class="sig-name descname">flag4_isonLand</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RadsDsets.html#flag4_isonLand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RadsDsets.flag4_isonLand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RadsDsets.getRADSDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.RadsDsets.</code><code class="sig-name descname">getRADSDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RadsDsets.html#getRADSDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RadsDsets.getRADSDsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create all tables for all satellite missions and phases</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RadsDsets.is_set">
+<code class="sig-prename descclassname">geoslurp.dataset.RadsDsets.</code><code class="sig-name descname">is_set</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RadsDsets.html#is_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RadsDsets.is_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the nth bit of x is set to True</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RadsDsets.radsMetaDataExtractor">
+<code class="sig-prename descclassname">geoslurp.dataset.RadsDsets.</code><code class="sig-name descname">radsMetaDataExtractor</code><span class="sig-paren">(</span><em class="sig-param">uri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RadsDsets.html#radsMetaDataExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RadsDsets.radsMetaDataExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a dictionary with rads entries for the database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.RadsDsets.radsclassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.RadsDsets.</code><code class="sig-name descname">radsclassFactory</code><span class="sig-paren">(</span><em class="sig-param">clnm</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RadsDsets.html#radsclassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RadsDsets.radsclassFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-rasterbase-module">
-<h2>geoslurp.dataset.RasterBase module<a class="headerlink" href="#geoslurp-dataset-rasterbase-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.RasterBase">
+<span id="geoslurp-dataset-rasterbase-module"></span><h2>geoslurp.dataset.RasterBase module<a class="headerlink" href="#module-geoslurp.dataset.RasterBase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.RasterBase.RasterBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.RasterBase.</code><code class="sig-name descname">RasterBase</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RasterBase.html#RasterBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Base class to load raster (tiles) into the postgis database</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.auxcolumns">
+<code class="sig-name descname">auxcolumns</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.auxcolumns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.bandname">
+<code class="sig-name descname">bandname</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.bandname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.columns">
+<code class="sig-name descname">columns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RasterBase.html#RasterBase.columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.columns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.geotransform">
+<code class="sig-name descname">geotransform</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.geotransform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.outofdb">
+<code class="sig-name descname">outofdb</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.outofdb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.overviews">
+<code class="sig-name descname">overviews</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.overviews" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.rastExtract">
+<code class="sig-name descname">rastExtract</code><span class="sig-paren">(</span><em class="sig-param">uri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RasterBase.html#RasterBase.rastExtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.rastExtract" title="Permalink to this definition">¶</a></dt>
+<dd><p>How things are extracted from the raster file (this may be overloaded in derived classes for more granular access</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.rastregex">
+<code class="sig-name descname">rastregex</code><em class="property"> = '.*'</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.rastregex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/RasterBase.html#RasterBase.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the directory for updated raster files and updates them in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.regularblocking">
+<code class="sig-name descname">regularblocking</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.regularblocking" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.srcdir">
+<code class="sig-name descname">srcdir</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.srcdir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.srid">
+<code class="sig-name descname">srid</code><em class="property"> = 4326</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.srid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.RasterBase.RasterBase.tiles">
+<code class="sig-name descname">tiles</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.RasterBase.RasterBase.tiles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-tugrazdsets-module">
-<h2>geoslurp.dataset.TUGRAZDsets module<a class="headerlink" href="#geoslurp-dataset-tugrazdsets-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.TUGRAZDsets">
+<span id="geoslurp-dataset-tugrazdsets-module"></span><h2>geoslurp.dataset.TUGRAZDsets module<a class="headerlink" href="#module-geoslurp.dataset.TUGRAZDsets" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.TUGRAZDsets.</code><code class="sig-name descname">TUGRAZGRACEDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/TUGRAZDsets.html#TUGRAZGRACEDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEDsets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.TUGRAZDsets.</code><code class="sig-name descname">TUGRAZGRACEL2Base</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/TUGRAZDsets.html#TUGRAZGRACEL2Base"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Derived type representing GRACE spherical harmonic coefficients from the TU GRAZ</p>
+<dl class="method">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/TUGRAZDsets.html#TUGRAZGRACEL2Base.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the necessary data from the online resource</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/TUGRAZDsets.html#TUGRAZGRACEL2Base.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the downloaded dataset in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.release">
+<code class="sig-name descname">release</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.release" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'gravity'</em><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.subdirs">
+<code class="sig-name descname">subdirs</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.subdirs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.table">
+<code class="sig-name descname">table</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.updated">
+<code class="sig-name descname">updated</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2ClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.TUGRAZDsets.</code><code class="sig-name descname">TUGRAZGRACEL2ClassFactory</code><span class="sig-paren">(</span><em class="sig-param">release</em>, <em class="sig-param">subdirs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/TUGRAZDsets.html#TUGRAZGRACEL2ClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2ClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dynamically construct GRACE Level 2 dataset classes for TU GRAZ</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.TUGRAZDsets.enhanceMeta">
+<code class="sig-prename descclassname">geoslurp.dataset.TUGRAZDsets.</code><code class="sig-name descname">enhanceMeta</code><span class="sig-paren">(</span><em class="sig-param">meta</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/TUGRAZDsets.html#enhanceMeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.TUGRAZDsets.enhanceMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract addtional timestamps from the TU graz filename data</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-geoslurp.dataset.dataSetBase">
 <span id="geoslurp-dataset-datasetbase-module"></span><h2>geoslurp.dataset.dataSetBase module<a class="headerlink" href="#module-geoslurp.dataset.dataSetBase" title="Permalink to this headline">¶</a></h2>
@@ -611,6 +1205,11 @@ The directory will be created if it does not exist</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="geoslurp.dataset.dataSetBase.DataSet.stripuri">
+<code class="sig-name descname">stripuri</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.dataset.dataSetBase.DataSet.stripuri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="geoslurp.dataset.dataSetBase.DataSet.table">
 <code class="sig-name descname">table</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.dataSetBase.DataSet.table" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -651,23 +1250,468 @@ The directory will be created if it does not exist</p>
 </dd></dl>
 
 </div>
-<div class="section" id="geoslurp-dataset-deg1n2-module">
-<h2>geoslurp.dataset.deg1n2 module<a class="headerlink" href="#geoslurp-dataset-deg1n2-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.deg1n2">
+<span id="geoslurp-dataset-deg1n2-module"></span><h2>geoslurp.dataset.deg1n2 module<a class="headerlink" href="#module-geoslurp.dataset.deg1n2" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.deg1n2.Deg1n2">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.deg1n2.</code><code class="sig-name descname">Deg1n2</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#Deg1n2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.Deg1n2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Dataset registering several low degree (up to degree x) estimates including their definitions</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.Deg1n2.dsources">
+<code class="sig-name descname">dsources</code><em class="property"> = [&lt;class 'geoslurp.dataset.deg1n2.Rietbroeketal2016updated'&gt;, &lt;class 'geoslurp.dataset.deg1n2.Sun2017Comb'&gt;, &lt;class 'geoslurp.dataset.deg1n2.Sun2017Comb_GIArestored'&gt;]</em><a class="headerlink" href="#geoslurp.dataset.deg1n2.Deg1n2.dsources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.deg1n2.Deg1n2.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#Deg1n2.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.Deg1n2.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls known geocenter motion estimates from the internet and stores them in the cache</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.deg1n2.Deg1n2.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#Deg1n2.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.Deg1n2.register" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.Deg1n2.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'gravity'</em><a class="headerlink" href="#geoslurp.dataset.deg1n2.Deg1n2.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.Deg1n2.table">
+<code class="sig-name descname">table</code><a class="headerlink" href="#geoslurp.dataset.deg1n2.Deg1n2.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#geoslurp.dataset.deg1n2.GeocTable" title="geoslurp.dataset.deg1n2.GeocTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeocTable</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.deg1n2.GeocTable">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.deg1n2.</code><code class="sig-name descname">GeocTable</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#GeocTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.GeocTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Defines the Geocenter motion table</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.GeocTable.data">
+<code class="sig-name descname">data</code><a class="headerlink" href="#geoslurp.dataset.deg1n2.GeocTable.data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.GeocTable.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#geoslurp.dataset.deg1n2.GeocTable.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.GeocTable.lastupdate">
+<code class="sig-name descname">lastupdate</code><a class="headerlink" href="#geoslurp.dataset.deg1n2.GeocTable.lastupdate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.GeocTable.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#geoslurp.dataset.deg1n2.GeocTable.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.GeocTable.origin">
+<code class="sig-name descname">origin</code><a class="headerlink" href="#geoslurp.dataset.deg1n2.GeocTable.origin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.GeocTable.tend">
+<code class="sig-name descname">tend</code><a class="headerlink" href="#geoslurp.dataset.deg1n2.GeocTable.tend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.GeocTable.tstart">
+<code class="sig-name descname">tstart</code><a class="headerlink" href="#geoslurp.dataset.deg1n2.GeocTable.tstart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.deg1n2.</code><code class="sig-name descname">LowdegreeSource</code><span class="sig-paren">(</span><em class="sig-param">direc</em>, <em class="sig-param">uri</em>, <em class="sig-param">lastupdate=None</em>, <em class="sig-param">order=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#LowdegreeSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.covindex">
+<code class="sig-name descname">covindex</code><span class="sig-paren">(</span><em class="sig-param">el1</em>, <em class="sig-param">el2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#LowdegreeSource.covindex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.covindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index function of the upper covariance matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.dindex">
+<code class="sig-name descname">dindex</code><span class="sig-paren">(</span><em class="sig-param">el</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#LowdegreeSource.dindex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.dindex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.direc">
+<code class="sig-name descname">direc</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.direc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.download">
+<code class="sig-name descname">download</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#LowdegreeSource.download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.download" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#LowdegreeSource.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.extract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.fout">
+<code class="sig-name descname">fout</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.fout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.meta">
+<code class="sig-name descname">meta</code><em class="property"> = {'data': {}}</em><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.meta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.order">
+<code class="sig-name descname">order</code><em class="property"> = ['c10', 'c11', 's11', 'c20']</em><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.order" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.sqrt3timesRE">
+<code class="sig-name descname">sqrt3timesRE</code><em class="property"> = 11047256.4063275</em><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.sqrt3timesRE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.deg1n2.LowdegreeSource.uri">
+<code class="sig-name descname">uri</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dataset.deg1n2.LowdegreeSource.uri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.deg1n2.Rietbroeketal2016updated">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.deg1n2.</code><code class="sig-name descname">Rietbroeketal2016updated</code><span class="sig-paren">(</span><em class="sig-param">direc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#Rietbroeketal2016updated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.Rietbroeketal2016updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.deg1n2.LowdegreeSource" title="geoslurp.dataset.deg1n2.LowdegreeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.deg1n2.LowdegreeSource</span></code></a></p>
+<dl class="method">
+<dt id="geoslurp.dataset.deg1n2.Rietbroeketal2016updated.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#Rietbroeketal2016updated.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.Rietbroeketal2016updated.extract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.deg1n2.Sun2017Comb">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.deg1n2.</code><code class="sig-name descname">Sun2017Comb</code><span class="sig-paren">(</span><em class="sig-param">direc</em>, <em class="sig-param">uri=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#Sun2017Comb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.Sun2017Comb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.deg1n2.LowdegreeSource" title="geoslurp.dataset.deg1n2.LowdegreeSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.deg1n2.LowdegreeSource</span></code></a></p>
+<dl class="method">
+<dt id="geoslurp.dataset.deg1n2.Sun2017Comb.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#Sun2017Comb.extract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.Sun2017Comb.extract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.deg1n2.Sun2017Comb_GIArestored">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.deg1n2.</code><code class="sig-name descname">Sun2017Comb_GIArestored</code><span class="sig-paren">(</span><em class="sig-param">direc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/deg1n2.html#Sun2017Comb_GIArestored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.deg1n2.Sun2017Comb_GIArestored" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.deg1n2.Sun2017Comb" title="geoslurp.dataset.deg1n2.Sun2017Comb"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.deg1n2.Sun2017Comb</span></code></a></p>
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-geodesyunr-module">
-<h2>geoslurp.dataset.geodesyunr module<a class="headerlink" href="#geoslurp-dataset-geodesyunr-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.geodesyunr">
+<span id="geoslurp-dataset-geodesyunr-module"></span><h2>geoslurp.dataset.geodesyunr module<a class="headerlink" href="#module-geoslurp.dataset.geodesyunr" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.geodesyunr.</code><code class="sig-name descname">UNRTable</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geodesyunr.html#UNRTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.data">
+<code class="sig-name descname">data</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.geom">
+<code class="sig-name descname">geom</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.geom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.lastupdate">
+<code class="sig-name descname">lastupdate</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.lastupdate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.nsolu">
+<code class="sig-name descname">nsolu</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.nsolu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.statname">
+<code class="sig-name descname">statname</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.statname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.tend">
+<code class="sig-name descname">tend</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.tend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.tstart">
+<code class="sig-name descname">tstart</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.tstart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.uri">
+<code class="sig-name descname">uri</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.uri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRTable.xyz">
+<code class="sig-name descname">xyz</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRTable.xyz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.geodesyunr.UNRfinal">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.geodesyunr.</code><code class="sig-name descname">UNRfinal</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geodesyunr.html#UNRfinal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRfinal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Base class to store RLR/MET annual and monthly data</p>
+<dl class="method">
+<dt id="geoslurp.dataset.geodesyunr.UNRfinal.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geodesyunr.html#UNRfinal.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRfinal.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the necessary data from the online resource</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.geodesyunr.UNRfinal.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geodesyunr.html#UNRfinal.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRfinal.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the downloaded dataset in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRfinal.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'gnss'</em><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRfinal.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRfinal.table">
+<code class="sig-name descname">table</code><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRfinal.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#geoslurp.dataset.geodesyunr.UNRTable" title="geoslurp.dataset.geodesyunr.UNRTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">UNRTable</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geodesyunr.UNRfinal.updated">
+<code class="sig-name descname">updated</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.geodesyunr.UNRfinal.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.geodesyunr.enhancetenv3Meta">
+<code class="sig-prename descclassname">geoslurp.dataset.geodesyunr.</code><code class="sig-name descname">enhancetenv3Meta</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geodesyunr.html#enhancetenv3Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geodesyunr.enhancetenv3Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorder some entries so that they agree with The only thing whch is currently indexed is that the uri is replaced by the filename,but more adavanced meta data extractions may be adaded here</p>
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-geoshapes-module">
-<h2>geoslurp.dataset.geoshapes module<a class="headerlink" href="#geoslurp-dataset-geoshapes-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.geoshapes">
+<span id="geoslurp-dataset-geoshapes-module"></span><h2>geoslurp.dataset.geoshapes module<a class="headerlink" href="#module-geoslurp.dataset.geoshapes" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="geoslurp.dataset.geoshapes.GeoshapeClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.geoshapes.</code><code class="sig-name descname">GeoshapeClassFactory</code><span class="sig-paren">(</span><em class="sig-param">clsName</em>, <em class="sig-param">val</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geoshapes.html#GeoshapeClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geoshapes.GeoshapeClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.geoshapes.geoshapeBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.geoshapes.</code><code class="sig-name descname">geoshapeBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geoshapes.html#geoshapeBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geoshapes.geoshapeBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.OGRBase.OGRBase" title="geoslurp.dataset.OGRBase.OGRBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.OGRBase.OGRBase</span></code></a></p>
+<p>Base class for a geoshapes dataset (selection of handrawn shapes) (downloads from github)</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.geoshapes.geoshapeBase.path">
+<code class="sig-name descname">path</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.geoshapes.geoshapeBase.path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.geoshapes.geoshapeBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geoshapes.html#geoshapeBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geoshapes.geoshapeBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the geojson data from github and unpacks it in the cache directory</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geoshapes.geoshapeBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'globalgis'</em><a class="headerlink" href="#geoslurp.dataset.geoshapes.geoshapeBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geoshapes.geoshapeBase.url">
+<code class="sig-name descname">url</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.geoshapes.geoshapeBase.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.geoshapes.geoshapeBase.version">
+<code class="sig-name descname">version</code><em class="property"> = (0, 0, 0)</em><a class="headerlink" href="#geoslurp.dataset.geoshapes.geoshapeBase.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.geoshapes.getGeoshapesDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.geoshapes.</code><code class="sig-name descname">getGeoshapesDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/geoshapes.html#getGeoshapesDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.geoshapes.getGeoshapesDsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>retrieves the available geoshapes datasets</p>
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-icgemdsets-module">
-<h2>geoslurp.dataset.icgemDsets module<a class="headerlink" href="#geoslurp-dataset-icgemdsets-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.icgemDsets">
+<span id="geoslurp-dataset-icgemdsets-module"></span><h2>geoslurp.dataset.icgemDsets module<a class="headerlink" href="#module-geoslurp.dataset.icgemDsets" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.icgemDsets.ICGEM_static">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.icgemDsets.</code><code class="sig-name descname">ICGEM_static</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/icgemDsets.html#ICGEM_static"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.icgemDsets.ICGEM_static" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Manages the static gravity fields which are hosted at <a class="reference external" href="http://icgem.gfz-potsdam.de/tom_longtime">http://icgem.gfz-potsdam.de/tom_longtime</a></p>
+<dl class="method">
+<dt id="geoslurp.dataset.icgemDsets.ICGEM_static.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em>, <em class="sig-param">list=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/icgemDsets.html#ICGEM_static.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.icgemDsets.ICGEM_static.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls static gravity fields from the icgem website
+:param pattern: only download files whose name obeys this regular expression
+:param list (bool): only list available models</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.icgemDsets.ICGEM_static.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param">pattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/icgemDsets.html#ICGEM_static.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.icgemDsets.ICGEM_static.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the downloaded dataset in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.icgemDsets.ICGEM_static.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'gravity'</em><a class="headerlink" href="#geoslurp.dataset.icgemDsets.ICGEM_static.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.icgemDsets.ICGEM_static.table">
+<code class="sig-name descname">table</code><a class="headerlink" href="#geoslurp.dataset.icgemDsets.ICGEM_static.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ICGEM_staticTable</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-motugridsbase-module">
-<h2>geoslurp.dataset.motuGridsBase module<a class="headerlink" href="#geoslurp-dataset-motugridsbase-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.motuGridsBase">
+<span id="geoslurp-dataset-motugridsbase-module"></span><h2>geoslurp.dataset.motuGridsBase module<a class="headerlink" href="#module-geoslurp.dataset.motuGridsBase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.motuGridsBase.</code><code class="sig-name descname">MotuGridsBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/motuGridsBase.html#MotuGridsBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.RasterBase.RasterBase" title="geoslurp.dataset.RasterBase.RasterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.RasterBase.RasterBase</span></code></a></p>
+<p>Downloads and register subsets of gridded data with the motu client</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.authalias">
+<code class="sig-name descname">authalias</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.authalias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.auxcolumns">
+<code class="sig-name descname">auxcolumns</code><em class="property"> = [Column('lastupdate', TIMESTAMP(), table=None), Column('time', ARRAY(TIMESTAMP()), table=None)]</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.auxcolumns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.motuproduct">
+<code class="sig-name descname">motuproduct</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.motuproduct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.moturoot">
+<code class="sig-name descname">moturoot</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.moturoot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.motuservice">
+<code class="sig-name descname">motuservice</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.motuservice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.outofdb">
+<code class="sig-name descname">outofdb</code><em class="property"> = True</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.outofdb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><em class="sig-param">name=None</em>, <em class="sig-param">wsne=None</em>, <em class="sig-param">tstart=None</em>, <em class="sig-param">tend=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/motuGridsBase.html#MotuGridsBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls a subset of a gridded dataset as netcdf from an motu enabled server
+This routine calls the internal routines of the motuclient python client
+:param name: Name of the  output datatset (file will be named ‘name.nc’)
+:param wsne: bounding box of the section of interest as [West,South,North,East]
+:param tstart: start date (as yyyy-mm-dd) for the extraction
+:param tend: end date (as yyyy-mm-dd) for the extraction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.rastExtract">
+<code class="sig-name descname">rastExtract</code><span class="sig-paren">(</span><em class="sig-param">uri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/motuGridsBase.html#MotuGridsBase.rastExtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.rastExtract" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract raster and other meta info from the downloaded files</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.rastregex">
+<code class="sig-name descname">rastregex</code><em class="property"> = '\\.nc$'</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.rastregex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.updated">
+<code class="sig-name descname">updated</code><em class="property"> = []</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.updated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.motuGridsBase.MotuGridsBase.variables">
+<code class="sig-name descname">variables</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase.variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-mss-cnes-cls2015-module">
-<h2>geoslurp.dataset.mss_cnes_cls2015 module<a class="headerlink" href="#geoslurp-dataset-mss-cnes-cls2015-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.mss_cnes_cls2015">
+<span id="geoslurp-dataset-mss-cnes-cls2015-module"></span><h2>geoslurp.dataset.mss_cnes_cls2015 module<a class="headerlink" href="#module-geoslurp.dataset.mss_cnes_cls2015" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.mss_cnes_cls2015.mss_cls2015">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.mss_cnes_cls2015.</code><code class="sig-name descname">mss_cls2015</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/mss_cnes_cls2015.html#mss_cls2015"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.mss_cnes_cls2015.mss_cls2015" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.motuGridsBase.MotuGridsBase" title="geoslurp.dataset.motuGridsBase.MotuGridsBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.motuGridsBase.MotuGridsBase</span></code></a></p>
+<p>Downloads the mean sea surface heigth data as netcdf</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.authalias">
+<code class="sig-name descname">authalias</code><em class="property"> = 'avisoftp'</em><a class="headerlink" href="#geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.authalias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.bandname">
+<code class="sig-name descname">bandname</code><em class="property"> = 'mss'</em><a class="headerlink" href="#geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.bandname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.motuproduct">
+<code class="sig-name descname">motuproduct</code><em class="property"> = 'dataset-mss-cnes-cls15-global'</em><a class="headerlink" href="#geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.motuproduct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.moturoot">
+<code class="sig-name descname">moturoot</code><em class="property"> = 'https://motu.aviso.altimetry.fr/motu-web/Motu'</em><a class="headerlink" href="#geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.moturoot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.motuservice">
+<code class="sig-name descname">motuservice</code><em class="property"> = 'AvisoMSS'</em><a class="headerlink" href="#geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.motuservice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'altim'</em><a class="headerlink" href="#geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.variables">
+<code class="sig-name descname">variables</code><em class="property"> = ['mss', 'mss_err']</em><a class="headerlink" href="#geoslurp.dataset.mss_cnes_cls2015.mss_cls2015.variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-geoslurp.dataset.naturalearth">
 <span id="geoslurp-dataset-naturalearth-module"></span><h2>geoslurp.dataset.naturalearth module<a class="headerlink" href="#module-geoslurp.dataset.naturalearth" title="Permalink to this headline">¶</a></h2>
@@ -716,23 +1760,320 @@ The directory will be created if it does not exist</p>
 </dd></dl>
 
 </div>
-<div class="section" id="geoslurp-dataset-orsifronts-module">
-<h2>geoslurp.dataset.orsiFronts module<a class="headerlink" href="#geoslurp-dataset-orsifronts-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.orsiFronts">
+<span id="geoslurp-dataset-orsifronts-module"></span><h2>geoslurp.dataset.orsiFronts module<a class="headerlink" href="#module-geoslurp.dataset.orsiFronts" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.orsiFronts.Orsifronts">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.orsiFronts.</code><code class="sig-name descname">Orsifronts</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/orsiFronts.html#Orsifronts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.orsiFronts.Orsifronts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Orsifronts table</p>
+<dl class="method">
+<dt id="geoslurp.dataset.orsiFronts.Orsifronts.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/orsiFronts.html#Orsifronts.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.orsiFronts.Orsifronts.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download acsii files in zip and unpack ascii data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.orsiFronts.Orsifronts.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/orsiFronts.html#Orsifronts.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.orsiFronts.Orsifronts.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register all downloaded fronts (in text files)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.orsiFronts.Orsifronts.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'oceanobs'</em><a class="headerlink" href="#geoslurp.dataset.orsiFronts.Orsifronts.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.orsiFronts.Orsifronts.table">
+<code class="sig-name descname">table</code><a class="headerlink" href="#geoslurp.dataset.orsiFronts.Orsifronts.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#geoslurp.dataset.orsiFronts.OrsifrontsTable" title="geoslurp.dataset.orsiFronts.OrsifrontsTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">OrsifrontsTable</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.orsiFronts.Orsifronts.version">
+<code class="sig-name descname">version</code><em class="property"> = (0, 0, 0)</em><a class="headerlink" href="#geoslurp.dataset.orsiFronts.Orsifronts.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.orsiFronts.OrsifrontsTable">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.orsiFronts.</code><code class="sig-name descname">OrsifrontsTable</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/orsiFronts.html#OrsifrontsTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.orsiFronts.OrsifrontsTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Defines the Orsifonts PostgreSQL table</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.orsiFronts.OrsifrontsTable.acronym">
+<code class="sig-name descname">acronym</code><a class="headerlink" href="#geoslurp.dataset.orsiFronts.OrsifrontsTable.acronym" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.orsiFronts.OrsifrontsTable.geom">
+<code class="sig-name descname">geom</code><a class="headerlink" href="#geoslurp.dataset.orsiFronts.OrsifrontsTable.geom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.orsiFronts.OrsifrontsTable.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#geoslurp.dataset.orsiFronts.OrsifrontsTable.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.orsiFronts.OrsifrontsTable.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#geoslurp.dataset.orsiFronts.OrsifrontsTable.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.orsiFronts.orsiMetaExtractor">
+<code class="sig-prename descclassname">geoslurp.dataset.orsiFronts.</code><code class="sig-name descname">orsiMetaExtractor</code><span class="sig-paren">(</span><em class="sig-param">uri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/orsiFronts.html#orsiMetaExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.orsiFronts.orsiMetaExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract table data from the files</p>
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-pandasbase-module">
-<h2>geoslurp.dataset.pandasbase module<a class="headerlink" href="#geoslurp-dataset-pandasbase-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.pandasbase">
+<span id="geoslurp-dataset-pandasbase-module"></span><h2>geoslurp.dataset.pandasbase module<a class="headerlink" href="#module-geoslurp.dataset.pandasbase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.pandasbase.PandasBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.pandasbase.</code><code class="sig-name descname">PandasBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/pandasbase.html#PandasBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Base class which reads in a pandas compatible table (CSV, excel are currently supported) it in a db table</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.pandasbase.PandasBase.dtypes">
+<code class="sig-name descname">dtypes</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase.dtypes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.pandasbase.PandasBase.encoding">
+<code class="sig-name descname">encoding</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase.encoding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.pandasbase.PandasBase.ftype">
+<code class="sig-name descname">ftype</code><em class="property"> = 'csv'</em><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase.ftype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.pandasbase.PandasBase.modify_df">
+<code class="sig-name descname">modify_df</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/pandasbase.html#PandasBase.modify_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase.modify_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>A derived type can overload this to make modifications to the dataframe before registering it in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.pandasbase.PandasBase.pdfile">
+<code class="sig-name descname">pdfile</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase.pdfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.pandasbase.PandasBase.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/pandasbase.html#PandasBase.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update/populate a database table from a pandas compatible file)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.pandasbase.PandasBase.skipfooter">
+<code class="sig-name descname">skipfooter</code><em class="property"> = 0</em><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase.skipfooter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.pandasbase.PandasBase.table">
+<code class="sig-name descname">table</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.pandasbase.PandasBase.table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-snrei-module">
-<h2>geoslurp.dataset.snrei module<a class="headerlink" href="#geoslurp-dataset-snrei-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.snrei">
+<span id="geoslurp-dataset-snrei-module"></span><h2>geoslurp.dataset.snrei module<a class="headerlink" href="#module-geoslurp.dataset.snrei" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.snrei.LLove">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.snrei.</code><code class="sig-name descname">LLove</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/snrei.html#LLove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.snrei.LLove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.dataSetBase.DataSet" title="geoslurp.dataset.dataSetBase.DataSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.dataSetBase.DataSet</span></code></a></p>
+<p>Class for registering load love numbers (downloads from github)</p>
+<dl class="method">
+<dt id="geoslurp.dataset.snrei.LLove.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/snrei.html#LLove.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.snrei.LLove.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the dataset from github and unpacks it in the cache directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.snrei.LLove.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/snrei.html#LLove.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.snrei.LLove.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the downloaded dataset in the database</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLove.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'earthmodels'</em><a class="headerlink" href="#geoslurp.dataset.snrei.LLove.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLove.table">
+<code class="sig-name descname">table</code><a class="headerlink" href="#geoslurp.dataset.snrei.LLove.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#geoslurp.dataset.snrei.LLoveTable" title="geoslurp.dataset.snrei.LLoveTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLoveTable</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLove.version">
+<code class="sig-name descname">version</code><em class="property"> = (0, 0, 0)</em><a class="headerlink" href="#geoslurp.dataset.snrei.LLove.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.snrei.LLoveTable">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.snrei.</code><code class="sig-name descname">LLoveTable</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/snrei.html#LLoveTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.snrei.LLoveTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Defines the Load Love number PostgreSQL table</p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLoveTable.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#geoslurp.dataset.snrei.LLoveTable.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLoveTable.lastupdate">
+<code class="sig-name descname">lastupdate</code><a class="headerlink" href="#geoslurp.dataset.snrei.LLoveTable.lastupdate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLoveTable.loadtype">
+<code class="sig-name descname">loadtype</code><a class="headerlink" href="#geoslurp.dataset.snrei.LLoveTable.loadtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLoveTable.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#geoslurp.dataset.snrei.LLoveTable.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLoveTable.nmax">
+<code class="sig-name descname">nmax</code><a class="headerlink" href="#geoslurp.dataset.snrei.LLoveTable.nmax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.snrei.LLoveTable.uri">
+<code class="sig-name descname">uri</code><a class="headerlink" href="#geoslurp.dataset.snrei.LLoveTable.uri" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.snrei.lloveMetaExtractor">
+<code class="sig-prename descclassname">geoslurp.dataset.snrei.</code><code class="sig-name descname">lloveMetaExtractor</code><span class="sig-paren">(</span><em class="sig-param">uri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/snrei.html#lloveMetaExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.snrei.lloveMetaExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract some metainfo from the load Lovenumber file</p>
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-swot-sim-module">
-<h2>geoslurp.dataset.swot_sim module<a class="headerlink" href="#geoslurp-dataset-swot-sim-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.swot_sim">
+<span id="geoslurp-dataset-swot-sim-module"></span><h2>geoslurp.dataset.swot_sim module<a class="headerlink" href="#module-geoslurp.dataset.swot_sim" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.swot_sim.SWOTSIMBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.swot_sim.</code><code class="sig-name descname">SWOTSIMBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/swot_sim.html#SWOTSIMBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.swot_sim.SWOTSIMBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.OGRBase.OGRBase" title="geoslurp.dataset.OGRBase.OGRBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.OGRBase.OGRBase</span></code></a></p>
+<p>Base class for the swot simulation tracks (cal/val and science mode)</p>
+<dl class="method">
+<dt id="geoslurp.dataset.swot_sim.SWOTSIMBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/swot_sim.html#SWOTSIMBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.swot_sim.SWOTSIMBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the shapefile from the aviso server</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.swot_sim.SWOTSIMBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'altim'</em><a class="headerlink" href="#geoslurp.dataset.swot_sim.SWOTSIMBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.swot_sim.SWOTSIMBase.zipf">
+<code class="sig-name descname">zipf</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dataset.swot_sim.SWOTSIMBase.zipf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.swot_sim.SWOTSIMClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.swot_sim.</code><code class="sig-name descname">SWOTSIMClassFactory</code><span class="sig-paren">(</span><em class="sig-param">ogrfile</em>, <em class="sig-param">zipfileName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/swot_sim.html#SWOTSIMClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.swot_sim.SWOTSIMClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.swot_sim.getSWOTSIMDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.swot_sim.</code><code class="sig-name descname">getSWOTSIMDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/swot_sim.html#getSWOTSIMDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.swot_sim.getSWOTSIMDsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically create all classes for the swot simulation tracks</p>
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-wgms-fog-module">
-<h2>geoslurp.dataset.wgms_fog module<a class="headerlink" href="#geoslurp-dataset-wgms-fog-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.wgms_fog">
+<span id="geoslurp-dataset-wgms-fog-module"></span><h2>geoslurp.dataset.wgms_fog module<a class="headerlink" href="#module-geoslurp.dataset.wgms_fog" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="geoslurp.dataset.wgms_fog.FOGClassFactory">
+<code class="sig-prename descclassname">geoslurp.dataset.wgms_fog.</code><code class="sig-name descname">FOGClassFactory</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/wgms_fog.html#FOGClassFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.wgms_fog.FOGClassFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.wgms_fog.getFOGDsets">
+<code class="sig-prename descclassname">geoslurp.dataset.wgms_fog.</code><code class="sig-name descname">getFOGDsets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/wgms_fog.html#getFOGDsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.wgms_fog.getFOGDsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically create all classes contained within the WGMS FOG csv tables</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.dataset.wgms_fog.pullFoG">
+<code class="sig-prename descclassname">geoslurp.dataset.wgms_fog.</code><code class="sig-name descname">pullFoG</code><span class="sig-paren">(</span><em class="sig-param">downloaddir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/wgms_fog.html#pullFoG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.wgms_fog.pullFoG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls various GRDC datasets from the webdav folder</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.dataset.wgms_fog.wgms_fogBase">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.wgms_fog.</code><code class="sig-name descname">wgms_fogBase</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/wgms_fog.html#wgms_fogBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.wgms_fog.wgms_fogBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.pandasbase.PandasBase" title="geoslurp.dataset.pandasbase.PandasBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.pandasbase.PandasBase</span></code></a></p>
+<dl class="attribute">
+<dt id="geoslurp.dataset.wgms_fog.wgms_fogBase.ftype">
+<code class="sig-name descname">ftype</code><em class="property"> = 'csv'</em><a class="headerlink" href="#geoslurp.dataset.wgms_fog.wgms_fogBase.ftype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.wgms_fog.wgms_fogBase.modify_df">
+<code class="sig-name descname">modify_df</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/wgms_fog.html#wgms_fogBase.modify_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.wgms_fog.wgms_fogBase.modify_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a geometry column extracted from the other columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dataset.wgms_fog.wgms_fogBase.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/wgms_fog.html#wgms_fogBase.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.wgms_fog.wgms_fogBase.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>pulls the WGMS FOG zip file and extracts it</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.wgms_fog.wgms_fogBase.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'cryo'</em><a class="headerlink" href="#geoslurp.dataset.wgms_fog.wgms_fogBase.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-dataset-wribasin-module">
-<h2>geoslurp.dataset.wribasin module<a class="headerlink" href="#geoslurp-dataset-wribasin-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.dataset.wribasin">
+<span id="geoslurp-dataset-wribasin-module"></span><h2>geoslurp.dataset.wribasin module<a class="headerlink" href="#module-geoslurp.dataset.wribasin" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dataset.wribasin.WriBasin">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dataset.wribasin.</code><code class="sig-name descname">WriBasin</code><span class="sig-paren">(</span><em class="sig-param">dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/wribasin.html#WriBasin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.wribasin.WriBasin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dataset.OGRBase.OGRBase" title="geoslurp.dataset.OGRBase.OGRBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dataset.OGRBase.OGRBase</span></code></a></p>
+<p>Base class for Wribasin watersheds</p>
+<dl class="method">
+<dt id="geoslurp.dataset.wribasin.WriBasin.pull">
+<code class="sig-name descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/wribasin.html#WriBasin.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.wribasin.WriBasin.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pulls the wribasin data from the internet and unpacks it in the cache directory</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.wribasin.WriBasin.scheme">
+<code class="sig-name descname">scheme</code><em class="property"> = 'globalgis'</em><a class="headerlink" href="#geoslurp.dataset.wribasin.WriBasin.scheme" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dataset.wribasin.WriBasin.swapxy">
+<code class="sig-name descname">swapxy</code><em class="property"> = True</em><a class="headerlink" href="#geoslurp.dataset.wribasin.WriBasin.swapxy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 

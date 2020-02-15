@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.dataset.geodesyunr &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.dataset.geodesyunr</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.dataset.geodesyunr</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with geoslurp; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
+<span class="kn">from</span> <span class="nn">geoslurp.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span><span class="p">,</span> <span class="n">Boolean</span><span class="p">,</span><span class="n">Float</span><span class="p">,</span><span class="n">ARRAY</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">TIMESTAMP</span><span class="p">,</span> <span class="n">JSONB</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.geodesyunr</span> <span class="kn">import</span> <span class="n">Crawler</span> <span class="k">as</span> <span class="n">UnrCrawler</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2.types</span> <span class="kn">import</span> <span class="n">Geography</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2.elements</span> <span class="kn">import</span> <span class="n">WKBElement</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span><span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">ogr</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.register</span> <span class="kn">import</span> <span class="n">geoslurpregistry</span>
+
+<span class="n">geoPointtype</span> <span class="o">=</span> <span class="n">Geography</span><span class="p">(</span><span class="n">geometry_type</span><span class="o">=</span><span class="s2">&quot;POINTZ&quot;</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="s1">&#39;4326&#39;</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">dimension</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;gnss&#39;</span>
+<span class="n">GNSSTBase</span><span class="o">=</span><span class="n">declarative_base</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">scheme</span><span class="p">))</span>
+
+<div class="viewcode-block" id="UNRTable"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geodesyunr.UNRTable">[docs]</a><span class="k">class</span> <span class="nc">UNRTable</span><span class="p">(</span><span class="n">GNSSTBase</span><span class="p">):</span>
+    <span class="n">__tablename__</span><span class="o">=</span><span class="s1">&#39;unrfinal&#39;</span>
+    <span class="nb">id</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">statname</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">lastupdate</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">)</span>
+    <span class="n">nsolu</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">xyz</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">ARRAY</span><span class="p">(</span><span class="n">Float</span><span class="p">))</span>
+    <span class="n">tstart</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tend</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">uri</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">geom</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">geoPointtype</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">JSONB</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="enhancetenv3Meta"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geodesyunr.enhancetenv3Meta">[docs]</a><span class="k">def</span> <span class="nf">enhancetenv3Meta</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="n">file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reorder some entries so that they agree with The only thing whch is currently indexed is that the uri is replaced by the filename,but more adavanced meta data extractions may be adaded here&quot;&quot;&quot;</span>
+    <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">file</span>
+    <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">=</span><span class="p">{}</span>
+
+    <span class="c1"># adapt later to extract additional info</span>
+    <span class="c1"># with gz.open(file,&#39;rt&#39;) as fid:</span>
+    <span class="c1">#     slurplogger().info(&quot;Extracting info from %s&quot;%(file))</span>
+    <span class="c1">#     for cnt,ln in enumerate(fid):</span>
+    <span class="c1">#         pass</span>
+
+    <span class="c1">#extract geographic point</span>
+
+    <span class="n">geoLoc</span><span class="o">=</span><span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbPoint</span><span class="p">)</span>
+    <span class="n">geoLoc</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;lon&quot;</span><span class="p">),</span><span class="n">meta</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;lat&quot;</span><span class="p">),</span><span class="n">meta</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">))</span>
+    <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;geom&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">WKBElement</span><span class="p">(</span><span class="n">geoLoc</span><span class="o">.</span><span class="n">ExportToWkb</span><span class="p">(),</span><span class="n">srid</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span><span class="n">extended</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">meta</span></div>
+
+
+<div class="viewcode-block" id="UNRfinal"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geodesyunr.UNRfinal">[docs]</a><span class="k">class</span> <span class="nc">UNRfinal</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class to store RLR/MET annual and monthly data&quot;&quot;&quot;</span>
+    <span class="n">table</span><span class="o">=</span><span class="n">UNRTable</span>
+    <span class="n">updated</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
+        <span class="n">GNSSTBase</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span> <span class="n">checkfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UNRfinal.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geodesyunr.UNRfinal.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">crwl</span><span class="o">=</span><span class="n">UnrCrawler</span><span class="p">(</span><span class="n">catalogfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="s1">&#39;DataHoldings.txt&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated</span><span class="o">=</span><span class="n">crwl</span><span class="o">.</span><span class="n">parallelDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">maxconn</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UNRfinal.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.geodesyunr.UNRfinal.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#create a list of files which need to be (re)registered</span>
+
+        <span class="n">crwl</span><span class="o">=</span><span class="n">UnrCrawler</span><span class="p">(</span><span class="n">catalogfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="s1">&#39;DataHoldings.txt&#39;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">crwl</span><span class="o">.</span><span class="n">uris</span><span class="p">(</span><span class="n">refresh</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">uriNeedsUpdate</span><span class="p">(</span><span class="n">uri</span><span class="p">[</span><span class="s2">&quot;statname&quot;</span><span class="p">],</span><span class="n">uri</span><span class="p">[</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">]):</span>
+                <span class="k">continue</span>
+
+            <span class="n">localfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">uri</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;.gz&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">localfile</span><span class="p">):</span>
+                <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">localfile</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Registering </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">localfile</span><span class="p">))</span>
+            <span class="n">meta</span><span class="o">=</span><span class="n">uri</span><span class="o">.</span><span class="n">dict</span>
+            <span class="n">meta</span><span class="o">=</span><span class="n">enhancetenv3Meta</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="n">localfile</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;citation&quot;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;Blewitt, G., W. C. Hammond, and C. Kreemer (2018), &quot;</span> \
+                                     <span class="s2">&quot;Harnessing the GPS data explosion for interdisciplinary science, Eos, 99, https://doi.org/10.1029/2018EO104623.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
+
+<span class="n">geoslurpregistry</span><span class="o">.</span><span class="n">registerDataset</span><span class="p">(</span><span class="n">UNRfinal</span><span class="p">)</span>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

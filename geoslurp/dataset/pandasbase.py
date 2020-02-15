@@ -25,7 +25,7 @@ import pandas as pd
 
 
 class PandasBase(DataSet):
-    """Base class which reads in a pandas compatible table (CSV, excel are currently supported_) it in a db table"""
+    """Base class which reads in a pandas compatible table (CSV, excel are currently supported) it in a db table"""
     table=None
     pdfile=None
     skipfooter=0

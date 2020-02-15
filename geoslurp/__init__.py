@@ -1,1 +1,1 @@
-"""Geoslurp's module docstring"""
+"""API Documentation for the geoslurp python module"""

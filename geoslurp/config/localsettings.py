@@ -24,13 +24,22 @@ import copy
 
 
 class settingsArgs:
+    """Stand-in class with several settings.
+    This class can be used as a stand-in for the
+    command line argparse arguments from the :ref:`clihelp` """
+
     host=None
+    """(str): Database host name"""
     user=None
     usekeyring=None
     password=None
     port=5432
+    """(int): database port to connect to"""
     mirror=None
+
     local_settings=None
+    """(str): Alternative local settings file (instead of ${HOME}/.geoslurp_lastused.yaml)"""
+
     def __init__(self,host=None,user=None,usekeyring=True,password=None,port=None,mirror=None):
         if host:
             self.host=host

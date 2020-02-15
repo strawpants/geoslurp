@@ -2,15 +2,14 @@ geoslurp.discover package
 =========================
 
 .. automodule:: geoslurp.discover
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Subpackages
 -----------
 
 .. toctree::
 
-    geoslurp.discover.gravity
-    geoslurp.discover.oceanobs
-
+   geoslurp.discover.gravity
+   geoslurp.discover.oceanobs

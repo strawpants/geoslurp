@@ -43,7 +43,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinxcontrib.autoprogram',
-    'nbsphinx',
+    'nbsphinx','sphinx.ext.napoleon',
 ]
 
 apidoc_module_dir = '../geoslurp'
@@ -78,7 +78,7 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store','**.ipynb_checkpoints']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = None
+pygments_style = 'default'
 
 
 # -- Options for HTML output -------------------------------------------------

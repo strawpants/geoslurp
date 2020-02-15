@@ -20,7 +20,7 @@
 
 import sys
 import argparse
-from geoslurp.db import Inventory
+from geoslurp.db import Inventory, Credentials
 from geoslurp.db import GeoslurpConnector
 import json
 import logging
@@ -93,7 +93,8 @@ def main(argv):
         conf.defaultupdate(args.admin_config)
 
     if args.auth_config:
-        conf.updateAuth(args.auth_config)
+        for alias,dvals in args.auth_config:
+            conf.updateAuth(Credentials(alias=alias,**dvals))
 
     if args.refresh:
         geoslurpregistry.refresh(conf)

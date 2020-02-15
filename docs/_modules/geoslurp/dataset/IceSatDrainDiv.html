@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.dataset.IceSatDrainDiv &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.dataset.IceSatDrainDiv</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.dataset.IceSatDrainDiv</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with geoslurp; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2020</span>
+
+
+<span class="kn">from</span> <span class="nn">geoslurp.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">as_declarative</span><span class="p">,</span><span class="n">declared_attr</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Float</span><span class="p">,</span><span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2.types</span> <span class="kn">import</span> <span class="n">Geography</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2.elements</span> <span class="kn">import</span> <span class="n">WKBElement</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.http</span> <span class="kn">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.register</span> <span class="kn">import</span> <span class="n">geoslurpregistry</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">ogr</span>
+<span class="kn">import</span> <span class="nn">gzip</span> <span class="k">as</span> <span class="nn">gz</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;cryo&#39;</span>
+
+
+<span class="n">geoPolyType</span> <span class="o">=</span> <span class="n">Geography</span><span class="p">(</span><span class="n">geometry_type</span><span class="o">=</span><span class="s2">&quot;POLYGON&quot;</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="s1">&#39;4326&#39;</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">dimension</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="nd">@as_declarative</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">scheme</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">draindivTBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@declared_attr</span>
+    <span class="k">def</span> <span class="nf">__tablename__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1">#strip of the &#39;Table&#39; from the class name</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">basinid</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
+    <span class="n">geom</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">geoPolyType</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IceSatPolygons"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.IceSatDrainDiv.IceSatPolygons">[docs]</a><span class="k">def</span> <span class="nf">IceSatPolygons</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generatori (co-routine) which reads polygons from a text file&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Drainage divide file  </span><span class="si">%s</span><span class="s2"> not found is the data pulled?&quot;</span><span class="o">%</span><span class="n">fname</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;Ant_.+Polygons.txt&quot;</span><span class="p">,</span><span class="n">fname</span><span class="p">):</span>
+        <span class="n">idx</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">idx</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">with</span> <span class="n">gz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="s1">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;END OF HEADER&quot;</span><span class="p">,</span><span class="n">ln</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="n">oldid</span><span class="o">=-</span><span class="mi">1</span>
+        <span class="n">ring</span><span class="o">=</span><span class="kc">None</span>
+        <span class="c1">#read polygons</span>
+        <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="n">row</span><span class="o">=</span><span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ln</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+            <span class="n">row</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">oldid</span> <span class="o">==</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">ring</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ring</span><span class="p">:</span>
+                    <span class="c1">#possibly return the last completed polygon</span>
+                    <span class="n">poly</span><span class="o">=</span><span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbPolygon</span><span class="p">)</span>
+                    <span class="n">poly</span><span class="o">.</span><span class="n">AddGeometry</span><span class="p">(</span><span class="n">ring</span><span class="p">)</span>
+                    <span class="n">poly</span><span class="o">.</span><span class="n">FlattenTo2D</span><span class="p">()</span>
+                    <span class="n">poly</span><span class="o">.</span><span class="n">CloseRings</span><span class="p">()</span>
+                    <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;basinid&quot;</span><span class="p">:</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s2">&quot;geom&quot;</span><span class="p">:</span><span class="n">WKBElement</span><span class="p">(</span><span class="n">poly</span><span class="o">.</span><span class="n">ExportToIsoWkb</span><span class="p">(),</span><span class="n">srid</span><span class="o">=</span><span class="mi">4326</span><span class="p">)}</span>
+                    <span class="k">yield</span> <span class="n">meta</span>
+                <span class="n">oldid</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="c1">#initialize a ring</span>
+                <span class="n">ring</span><span class="o">=</span><span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbLinearRing</span><span class="p">)</span>
+                <span class="n">ring</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="IceSatDDivBase"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase">[docs]</a><span class="k">class</span> <span class="nc">IceSatDDivBase</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Icesat Drainage divide table base&quot;&quot;&quot;</span>
+    <span class="n">version</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbcon</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbcon</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span> <span class="n">checkfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;citation&quot;</span><span class="p">:</span><span class="s2">&quot;Zwally, H. Jay, Mario B. Giovinetto, Matthew A. Beckley, and Jack L. Saba, 2012, Antarctic and Greenland Drainage Systems, GSFC Cryospheric Sciences Laboratory, at http://icesat4.gsfc.nasa.gov/cryo_data/ant_grn_drainage_systems.php. &quot;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCacheDir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">getDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="s1">&#39;CacheDir&#39;</span><span class="p">,</span><span class="s1">&#39;Icesat_Draindiv&#39;</span><span class="p">)))</span>
+
+<div class="viewcode-block" id="IceSatDDivBase.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Download ascii file&quot;&quot;&quot;</span>
+        <span class="n">httpserv</span><span class="o">=</span><span class="n">http</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;https://icesat4.gsfc.nasa.gov/cryo_data/drainage_divides/&#39;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fbase</span><span class="p">),</span><span class="n">lastmod</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">uri</span><span class="p">,</span><span class="n">upd</span><span class="o">=</span><span class="n">httpserv</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IceSatDDivBase.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.IceSatDrainDiv.IceSatDDivBase.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Register the drainage divides&quot;&quot;&quot;</span>
+        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Registering </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1">#possibly empty table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">truncateTable</span><span class="p">()</span>
+        <span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">fbase</span><span class="o">+</span><span class="s2">&quot;.gz&quot;</span><span class="p">)</span>
+        <span class="c1">#loop over  polygon entries</span>
+        <span class="k">for</span> <span class="n">dicentry</span> <span class="ow">in</span> <span class="n">IceSatPolygons</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">dicentry</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
+
+
+
+
+<div class="viewcode-block" id="DrainDivClassFactory"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.IceSatDrainDiv.DrainDivClassFactory">[docs]</a><span class="k">def</span> <span class="nf">DrainDivClassFactory</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span><span class="n">fbase</span><span class="p">):</span>
+    <span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">clsName</span> <span class="o">+</span><span class="s2">&quot;Table&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">draindivTBase</span><span class="p">,),</span> <span class="p">{})</span>
+    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span> <span class="p">(</span><span class="n">IceSatDDivBase</span><span class="p">,),</span> <span class="p">{</span><span class="s2">&quot;fbase&quot;</span><span class="p">:</span> <span class="n">fbase</span><span class="p">,</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span><span class="n">table</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="getDrainDivDsets"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.IceSatDrainDiv.getDrainDivDsets">[docs]</a><span class="k">def</span> <span class="nf">getDrainDivDsets</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+    <span class="n">clslookup</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;antarc_ddiv_icesat&quot;</span><span class="p">:</span><span class="s2">&quot;Ant_Full_DrainageSystem_Polygons.txt&quot;</span><span class="p">,</span><span class="s2">&quot;green_ddiv_icesat&quot;</span><span class="p">:</span><span class="s2">&quot;GrnDrainageSystems_Ekholm.txt&quot;</span><span class="p">,</span><span class="s2">&quot;antarc_ddiv_icesat_grnd&quot;</span><span class="p">:</span><span class="s2">&quot;Ant_Grounded_DrainageSystem_Polygons.txt&quot;</span><span class="p">}</span>
+    <span class="n">out</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">clsName</span><span class="p">,</span><span class="n">fbase</span> <span class="ow">in</span> <span class="n">clslookup</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DrainDivClassFactory</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span><span class="n">fbase</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<span class="n">geoslurpregistry</span><span class="o">.</span><span class="n">registerDatasetFactory</span><span class="p">(</span><span class="n">getDrainDivDsets</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -45,8 +45,11 @@ Note that settings in this file may be overwritten with last used values when us
 
 Specifying passwords
 --------------------
-There are several ways to specify passwords, some which are more secure than others.
+There are several ways to specify passwords, some which are more secure than others. The follin 
 
-1. **Use a keyring recognized by python keyring**. This requires that `python keyring  is installed with a suitable backend <https://pypi.org/project/keyring/>`_). When the option ``useKeyring=true`` is specified in ``${HOME}.geoslurp_lastused.yaml``, users will be prompted for a  password when they connect for the first time, but subsequent accesses don't require entering a password
-2. **Use an environment variable**. If one specifies
+1. **Use a keyring recognized by python keyring**. This requires that `python keyring  is installed with a suitable backend <https://pypi.org/project/keyring/>`_. When the option ``useKeyring=true`` is specified in ``${HOME}/.geoslurp_lastused.yaml``, users will be prompted for a  password when they connect for the first time, but subsequent accesses don't require entering a password, and are therefore non-interactive.
+2. **Use an environment variable**. If ``useKeyRing=false``, one can use an environment variable to specify the password e.g.: ``export GEOSLURP_PGPASS="supersecretpassword``, or ``export GEOSLURP_PGPASSRO`` (for the readonly user).
+3. If both methods 1 and 2 fail. one will be interactively prompted for a password
+4. As an alternative the constructor of the `GeoslurpConnector <reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector>`_ class allows the explicit input of a password.
+
 

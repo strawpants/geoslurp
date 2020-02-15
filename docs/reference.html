@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Command line tools" href="clitools.html" />
+    <link rel="next" title="Conventions on naming tables and their columns" href="tableconventions.html" />
     <link rel="prev" title="Establish a database connection and retrieve the inventory and User settings" href="examples/connectnQuery.html" /> 
 </head>
 
@@ -93,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tableconventions.html">Conventions on naming tables and their  columns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="clitools.html">Command line tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/geoslurp.html">geoslurp package</a></li>
 </ul>
@@ -189,12 +190,20 @@
 <h1>Reference Documentation<a class="headerlink" href="#reference-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="tableconventions.html">Conventions on naming tables and their  columns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="clitools.html">Command line tools</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="clitools.html#clitools-geoslurper-py">clitools/geoslurper.py</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference/geoslurp.html">geoslurp package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference/geoslurp.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/geoslurp.config.html">geoslurp.config package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.config.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.config.html#module-geoslurp.config.localsettings">geoslurp.config.localsettings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.config.html#module-geoslurp.config.register">geoslurp.config.register module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.config.html#module-geoslurp.config.slurplogger">geoslurp.config.slurplogger module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="reference/geoslurp.datapull.html">geoslurp.datapull package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.crawler">geoslurp.datapull.crawler module</a></li>
@@ -202,43 +211,43 @@
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.geodesyunr">geoslurp.datapull.geodesyunr module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.github">geoslurp.datapull.github module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.http">geoslurp.datapull.http module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#geoslurp-datapull-icgem-module">geoslurp.datapull.icgem module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#geoslurp-datapull-motu-module">geoslurp.datapull.motu module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.icgem">geoslurp.datapull.icgem module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.motu">geoslurp.datapull.motu module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.rsync">geoslurp.datapull.rsync module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#geoslurp-datapull-thredds-module">geoslurp.datapull.thredds module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.thredds">geoslurp.datapull.thredds module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.uri">geoslurp.datapull.uri module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#geoslurp-datapull-webdav-module">geoslurp.datapull.webdav module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.datapull.html#module-geoslurp.datapull.webdav">geoslurp.datapull.webdav module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="reference/geoslurp.dataset.html">geoslurp.dataset package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-arcticdem-module">geoslurp.dataset.ArcticDEM module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.ArcticDEM">geoslurp.dataset.ArcticDEM module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.Argo">geoslurp.dataset.Argo module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-csvbase-module">geoslurp.dataset.CSVBase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-duacsgriddeddsets-module">geoslurp.dataset.DuacsGriddedDsets module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-gracedsets-module">geoslurp.dataset.GRACEDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.CSVBase">geoslurp.dataset.CSVBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.DuacsGriddedDsets">geoslurp.dataset.DuacsGriddedDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.GRACEDsets">geoslurp.dataset.GRACEDsets module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.GSHHGDsets">geoslurp.dataset.GSHHGDsets module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-icesatdraindiv-module">geoslurp.dataset.IceSatDrainDiv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.IceSatDrainDiv">geoslurp.dataset.IceSatDrainDiv module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.OGRBase">geoslurp.dataset.OGRBase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-psmsl-module">geoslurp.dataset.PSMSL module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-rgidsets-module">geoslurp.dataset.RGIDsets module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-radsdsets-module">geoslurp.dataset.RadsDsets module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-rasterbase-module">geoslurp.dataset.RasterBase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-tugrazdsets-module">geoslurp.dataset.TUGRAZDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.PSMSL">geoslurp.dataset.PSMSL module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.RGIDsets">geoslurp.dataset.RGIDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.RadsDsets">geoslurp.dataset.RadsDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.RasterBase">geoslurp.dataset.RasterBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.TUGRAZDsets">geoslurp.dataset.TUGRAZDsets module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.dataSetBase">geoslurp.dataset.dataSetBase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-deg1n2-module">geoslurp.dataset.deg1n2 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-geodesyunr-module">geoslurp.dataset.geodesyunr module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-geoshapes-module">geoslurp.dataset.geoshapes module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-icgemdsets-module">geoslurp.dataset.icgemDsets module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-motugridsbase-module">geoslurp.dataset.motuGridsBase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-mss-cnes-cls2015-module">geoslurp.dataset.mss_cnes_cls2015 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.deg1n2">geoslurp.dataset.deg1n2 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.geodesyunr">geoslurp.dataset.geodesyunr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.geoshapes">geoslurp.dataset.geoshapes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.icgemDsets">geoslurp.dataset.icgemDsets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.motuGridsBase">geoslurp.dataset.motuGridsBase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.mss_cnes_cls2015">geoslurp.dataset.mss_cnes_cls2015 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.naturalearth">geoslurp.dataset.naturalearth module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-orsifronts-module">geoslurp.dataset.orsiFronts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-pandasbase-module">geoslurp.dataset.pandasbase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-snrei-module">geoslurp.dataset.snrei module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-swot-sim-module">geoslurp.dataset.swot_sim module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-wgms-fog-module">geoslurp.dataset.wgms_fog module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#geoslurp-dataset-wribasin-module">geoslurp.dataset.wribasin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.orsiFronts">geoslurp.dataset.orsiFronts module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.pandasbase">geoslurp.dataset.pandasbase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.snrei">geoslurp.dataset.snrei module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.swot_sim">geoslurp.dataset.swot_sim module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.wgms_fog">geoslurp.dataset.wgms_fog module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dataset.html#module-geoslurp.dataset.wribasin">geoslurp.dataset.wribasin module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="reference/geoslurp.db.html">geoslurp.db package</a><ul>
@@ -253,8 +262,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="reference/geoslurp.dbfunc.html">geoslurp.dbfunc package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dbfunc.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dbfunc.html#geoslurp-dbfunc-dbfunc-module">geoslurp.dbfunc.dbfunc module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dbfunc.html#geoslurp-dbfunc-radsfuncs-module">geoslurp.dbfunc.radsfuncs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dbfunc.html#module-geoslurp.dbfunc.dbfunc">geoslurp.dbfunc.dbfunc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.dbfunc.html#module-geoslurp.dbfunc.radsfuncs">geoslurp.dbfunc.radsfuncs module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="reference/geoslurp.discover.html">geoslurp.discover package</a><ul>
@@ -264,12 +273,19 @@
 <li class="toctree-l6"><a class="reference internal" href="reference/geoslurp.discover.gravity.html#module-geoslurp.discover.gravity.staticfields">geoslurp.discover.gravity.staticfields module</a></li>
 </ul>
 </li>
+<li class="toctree-l5"><a class="reference internal" href="reference/geoslurp.discover.oceanobs.html">geoslurp.discover.oceanobs package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="reference/geoslurp.discover.oceanobs.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="reference/geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.argo">geoslurp.discover.oceanobs.argo module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="reference/geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.psmsl">geoslurp.discover.oceanobs.psmsl module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="reference/geoslurp.tools.html">geoslurp.tools package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.tools.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.tools.html#module-geoslurp.tools.Bounds">geoslurp.tools.Bounds module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.tools.html#module-geoslurp.tools.csv">geoslurp.tools.csv module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.tools.html#module-geoslurp.tools.gravity">geoslurp.tools.gravity module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="reference/geoslurp.tools.html#module-geoslurp.tools.netcdftools">geoslurp.tools.netcdftools module</a></li>
@@ -294,7 +310,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="clitools.html" class="btn btn-neutral float-right" title="Command line tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tableconventions.html" class="btn btn-neutral float-right" title="Conventions on naming tables and their columns" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="examples/connectnQuery.html" class="btn btn-neutral float-left" title="Establish a database connection and retrieve the inventory and User settings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

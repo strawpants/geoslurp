@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="geoslurp.dataset package" href="geoslurp.dataset.html" />
-    <link rel="prev" title="geoslurp package" href="geoslurp.html" /> 
+    <link rel="prev" title="geoslurp.config package" href="geoslurp.config.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -326,11 +326,275 @@
 </dd></dl>
 
 </div>
-<div class="section" id="geoslurp-datapull-icgem-module">
-<h2>geoslurp.datapull.icgem module<a class="headerlink" href="#geoslurp-datapull-icgem-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.datapull.icgem">
+<span id="geoslurp-datapull-icgem-module"></span><h2>geoslurp.datapull.icgem module<a class="headerlink" href="#module-geoslurp.datapull.icgem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.datapull.icgem.Crawler">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.icgem.</code><code class="sig-name descname">Crawler</code><a class="reference internal" href="../_modules/geoslurp/datapull/icgem.html#Crawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.icgem.Crawler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.datapull.crawler.CrawlerBase" title="geoslurp.datapull.crawler.CrawlerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.datapull.crawler.CrawlerBase</span></code></a></p>
+<p>Crawl icgem static fields</p>
+<dl class="method">
+<dt id="geoslurp.datapull.icgem.Crawler.uris">
+<code class="sig-name descname">uris</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/icgem.html#Crawler.uris"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.icgem.Crawler.uris" title="Permalink to this definition">¶</a></dt>
+<dd><p>List uris of available static models</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.datapull.icgem.Uri">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.icgem.</code><code class="sig-name descname">Uri</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">lastmod=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">ref=None</em>, <em class="sig-param">nmax=None</em>, <em class="sig-param">year=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/icgem.html#Uri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.icgem.Uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.datapull.uri.UriBase" title="geoslurp.datapull.uri.UriBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.datapull.uri.UriBase</span></code></a></p>
+<p>Holds an uri to an icgem static field</p>
+</dd></dl>
+
 </div>
-<div class="section" id="geoslurp-datapull-motu-module">
-<h2>geoslurp.datapull.motu module<a class="headerlink" href="#geoslurp-datapull-motu-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.datapull.motu">
+<span id="geoslurp-datapull-motu-module"></span><h2>geoslurp.datapull.motu module<a class="headerlink" href="#module-geoslurp.datapull.motu" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.datapull.motu.MotuOpts">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.motu.</code><code class="sig-name descname">MotuOpts</code><span class="sig-paren">(</span><em class="sig-param">moturoot</em>, <em class="sig-param">service</em>, <em class="sig-param">product</em>, <em class="sig-param">auth</em>, <em class="sig-param">btdbox</em>, <em class="sig-param">fout</em>, <em class="sig-param">cache</em>, <em class="sig-param">variables=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#MotuOpts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class which mimics the options from argparse as used by the motuclient command line program</p>
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.auth_mode">
+<code class="sig-name descname">auth_mode</code><em class="property"> = 'cas'</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.auth_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.block_size">
+<code class="sig-name descname">block_size</code><em class="property"> = 12001</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.block_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.btdbox">
+<code class="sig-name descname">btdbox</code><em class="property"> = &lt;geoslurp.tools.Bounds.BtdBox object&gt;</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.btdbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.cache">
+<code class="sig-name descname">cache</code><em class="property"> = '.'</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.console_mode">
+<code class="sig-name descname">console_mode</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.console_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.date_max">
+<code class="sig-name descname">date_max</code><em class="property"> = '9999-12-31 23:59:59'</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.date_max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.date_min">
+<code class="sig-name descname">date_min</code><em class="property"> = '1-01-01 00:00:00'</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.date_min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.depth_max">
+<code class="sig-name descname">depth_max</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.depth_max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.depth_min">
+<code class="sig-name descname">depth_min</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.depth_min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.describe">
+<code class="sig-name descname">describe</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.describe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.extraction_geographic">
+<code class="sig-name descname">extraction_geographic</code><em class="property"> = True</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.extraction_geographic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.extraction_vertical">
+<code class="sig-name descname">extraction_vertical</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.extraction_vertical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.motu.MotuOpts.fullname">
+<code class="sig-name descname">fullname</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#MotuOpts.fullname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.fullname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.latitude_max">
+<code class="sig-name descname">latitude_max</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.latitude_max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.latitude_min">
+<code class="sig-name descname">latitude_min</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.latitude_min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.longitude_max">
+<code class="sig-name descname">longitude_max</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.longitude_max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.longitude_min">
+<code class="sig-name descname">longitude_min</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.longitude_min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.motu">
+<code class="sig-name descname">motu</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.motu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.out_dir">
+<code class="sig-name descname">out_dir</code><em class="property"> = '.'</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.out_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.out_name">
+<code class="sig-name descname">out_name</code><em class="property"> = 'dataset.nc'</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.out_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.outputWritten">
+<code class="sig-name descname">outputWritten</code><em class="property"> = 'netcdf'</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.outputWritten" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.product_id">
+<code class="sig-name descname">product_id</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.product_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.proxy_server">
+<code class="sig-name descname">proxy_server</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.proxy_server" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.pwd">
+<code class="sig-name descname">pwd</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.pwd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.service_id">
+<code class="sig-name descname">service_id</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.service_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.size">
+<code class="sig-name descname">size</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.socket_timeout">
+<code class="sig-name descname">socket_timeout</code><em class="property"> = 515</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.socket_timeout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.sync">
+<code class="sig-name descname">sync</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.sync" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.motu.MotuOpts.syncbtdbox">
+<code class="sig-name descname">syncbtdbox</code><span class="sig-paren">(</span><em class="sig-param">bbox=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#MotuOpts.syncbtdbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.syncbtdbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the internal btdbox and synchronize the corresponding motu variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.motu.MotuOpts.syncfilename">
+<code class="sig-name descname">syncfilename</code><span class="sig-paren">(</span><em class="sig-param">fout</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#MotuOpts.syncfilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.syncfilename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.user">
+<code class="sig-name descname">user</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.user_agent">
+<code class="sig-name descname">user_agent</code><em class="property"> = 'motu-api-client'</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.user_agent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuOpts.variable">
+<code class="sig-name descname">variable</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuOpts.variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.datapull.motu.MotuRecursive">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.motu.</code><code class="sig-name descname">MotuRecursive</code><span class="sig-paren">(</span><em class="sig-param">mopts</em>, <em class="sig-param">keepfiles=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#MotuRecursive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.MotuRecursive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class which recursively downloads netcdf files within the 1GB limit using motu and patches them together</p>
+<dl class="method">
+<dt id="geoslurp.datapull.motu.MotuRecursive.download">
+<code class="sig-name descname">download</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#MotuRecursive.download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.MotuRecursive.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.MotuRecursive.keepfiles">
+<code class="sig-name descname">keepfiles</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.datapull.motu.MotuRecursive.keepfiles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.datapull.motu.Uri">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.motu.</code><code class="sig-name descname">Uri</code><span class="sig-paren">(</span><em class="sig-param">Mopts</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#Uri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.Uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.datapull.uri.UriBase" title="geoslurp.datapull.uri.UriBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.datapull.uri.UriBase</span></code></a></p>
+<dl class="method">
+<dt id="geoslurp.datapull.motu.Uri.download">
+<code class="sig-name descname">download</code><span class="sig-paren">(</span><em class="sig-param">direc</em>, <em class="sig-param">check=False</em>, <em class="sig-param">gzip=False</em>, <em class="sig-param">outfile=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#Uri.download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.Uri.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download file into directory and possibly check the modification time
+:param check : check whether the file needs updating
+:param gzip: additionally gzips the file (adds .gz to file name)
+:param continueonError (bool): don’t raise an exception when a download error occurrs</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.Uri.info">
+<code class="sig-name descname">info</code><em class="property"> = False</em><a class="headerlink" href="#geoslurp.datapull.motu.Uri.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.Uri.kbsize">
+<code class="sig-name descname">kbsize</code><em class="property"> = 0</em><a class="headerlink" href="#geoslurp.datapull.motu.Uri.kbsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.Uri.maxbtdbox">
+<code class="sig-name descname">maxbtdbox</code><em class="property"> = &lt;geoslurp.tools.Bounds.BtdBox object&gt;</em><a class="headerlink" href="#geoslurp.datapull.motu.Uri.maxbtdbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.motu.Uri.maxkbsize">
+<code class="sig-name descname">maxkbsize</code><em class="property"> = 0</em><a class="headerlink" href="#geoslurp.datapull.motu.Uri.maxkbsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.motu.Uri.requestInfo">
+<code class="sig-name descname">requestInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#Uri.requestInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.Uri.requestInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request info (modification time, size, datacoverage) on this specific query from the server</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.motu.Uri.updateModTime">
+<code class="sig-name descname">updateModTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#Uri.updateModTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.Uri.updateModTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests data description from the motu service</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.motu.Uri.updateSize">
+<code class="sig-name descname">updateSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/motu.html#Uri.updateSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.motu.Uri.updateSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request information about the size of the query</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-geoslurp.datapull.rsync">
 <span id="geoslurp-datapull-rsync-module"></span><h2>geoslurp.datapull.rsync module<a class="headerlink" href="#module-geoslurp.datapull.rsync" title="Permalink to this headline">¶</a></h2>
@@ -370,8 +634,124 @@
 </dd></dl>
 
 </div>
-<div class="section" id="geoslurp-datapull-thredds-module">
-<h2>geoslurp.datapull.thredds module<a class="headerlink" href="#geoslurp-datapull-thredds-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.datapull.thredds">
+<span id="geoslurp-datapull-thredds-module"></span><h2>geoslurp.datapull.thredds module<a class="headerlink" href="#module-geoslurp.datapull.thredds" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.datapull.thredds.Crawler">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.thredds.</code><code class="sig-name descname">Crawler</code><span class="sig-paren">(</span><em class="sig-param">catalogurl</em>, <em class="sig-param">filter=&lt;geoslurp.datapull.thredds.ThreddsFilter object&gt;</em>, <em class="sig-param">followfilter=&lt;geoslurp.datapull.thredds.ThreddsFilter object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#Crawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.Crawler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.datapull.crawler.CrawlerBase" title="geoslurp.datapull.crawler.CrawlerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.datapull.crawler.CrawlerBase</span></code></a></p>
+<p>A class to work with an Opendap server</p>
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.Crawler.getCatalog">
+<em class="property">static </em><code class="sig-name descname">getCatalog</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#Crawler.getCatalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.Crawler.getCatalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a catalogue</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.Crawler.getServices">
+<em class="property">static </em><code class="sig-name descname">getServices</code><span class="sig-paren">(</span><em class="sig-param">catalog</em>, <em class="sig-param">rooturl</em>, <em class="sig-param">depth=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#Crawler.getServices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.Crawler.getServices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the root for serving files over http url from a catalogue</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.Crawler.setResumePoint">
+<code class="sig-name descname">setResumePoint</code><span class="sig-paren">(</span><em class="sig-param">filter</em>, <em class="sig-param">followfilt=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#Crawler.setResumePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.Crawler.setResumePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the filters after which the normal filters will be applied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.Crawler.unsetResumePoint">
+<code class="sig-name descname">unsetResumePoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#Crawler.unsetResumePoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.Crawler.unsetResumePoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unset resume point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.Crawler.uris">
+<code class="sig-name descname">uris</code><span class="sig-paren">(</span><em class="sig-param">depth=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#Crawler.uris"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.Crawler.uris" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a list of threddsURI’s (makes use of xmlitems())</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.Crawler.xmlitems">
+<code class="sig-name descname">xmlitems</code><span class="sig-paren">(</span><em class="sig-param">xmlcatalog=None</em>, <em class="sig-param">url=None</em>, <em class="sig-param">depth=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#Crawler.xmlitems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.Crawler.xmlitems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator which returns xml nodes which obey a certain filter
+Nodes which obey the followFilter will be recursively searched</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.datapull.thredds.ThreddsFilter">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.thredds.</code><code class="sig-name descname">ThreddsFilter</code><span class="sig-paren">(</span><em class="sig-param">xmltyp='*'</em>, <em class="sig-param">attr=None</em>, <em class="sig-param">regex=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#ThreddsFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.ThreddsFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class to aid traversing to opendap xml elements</p>
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.ThreddsFilter.AND">
+<code class="sig-name descname">AND</code><span class="sig-paren">(</span><em class="sig-param">xmltyp</em>, <em class="sig-param">attr=None</em>, <em class="sig-param">regex=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#ThreddsFilter.AND"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.ThreddsFilter.AND" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a method for chaining OR filters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.ThreddsFilter.OR">
+<code class="sig-name descname">OR</code><span class="sig-paren">(</span><em class="sig-param">xmltyp</em>, <em class="sig-param">attr=None</em>, <em class="sig-param">regex=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#ThreddsFilter.OR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.ThreddsFilter.OR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a method for chaining OR filters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.ThreddsFilter.isCatalog">
+<code class="sig-name descname">isCatalog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#ThreddsFilter.isCatalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.ThreddsFilter.isCatalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the filter type is a catalogRef</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.thredds.ThreddsFilter.isValid">
+<code class="sig-name descname">isValid</code><span class="sig-paren">(</span><em class="sig-param">xmlelem</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#ThreddsFilter.isValid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.ThreddsFilter.isValid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter xmlelem on  attributes</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.datapull.thredds.Uri">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.thredds.</code><code class="sig-name descname">Uri</code><span class="sig-paren">(</span><em class="sig-param">dataxml</em>, <em class="sig-param">services</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#Uri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.Uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.datapull.uri.UriBase" title="geoslurp.datapull.uri.UriBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.datapull.uri.UriBase</span></code></a></p>
+<p>Thredds URI class</p>
+<dl class="attribute">
+<dt id="geoslurp.datapull.thredds.Uri.opendap">
+<code class="sig-name descname">opendap</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.thredds.Uri.opendap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.thredds.Uri.suburl">
+<code class="sig-name descname">suburl</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.thredds.Uri.suburl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.datapull.thredds.getAttrib">
+<code class="sig-prename descclassname">geoslurp.datapull.thredds.</code><code class="sig-name descname">getAttrib</code><span class="sig-paren">(</span><em class="sig-param">xml</em>, <em class="sig-param">regex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#getAttrib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.getAttrib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search in xml attributes based on a regex</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.datapull.thredds.getDate">
+<code class="sig-prename descclassname">geoslurp.datapull.thredds.</code><code class="sig-name descname">getDate</code><span class="sig-paren">(</span><em class="sig-param">xml</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#getDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.getDate" title="Permalink to this definition">¶</a></dt>
+<dd><p>extracts the date from a dataset element</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.datapull.thredds.getTagEnding">
+<code class="sig-prename descclassname">geoslurp.datapull.thredds.</code><code class="sig-name descname">getTagEnding</code><span class="sig-paren">(</span><em class="sig-param">xml</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#getTagEnding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.getTagEnding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip the leading junk ({…}) from a tag</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.datapull.thredds.gethref">
+<code class="sig-prename descclassname">geoslurp.datapull.thredds.</code><code class="sig-name descname">gethref</code><span class="sig-paren">(</span><em class="sig-param">input</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/thredds.html#gethref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.thredds.gethref" title="Permalink to this definition">¶</a></dt>
+<dd><p>small function to extract a href link from a dictionary</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-geoslurp.datapull.uri">
 <span id="geoslurp-datapull-uri-module"></span><h2>geoslurp.datapull.uri module<a class="headerlink" href="#module-geoslurp.datapull.uri" title="Permalink to this headline">¶</a></h2>
@@ -480,8 +860,68 @@ b the server)
 <dd></dd></dl>
 
 </div>
-<div class="section" id="geoslurp-datapull-webdav-module">
-<h2>geoslurp.datapull.webdav module<a class="headerlink" href="#geoslurp-datapull-webdav-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.datapull.webdav">
+<span id="geoslurp-datapull-webdav-module"></span><h2>geoslurp.datapull.webdav module<a class="headerlink" href="#module-geoslurp.datapull.webdav" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.datapull.webdav.Crawler">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.webdav.</code><code class="sig-name descname">Crawler</code><span class="sig-paren">(</span><em class="sig-param">rooturl</em>, <em class="sig-param">pattern</em>, <em class="sig-param">auth</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/webdav.html#Crawler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.webdav.Crawler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.datapull.crawler.CrawlerBase" title="geoslurp.datapull.crawler.CrawlerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.datapull.crawler.CrawlerBase</span></code></a></p>
+<p>Webdav Crawler</p>
+<dl class="attribute">
+<dt id="geoslurp.datapull.webdav.Crawler.pattern">
+<code class="sig-name descname">pattern</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.webdav.Crawler.pattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.webdav.Crawler.uris">
+<code class="sig-name descname">uris</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/webdav.html#Crawler.uris"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.webdav.Crawler.uris" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator which returns uri’s to requested datasets</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.webdav.Crawler.webdavroot">
+<code class="sig-name descname">webdavroot</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.webdav.Crawler.webdavroot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="geoslurp.datapull.webdav.Uri">
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.datapull.webdav.</code><code class="sig-name descname">Uri</code><span class="sig-paren">(</span><em class="sig-param">rooturl</em>, <em class="sig-param">lastmod=None</em>, <em class="sig-param">auth=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/webdav.html#Uri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.webdav.Uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.datapull.uri.UriBase" title="geoslurp.datapull.uri.UriBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.datapull.uri.UriBase</span></code></a></p>
+<p>“Webdav URI</p>
+<dl class="method">
+<dt id="geoslurp.datapull.webdav.Uri.connect">
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/webdav.html#Uri.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.webdav.Uri.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.webdav.Uri.download">
+<code class="sig-name descname">download</code><span class="sig-paren">(</span><em class="sig-param">direc</em>, <em class="sig-param">check=False</em>, <em class="sig-param">gzip=False</em>, <em class="sig-param">outfile=None</em>, <em class="sig-param">continueonError=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/webdav.html#Uri.download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.webdav.Uri.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download file into directory and possibly check the modification time
+:param check : check whether the file needs updating
+:param gzip: additionally gzips the file (adds .gz to file name)
+:param continueonError (bool): don’t raise an exception when a download error occurrs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.webdav.Uri.ls">
+<code class="sig-name descname">ls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/webdav.html#Uri.ls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.webdav.Uri.ls" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.datapull.webdav.Uri.subUri">
+<code class="sig-name descname">subUri</code><span class="sig-paren">(</span><em class="sig-param">remf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/datapull/webdav.html#Uri.subUri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.datapull.webdav.Uri.subUri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a webdav URI derived from this one</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.datapull.webdav.Uri.webdav">
+<code class="sig-name descname">webdav</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.datapull.webdav.Uri.webdav" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
@@ -496,7 +936,7 @@ b the server)
         <a href="geoslurp.dataset.html" class="btn btn-neutral float-right" title="geoslurp.dataset package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="geoslurp.html" class="btn btn-neutral float-left" title="geoslurp package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="geoslurp.config.html" class="btn btn-neutral float-left" title="geoslurp.config package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

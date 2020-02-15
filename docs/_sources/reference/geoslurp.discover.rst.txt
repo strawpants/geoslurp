@@ -12,3 +12,4 @@ Subpackages
 .. toctree::
 
    geoslurp.discover.gravity
+   geoslurp.discover.oceanobs

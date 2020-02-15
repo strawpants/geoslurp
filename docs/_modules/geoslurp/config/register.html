@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.config.register &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.config.register</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.config.register</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with Frommle; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="kn">import</span> <span class="n">Inventory</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+
+<div class="viewcode-block" id="DatasetRegister"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister">[docs]</a><span class="k">class</span> <span class="nc">DatasetRegister</span><span class="p">:</span>
+    <span class="c1">#holds dataset classes (not initiated!)</span>
+    <span class="n">__dsets__</span><span class="o">=</span><span class="p">[]</span>
+    <span class="c1"># holds factory methods for dyanamically building datasets</span>
+    <span class="n">__dsetfac__</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">__catalogue__</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">__dscache__</span><span class="o">=</span><span class="p">{}</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+<div class="viewcode-block" id="DatasetRegister.getCacheFile"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.getCacheFile">[docs]</a>    <span class="nd">@staticmethod</span> 
+    <span class="k">def</span> <span class="nf">getCacheFile</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">getCacheDir</span><span class="p">(</span><span class="s2">&quot;Dset&quot;</span><span class="p">),</span><span class="s2">&quot;Dset_Catalogue.yaml&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DatasetRegister.addUserPlugPaths"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.addUserPlugPaths">[docs]</a>    <span class="nd">@staticmethod</span> 
+    <span class="k">def</span> <span class="nf">addUserPlugPaths</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="n">loadmod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;userplugins&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">upath</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;userplugins&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">upath</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">upath</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">loadmod</span><span class="p">:</span>
+                        <span class="n">mod</span><span class="o">=</span><span class="nb">__import__</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">upath</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DatasetRegister.registerDataset"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.registerDataset">[docs]</a>    <span class="k">def</span> <span class="nf">registerDataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">datasetcls</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dsets__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datasetcls</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DatasetRegister.registerDatasetFactory"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.registerDatasetFactory">[docs]</a>    <span class="k">def</span> <span class="nf">registerDatasetFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">datasetclsfac</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dsetfac__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datasetclsfac</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DatasetRegister.refresh"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Refresh the dataset catalogue&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">registerAllDataSets</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+
+        <span class="c1">#load inventory of existing datasets (for the templated)</span>
+        <span class="n">Inv</span><span class="o">=</span><span class="n">Inventory</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;datasets&quot;</span><span class="p">:{},</span><span class="s2">&quot;factories&quot;</span><span class="p">:{},</span><span class="s2">&quot;functions&quot;</span><span class="p">:{}}</span>
+        <span class="c1">#loop over dataset in the factories</span>
+
+        <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dsets__</span><span class="p">:</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">ds</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">ds</span><span class="o">.</span><span class="vm">__name__</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+                <span class="n">srch</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="s2">&quot;([^</span><span class="se">\\</span><span class="s2">\s]+)&quot;</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;\.&quot;</span><span class="p">))</span>
+                <span class="c1">#possibly also add existing datasets so they can be found by regular expressions</span>
+                <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">Inv</span><span class="p">:</span>
+                    <span class="n">nameexisting</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">entry</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">entry</span><span class="o">.</span><span class="n">dataset</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">srch</span><span class="p">,</span><span class="n">nameexisting</span><span class="p">):</span>
+                        <span class="c1">#add </span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">][</span><span class="n">nameexisting</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;template&quot;</span><span class="p">:</span><span class="n">name</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span><span class="n">ds</span><span class="o">.</span><span class="vm">__module__</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">ds</span>
+
+        <span class="k">for</span> <span class="n">dsfac</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dsetfac__</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;factories&quot;</span><span class="p">][</span><span class="n">dsfac</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span><span class="n">dsfac</span><span class="o">.</span><span class="vm">__module__</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">dsfac</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">ds</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">ds</span><span class="o">.</span><span class="vm">__name__</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+                    <span class="n">srch</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="s2">&quot;([^</span><span class="se">\\</span><span class="s2">\s]+)&quot;</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;\.&quot;</span><span class="p">))</span>
+                    <span class="c1">#possibly also add existing datasets so they can be found by regular expressions</span>
+                    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">Inv</span><span class="p">:</span>
+                        <span class="n">nameexisting</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">entry</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">entry</span><span class="o">.</span><span class="n">dataset</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">srch</span><span class="p">,</span><span class="n">nameexisting</span><span class="p">):</span>
+                            <span class="c1">#add </span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">][</span><span class="n">nameexisting</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;template&quot;</span><span class="p">:</span><span class="n">name</span><span class="p">}</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;factory&quot;</span><span class="p">:</span><span class="n">dsfac</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">ds</span>
+        
+        <span class="c1">#also find already existing instances of templated datasets</span>
+
+
+        <span class="c1">#save to yaml</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">cachefile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getCacheFile</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saving available Dataset catalogue to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">cachefile</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cachefile</span><span class="p">,</span><span class="s1">&#39;wt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DatasetRegister.loadCatalogue"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.loadCatalogue">[docs]</a>    <span class="k">def</span> <span class="nf">loadCatalogue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">addUserPlugPaths</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="n">cachefile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getCacheFile</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cachefile</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cachefile</span><span class="p">,</span><span class="s1">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DatasetRegister.registerAllDataSets"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.registerAllDataSets">[docs]</a>    <span class="k">def</span> <span class="nf">registerAllDataSets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;load all dataset classes (but don&#39;t construct them)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dsets__</span><span class="p">:</span>
+            <span class="c1">#already loaded (quick return)</span>
+            <span class="k">return</span>
+        
+        <span class="c1">#dynamically import all relevant datasets and class factories (including userplugin datasets)</span>
+        <span class="n">modgeo</span><span class="o">=</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;geoslurp.dataset&quot;</span><span class="p">)</span>
+        
+        <span class="c1">#also load userplugins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addUserPlugPaths</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="DatasetRegister.listDataSets"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.listDataSets">[docs]</a>    <span class="k">def</span> <span class="nf">listDataSets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DatasetRegister.listFunctions"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.listFunctions">[docs]</a>    <span class="k">def</span> <span class="nf">listFunctions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;functions&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DatasetRegister.listFactories"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.listFactories">[docs]</a>    <span class="k">def</span> <span class="nf">listFactories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;factories&quot;</span><span class="p">]</span></div>
+
+            
+<div class="viewcode-block" id="DatasetRegister.getDsetClass"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.getDsetClass">[docs]</a>    <span class="k">def</span> <span class="nf">getDsetClass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loads a dataset as an class (but check cache first)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span> 
+           <span class="n">dsentry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span>
+           <span class="c1">#load isolated class</span>
+           <span class="k">if</span> <span class="s2">&quot;factory&quot;</span> <span class="ow">in</span> <span class="n">dsentry</span><span class="p">:</span>
+               <span class="c1">#produce all classes in the factory</span>
+               <span class="n">facentry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;factories&quot;</span><span class="p">][</span><span class="n">dsentry</span><span class="p">[</span><span class="s2">&quot;factory&quot;</span><span class="p">]]</span>
+               <span class="n">facmod</span><span class="o">=</span><span class="n">import_module</span><span class="p">(</span><span class="n">facentry</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">])</span>
+               <span class="n">fac</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">facmod</span><span class="p">,</span><span class="n">dsentry</span><span class="p">[</span><span class="s2">&quot;factory&quot;</span><span class="p">])</span>
+               <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">fac</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+                   <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">ds</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">ds</span><span class="o">.</span><span class="vm">__name__</span><span class="p">])]</span><span class="o">=</span><span class="n">ds</span>
+               <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+           <span class="k">elif</span> <span class="s2">&quot;template&quot;</span> <span class="ow">in</span> <span class="n">dsentry</span><span class="p">:</span>
+                <span class="c1">#the requested class must be derived from a templated base class</span>
+                <span class="n">dsbase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getDsetClass</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="n">dsentry</span><span class="p">[</span><span class="s2">&quot;template&quot;</span><span class="p">])</span>
+                <span class="n">scheme</span><span class="p">,</span><span class="n">tbl</span><span class="o">=</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="n">ds</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">tbl</span><span class="p">,(</span><span class="n">dsbase</span><span class="p">,),{</span><span class="s2">&quot;scheme&quot;</span><span class="p">:</span><span class="n">scheme</span><span class="p">})</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">ds</span>
+                <span class="k">return</span> <span class="n">ds</span>
+           <span class="k">else</span><span class="p">:</span>
+               <span class="n">mod</span><span class="o">=</span><span class="n">import_module</span><span class="p">(</span><span class="n">dsentry</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">])</span>
+               <span class="c1"># import ipdb;ipdb.set_trace()</span>
+               <span class="n">ds</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">ds</span>
+               <span class="k">return</span> <span class="n">ds</span></div>
+        
+<div class="viewcode-block" id="DatasetRegister.getDatasets"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.getDatasets">[docs]</a>    <span class="k">def</span> <span class="nf">getDatasets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">,</span><span class="n">regex</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;retrieves a list of dataset classes possibly obeying a certain regex&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>        
+        <span class="c1">#get the valid names  </span>
+        <span class="n">outdsets</span><span class="o">=</span><span class="p">[]</span> 
+        <span class="n">regexcomp</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+        <span class="c1">#we expect to have only one matching entry when the regex is a fully-qualified scheme.table name</span>
+        <span class="n">singleEntry</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="s2">&quot;^[\w]+(?:\.[\w]+)$&quot;</span><span class="p">,</span><span class="n">regex</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">ds</span><span class="o">=</span><span class="kc">None</span>
+            <span class="k">if</span> <span class="n">regexcomp</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="n">ds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getDsetClass</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">singleEntry</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">outdsets</span><span class="p">:</span>
+                        <span class="n">outdsets</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+                    <span class="c1">#this possibly overwrites a fitting template class</span>
+                    <span class="n">outdsets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">ds</span>
+                    <span class="c1">#no need to look any further we found our fit</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outdsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+                    <span class="c1">#note: other datasets may fit so we continue the loop</span>
+                    <span class="k">continue</span>
+
+            
+            <span class="c1">#other case name: is when the regex is a fully specified  scheme.table and  obeys a template</span>
+            <span class="k">if</span> <span class="n">singleEntry</span> <span class="ow">and</span>  <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+                <span class="c1">#reverse the search: turn the TEMPLATE into a regex and assume the regex is a fully qualified name for the class </span>
+                <span class="n">srch</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="s2">&quot;([^</span><span class="se">\\</span><span class="s2">\s]+)&quot;</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;\.&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">srch</span><span class="p">,</span><span class="n">regex</span><span class="p">):</span>
+                    <span class="c1">#we really should only land in this code area when no outdset has been defined yet</span>
+                    <span class="k">assert</span> <span class="ow">not</span> <span class="n">outdsets</span>
+                    <span class="c1">#dynamically derive a class from the  template</span>
+                    <span class="k">if</span> <span class="n">regex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">:</span>
+                        <span class="n">ds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="n">regex</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">dsbase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getDsetClass</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+                        <span class="n">scheme</span><span class="p">,</span><span class="n">tbl</span><span class="o">=</span><span class="n">regex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                        <span class="c1">#derive a new class from the template class</span>
+                        <span class="n">ds</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">tbl</span><span class="p">,(</span><span class="n">dsbase</span><span class="p">,),{</span><span class="s2">&quot;scheme&quot;</span><span class="p">:</span><span class="n">scheme</span><span class="p">})</span>
+                    <span class="n">outdsets</span><span class="o">=</span><span class="p">[</span><span class="n">ds</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">outdsets</span></div>
+        
+<div class="viewcode-block" id="DatasetRegister.getFuncs"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.register.DatasetRegister.getFuncs">[docs]</a>    <span class="k">def</span> <span class="nf">getFuncs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">,</span><span class="n">regex</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This is currently a stub (returns en empty list)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span></div></div>
+
+<span class="c1">#module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )</span>
+<span class="n">geoslurpregistry</span><span class="o">=</span><span class="n">DatasetRegister</span><span class="p">()</span>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
