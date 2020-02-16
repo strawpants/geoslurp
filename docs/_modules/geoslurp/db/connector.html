@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
@@ -186,7 +187,8 @@
 <div class="viewcode-block" id="GeoslurpConnector"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector">[docs]</a><span class="k">class</span> <span class="nc">GeoslurpConnector</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Holds a connector to a geoslurp database&quot;&quot;&quot;</span>
     <span class="n">mirror</span><span class="o">=</span><span class="kc">None</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">passwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5432</span><span class="p">,</span><span class="n">readonlyuser</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">datamirror</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">cache</span><span class="o">=</span><span class="kc">None</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">passwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5432</span><span class="p">,</span><span class="n">readonlyuser</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">datamirror</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cache</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        establishes a database engine whoch provides the base</span>
 <span class="sd">        for creating sessions (ORM) or connections (SQL expressions)</span>
@@ -213,6 +215,12 @@
 
         <span class="k">if</span> <span class="n">datamirror</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mirror</span><span class="o">=</span><span class="n">datamirror</span>
+
+        <span class="k">if</span> <span class="n">cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">=</span><span class="n">cache</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#default when not specified</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">=</span><span class="s2">&quot;/tmp/geoslurp_cache&quot;</span>
 
 
 <div class="viewcode-block" id="GeoslurpConnector.transsession"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.transsession">[docs]</a>    <span class="k">def</span> <span class="nf">transsession</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

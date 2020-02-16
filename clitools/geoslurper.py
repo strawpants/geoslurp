@@ -35,7 +35,7 @@ def main(argv):
     # add various arguments to the program
     parser=addCommandLineArgs()
     args = parser.parse_args(argv[1:])
-    check_args(args,parser)
+    args=check_args(args,parser)
 
 
     # We need a point of contact to communicate with the database
@@ -156,8 +156,8 @@ def main(argv):
         if args.data_dir:
             ds.setDataDir(args.data_dir)
         
-        if args.cache_dir:
-            ds.setCacheDir(args.cache_dir)
+        # if args.cache_dir:
+        #     ds.setCacheDir(args.cache_dir)
 
         # import pdb;pdb.set_trace()
         if args.purge_cache:
@@ -167,7 +167,7 @@ def main(argv):
             ds.purgedata(args.purge_data)
         # import pdb;pdb.set_trace()
         if args.purge_entry:
-            ds.purgeentry(args.purge_entry)
+            ds.purgeentry()
 
         if args.pull:
             try:
@@ -241,8 +241,8 @@ def addCommandLineArgs():
         parser.add_argument('--purge-data',type=str, metavar='filter',const='*',nargs='?',
                             help="Purge the data of the selected dataset. while optionally applying a filter for the files")
 
-        parser.add_argument('--purge-entry',type=str, metavar='filter',const='*',nargs='?',
-                            help="Purge the database entry of the selected dataset. Optionally applying a filter for the files")
+        parser.add_argument('--purge-entry',action='store_true',
+                            help="Purge the database entry of the selected dataset.")
 
         parser.add_argument("--pull", metavar="JSON",action=JsonParseAction, nargs="?",const=False,default=False,
                             help="Pull data from online resource (possibly pass on options as a JSON dict")
@@ -300,8 +300,12 @@ def addCommandLineArgs():
         parser.add_argument('--data-dir',type=str,metavar='DIR',nargs=1,
                 help="Specify (and register) a dataset specific data directory DIR")
         
-        parser.add_argument('--cache-dir',type=str,metavar='DIR',nargs=1,
-                help="Specify (and register) a dataset specific cache directory DIR")
+        # parser.add_argument('--cache-dir',type=str,metavar='DIR',nargs=1,
+        #         help="Specify (and register) a dataset specific cache directory DIR")
+
+        parser.add_argument('--cache',type=str,metavar='DIR',
+                            help="Set the root of the cache directory to DIR")
+
         #also look for datasets or functions  to manage
         parser.add_argument("-d","--dset",metavar="PATTERN",nargs="?",type=str,
                 help='Select datasets or all datasets in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.DATASET)')
@@ -325,8 +329,10 @@ def check_args(args,parser):
         if not args.dset:
             parser.print_help()
             sys.exit(0)
+
     #also fillout last options with defaults from the last call
-    readLocalSettings(args,readonlyuser=False)
+    #note that this will return an updated argument dict
+    return readLocalSettings(args,readonlyuser=False)
 
 
 if __name__ == "__main__":

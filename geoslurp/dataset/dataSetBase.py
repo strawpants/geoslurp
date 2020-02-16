@@ -150,7 +150,7 @@ class DataSet(ABC):
         """Deletes the cache directory of the dataset, optionally applying a directory/filename filter"""
         rmfilterdir(self.cacheDir(),filter)
 
-    def purgeentry(self,filter):
+    def purgeentry(self):
         """Delete dataset entry in the database"""
         slurplogger().info("Deleting %s entry"%(self.name))
         self._ses.delete(self._dbinvent)
@@ -275,6 +275,9 @@ class DataSet(ABC):
         else:
             self.commitCounter+=1
 
+    def bulkInsert(self,dictlist):
+        """Insert a  list of dicts in bulk mode"""
+        self._ses.bulk_insert_mappings(self.table,dictlist)
 
 
     def truncateTable(self):

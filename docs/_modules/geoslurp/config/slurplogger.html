@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
@@ -174,14 +175,44 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
+<span class="n">slurplog</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Geoslurp&quot;</span><span class="p">)</span>
+
+<span class="n">ch</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+<span class="c1"># create formatter</span>
+<span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(name)s</span><span class="s1">-</span><span class="si">%(levelname)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># add formatter to ch</span>
+<span class="n">ch</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+
+<span class="c1"># add ch to logger</span>
+<span class="n">slurplog</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+
 <span class="c1"># geoslurp wide logger</span>
 <div class="viewcode-block" id="slurplogger"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.slurplogger.slurplogger">[docs]</a><span class="k">def</span> <span class="nf">slurplogger</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Retrieve the geoslurp specific logger&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Geoslurp&quot;</span><span class="p">)</span></div>
+    <span class="sd">&quot;&quot;&quot;Retrieve the geoslurp specific logger (deprecated, only for compatibility)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">slurplog</span></div>
 
 <div class="viewcode-block" id="debugging"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.slurplogger.debugging">[docs]</a><span class="k">def</span> <span class="nf">debugging</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Sets the most detailed logging level to DEBUG&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">getEffectiveLevel</span><span class="p">()</span> <span class="o">==</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span></div>
+    <span class="sd">&quot;&quot;&quot;Test if the logging level is set to DEBUG&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">slurplog</span><span class="o">.</span><span class="n">getEffectiveLevel</span><span class="p">()</span> <span class="o">==</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span></div>
+
+<div class="viewcode-block" id="setInfoLevel"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.slurplogger.setInfoLevel">[docs]</a><span class="k">def</span> <span class="nf">setInfoLevel</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set logging level to INFO severity&quot;&quot;&quot;</span>
+    <span class="n">slurplog</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="setDebugLevel"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.slurplogger.setDebugLevel">[docs]</a><span class="k">def</span> <span class="nf">setDebugLevel</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set logging level to DEBUG severity&quot;&quot;&quot;</span>
+    <span class="n">slurplog</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="setWarningLevel"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.slurplogger.setWarningLevel">[docs]</a><span class="k">def</span> <span class="nf">setWarningLevel</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set logging level to WARNING severity&quot;&quot;&quot;</span>
+    <span class="n">slurplog</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="setErrorLevel"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.slurplogger.setErrorLevel">[docs]</a><span class="k">def</span> <span class="nf">setErrorLevel</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Set logging level to ERROR severity&quot;&quot;&quot;</span>
+    <span class="n">slurplog</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

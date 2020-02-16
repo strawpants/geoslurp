@@ -91,6 +91,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference Documentation</a></li>
 </ul>
@@ -194,7 +195,7 @@
 <span id="geoslurp-db-connector-module"></span><h2>geoslurp.db.connector module<a class="headerlink" href="#module-geoslurp.db.connector" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="geoslurp.db.connector.GeoslurpConnector">
-<em class="property">class </em><code class="sig-prename descclassname">geoslurp.db.connector.</code><code class="sig-name descname">GeoslurpConnector</code><span class="sig-paren">(</span><em class="sig-param">host</em>, <em class="sig-param">user</em>, <em class="sig-param">passwd=None</em>, <em class="sig-param">port=5432</em>, <em class="sig-param">readonlyuser=True</em>, <em class="sig-param">datamirror=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.db.connector.</code><code class="sig-name descname">GeoslurpConnector</code><span class="sig-paren">(</span><em class="sig-param">host</em>, <em class="sig-param">user</em>, <em class="sig-param">passwd=None</em>, <em class="sig-param">port=5432</em>, <em class="sig-param">readonlyuser=True</em>, <em class="sig-param">datamirror=None</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Holds a connector to a geoslurp database</p>
 <dl class="method">
@@ -207,6 +208,11 @@
 <code class="sig-name descname">addUser</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">passw</em>, <em class="sig-param">readonly=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.addUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.addUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a user to the database (note executing this functions requires appropriate database rights</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.db.connector.GeoslurpConnector.cache">
+<code class="sig-name descname">cache</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.db.connector.GeoslurpConnector.createTable">
@@ -525,7 +531,8 @@ configuration file ($HOME/.geoslurp_lastused.yaml).
 <dl class="method">
 <dt id="geoslurp.db.settings.Settings.getCacheDir">
 <code class="sig-name descname">getCacheDir</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">dataset=None</em>, <em class="sig-param">subdirs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.getCacheDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.getCacheDir" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Obtain and create a cache directory</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.db.settings.Settings.getDataDir">
@@ -610,12 +617,6 @@ configuration file ($HOME/.geoslurp_lastused.yaml).
 <code class="sig-name descname">user</code><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.user" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="geoslurp.db.settings.aliasNDict">
-<code class="sig-prename descclassname">geoslurp.db.settings.</code><code class="sig-name descname">aliasNDict</code><span class="sig-paren">(</span><em class="sig-param">cred: geoslurp.db.settings.Credentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#aliasNDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.aliasNDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the alias and a dictionary with non-None entries of a Credentials entry</p>
 </dd></dl>
 
 <dl class="function">

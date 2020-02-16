@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial" href="examples.html" />
+    <link rel="next" title="Configuration" href="confsettings.html" />
     <link rel="prev" title="An introduction to Geoslurp" href="introduction.html" /> 
 </head>
 
@@ -93,12 +93,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation of the geoslurp package and setting up the PostgreSQL instance</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation-of-the-geoslurp-package">Installation of the geoslurp package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-the-postgresql-database">Setting up the PostgreSQL database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#local-configuration-settings">Local Configuration settings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#specifying-passwords">Specifying passwords</a></li>
 </ul>
 </li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Documentation</a></li>
 </ul>
@@ -212,29 +209,6 @@
 <li><p>set up geoslurp roles and users.</p></li>
 </ol>
 </div>
-<div class="section" id="local-configuration-settings">
-<h2>Local Configuration settings<a class="headerlink" href="#local-configuration-settings" title="Permalink to this headline">¶</a></h2>
-<p>The settings which are specific to a client are stored in a yaml file which is expected in the user’s home when not indicated otherwise. The file is called <code class="docutils literal notranslate"><span class="pre">.geoslurp_lastused.yaml</span></code> and may contain the following entries:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">host</span><span class="p">:</span> <span class="n">hostname_of_database_server</span>
-<span class="n">lastupdate</span><span class="p">:</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">06</span> <span class="mi">19</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mf">43.292675</span>
-<span class="n">port</span><span class="p">:</span> <span class="mi">5432</span> <span class="c1">#where to contact the server</span>
-<span class="n">readonlyUser</span><span class="p">:</span> <span class="n">slurpy</span> <span class="c1"># user which has readonly access to the database (This is the preferred user to use when browsing and using the database but not for registering)</span>
-<span class="n">useKeyring</span><span class="p">:</span> <span class="n">true</span> <span class="c1">#This allows users to store their database password in a system keyring (e.g. kwallet, gnome-keyring, ..) Requires the python package keyring with a sutable backend</span>
-<span class="n">user</span><span class="p">:</span> <span class="n">username</span> <span class="c1">#username which also has write access to the database</span>
-</pre></div>
-</div>
-<p>Note that settings in this file may be overwritten with last used values when using the <a class="reference internal" href="clitools.html#clihelp"><span class="std std-ref">Command line tools</span></a>.</p>
-<div class="section" id="specifying-passwords">
-<h3>Specifying passwords<a class="headerlink" href="#specifying-passwords" title="Permalink to this headline">¶</a></h3>
-<p>There are several ways to specify passwords, some which are more secure than others. The follin</p>
-<ol class="arabic simple">
-<li><p><strong>Use a keyring recognized by python keyring</strong>. This requires that <a class="reference external" href="https://pypi.org/project/keyring/">python keyring  is installed with a suitable backend</a>. When the option <code class="docutils literal notranslate"><span class="pre">useKeyring=true</span></code> is specified in <code class="docutils literal notranslate"><span class="pre">${HOME}/.geoslurp_lastused.yaml</span></code>, users will be prompted for a  password when they connect for the first time, but subsequent accesses don’t require entering a password, and are therefore non-interactive.</p></li>
-<li><p><strong>Use an environment variable</strong>. If <code class="docutils literal notranslate"><span class="pre">useKeyRing=false</span></code>, one can use an environment variable to specify the password e.g.: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASS=&quot;supersecretpassword</span></code>, or <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASSRO</span></code> (for the readonly user).</p></li>
-<li><p>If both methods 1 and 2 fail. one will be interactively prompted for a password</p></li>
-<li><p>As an alternative the constructor of the <a class="reference external" href="reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector">GeoslurpConnector</a> class allows the explicit input of a password.</p></li>
-</ol>
-</div>
-</div>
 </div>
 
 
@@ -245,7 +219,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="examples.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="confsettings.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="introduction.html" class="btn btn-neutral float-left" title="An introduction to Geoslurp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

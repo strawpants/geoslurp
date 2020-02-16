@@ -38,9 +38,10 @@ class settingsArgs:
     mirror=None
 
     local_settings=None
+    cache=None
     """(str): Alternative local settings file (instead of ${HOME}/.geoslurp_lastused.yaml)"""
 
-    def __init__(self,host=None,user=None,usekeyring=True,password=None,port=None,mirror=None):
+    def __init__(self,host=None,user=None,usekeyring=True,password=None,port=None,mirror=None,cache=None):
         if host:
             self.host=host
 
@@ -59,6 +60,8 @@ class settingsArgs:
         if mirror:
             self.mirror=mirror
 
+        if cache:
+            self.cache=cache
 
 
 def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
@@ -74,7 +77,8 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
         with open(settingsFile, 'r') as fid:
             lastOpts=yaml.safe_load(fid)
     else:
-        lastOpts={}
+        #set the defaults
+        lastOpts={"host":"localhost","user":"geoslurp","port":5432,"readOnlyUser":"slurpy","useKeyring":False,"cache":"tmp/geoslurp_cache"}
 
     isUpdated=False
 
@@ -97,6 +101,7 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
         isUpdated=True
     else:
         lastOpts["port"]=5432
+
     if argsout.user:
         if readonlyuser:
             lastOpts["readonlyUser"]=argsout.user
@@ -169,6 +174,14 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
             argsout.mirror=lastOpts["mirror"]
         else:
             argsout.mirror="default"
+
+    if argsout.cache:
+        lastOpts["cache"]=argsout.cache
+    else:
+        if "cache"  in lastOpts:
+            argsout.cache=lastOpts["cache"]
+        else:
+            argsout.cache="/tmp/geoslurp_cache"
 
     #write out  options to file to store these settings
     if isUpdated and update:

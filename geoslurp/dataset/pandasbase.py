@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 
 from geoslurp.dataset.dataSetBase import DataSet
-from geoslurp.config.slurplogger import slurplogger
+from geoslurp.config.slurplogger import slurplog
 import re
 import pandas as pd
 
@@ -50,7 +50,7 @@ class PandasBase(DataSet):
             raise RuntimeError("Don't know how to open %s, specify ftype"%(self.pdfile))
             #possibly modify dataframe in derived class 
             
-        slurplogger().info("Filling pandas table %s.%s with data from %s" % (self.scheme, self.name, self.pdfile))
+        slurplog.info("Filling pandas table %s.%s with data from %s" % (self.scheme, self.name, self.pdfile))
         
         df=self.modify_df(df)                
         df.to_sql(self.name,self.db.dbeng,schema=self.scheme, if_exists='replace', dtype=self.dtypes)

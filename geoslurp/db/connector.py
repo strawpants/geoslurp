@@ -30,7 +30,8 @@ import getpass
 class GeoslurpConnector():
     """Holds a connector to a geoslurp database"""
     mirror=None
-    def __init__(self, host, user, passwd=None, port=5432,readonlyuser=True,datamirror=None):
+    cache=None
+    def __init__(self, host, user, passwd=None, port=5432,readonlyuser=True,datamirror=None,cache=None):
         """
         establishes a database engine whoch provides the base
         for creating sessions (ORM) or connections (SQL expressions)
@@ -57,6 +58,12 @@ class GeoslurpConnector():
 
         if datamirror:
             self.mirror=datamirror
+
+        if cache:
+            self.cache=cache
+        else:
+            #default when not specified
+            self.cache="/tmp/geoslurp_cache"
 
 
     def transsession(self):

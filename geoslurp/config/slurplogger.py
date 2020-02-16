@@ -18,11 +18,41 @@
 
 import logging
 
+slurplog=logging.getLogger("Geoslurp")
+
+ch = logging.StreamHandler()
+# create formatter
+formatter = logging.Formatter('%(name)s-%(levelname)s: %(message)s')
+
+# add formatter to ch
+ch.setFormatter(formatter)
+
+# add ch to logger
+slurplog.addHandler(ch)
+
 # geoslurp wide logger
 def slurplogger():
-    """Retrieve the geoslurp specific logger"""
-    return logging.getLogger("Geoslurp")
+    """Retrieve the geoslurp specific logger (deprecated, only for compatibility)"""
+    return slurplog
 
 def debugging():
-    """Sets the most detailed logging level to DEBUG"""
-    return slurplogger().getEffectiveLevel() == logging.DEBUG
+    """Test if the logging level is set to DEBUG"""
+    return slurplog.getEffectiveLevel() == logging.DEBUG
+
+def setInfoLevel():
+    """Set logging level to INFO severity"""
+    slurplog.setLevel(logging.INFO)
+
+def setDebugLevel():
+    """Set logging level to DEBUG severity"""
+    slurplog.setLevel(logging.DEBUG)
+
+
+def setWarningLevel():
+    """Set logging level to WARNING severity"""
+    slurplog.setLevel(logging.WARNING)
+
+def setErrorLevel():
+    """Set logging level to ERROR severity"""
+    slurplog.setLevel(logging.ERROR)
+

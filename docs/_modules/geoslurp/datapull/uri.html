@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
@@ -176,7 +177,7 @@
 <span class="kn">import</span> <span class="nn">pycurl</span><span class="o">,</span><span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">io</span>  <span class="kn">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplog</span>
 <span class="kn">import</span> <span class="nn">gzip</span> <span class="k">as</span> <span class="nn">gz</span>
 
 
@@ -335,16 +336,16 @@
         <span class="k">if</span> <span class="n">check</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span> <span class="ow">and</span> <span class="n">uri</span><span class="o">.</span><span class="n">lastmod</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span> <span class="o">&lt;=</span> <span class="n">uri</span><span class="o">.</span><span class="n">lastmod</span><span class="p">:</span>
                 <span class="c1">#no need to download the file</span>
-                <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Already Downloaded, skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+                <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Already Downloaded, skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">uri</span><span class="p">,</span><span class="kc">False</span>
-        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Downloading </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+        <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Downloading </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="p">:</span>
                 <span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="n">gunzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="n">gunzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">pyexc</span><span class="p">:</span>
-            <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Download failed, skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+            <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Download failed, skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">continueonError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">pyexc</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>

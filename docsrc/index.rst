@@ -13,6 +13,7 @@ Data management with geoslurp
 
    introduction
    installation
+   confsettings
    examples
    reference
 

@@ -91,6 +91,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Reference Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tableconventions.html">Conventions on naming tables and their  columns</a></li>
@@ -198,10 +199,10 @@
 <blockquote>
 <div><p>Program to download and manage Earth Science data</p>
 </div></blockquote>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: clitools/geoslurper.py [-h] [-i] [-l] [--refresh] [--purge-cache [filter]] [--purge-data [filter]] [--purge-entry [filter]] [--pull [JSON]] [--register [JSON]]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: clitools/geoslurper.py [-h] [-i] [-l] [--refresh] [--purge-cache [filter]] [--purge-data [filter]] [--purge-entry] [--pull [JSON]] [--register [JSON]]</span>
 <span class="go">                              [--local-settings LOCALSETTINGSFILE] [--config [JSON]] [--show-config] [--auth-config [JSON]] [--admin-config [JSON]] [--host hostname]</span>
 <span class="go">                              [--user user] [--add-user username] [--add-readonly-user username] [--password password] [--port port] [--usekeyring] [-v [VERBOSE]]</span>
-<span class="go">                              [--data-dir DIR] [--cache-dir DIR] [-d [PATTERN]] [--mirror [MIRRORALIAS]] [-f [PATTERN]]</span>
+<span class="go">                              [--data-dir DIR] [--cache DIR] [-d [PATTERN]] [--mirror [MIRRORALIAS]] [-f [PATTERN]]</span>
 </pre></div>
 </div>
 <dl class="option">
@@ -242,8 +243,8 @@
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-purge-entry">
-<code class="sig-name descname">--purge-entry</code><code class="sig-prename descclassname"> &lt;filter&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-purge-entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Purge the database entry of the selected dataset. Optionally applying a filter for the files</p>
+<code class="sig-name descname">--purge-entry</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-purge-entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Purge the database entry of the selected dataset.</p>
 </dd></dl>
 
 <dl class="option">
@@ -343,9 +344,9 @@
 </dd></dl>
 
 <dl class="option">
-<dt id="cmdoption-clitools-geoslurper-py-cache-dir">
-<code class="sig-name descname">--cache-dir</code><code class="sig-prename descclassname"> &lt;dir&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-cache-dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specify (and register) a dataset specific cache directory DIR</p>
+<dt id="cmdoption-clitools-geoslurper-py-cache">
+<code class="sig-name descname">--cache</code><code class="sig-prename descclassname"> &lt;dir&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the root of the cache directory to DIR</p>
 </dd></dl>
 
 <dl class="option">

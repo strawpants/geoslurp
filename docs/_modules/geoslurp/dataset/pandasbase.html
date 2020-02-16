@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
@@ -172,7 +173,7 @@
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019</span>
 
 <span class="kn">from</span> <span class="nn">geoslurp.dataset.dataSetBase</span> <span class="kn">import</span> <span class="n">DataSet</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplog</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -206,7 +207,7 @@
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know how to open </span><span class="si">%s</span><span class="s2">, specify ftype&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">))</span>
             <span class="c1">#possibly modify dataframe in derived class </span>
             
-        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filling pandas table </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2"> with data from </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">))</span>
+        <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filling pandas table </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2"> with data from </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">))</span>
         
         <span class="n">df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">modify_df</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>                
         <span class="n">df</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span><span class="n">schema</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>

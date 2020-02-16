@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
@@ -237,11 +238,6 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">Credentials</span><span class="o">.</span><span class="fm">__new__</span><span class="o">.</span><span class="vm">__defaults__</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">Credentials</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span>
-
-<div class="viewcode-block" id="aliasNDict"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.aliasNDict">[docs]</a><span class="k">def</span> <span class="nf">aliasNDict</span><span class="p">(</span><span class="n">cred</span><span class="p">:</span><span class="n">Credentials</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;return the alias and a dictionary with non-None entries of a Credentials entry&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">cred</span><span class="o">.</span><span class="n">alias</span><span class="p">,</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">ky</span><span class="p">,</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">ky</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">_fields</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ky</span> <span class="o">!=</span> <span class="s2">&quot;alias&quot;</span><span class="p">])</span></div>
-
 
 <span class="n">GSBase</span><span class="o">=</span><span class="n">declarative_base</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">))</span>
 
@@ -460,12 +456,16 @@
         <span class="k">return</span> <span class="n">getCreateDir</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">mirrorMap</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Settings.getCacheDir"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.getCacheDir">[docs]</a>    <span class="k">def</span> <span class="nf">getCacheDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">scheme</span><span class="p">,</span><span class="n">dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;CacheDir&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
-            <span class="n">ddir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;CacheDir&quot;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ddir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;CacheDir&quot;</span><span class="p">]</span>
+        <span class="sd">&quot;&quot;&quot;Obtain and create a cache directory&quot;&quot;&quot;</span>
+        <span class="c1">#starting point</span>
+        <span class="n">ddir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span>
 
-        <span class="n">ddir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span>
+        <span class="c1"># if &quot;CacheDir&quot; in self.userentry.conf:</span>
+        <span class="c1">#     ddir=self.userentry.conf[&quot;CacheDir&quot;]</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     ddir=self.defaultentry.conf[&quot;CacheDir&quot;]</span>
+        <span class="c1">#</span>
+        <span class="c1"># ddir=os.path.join(ddir,scheme)</span>
 
         <span class="c1">#POssibly we need to append a dataset directory </span>
         <span class="k">if</span> <span class="n">dataset</span><span class="p">:</span>
@@ -476,7 +476,7 @@
             <span class="n">ddir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="n">subdirs</span><span class="p">)</span>
 
         <span class="c1">#NOTE: this posssibly applies a mapping of the root part of the directory </span>
-        <span class="k">return</span> <span class="n">getCreateDir</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">mirrorMap</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">getCreateDir</span><span class="p">(</span><span class="n">ddir</span><span class="p">)</span></div></div>
 
 </pre></div>
 

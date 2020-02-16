@@ -89,6 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
 </ul>
@@ -306,7 +307,7 @@
         <span class="sd">&quot;&quot;&quot;Deletes the cache directory of the dataset, optionally applying a directory/filename filter&quot;&quot;&quot;</span>
         <span class="n">rmfilterdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="nb">filter</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataSet.purgeentry"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.purgeentry">[docs]</a>    <span class="k">def</span> <span class="nf">purgeentry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">filter</span><span class="p">):</span>
+<div class="viewcode-block" id="DataSet.purgeentry"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.purgeentry">[docs]</a>    <span class="k">def</span> <span class="nf">purgeentry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete dataset entry in the database&quot;&quot;&quot;</span>
         <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting </span><span class="si">%s</span><span class="s2"> entry&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="p">)</span>
@@ -431,6 +432,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">commitCounter</span><span class="o">+=</span><span class="mi">1</span></div>
 
+<div class="viewcode-block" id="DataSet.bulkInsert"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.bulkInsert">[docs]</a>    <span class="k">def</span> <span class="nf">bulkInsert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dictlist</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Insert a  list of dicts in bulk mode&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">bulk_insert_mappings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">,</span><span class="n">dictlist</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DataSet.truncateTable"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.truncateTable">[docs]</a>    <span class="k">def</span> <span class="nf">truncateTable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

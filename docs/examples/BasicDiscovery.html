@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic discovery techniques &mdash; geoslurp Wannabe v1.0 documentation</title>
+  <title>Discovery techniques &mdash; geoslurp Wannabe v1.0 documentation</title>
   
 
   
@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Reference Documentation" href="../reference.html" />
-    <link rel="prev" title="Create a dataset, pull data and register it in the database" href="CreateDynDSet.html" /> 
+    <link rel="prev" title="Download and register a dataset of (fictious?) US Marijuana street prices" href="CreateDynDSet.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,12 +91,17 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confsettings.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="usingcli.html">Using the command line tool geoslurp</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="pyexamples.html">Python Examples</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="connectnQuery.html">Establish a database connection and retrieve the inventory and User settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="CreateDynDSet.html">Create a dataset, pull data and register it in the database</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Basic discovery techniques</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CreateDynDSet.html">Download and register a dataset of (fictious?) US Marijuana street prices</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Discovery techniques</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Query-a-single-table-and-visualize-the-result">Query a single table and visualize the result</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#A-more-complicated-query-which-joins-data-between-tables">A more complicated query which joins data between tables</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -151,7 +156,7 @@
         
           <li><a href="pyexamples.html">Python Examples</a> &raquo;</li>
         
-      <li>Basic discovery techniques</li>
+      <li>Discovery techniques</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -172,6 +177,224 @@
             
   
 <style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
@@ -194,8 +417,188 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="Basic-discovery-techniques">
-<h1>Basic discovery techniques<a class="headerlink" href="#Basic-discovery-techniques" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Discovery-techniques">
+<h1>Discovery techniques<a class="headerlink" href="#Discovery-techniques" title="Permalink to this headline">¶</a></h1>
+<p>Querying the database can be done with anything which support attaching to a PostGreSQL database. Many interface libraries for a variety of programming languages exist, so this is in the end a user’s choice.</p>
+<p>That being said, often there are queries which need to be done more often, and it pays off to build convenience functions which wrap a database query. Commonly used query wrapper are found in the <a class="reference external" href="../reference/geoslurp.discover.html#module-geoslurp.discover">discover subdirectory</a>.</p>
+<p>Below are a few examples which demonstrate the use of sqlalchemy to perform queries. They make use of the data which has been registered in <a class="reference external" href="../examples/CreateDynDSet.html#Download-and-register-a-dataset-of-(fictious?)-US-Marijuana-street-prices">this notebook</a>. The queries are encapsulated in functions which return an iteratable object which is the result of the query. This is also the same pattern as most functions in the <em>discover</em> directory obey.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from geoslurp.config import setInfoLevel
+from geoslurp.db import geoslurpConnect
+setInfoLevel()
+
+gpcon=geoslurpConnect() # this will be a connection based on the readonly user
+</pre></div>
+</div>
+</div>
+<div class="section" id="Query-a-single-table-and-visualize-the-result">
+<h2>Query a single table and visualize the result<a class="headerlink" href="#Query-a-single-table-and-visualize-the-result" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from sqlalchemy import select,asc
+def queryState(dbcon,state):
+    &quot;&quot;&quot;Query the usweedprices2 table for a given state, while sorting the results according to their timestamp&quot;&quot;&quot;
+    #retrieve/reflect the table (note the lowercase table name)
+    tbl=dbcon.getTable(&#39;usweedprices2&#39;,&#39;public&#39;)
+
+    qry=select([tbl]).where(tbl.c.State == state).order_by(asc(tbl.c.date))
+
+    return dbcon.dbeng.execute(qry)
+</pre></div>
+</div>
+</div>
+<div class="section" id="Pick-a-state-and-plot-the-results-using-matplotlib">
+<h3>Pick a state and plot the results using matplotlib<a class="headerlink" href="#Pick-a-state-and-plot-the-results-using-matplotlib" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>import matplotlib.pyplot as mpl
+from datetime import datetime
+
+statename=&quot;California&quot;
+
+t=[]
+medq=[]
+for entry in queryState(gpcon,statename):
+    t.append(datetime.strptime(entry.date, &quot;%Y-%m-%d&quot;))
+    medq.append(entry.MedQ)
+
+
+fig,ax=mpl.subplots(figsize=(10,2))
+ax.plot(t,medq)
+mpl.ylabel(&quot;USD&quot;)
+mpl.title(&quot;%s MedQ Street price Marijuana&quot;%statename)
+mpl.xlabel(&quot;date&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 0, &#39;date&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_BasicDiscovery_5_1.png" src="../_images/examples_BasicDiscovery_5_1.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="A-more-complicated-query-which-joins-data-between-tables">
+<h2>A more complicated query which joins data between tables<a class="headerlink" href="#A-more-complicated-query-which-joins-data-between-tables" title="Permalink to this headline">¶</a></h2>
+<p>Imagine you want to geographically compare the average street price in 2024 between US states, and geographically visualize this.</p>
+<p>This requires a query which computes the average per State and an inner join with a table which contains the polygons of the states.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from sqlalchemy.sql import join
+def queryAveragePerState(dbcon):
+
+    #find the two relevant tables
+    usw=dbcon.getTable(&#39;usweedprices2&#39;,&#39;public&#39;)
+    stategeo=dbcon.getTable(&#39;ne_110m_admin_1_states_provinces&#39;,&#39;globalgis&#39;)
+
+    #create a subquery with averages per state
+    subqry1=select([usw.c.State,func.avg(usw.c.MedQ).label(&quot;avg&quot;)]).group_by(usw.c.State).alias(&quot;uswt&quot;)
+
+    #join the subquery with polygon data from the stategeo table
+    j=join(subqry1,stategeo,subqry1.c.State == stategeo.c.name)
+
+    qry=select([qry1.c.State,qry1.c.avg,stategeo.c.geom]).select_from(j)
+
+    return dbcon.dbeng.execute(qry)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>for entry in queryAveragePerState(gpcon):
+    print(entry.State,entry.avg)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+SELECT uswt.&#34;State&#34;, uswt.avg, globalgis.ne_110m_admin_1_states_provinces.geom
+FROM (SELECT public.usweedprices2.&#34;State&#34; AS &#34;State&#34;, avg(public.usweedprices2.&#34;MedQ&#34;) AS avg
+FROM public.usweedprices2 GROUP BY public.usweedprices2.&#34;State&#34;) AS uswt JOIN globalgis.ne_110m_admin_1_states_provinces ON uswt.&#34;State&#34; = globalgis.ne_110m_admin_1_states_provinces.name
+Minnesota 275.850066815145
+Montana 248.39855233853
+North Dakota 349.066681514477
+Hawaii 268.738151447661
+Idaho 249.822427616927
+Washington 189.924988864143
+Arizona 209.365345211581
+California 191.268908685969
+Colorado 196.532516703786
+Nevada 226.217416481069
+New Mexico 209.242249443207
+Oregon 183.889866369711
+Utah 237.371893095769
+Wyoming 358.534832962139
+Arkansas 190.414654788419
+Iowa 289.9455233853
+Kansas 261.243073496659
+Missouri 244.812204899777
+Nebraska 248.160645879733
+Oklahoma 233.822004454343
+South Dakota 351.944810690423
+Alabama 204.606169265033
+Louisiana 243.117884187082
+Texas 233.536837416481
+Connecticut 271.323897550111
+Massachusetts 290.197884187083
+New Hampshire 290.107750556793
+Rhode Island 258.172293986637
+Vermont 315.547550111359
+Florida 217.882561247216
+Georgia 215.943630289532
+Mississippi 148.231603563474
+South Carolina 203.339777282851
+Illinois 284.18008908686
+Indiana 211.989510022272
+Kentucky 179.933763919822
+North Carolina 245.699220489978
+Ohio 216.953162583519
+Tennessee 225.808864142539
+Virginia 290.408084632517
+Wisconsin 271.648173719376
+West Virginia 215.883808463252
+Delaware 231.230311804009
+District of Columbia 288.251314031181
+Maryland 254.140445434298
+New Jersey 288.7270155902
+New York 265.376948775056
+Pennsylvania 267.891336302896
+Maine 248.438173719376
+Michigan 273.352338530067
+Alaska 262.046391982182
+</pre></div></div>
+</div>
+</div>
 </div>
 
 
@@ -209,7 +612,7 @@
         <a href="../reference.html" class="btn btn-neutral float-right" title="Reference Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="CreateDynDSet.html" class="btn btn-neutral float-left" title="Create a dataset, pull data and register it in the database" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="CreateDynDSet.html" class="btn btn-neutral float-left" title="Download and register a dataset of (fictious?) US Marijuana street prices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

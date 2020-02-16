@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configuration &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial" href="examples.html" />
+    <link rel="prev" title="Installation of the geoslurp package and setting up the PostgreSQL instance" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#local-client-side-settings">Local (client-side) settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#specifying-passwords">Specifying passwords</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#server-side-settings">Server-side settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#important-configuration-parameters">Important configuration parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Configuration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/confsettings.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="local-client-side-settings">
+<h2>Local (client-side) settings<a class="headerlink" href="#local-client-side-settings" title="Permalink to this headline">¶</a></h2>
+<p>The settings which are specific to a client are stored in a yaml file which is expected in the user’s home when not indicated otherwise. The file is called <code class="docutils literal notranslate"><span class="pre">.geoslurp_lastused.yaml</span></code> and may contain the following entries:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">host</span><span class="p">:</span> <span class="n">hostname_of_database_server</span>
+<span class="n">lastupdate</span><span class="p">:</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">06</span> <span class="mi">19</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mf">43.292675</span>
+<span class="n">port</span><span class="p">:</span> <span class="mi">5432</span> <span class="c1">#where to contact the server</span>
+<span class="n">readonlyUser</span><span class="p">:</span> <span class="n">slurpy</span> <span class="c1"># user which has readonly access to the database (This is the preferred user to use when browsing and using the database but not for registering)</span>
+<span class="n">useKeyring</span><span class="p">:</span> <span class="n">true</span> <span class="c1">#This allows users to store their database password in a system keyring (e.g. kwallet, gnome-keyring, ..) Requires the python package keyring with a sutable backend</span>
+<span class="n">user</span><span class="p">:</span> <span class="n">username</span> <span class="c1">#username which also has write access to the database</span>
+</pre></div>
+</div>
+<p>Note that settings in this file may be overwritten with last used values when using the <a class="reference internal" href="clitools.html#clihelp"><span class="std std-ref">Command line tools</span></a>.</p>
+<div class="section" id="specifying-passwords">
+<h3>Specifying passwords<a class="headerlink" href="#specifying-passwords" title="Permalink to this headline">¶</a></h3>
+<p>There are several ways to specify passwords, some which are more secure than others. The follin</p>
+<ol class="arabic simple">
+<li><p><strong>Use a keyring recognized by python keyring</strong>. This requires that <a class="reference external" href="https://pypi.org/project/keyring/">python keyring  is installed with a suitable backend</a>. When the option <code class="docutils literal notranslate"><span class="pre">useKeyring=true</span></code> is specified in <code class="docutils literal notranslate"><span class="pre">${HOME}/.geoslurp_lastused.yaml</span></code>, users will be prompted for a  password when they connect for the first time, but subsequent accesses don’t require entering a password, and are therefore non-interactive.</p></li>
+<li><p><strong>Use an environment variable</strong>. If <code class="docutils literal notranslate"><span class="pre">useKeyRing=false</span></code>, one can use an environment variable to specify the password e.g.: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASS=&quot;supersecretpassword</span></code>, or <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASSRO</span></code> (for the readonly user).</p></li>
+<li><p>If both methods 1 and 2 fail. one will be interactively prompted for a password</p></li>
+<li><p>As an alternative the constructor of the <a class="reference external" href="reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector">GeoslurpConnector</a> class allows the explicit input of a password.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="server-side-settings">
+<h2>Server-side settings<a class="headerlink" href="#server-side-settings" title="Permalink to this headline">¶</a></h2>
+<p>The database table <em>admin.settings</em> contains a row with default settings and a user specific row which potentially overrule the defaults. The settings table contains, beside the usernames, a jsonb column <em>conf</em> and an encrypted bytestring <em>auth</em>, which contains sensitive login details.</p>
+<div class="section" id="important-configuration-parameters">
+<h3>Important configuration parameters<a class="headerlink" href="#important-configuration-parameters" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p><strong>DataDir</strong>:This is the root directory where out-of-db datafiles will be stored. This can be overruled for individual datasets (e.g. when the files belonging to a datase are already downloaded and available)</p></li>
+<li><p><strong>CacheDir</strong>: Temporary files will be stored in this directory. Note that this can be overruled per user.</p></li>
+<li><p><strong>userplugins</strong>: A list of directories where custom <em>dataset</em> classes are stored.</p></li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation of the geoslurp package and setting up the PostgreSQL instance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

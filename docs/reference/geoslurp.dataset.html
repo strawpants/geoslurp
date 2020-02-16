@@ -91,6 +91,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference Documentation</a></li>
 </ul>
@@ -1091,6 +1092,12 @@ seems reasonable</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="geoslurp.dataset.dataSetBase.DataSet.bulkInsert">
+<code class="sig-name descname">bulkInsert</code><span class="sig-paren">(</span><em class="sig-param">dictlist</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/dataSetBase.html#DataSet.bulkInsert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.dataSetBase.DataSet.bulkInsert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a  list of dicts in bulk mode</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="geoslurp.dataset.dataSetBase.DataSet.cacheDir">
 <code class="sig-name descname">cacheDir</code><span class="sig-paren">(</span><em class="sig-param">subdirs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/dataSetBase.html#DataSet.cacheDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.dataSetBase.DataSet.cacheDir" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the cache directory of this scheme and dataset</p>
@@ -1173,7 +1180,7 @@ The directory will be created if it does not exist</p>
 
 <dl class="method">
 <dt id="geoslurp.dataset.dataSetBase.DataSet.purgeentry">
-<code class="sig-name descname">purgeentry</code><span class="sig-paren">(</span><em class="sig-param">filter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/dataSetBase.html#DataSet.purgeentry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.dataSetBase.DataSet.purgeentry" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">purgeentry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dataset/dataSetBase.html#DataSet.purgeentry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dataset.dataSetBase.DataSet.purgeentry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete dataset entry in the database</p>
 </dd></dl>
 

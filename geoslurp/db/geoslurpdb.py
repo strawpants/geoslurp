@@ -26,5 +26,4 @@ def geoslurpConnect(args=None,readonlyuser=True,update=False):
         userSettings=readLocalSettings(args=args,update=update,readonlyuser=readonlyuser)
     else:
         userSettings=readLocalSettings(update=update,readonlyuser=readonlyuser)
-
-    return GeoslurpConnector(userSettings.host,userSettings.user,userSettings.password)
+    return GeoslurpConnector(host=userSettings.host,user=userSettings.user,passwd=userSettings.password,cache=userSettings.cache)

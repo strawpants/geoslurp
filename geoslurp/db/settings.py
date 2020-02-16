@@ -82,11 +82,6 @@ Attributes:
 
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
 
-def aliasNDict(cred:Credentials):
-    """return the alias and a dictionary with non-None entries of a Credentials entry"""
-    return cred.alias, dict([(ky,val) for ky,val in zip(t._fields,t) if bool(val) and ky != "alias"])
-
-
 GSBase=declarative_base(metadata=MetaData(schema='admin'))
 
 
@@ -304,12 +299,16 @@ class Settings():
         return getCreateDir(ddir,self.mirrorMap)
 
     def getCacheDir(self,scheme,dataset=None,subdirs=None):
-        if "CacheDir" in self.userentry.conf:
-            ddir=self.userentry.conf["CacheDir"]
-        else:
-            ddir=self.defaultentry.conf["CacheDir"]
+        """Obtain and create a cache directory"""
+        #starting point
+        ddir=os.path.join(self.db.cache,scheme)
 
-        ddir=os.path.join(ddir,scheme)
+        # if "CacheDir" in self.userentry.conf:
+        #     ddir=self.userentry.conf["CacheDir"]
+        # else:
+        #     ddir=self.defaultentry.conf["CacheDir"]
+        #
+        # ddir=os.path.join(ddir,scheme)
 
         #POssibly we need to append a dataset directory 
         if dataset:
@@ -320,5 +319,5 @@ class Settings():
             ddir=os.path.join(ddir,subdirs)
 
         #NOTE: this posssibly applies a mapping of the root part of the directory 
-        return getCreateDir(ddir,self.mirrorMap)
+        return getCreateDir(ddir)
 

@@ -90,6 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="confsettings.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Documentation</a></li>
 </ul>
@@ -217,10 +218,10 @@
 </li>
       </ul></li>
       <li>
-    --cache-dir &lt;dir&gt;
+    --cache &lt;dir&gt;
 
       <ul>
-        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-cache-dir">clitools/geoslurper.py command line option</a>
+        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-cache">clitools/geoslurper.py command line option</a>
 </li>
       </ul></li>
       <li>
@@ -331,7 +332,7 @@
 </li>
       </ul></li>
       <li>
-    --purge-entry &lt;filter&gt;
+    --purge-entry
 
       <ul>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-purge-entry">clitools/geoslurper.py command line option</a>
@@ -437,8 +438,6 @@
 </li>
       <li><a href="reference/geoslurp.db.html#geoslurp.db.settings.Credentials.alias">alias (geoslurp.db.settings.Credentials attribute)</a>, <a href="reference/geoslurp.db.html#geoslurp.db.settings.Credentials.alias">[1]</a>
 </li>
-      <li><a href="reference/geoslurp.db.html#geoslurp.db.settings.aliasNDict">aliasNDict() (in module geoslurp.db.settings)</a>
-</li>
       <li><a href="reference/geoslurp.datapull.html#geoslurp.datapull.thredds.ThreddsFilter.AND">AND() (geoslurp.datapull.thredds.ThreddsFilter method)</a>
 </li>
       <li><a href="reference/geoslurp.db.html#geoslurp.db.settings.MirrorMap.apply">apply() (geoslurp.db.settings.MirrorMap method)</a>
@@ -451,10 +450,10 @@
 </li>
       <li><a href="reference/geoslurp.dataset.html#geoslurp.dataset.Argo.ArgoftpCrawler">ArgoftpCrawler (class in geoslurp.dataset.Argo)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/geoslurp.dataset.html#geoslurp.dataset.Argo.argoMetaExtractor">argoMetaExtractor() (in module geoslurp.dataset.Argo)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/geoslurp.discover.oceanobs.html#geoslurp.discover.oceanobs.argo.argoQuery">argoQuery() (in module geoslurp.discover.oceanobs.argo)</a>
 </li>
       <li><a href="reference/geoslurp.dataset.html#geoslurp.dataset.Argo.ArgoTable">ArgoTable (class in geoslurp.dataset.Argo)</a>
@@ -501,10 +500,10 @@
       </ul></li>
       <li><a href="reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.basedir">basedir (geoslurp.datapull.uri.UriBase attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/geoslurp.datapull.html#geoslurp.datapull.motu.MotuOpts.block_size">block_size (geoslurp.datapull.motu.MotuOpts attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/geoslurp.tools.html#geoslurp.tools.Bounds.BtdBox">BtdBox (class in geoslurp.tools.Bounds)</a>
 </li>
       <li><a href="reference/geoslurp.datapull.html#geoslurp.datapull.motu.MotuOpts.btdbox">btdbox (geoslurp.datapull.motu.MotuOpts attribute)</a>
@@ -515,15 +514,21 @@
         <li><a href="reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriFile.buffer">(geoslurp.datapull.uri.UriFile method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.bulkInsert">bulkInsert() (geoslurp.dataset.dataSetBase.DataSet method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/geoslurp.datapull.html#geoslurp.datapull.motu.MotuOpts.cache">cache (geoslurp.datapull.motu.MotuOpts attribute)</a>
+      <li><a href="reference/geoslurp.config.html#geoslurp.config.localsettings.settingsArgs.cache">cache (geoslurp.config.localsettings.settingsArgs attribute)</a>
 
       <ul>
+        <li><a href="reference/geoslurp.datapull.html#geoslurp.datapull.motu.MotuOpts.cache">(geoslurp.datapull.motu.MotuOpts attribute)</a>
+</li>
+        <li><a href="reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.cache">(geoslurp.db.connector.GeoslurpConnector attribute)</a>
+</li>
         <li><a href="reference/geoslurp.db.html#geoslurp.db.inventory.InventTable.cache">(geoslurp.db.inventory.InventTable attribute)</a>
 </li>
       </ul></li>
@@ -547,7 +552,7 @@
 </li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-auth-config">--auth-config</a>
 </li>
-        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-cache-dir">--cache-dir &lt;dir&gt;</a>
+        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-cache">--cache &lt;dir&gt;</a>
 </li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-config">--config</a>
 </li>
@@ -579,7 +584,7 @@
 </li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-purge-data">--purge-data &lt;filter&gt;</a>
 </li>
-        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-purge-entry">--purge-entry &lt;filter&gt;</a>
+        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-purge-entry">--purge-entry</a>
 </li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-refresh">--refresh</a>
 </li>
@@ -1710,11 +1715,17 @@
 </li>
       <li><a href="reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet.setDataDir">setDataDir() (geoslurp.dataset.dataSetBase.DataSet method)</a>
 </li>
+      <li><a href="reference/geoslurp.config.html#geoslurp.config.slurplogger.setDebugLevel">setDebugLevel() (in module geoslurp.config.slurplogger)</a>
+</li>
       <li><a href="reference/geoslurp.db.html#geoslurp.db.settings.Settings.setdefault">setdefault() (geoslurp.db.settings.Settings method)</a>
+</li>
+      <li><a href="reference/geoslurp.config.html#geoslurp.config.slurplogger.setErrorLevel">setErrorLevel() (in module geoslurp.config.slurplogger)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/geoslurp.datapull.html#geoslurp.datapull.uri.setFtime">setFtime() (in module geoslurp.datapull.uri)</a>
+</li>
+      <li><a href="reference/geoslurp.config.html#geoslurp.config.slurplogger.setInfoLevel">setInfoLevel() (in module geoslurp.config.slurplogger)</a>
 </li>
       <li><a href="reference/geoslurp.db.html#geoslurp.db.settings.Settings.setMirror">setMirror() (geoslurp.db.settings.Settings method)</a>
 </li>
@@ -1725,6 +1736,8 @@
       <li><a href="reference/geoslurp.config.html#geoslurp.config.localsettings.settingsArgs">settingsArgs (class in geoslurp.config.localsettings)</a>
 </li>
       <li><a href="reference/geoslurp.db.html#geoslurp.db.settings.SettingsTable">SettingsTable (class in geoslurp.db.settings)</a>
+</li>
+      <li><a href="reference/geoslurp.config.html#geoslurp.config.slurplogger.setWarningLevel">setWarningLevel() (in module geoslurp.config.slurplogger)</a>
 </li>
       <li><a href="reference/geoslurp.db.html#geoslurp.db.settings.Settings.show">show() (geoslurp.db.settings.Settings method)</a>
 </li>
