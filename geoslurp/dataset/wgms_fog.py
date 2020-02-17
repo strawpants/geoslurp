@@ -20,7 +20,7 @@ from geoslurp.datapull.http import Uri as http
 from geoslurp.config.slurplogger import slurplogger
 from zipfile import ZipFile
 import os
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.dataset.pandasbase import PandasBase
 from geoalchemy2 import Geography,WKTElement
 from sqlalchemy.types import String
@@ -105,4 +105,4 @@ def getFOGDsets(conf):
 
 
 
-geoslurpregistry.registerDatasetFactory(getFOGDsets)
+geoslurpCatalogue.addDatasetFactory(getFOGDsets)

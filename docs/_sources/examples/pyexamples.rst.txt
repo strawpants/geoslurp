@@ -5,5 +5,6 @@ All operations which are supported by the command line tool can also be performe
 .. toctree::
    
    connectnQuery
+   UsingCataloguedDsets
    CreateDynDSet
    BasicDiscovery

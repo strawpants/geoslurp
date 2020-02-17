@@ -22,9 +22,11 @@ For a development install you can replace the final line with ``python3 ./setup.
 
 Setting up the PostgreSQL database
 ==================================
-To setup the database one is (currently) referred to the documentation of `Running geoslurp with docker <https://github.com/strawpants/docker-geoslurp>`_. The basic steps are essentially to:
+To setup the database one is (currently) referred to the documentation of `Running the geoslurp database with (and without) docker <https://github.com/strawpants/docker-geoslurp>`_. The basic steps are essentially to:
 
 1. install a PostGreSQL instance with the PostGIS extension,
-2. add a database called 'geoslurp',
-3. set up geoslurp roles and users.
+2. create a database called *geoslurp*,
+3. Add an *admin* scheme (for storing the *settings*, and *inventory* table)
+4. set up a *geoslurp* role (read and write), a *geobrowse* role (readonly)
+5. Add users with appropriate privileges
 

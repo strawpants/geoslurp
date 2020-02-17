@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.dataset.motuGridsBase import MotuGridsBase
 
 
@@ -38,4 +38,4 @@ class mss_cls2015(MotuGridsBase):
     def __init__(self,dbconn):
         super().__init__(dbconn)
 
-geoslurpregistry.registerDataset(mss_cls2015)
+geoslurpCatalogue.addDataset(mss_cls2015)

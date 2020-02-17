@@ -26,7 +26,7 @@ from datetime import datetime,timedelta
 import os
 from osgeo import ogr
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 
 geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
 
@@ -103,6 +103,6 @@ class UNRfinal(DataSet):
                                      "Harnessing the GPS data explosion for interdisciplinary science, Eos, 99, https://doi.org/10.1029/2018EO104623."
         self.updateInvent()
 
-geoslurpregistry.registerDataset(UNRfinal)
+geoslurpCatalogue.addDataset(UNRfinal)
 
 

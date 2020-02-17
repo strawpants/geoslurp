@@ -21,7 +21,7 @@ from geoslurp.datapull.http import Uri as http
 from geoslurp.config.slurplogger import slurplogger
 from zipfile import ZipFile
 import os
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from datetime import datetime
 
 scheme='altim'
@@ -68,4 +68,4 @@ def getSWOTSIMDsets(conf):
 
 
 
-geoslurpregistry.registerDatasetFactory(getSWOTSIMDsets)
+geoslurpCatalogue.addDatasetFactory(getSWOTSIMDsets)

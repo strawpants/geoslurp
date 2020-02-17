@@ -24,7 +24,7 @@ from datetime import datetime
 from geoslurp.tools.gravity import GravitySHTBase, icgemMetaExtractor
 import re
 import os
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.db.settings import getCreateDir
 
 scheme='gravity'
@@ -105,4 +105,4 @@ def TUGRAZGRACEDsets(conf):
         out.append(TUGRAZGRACEL2ClassFactory(release,subdirs))
     return out
 
-geoslurpregistry.registerDatasetFactory(TUGRAZGRACEDsets)
+geoslurpCatalogue.addDatasetFactory(TUGRAZGRACEDsets)

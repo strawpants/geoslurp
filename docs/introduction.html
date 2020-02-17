@@ -19,42 +19,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="index.html"/>
-        <link rel="next" title="Installation of the geoslurp package and setting up the PostgreSQL instance" href="installation.html"/>
-        <link rel="prev" title="Data management with geoslurp" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation of the geoslurp package and setting up the PostgreSQL instance" href="installation.html" />
+    <link rel="prev" title="Data management with geoslurp" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -114,7 +109,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">geoslurp</a>
@@ -122,9 +117,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -171,18 +167,23 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
 }
 </style>
 <div class="section" id="an-introduction-to-geoslurp">
@@ -190,13 +191,13 @@
 <p><strong>Geoslurp is a  pure-python module which allows downloading/updating/querying of different datasets in a spatially aware database (PostgreSQL with PostGIS).</strong></p>
 <p>The idea behind Geoslurp is to centrally manage datasets, which has the following advantages:</p>
 <ul class="simple">
-<li>It provides and encourages a central point to access to various datasets</li>
-<li>Established database functionatility can be exploited by allowing (spatial) queries of the datasets, <em>joins</em> (querying a combination of datasets)</li>
-<li>Sharing is encouraged, users share data by default, making it possible for other users to use the registered data and avoiding copies of large datasets</li>
-<li>It allows for consistent versioning of datasets</li>
-<li>The use of an ‘off-the-shelf’ database provides a standard and mature interface reachable from various programming languages.</li>
-<li>Large datafiles don’t necessarily need to be in the database. The metainformation, required for the queries, will be stored together with a link to where the data can be found (e.g. a local file path or an online url). This allows relatively light-weight databases to be set up.</li>
-<li>Provide ways to standardize downloading/updating/registering of datasets</li>
+<li><p>It provides and encourages a central point to access to various datasets</p></li>
+<li><p>Established database functionatility can be exploited by allowing (spatial) queries of the datasets, <em>joins</em> (querying a combination of datasets)</p></li>
+<li><p>Sharing is encouraged, users share data by default, making it possible for other users to use the registered data and avoiding copies of large datasets</p></li>
+<li><p>It allows for consistent versioning of datasets</p></li>
+<li><p>The use of an ‘off-the-shelf’ database provides a standard and mature interface reachable from various programming languages.</p></li>
+<li><p>Large datafiles don’t necessarily need to be in the database. The metainformation, required for the queries, will be stored together with a link to where the data can be found (e.g. a local file path or an online url). This allows relatively light-weight databases to be set up.</p></li>
+<li><p>Provide ways to standardize downloading/updating/registering of datasets</p></li>
 </ul>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
@@ -206,18 +207,16 @@
 <h2>What the future holds<a class="headerlink" href="#what-the-future-holds" title="Permalink to this headline">¶</a></h2>
 <p>At the time of writing, the geoslurp tools are still under development. But taking a look in the future, one may already philosophize about possible features:</p>
 <ul class="simple">
-<li>Manage a geoslurp instance by means of a website-frontend. Currently, the main way to interact with geoslurp is to use the <a class="reference internal" href="clitools.html#geoslurphelp"><span class="std std-ref">geoslurper command line script</span></a>. This may be too cumbersome to learn for occasional users.</li>
-<li>Hide the database access behind a REST-API. This may be more secure when public instances will be set up and will facilitate the interaction with other webservices.</li>
-<li>Encourage reproducibility by registering scientific processing pipelines.</li>
+<li><p>Manage a geoslurp instance by means of a website-frontend. Currently, the main way to interact with geoslurp is to use the <a class="reference internal" href="clitools.html#geoslurphelp"><span class="std std-ref">geoslurper command line script</span></a>. This may be too cumbersome to learn for occasional users.</p></li>
+<li><p>Hide the database access behind a REST-API. This may be more secure when public instances will be set up and will facilitate the interaction with other webservices.</p></li>
+<li><p>Encourage reproducibility by registering scientific processing pipelines.</p></li>
 </ul>
 </div>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -226,7 +225,7 @@
         <a href="installation.html" class="btn btn-neutral float-right" title="Installation of the geoslurp package and setting up the PostgreSQL instance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Data management with geoslurp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Data management with geoslurp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -235,11 +234,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -252,36 +251,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'Wannabe v1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

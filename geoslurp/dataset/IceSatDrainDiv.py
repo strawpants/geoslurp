@@ -25,7 +25,7 @@ from geoalchemy2.elements import WKBElement
 from geoslurp.datapull.http import Uri as http
 from datetime import datetime
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from osgeo import ogr
 import gzip as gz
 import os
@@ -129,4 +129,4 @@ def getDrainDivDsets(conf):
     return out
 
 
-geoslurpregistry.registerDatasetFactory(getDrainDivDsets)
+geoslurpCatalogue.addDatasetFactory(getDrainDivDsets)

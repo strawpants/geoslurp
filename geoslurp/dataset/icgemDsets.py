@@ -29,7 +29,7 @@ from geoslurp.datapull import UriFile
 import os
 from datetime import datetime
 from geoslurp.tools.gravity import icgemMetaExtractor
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 
 class ICGEM_static(DataSet):
     """Manages the static gravity fields which are hosted at http://icgem.gfz-potsdam.de/tom_longtime"""
@@ -86,5 +86,5 @@ class ICGEM_static(DataSet):
         self.updateInvent()
 
 
-geoslurpregistry.registerDataset(ICGEM_static)
+geoslurpCatalogue.addDataset(ICGEM_static)
 

@@ -18,7 +18,7 @@
 
 from geoslurp.datapull.webdav import Uri as webdav
 import os
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.dataset.dataSetBase import DataSet
 from geoalchemy2 import Geography,WKTElement
 from sqlalchemy import MetaData
@@ -89,4 +89,4 @@ class awipies(DataSet):
         self.updateInvent()
 
 
-geoslurpregistry.registerDataset(awipies)
+geoslurpCatalogue.addDataset(awipies)

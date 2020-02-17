@@ -20,7 +20,7 @@ from geoslurp.datapull.motu import Uri as MotuUri
 from geoslurp.datapull.motu import MotuOpts, MotuRecursive
 from geoslurp.tools.Bounds import BtdBox
 from geoslurp.tools.netcdftools import ncSwapLongitude,stackNcFiles
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 
 import os
 from geoalchemy2.types import Geography

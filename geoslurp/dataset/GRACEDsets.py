@@ -27,7 +27,7 @@ from io  import StringIO
 import os
 from datetime import datetime
 from geoslurp.tools.gravity import GravitySHTBase
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 
 scheme="gravity"
 
@@ -120,4 +120,4 @@ def GRACEDsets(conf):
             out.append(GRACEL2ClassFactory(clsName))
     return out
 
-geoslurpregistry.registerDatasetFactory(GRACEDsets)
+geoslurpCatalogue.addDatasetFactory(GRACEDsets)

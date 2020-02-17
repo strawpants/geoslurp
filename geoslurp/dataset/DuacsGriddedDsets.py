@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.dataset.motuGridsBase import MotuGridsBase
 
 class Duacs(MotuGridsBase):
@@ -34,4 +34,4 @@ class Duacs(MotuGridsBase):
         super().__init__(dbconn)
 
 
-geoslurpregistry.registerDataset(Duacs)
+geoslurpCatalogue.addDataset(Duacs)

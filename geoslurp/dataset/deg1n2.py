@@ -29,7 +29,7 @@ import os
 import tarfile
 import re
 from copy import deepcopy
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 scheme="gravity"
 GeocTBase=declarative_base(metadata=MetaData(schema=scheme))
 
@@ -236,5 +236,5 @@ class Deg1n2(DataSet):
         self.updateInvent()
 
 
-geoslurpregistry.registerDataset(Deg1n2)
+geoslurpCatalogue.addDataset(Deg1n2)
 

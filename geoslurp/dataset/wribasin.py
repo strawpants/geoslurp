@@ -17,7 +17,7 @@
 
 from geoslurp.dataset import OGRBase
 from geoslurp.datapull.http import Uri as http
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 import urllib.request
 from zipfile import ZipFile
 import os
@@ -38,4 +38,4 @@ class WriBasin(OGRBase):
         with ZipFile(os.path.join(self.cacheDir(),"wri_basin.zip"),'r') as zp:
             zp.extractall(self.cacheDir())
 
-geoslurpregistry.registerDataset(WriBasin)
+geoslurpCatalogue.addDataset(WriBasin)

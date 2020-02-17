@@ -20,7 +20,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import exists,select,column,table,text
 from sqlalchemy.schema import CreateSchema, DropSchema
 from sqlalchemy import Table
-from geoslurp.db.initgeoslurpdb import initgeoslurpdb
 from geoslurp.db.tabletools import tableMapFactory
 import re
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -53,8 +52,9 @@ class GeoslurpConnector():
         # self.conn=self.dbeng.connect()
         self.Session = sessionmaker(bind=self.dbeng)
         self.mdata = MetaData(bind=self.dbeng)
-        if not readonlyuser:
-            initgeoslurpdb(self)
+
+        if not self.schemaexists('admin'):
+            raise RuntimeError("The database does not have an admin scheme, is it properly initialized?")
 
         if datamirror:
             self.mirror=datamirror

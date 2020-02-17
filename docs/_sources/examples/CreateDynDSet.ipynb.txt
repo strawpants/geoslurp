@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Download and register a dataset of (crowd-sourced?) US Marijuana street prices\n",
+    "# Download and register a dynamic dataset of (crowd-sourced?) US Marijuana street prices\n",
     "\n",
     "To download and register a dataset, one can create a new class which is inherited from [DataSet](../reference/geoslurp.dataset.html#geoslurp.dataset.dataSetBase.DataSet). Two function *pull* and *register* can then be implemented so the data can be downloaded and registered in the database. \n",
     "\n",
@@ -256,7 +256,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.6.10"
+   "version": "3.8.1"
   }
  },
  "nbformat": 4,

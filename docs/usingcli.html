@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using the command line tool geoslurp &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Python Examples" href="examples/pyexamples.html" />
+    <link rel="prev" title="Tutorial" href="examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="confsettings.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Tutorial</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using the command line tool geoslurp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-info-and-help">Getting info and help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#administrative-tasks">Administrative tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataset-management">Dataset Management</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pyexamples.html">Python Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="examples.html">Tutorial</a> &raquo;</li>
+        
+      <li>Using the command line tool geoslurp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/usingcli.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="using-the-command-line-tool-geoslurp">
+<h1>Using the command line tool geoslurp<a class="headerlink" href="#using-the-command-line-tool-geoslurp" title="Permalink to this headline">¶</a></h1>
+<p>A command line program is provided which can be used to register known datasets, and edit configuration settings. The full options are described in <a class="reference internal" href="clitools.html#geoslurphelp"><span class="std std-ref">clitools/geoslurper.py</span></a>, but the examples below can be a practical starting point for common tasks.</p>
+<div class="section" id="getting-info-and-help">
+<h2>Getting info and help<a class="headerlink" href="#getting-info-and-help" title="Permalink to this headline">¶</a></h2>
+<p>List the available help options on the command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>To get detailed help on the <em>pull</em> and <em>register</em> method of a certain dataset (some datasets may require specialized command line arguments here). One can combine the <em>help</em> option with the <em>-d</em> dataset option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">help</span> <span class="o">-</span><span class="n">d</span> <span class="n">altim</span><span class="o">.</span><span class="n">Duacs</span>
+</pre></div>
+</div>
+<p>To list available datasets which are contained in the cached catalogue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="nb">list</span>
+</pre></div>
+</div>
+<p>To retrieve registration info on the current database holdings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">info</span>
+</pre></div>
+</div>
+<p>Show the user’s settings as stored in the database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">show</span><span class="o">-</span><span class="n">config</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="administrative-tasks">
+<h2>Administrative tasks<a class="headerlink" href="#administrative-tasks" title="Permalink to this headline">¶</a></h2>
+<p>Whenever new dataset classes are added to the geoslurp/geoslurp/dataset or the user’s plugin path (usersettings variable <cite>userplugins</cite>) one should explicitly refresh the dataset catalogue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">refresh</span>
+</pre></div>
+</div>
+<p>Default settings( available for all users, unless individually overruled) can be added to the database by users who have sufficient privileges. The option expects JSON arguments to specify the settings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">admin</span><span class="o">-</span><span class="n">config</span> <span class="s1">&#39;{&quot;userplugins&quot;:&quot;/home/geoslurp/geoslurpplugins&quot;}&#39;</span>
+</pre></div>
+</div>
+<p>User settings can also be added by providing JSON arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">config</span> <span class="s1">&#39;{&quot;userplugins&quot;:&quot;/home/roelof/customplugins&quot;}&#39;</span>
+</pre></div>
+</div>
+<p>Register authentication details for a specific service alias. For example for the copernicus Marine service one can specify:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auth</span><span class="o">-</span><span class="n">config</span> <span class="s1">&#39;{&quot;cmems&quot;: {&quot;user&quot;: &quot;yourusername&quot;, &quot;passw&quot;: &quot;yoursupersecretpassword&quot;}}&#39;</span>
+</pre></div>
+</div>
+<p>Another example, needed for repetitive crawling of github repo’s:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">auth</span><span class="o">-</span><span class="n">config</span> <span class="s1">&#39;{&quot;github&quot;: {&quot;oauth&quot;: &quot;OAUTHAPIKEY&quot;}}&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dataset-management">
+<h2>Dataset Management<a class="headerlink" href="#dataset-management" title="Permalink to this headline">¶</a></h2>
+<p>Datasets can be explicitly described by using the <em>-d</em> option in the form of <em>scheme.datasetclass</em>. However, the option also accepts a regular expression, so that multiple datasets can be selected at once.</p>
+<p>To download the data needed for a specific dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">pull</span> <span class="o">-</span><span class="n">d</span> <span class="n">oceanobs</span><span class="o">.</span><span class="n">Orsifronts</span>
+</pre></div>
+</div>
+<p>To delete the data belonging to a certain dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">purge</span><span class="o">-</span><span class="n">data</span> <span class="o">-</span><span class="n">d</span> <span class="n">oceanobs</span><span class="o">.</span><span class="n">Orsifronts</span>
+</pre></div>
+</div>
+<p>To register a certain dataset in the database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">register</span> <span class="o">-</span><span class="n">d</span> <span class="n">oceanobs</span><span class="o">.</span><span class="n">Orsifronts</span>
+</pre></div>
+</div>
+<p>To delete the database tables associated with the database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geoslurper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">purge</span><span class="o">-</span><span class="n">entry</span> <span class="o">-</span><span class="n">d</span> <span class="n">oceanobs</span><span class="o">.</span><span class="n">Orsifronts</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples/pyexamples.html" class="btn btn-neutral float-right" title="Python Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="examples.html" class="btn btn-neutral float-left" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

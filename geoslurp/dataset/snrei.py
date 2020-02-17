@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.http import Uri as http
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column,Integer,String,MetaData
 from sqlalchemy.dialects.postgresql import TIMESTAMP
@@ -112,4 +112,4 @@ class LLove(DataSet):
         self.updateInvent()
 
 
-geoslurpregistry.registerDataset(LLove)
+geoslurpCatalogue.addDataset(LLove)

@@ -19,43 +19,37 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/>
-        <link rel="up" title="geoslurp package" href="geoslurp.html"/>
-        <link rel="next" title="geoslurp.discover package" href="geoslurp.discover.html"/>
-        <link rel="prev" title="geoslurp.db package" href="geoslurp.db.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="geoslurp.discover package" href="geoslurp.discover.html" />
+    <link rel="prev" title="geoslurp.db package" href="geoslurp.db.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -111,7 +105,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -119,9 +113,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -172,18 +167,23 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
 }
 </style>
 <div class="section" id="module-geoslurp.dbfunc">
@@ -195,75 +195,75 @@
 <span id="geoslurp-dbfunc-dbfunc-module"></span><h2>geoslurp.dbfunc.dbfunc module<a class="headerlink" href="#module-geoslurp.dbfunc.dbfunc" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc">
-<em class="property">class </em><code class="descclassname">geoslurp.dbfunc.dbfunc.</code><code class="descname">DBFunc</code><span class="sig-paren">(</span><em>dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dbfunc.dbfunc.</code><code class="sig-name descname">DBFunc</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Abstract Base class which holds a database functione</p>
 <dl class="method">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.createreplace">
-<code class="descname">createreplace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.createreplace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.createreplace" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">createreplace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.createreplace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.createreplace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates/replaces the  pgfunction in the database</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.db">
-<code class="descname">db</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.db" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">db</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.db" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.inargs">
-<code class="descname">inargs</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.inargs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">inargs</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.inargs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.info">
-<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.info" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.language">
-<code class="descname">language</code><em class="property"> = 'plpgsql'</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.language" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">language</code><em class="property"> = 'plpgsql'</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.language" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.outargs">
-<code class="descname">outargs</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.outargs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">outargs</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.outargs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.pgbody">
-<code class="descname">pgbody</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.pgbody" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pgbody</code><em class="property"> = ''</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.pgbody" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.purgeentry">
-<code class="descname">purgeentry</code><span class="sig-paren">(</span><em>filter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.purgeentry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.purgeentry" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">purgeentry</code><span class="sig-paren">(</span><em class="sig-param">filter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.purgeentry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.purgeentry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete pgfunction entry in the database</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.register">
-<code class="descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.register" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register/update the function in the database</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.scheme">
-<code class="descname">scheme</code><em class="property"> = 'public'</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.scheme" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scheme</code><em class="property"> = 'public'</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.scheme" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.updateInvent">
-<code class="descname">updateInvent</code><span class="sig-paren">(</span><em>updateTime=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.updateInvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.updateInvent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">updateInvent</code><span class="sig-paren">(</span><em class="sig-param">updateTime=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.updateInvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.updateInvent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.updatefreq">
-<code class="descname">updatefreq</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.updatefreq" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">updatefreq</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.updatefreq" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.version">
-<code class="descname">version</code><em class="property"> = (0, 0, 0)</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property"> = (0, 0, 0)</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -273,38 +273,38 @@
 <span id="geoslurp-dbfunc-radsfuncs-module"></span><h2>geoslurp.dbfunc.radsfuncs module<a class="headerlink" href="#module-geoslurp.dbfunc.radsfuncs" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="geoslurp.dbfunc.radsfuncs.gs_rads_subsegment">
-<em class="property">class </em><code class="descclassname">geoslurp.dbfunc.radsfuncs.</code><code class="descname">gs_rads_subsegment</code><span class="sig-paren">(</span><em>dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/radsfuncs.html#gs_rads_subsegment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">geoslurp.dbfunc.radsfuncs.</code><code class="sig-name descname">gs_rads_subsegment</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/radsfuncs.html#gs_rads_subsegment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#geoslurp.dbfunc.dbfunc.DBFunc" title="geoslurp.dbfunc.dbfunc.DBFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dbfunc.dbfunc.DBFunc</span></code></a></p>
 <p>Find subsegments in a rads table with the corresponding indices of the datafiles</p>
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.inargs">
-<code class="descname">inargs</code><em class="property"> = 'segments geom, inpoly geom, data jsonb'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.inargs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">inargs</code><em class="property"> = 'segments geom, inpoly geom, data jsonb'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.inargs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.language">
-<code class="descname">language</code><em class="property"> = 'sql'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.language" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">language</code><em class="property"> = 'sql'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.language" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.outargs">
-<code class="descname">outargs</code><em class="property"> = 'TABLE(id int, geom geography(LINESTRING))'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.outargs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">outargs</code><em class="property"> = 'TABLE(id int, geom geography(LINESTRING))'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.outargs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.pgbody">
-<code class="descname">pgbody</code><em class="property"> = 'BEGIN\nSELECT 1,ST_DumpPoints(segm) from (SELECT ST_dump(geom) as segm)END;\n'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.pgbody" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pgbody</code><em class="property"> = 'BEGIN\nSELECT 1,ST_DumpPoints(segm) from (SELECT ST_dump(geom) as segm)END;\n'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.pgbody" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.register">
-<code class="descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/radsfuncs.html#gs_rads_subsegment.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.register" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/radsfuncs.html#gs_rads_subsegment.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register/update the function in the database</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.scheme">
-<code class="descname">scheme</code><em class="property"> = 'altim'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.scheme" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scheme</code><em class="property"> = 'altim'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.scheme" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -314,9 +314,7 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -325,7 +323,7 @@
         <a href="geoslurp.discover.html" class="btn btn-neutral float-right" title="geoslurp.discover package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="geoslurp.db.html" class="btn btn-neutral" title="geoslurp.db package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="geoslurp.db.html" class="btn btn-neutral float-left" title="geoslurp.db package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -334,11 +332,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -351,36 +349,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'Wannabe v1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

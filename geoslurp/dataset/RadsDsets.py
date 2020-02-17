@@ -32,7 +32,7 @@ from datetime import datetime,timedelta
 from glob import glob
 from geoslurp.config.slurplogger import slurplogger
 import re
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.db.settings import getCreateDir
 geotracktype = Geography(geometry_type="MULTILINESTRINGZ", srid='4326', spatial_index=True, dimension=3)
 
@@ -243,4 +243,4 @@ def getRADSDsets(conf):
             out.append(radsclassFactory(clname))
     return out
 
-geoslurpregistry.registerDatasetFactory(getRADSDsets)
+geoslurpCatalogue.addDatasetFactory(getRADSDsets)

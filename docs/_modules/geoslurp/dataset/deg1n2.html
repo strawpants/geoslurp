@@ -19,41 +19,35 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -109,7 +103,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,9 +111,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -149,8 +144,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -179,21 +172,21 @@
 
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="k">import</span> <span class="n">TIMESTAMP</span><span class="p">,</span> <span class="n">JSONB</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">MetaData</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
-<span class="kn">from</span> <span class="nn">geoslurp.dataset</span> <span class="k">import</span> <span class="n">DataSet</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull.ftp</span> <span class="k">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">ftp</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull.http</span> <span class="k">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">http</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">geoslurp.tools.time</span> <span class="k">import</span> <span class="n">decyear2dt</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">TIMESTAMP</span><span class="p">,</span> <span class="n">JSONB</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">geoslurp.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.ftp</span> <span class="kn">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">ftp</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.http</span> <span class="kn">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">geoslurp.tools.time</span> <span class="kn">import</span> <span class="n">decyear2dt</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">tarfile</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.register</span> <span class="k">import</span> <span class="n">geoslurpregistry</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.catalogue</span> <span class="kn">import</span> <span class="n">geoslurpCatalogue</span>
 <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span>
 <span class="n">GeocTBase</span><span class="o">=</span><span class="n">declarative_base</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">scheme</span><span class="p">))</span>
 
@@ -204,7 +197,7 @@
     <span class="n">direc</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
     <span class="n">sqrt3timesRE</span><span class="o">=</span><span class="mf">11047256.4063275</span>
     <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c10&#39;</span><span class="p">,</span><span class="s1">&#39;c11&#39;</span><span class="p">,</span><span class="s1">&#39;s11&#39;</span><span class="p">,</span><span class="s1">&#39;c20&#39;</span><span class="p">]</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">,</span><span class="n">uri</span><span class="p">,</span><span class="n">lastupdate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">,</span><span class="n">uri</span><span class="p">,</span><span class="n">lastupdate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">direc</span><span class="o">=</span><span class="n">direc</span>
@@ -246,7 +239,7 @@
 
 
 <div class="viewcode-block" id="Rietbroeketal2016updated"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.Rietbroeketal2016updated">[docs]</a><span class="k">class</span> <span class="nc">Rietbroeketal2016updated</span><span class="p">(</span><span class="n">LowdegreeSource</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">direc</span><span class="o">=</span><span class="n">direc</span><span class="p">,</span><span class="n">uri</span><span class="o">=</span><span class="s1">&#39;https://wobbly.earth/data/Geocenter_dec2017.tgz&#39;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c10&#39;</span><span class="p">,</span><span class="s1">&#39;c11&#39;</span><span class="p">,</span><span class="s1">&#39;s11&#39;</span><span class="p">],</span><span class="n">lastupdate</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
 <div class="viewcode-block" id="Rietbroeketal2016updated.extract"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.Rietbroeketal2016updated.extract">[docs]</a>    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
@@ -297,10 +290,10 @@
         <span class="k">return</span> <span class="n">metacomb</span></div></div>
 
 <div class="viewcode-block" id="Sun2017Comb"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.Sun2017Comb">[docs]</a><span class="k">class</span> <span class="nc">Sun2017Comb</span><span class="p">(</span><span class="n">LowdegreeSource</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">,</span><span class="n">uri</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">,</span><span class="n">uri</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">uri</span><span class="p">:</span>
             <span class="n">uri</span><span class="o">=</span><span class="s1">&#39;https://d1rkab7tlqy5f1.cloudfront.net/CiTG/Over</span><span class="si">%20f</span><span class="s1">aculteit/Afdelingen/&#39;</span> \
-                <span class="s1">&#39;Geoscience</span><span class="si">%20%</span><span class="s1">26%20Remote</span><span class="si">%20s</span><span class="s1">ensing/Research/Gravity/models%20and</span><span class="si">%20d</span><span class="s1">ata/3_Deg1_C20_CMB.txt&#39;</span>
+                <span class="s1">&#39;Geoscience</span><span class="si">%20%</span><span class="s1">26%20Remote</span><span class="si">%20s</span><span class="s1">ensing/Research/Gravity/models</span><span class="si">%20a</span><span class="s1">nd</span><span class="si">%20d</span><span class="s1">ata/3_Deg1_C20_CMB.txt&#39;</span>
         <span class="n">lastupdate</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">direc</span><span class="o">=</span><span class="n">direc</span><span class="p">,</span><span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">,</span><span class="n">lastupdate</span><span class="o">=</span><span class="n">lastupdate</span><span class="p">)</span>
 <div class="viewcode-block" id="Sun2017Comb.extract"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.Sun2017Comb.extract">[docs]</a>    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -342,9 +335,9 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">singlemeta</span><span class="p">]</span></div></div>
 
 <div class="viewcode-block" id="Sun2017Comb_GIArestored"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.Sun2017Comb_GIArestored">[docs]</a><span class="k">class</span> <span class="nc">Sun2017Comb_GIArestored</span><span class="p">(</span><span class="n">Sun2017Comb</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">):</span>
             <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;https://d1rkab7tlqy5f1.cloudfront.net/CiTG/Over</span><span class="si">%20f</span><span class="s2">aculteit/Afdelingen/&quot;</span> \
-                     <span class="s2">&quot;Geoscience</span><span class="si">%20%</span><span class="s2">26%20Remote</span><span class="si">%20s</span><span class="s2">ensing/Research/Gravity/models%20and</span><span class="si">%20d</span><span class="s2">ata/&quot;</span> \
+                     <span class="s2">&quot;Geoscience</span><span class="si">%20%</span><span class="s2">26%20Remote</span><span class="si">%20s</span><span class="s2">ensing/Research/Gravity/models</span><span class="si">%20a</span><span class="s2">nd</span><span class="si">%20d</span><span class="s2">ata/&quot;</span> \
                      <span class="s2">&quot;4_Deg1_C20_CMB_GIA_restored.txt&quot;</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span><span class="n">uri</span><span class="p">)</span></div>
 
@@ -371,7 +364,7 @@
     <span class="c1">#     # {&#39;name&#39;:&#39;Sun2017Comb&#39;,&#39;uri&#39;:&#39;https://d1rkab7tlqy5f1.cloudfront.net/CiTG/Over%20faculteit/Afdelingen/Geoscience%20%26%20Remote%20sensing/Research/Gravity/models%20and%20data/3_Deg1_C20_CMB.txt&#39;</span>
     <span class="c1">#     #                             ,&#39;lastupdate&#39;:datetime(2018,10,16)},</span>
     <span class="c1"># ]</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
         <span class="c1"># Create table if it doesn&#39;t exist</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span> <span class="n">checkfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -400,14 +393,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
 
 
-<span class="n">geoslurpregistry</span><span class="o">.</span><span class="n">registerDataset</span><span class="p">(</span><span class="n">Deg1n2</span><span class="p">)</span>
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addDataset</span><span class="p">(</span><span class="n">Deg1n2</span><span class="p">)</span>
 
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -416,11 +407,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -433,36 +424,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'Wannabe v1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -20,7 +20,7 @@ from geoslurp.datapull.http import Uri as http
 from geoslurp.datapull.github import Crawler as ghCrawler
 from geoslurp.datapull.github import GithubFilter as ghfilter
 from geoslurp.datapull.github import cachedGithubCatalogue
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 import json
 from zipfile import ZipFile
 import os
@@ -74,7 +74,7 @@ def getGeoshapesDsets(conf):
     return out
 
 
-geoslurpregistry.registerDatasetFactory(getGeoshapesDsets)
+geoslurpCatalogue.addDatasetFactory(getGeoshapesDsets)
 
 
 

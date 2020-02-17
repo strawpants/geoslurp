@@ -24,7 +24,7 @@ from datetime import datetime,timedelta
 from geoslurp.config.slurplogger import slurplogger
 import re
 import os
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 
 class GSHHGBase(OGRBase):
     """Base class for GSHHG datasets. They are all quite similar so letting them inherit from a baseclass
@@ -76,4 +76,4 @@ def getGSHHGDsets(conf):
     return out
 
 
-geoslurpregistry.registerDatasetFactory(getGSHHGDsets)
+geoslurpCatalogue.addDatasetFactory(getGSHHGDsets)

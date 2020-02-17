@@ -17,7 +17,7 @@
 
 from geoslurp.dataset.dataSetBase import DataSet
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 
 from sqlalchemy.ext.declarative import declared_attr, as_declarative
 from sqlalchemy import MetaData
@@ -294,4 +294,4 @@ def getFESOMDsets(conf):
     out.append(type("run_TEMPLATE_g_TEMPLATE", (FESOMRunBase,), {}))
     return out
 
-geoslurpregistry.registerDatasetFactory(getFESOMDsets)
+geoslurpCatalogue.addDatasetFactory(getFESOMDsets)

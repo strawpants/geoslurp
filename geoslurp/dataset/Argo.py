@@ -31,7 +31,7 @@ from datetime import datetime,timedelta
 from queue import Queue
 import gzip as gz
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 import os
 import re
 import numpy as np
@@ -251,4 +251,4 @@ class Argo2(DataSet):
         # #signal the end of the queue by adding a none
         # self._uriqueue.put(None)
 
-geoslurpregistry.registerDataset(Argo2)
+geoslurpCatalogue.addDataset(Argo2)

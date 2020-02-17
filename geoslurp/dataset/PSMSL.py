@@ -28,7 +28,7 @@ import os
 from zipfile import ZipFile
 from osgeo import ogr
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 
 
 scheme="oceanobs"
@@ -143,4 +143,4 @@ def getPSMSLDsets(conf):
     return out
 
 
-geoslurpregistry.registerDatasetFactory(getPSMSLDsets)
+geoslurpCatalogue.addDatasetFactory(getPSMSLDsets)

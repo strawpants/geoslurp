@@ -29,7 +29,7 @@ from zipfile import ZipFile
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.datapull import UriFile
 from geoslurp.datapull import findFiles
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 import re
 import os
 
@@ -115,4 +115,4 @@ class Orsifronts(DataSet):
 
 
 #register dataset
-geoslurpregistry.registerDataset(Orsifronts)
+geoslurpCatalogue.addDataset(Orsifronts)

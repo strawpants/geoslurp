@@ -19,42 +19,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="index.html"/>
-        <link rel="next" title="Using the command line tool geoslurp" href="examples/usingcli.html"/>
-        <link rel="prev" title="Configuration" href="confsettings.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using the command line tool geoslurp" href="usingcli.html" />
+    <link rel="prev" title="Configuration" href="confsettings.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -98,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="confsettings.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/usingcli.html">Using the command line tool geoslurp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usingcli.html">Using the command line tool geoslurp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/pyexamples.html">Python Examples</a></li>
 </ul>
 </li>
@@ -114,7 +109,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">geoslurp</a>
@@ -122,9 +117,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -171,28 +167,33 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
 }
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
 </style>
 <div class="section" id="tutorial">
 <h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/usingcli.html">Using the command line tool geoslurp</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/usingcli.html#getting-info-and-help">Getting info and help</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/usingcli.html#administrative-tasks">Administrative tasks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/usingcli.html#dataset-management">Dataset Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usingcli.html">Using the command line tool geoslurp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usingcli.html#getting-info-and-help">Getting info and help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usingcli.html#administrative-tasks">Administrative tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usingcli.html#dataset-management">Dataset Management</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/pyexamples.html">Python Examples</a><ul>
@@ -208,7 +209,8 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples/CreateDynDSet.html">Download and register a dataset of (fictious?) US Marijuana street prices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/UsingCataloguedDsets.html">Downloading and registering “catalogue” datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/CreateDynDSet.html">Download and register a dynamic dataset of (crowd-sourced?) US Marijuana street prices</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="examples/CreateDynDSet.html#Example:-US-street-prices-of-Marijuana">Example: US street prices of Marijuana</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="examples/CreateDynDSet.html#Create-the-stucture-of-the-database-table-using-sqalchemy-ORM-methods">Create the stucture of the database table using sqalchemy ORM methods</a></li>
 <li class="toctree-l4"><a class="reference internal" href="examples/CreateDynDSet.html#Create-a-helper-function-to-extract-relevant-information-from-the-file">Create a helper function to extract relevant information from the file</a></li>
@@ -224,7 +226,10 @@
 <li class="toctree-l4"><a class="reference internal" href="examples/BasicDiscovery.html#Pick-a-state-and-plot-the-results-using-matplotlib">Pick a state and plot the results using matplotlib</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="examples/BasicDiscovery.html#A-more-complicated-query-which-joins-data-between-tables">A more complicated query which joins data between tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/BasicDiscovery.html#A-more-complicated-query-which-joins-data-between-tables">A more complicated query which joins data between tables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/BasicDiscovery.html#Visualize-the-result-geographically-using-matplotlib">Visualize the result geographically using matplotlib</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -235,18 +240,16 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="examples/usingcli.html" class="btn btn-neutral float-right" title="Using the command line tool geoslurp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="usingcli.html" class="btn btn-neutral float-right" title="Using the command line tool geoslurp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="confsettings.html" class="btn btn-neutral" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="confsettings.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -255,11 +258,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &copy; Copyright 2020, Roelof Rietbroek
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -272,36 +275,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'Wannabe v1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

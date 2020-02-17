@@ -20,11 +20,11 @@ import os
 import yaml
 import inspect
 from datetime import datetime
-from geoslurp.config.slurplogger import slurplogger
+from geoslurp.config.slurplogger import slurplog
 from geoslurp.db import Inventory
 from importlib import import_module
 
-class DatasetRegister:
+class DatasetCatalogue:
     #holds dataset classes (not initiated!)
     __dsets__=[]
     # holds factory methods for dyanamically building datasets
@@ -47,14 +47,15 @@ class DatasetRegister:
                     if loadmod:
                         mod=__import__(os.path.basename(upath))
 
-    def registerDataset(self,datasetcls):
+    def addDataset(self, datasetcls):
         self.__dsets__.append(datasetcls)
     
-    def registerDatasetFactory(self,datasetclsfac):
+    def addDatasetFactory(self, datasetclsfac):
         self.__dsetfac__.append(datasetclsfac)
 
     def refresh(self,conf):
         """Refresh the dataset catalogue"""
+        slurplog.info("Refreshing cached catalogue %s"%cachefile)
         self.registerAllDataSets(conf)
 
         #load inventory of existing datasets (for the templated)
@@ -98,7 +99,7 @@ class DatasetRegister:
         #save to yaml
         self.__catalogue__["lastupdate"]=datetime.now()
         cachefile=self.getCacheFile(conf)
-        slurplogger().info("saving available Dataset catalogue to %s"%cachefile)
+        slurplog.info("saving available Dataset catalogue to %s"%cachefile)
         with open(cachefile,'wt') as fid:
             yaml.dump(self.__catalogue__, fid, default_flow_style=False)
     
@@ -109,7 +110,7 @@ class DatasetRegister:
         self.addUserPlugPaths(conf)
         cachefile=self.getCacheFile(conf)
         if not os.path.exists(cachefile):
-            self.refresh()
+            self.refresh(conf)
         with open(cachefile,'rt') as fid:
             self.__catalogue__=yaml.safe_load(fid)
 
@@ -220,6 +221,8 @@ class DatasetRegister:
         return []
 
 #module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )
-geoslurpregistry=DatasetRegister()
+geoslurpCatalogue=DatasetCatalogue()
+
+
 
 

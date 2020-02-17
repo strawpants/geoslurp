@@ -3,5 +3,5 @@ Tutorial
 
 .. toctree::
    
-   examples/usingcli.rst
-   examples/pyexamples
+   usingcli.rst
+   examples/pyexamples.rst

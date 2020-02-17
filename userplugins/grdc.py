@@ -21,7 +21,7 @@ from geoslurp.config.slurplogger import slurplogger
 from geoslurp.datapull.webdav import Crawler as webdav
 from zipfile import ZipFile
 import os
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.dataset.pandasbase import PandasBase
 from geoslurp.dataset.OGRBase import OGRBase
 from geoslurp.dataset.dataSetBase import DataSet
@@ -264,5 +264,5 @@ def getGRDCDsets(conf):
 
 
 
-geoslurpregistry.registerDatasetFactory(getGRDCDsets)
-geoslurpregistry.registerDataset(grdc_catalogue)
+geoslurpCatalogue.addDatasetFactory(getGRDCDsets)
+geoslurpCatalogue.addDataset(grdc_catalogue)

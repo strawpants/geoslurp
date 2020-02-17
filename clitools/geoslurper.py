@@ -26,7 +26,7 @@ import json
 import logging
 from geoslurp.db import Settings
 from geoslurp.config.localsettings import readLocalSettings
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 import getpass
 import re
 
@@ -97,26 +97,26 @@ def main(argv):
             conf.updateAuth(Credentials(alias=alias,**dvals))
 
     if args.refresh:
-        geoslurpregistry.refresh(conf)
+        geoslurpCatalogue.refresh(conf)
 
 
     if args.list:
         # show available schemes and datasets
         print("Available datasets (SCHEME.DATASET):")
-        for catentry in geoslurpregistry.listDataSets(conf).keys():
+        for catentry in geoslurpCatalogue.listDataSets(conf).keys():
             print("\t%s"%(catentry))
         
         print("Available functions (SCHEME.FUNCTION):")
-        for fn in geoslurpregistry.listFunctions(conf).keys():
+        for fn in geoslurpCatalogue.listFunctions(conf).keys():
             print("\t%s.%s"%(fn.scheme,fn.__name__))
         
     if not args.dset:
         #OK jsut gracefully exit
         sys.exit(0)
 
-    datasets=geoslurpregistry.getDatasets(conf,args.dset)
+    datasets=geoslurpCatalogue.getDatasets(conf, args.dset)
 
-    funcs=geoslurpregistry.getFuncs(conf,args.func)
+    funcs=geoslurpCatalogue.getFuncs(conf, args.func)
 
     if not ( datasets or funcs ):
         print("No valid datasets or functions selected")

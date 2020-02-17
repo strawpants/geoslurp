@@ -23,7 +23,7 @@ from datetime import datetime
 import os
 from zipfile import ZipFile
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 # from geoalchemy2.types import Raster
 # from sqlalchemy.ext.declarative import declared_attr, as_declarative
 # from sqlalchemy import Column, Integer, String, MetaData
@@ -109,6 +109,6 @@ def getArcticDems(conf):
 
 
 #register datasets
-geoslurpregistry.registerDataset(Arcticdemindex)
-geoslurpregistry.registerDatasetFactory(getArcticDems)
+geoslurpCatalogue.addDataset(Arcticdemindex)
+geoslurpCatalogue.addDatasetFactory(getArcticDems)
 

@@ -29,7 +29,7 @@ import os
 from glob import glob
 import shutil
 from numpy import arange
-from geoslurp.config.register import geoslurpregistry
+from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.db.settings import getCreateDir
 
 
@@ -170,4 +170,4 @@ def getRGIDsets(conf):
 
 
 
-geoslurpregistry.registerDatasetFactory(getRGIDsets)
+geoslurpCatalogue.addDatasetFactory(getRGIDsets)
