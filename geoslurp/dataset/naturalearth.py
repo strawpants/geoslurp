@@ -34,6 +34,7 @@ class NaturalEarthBase(OGRBase):
     path=None
     scheme='globalgis'
     version=(4,1,0)
+    swapxy=True
     def __init__(self,dbconn):
         super().__init__(dbconn)
         self.ogrfile=os.path.join(self.cacheDir(),os.path.basename(self.path))

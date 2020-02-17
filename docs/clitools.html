@@ -19,37 +19,43 @@
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="geoslurp package" href="reference/geoslurp.html" />
-    <link rel="prev" title="Conventions on naming tables and their columns" href="tableconventions.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="index.html"/>
+        <link rel="up" title="Reference Documentation" href="reference.html"/>
+        <link rel="next" title="geoslurp package" href="reference/geoslurp.html"/>
+        <link rel="prev" title="Conventions on naming tables and their columns" href="tableconventions.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -113,7 +119,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">geoslurp</a>
@@ -121,10 +127,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -173,23 +178,18 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
+.nbinput.nblast,
+.nboutput.nblast {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast.container + .nbinput.container {
+.nblast + .nbinput {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
 }
 </style>
 <div class="section" id="command-line-tools">
@@ -197,173 +197,182 @@
 <div class="section" id="clitools-geoslurper-py">
 <span id="geoslurphelp"></span><h2>clitools/geoslurper.py<a class="headerlink" href="#clitools-geoslurper-py" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Program to download and manage Earth Science data</p>
-</div></blockquote>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: clitools/geoslurper.py [-h] [-i] [-l] [--refresh] [--purge-cache [filter]] [--purge-data [filter]] [--purge-entry] [--pull [JSON]] [--register [JSON]]</span>
-<span class="go">                              [--local-settings LOCALSETTINGSFILE] [--config [JSON]] [--show-config] [--auth-config [JSON]] [--admin-config [JSON]] [--host hostname]</span>
-<span class="go">                              [--user user] [--add-user username] [--add-readonly-user username] [--password password] [--port port] [--usekeyring] [-v [VERBOSE]]</span>
-<span class="go">                              [--data-dir DIR] [--cache DIR] [-d [PATTERN]] [--mirror [MIRRORALIAS]] [-f [PATTERN]]</span>
+<div>Program to download and manage Earth Science data</div></blockquote>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: clitools/geoslurper.py [-h] [-i] [-l] [--refresh]</span>
+<span class="go">                              [--purge-cache [filter]] [--purge-data [filter]]</span>
+<span class="go">                              [--purge-entry] [--pull [JSON]]</span>
+<span class="go">                              [--register [JSON]]</span>
+<span class="go">                              [--local-settings LOCALSETTINGSFILE]</span>
+<span class="go">                              [--config [JSON]] [--show-config]</span>
+<span class="go">                              [--auth-config [JSON]] [--admin-config [JSON]]</span>
+<span class="go">                              [--host hostname] [--user user]</span>
+<span class="go">                              [--add-user username]</span>
+<span class="go">                              [--add-readonly-user username]</span>
+<span class="go">                              [--password password] [--port port]</span>
+<span class="go">                              [--usekeyring] [-v [VERBOSE]] [--data-dir DIR]</span>
+<span class="go">                              [--cache DIR] [-d [PATTERN]]</span>
+<span class="go">                              [--mirror [MIRRORALIAS]] [-f [PATTERN]]</span>
 </pre></div>
 </div>
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-h">
-<code class="sig-name descname">-h</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--help</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-h" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-h</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--help</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-h" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints detailed help (may be used in combination with –dset for detailed JSON options)</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-i">
-<code class="sig-name descname">-i</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--info</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-i" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-i</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--info</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-i" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show information about selected datasets</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-l">
-<code class="sig-name descname">-l</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--list</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-l" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-l</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--list</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-l" title="Permalink to this definition">¶</a></dt>
 <dd><p>List all datasets which are available to use</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-refresh">
-<code class="sig-name descname">--refresh</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-refresh" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--refresh</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refresh the cache of the available datasets</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-purge-cache">
-<code class="sig-name descname">--purge-cache</code><code class="sig-prename descclassname"> &lt;filter&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-purge-cache" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--purge-cache</code><code class="descclassname"> &lt;filter&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-purge-cache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purge the cache of the selected dataset. while optionally applying a filter for the files</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-purge-data">
-<code class="sig-name descname">--purge-data</code><code class="sig-prename descclassname"> &lt;filter&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-purge-data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--purge-data</code><code class="descclassname"> &lt;filter&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-purge-data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purge the data of the selected dataset. while optionally applying a filter for the files</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-purge-entry">
-<code class="sig-name descname">--purge-entry</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-purge-entry" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--purge-entry</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-purge-entry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Purge the database entry of the selected dataset.</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-pull">
-<code class="sig-name descname">--pull</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-pull" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--pull</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-pull" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pull data from online resource (possibly pass on options as a JSON dict</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-register">
-<code class="sig-name descname">--register</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-register" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--register</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register data in the database (possibly pass on options as a JSON dict)</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-local-settings">
-<code class="sig-name descname">--local-settings</code><code class="sig-prename descclassname"> &lt;localsettingsfile&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-local-settings" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--local-settings</code><code class="descclassname"> &lt;localsettingsfile&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-local-settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specify a different file to read the local settings from (default= ${HOME}/.geoslurp_lastused.yaml)</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-config">
-<code class="sig-name descname">--config</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--config</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register user settings  (pass as a JSON dict, e.g. {“DataDir”:”path/”})</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-show-config">
-<code class="sig-name descname">--show-config</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-show-config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--show-config</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-show-config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show user configurations as stored in the database</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-auth-config">
-<code class="sig-name descname">--auth-config</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-auth-config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--auth-config</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-auth-config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register (and encrypt on a user basis in the database) authentification services (pass as a JSON dict, e.g. {“servicename”:{“user”:..,”passw”:…}})</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-admin-config">
-<code class="sig-name descname">--admin-config</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-admin-config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--admin-config</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-admin-config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register admin/default settings  (pass as a JSON dict, e.g. {“DataDir”:”path/”})</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-host">
-<code class="sig-name descname">--host</code><code class="sig-prename descclassname"> &lt;hostname&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-host" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--host</code><code class="descclassname"> &lt;hostname&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-host" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select host where the PostgreSQL/PostGIS server is running</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-user">
-<code class="sig-name descname">--user</code><code class="sig-prename descclassname"> &lt;user&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--user</code><code class="descclassname"> &lt;user&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select postgresql user</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-add-user">
-<code class="sig-name descname">--add-user</code><code class="sig-prename descclassname"> &lt;username&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-add-user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--add-user</code><code class="descclassname"> &lt;username&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-add-user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new postgresql user (you will be prompted for a password, or you can append the password after a colon e.g. pietje:secretpassword)</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-add-readonly-user">
-<code class="sig-name descname">--add-readonly-user</code><code class="sig-prename descclassname"> &lt;username&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-add-readonly-user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--add-readonly-user</code><code class="descclassname"> &lt;username&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-add-readonly-user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new readonly postgresql user (you will be prompted for a password, or you can append the password after a colon e.g. pietje:secretpassword)</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-password">
-<code class="sig-name descname">--password</code><code class="sig-prename descclassname"> &lt;password&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-password" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--password</code><code class="descclassname"> &lt;password&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-password" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select password for the postgresql user</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-port">
-<code class="sig-name descname">--port</code><code class="sig-prename descclassname"> &lt;port&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-port" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--port</code><code class="descclassname"> &lt;port&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select the port where the database is served</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-usekeyring">
-<code class="sig-name descname">--usekeyring</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-usekeyring" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--usekeyring</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-usekeyring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set and get the system keyring to store the database password (alternatives are using –password or the environment variable GEOSLURP_PGPASS</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-v">
-<code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--verbose</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-v" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-v</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--verbose</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-v" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increase verbosity of the output one cvan use multiple v’s after another (e.g. -vv) to increase verbosity. The default prints errors only</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-data-dir">
-<code class="sig-name descname">--data-dir</code><code class="sig-prename descclassname"> &lt;dir&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-data-dir" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--data-dir</code><code class="descclassname"> &lt;dir&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-data-dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specify (and register) a dataset specific data directory DIR</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-cache">
-<code class="sig-name descname">--cache</code><code class="sig-prename descclassname"> &lt;dir&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-cache" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--cache</code><code class="descclassname"> &lt;dir&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-cache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the root of the cache directory to DIR</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-d">
-<code class="sig-name descname">-d</code><code class="sig-prename descclassname"> &lt;pattern&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--dset</code><code class="sig-prename descclassname"> &lt;pattern&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-d" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-d</code><code class="descclassname"> &lt;pattern&gt;</code><code class="descclassname">, </code><code class="descname">--dset</code><code class="descclassname"> &lt;pattern&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select datasets or all datasets in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.DATASET)</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-mirror">
-<code class="sig-name descname">--mirror</code><code class="sig-prename descclassname"> &lt;mirroralias&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-mirror" title="Permalink to this definition">¶</a></dt>
+<code class="descname">--mirror</code><code class="descclassname"> &lt;mirroralias&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-mirror" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use a different mirror for prepending to relative filename uris, the default uses the mirror registered as ‘default’ in the database. A mirror can be registered in the database  with –[admin-]config ‘{“DataMirrors”:{“MIRRORALIAS”:”MIRRORPATH”}}’.</p>
 </dd></dl>
 
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-f">
-<code class="sig-name descname">-f</code><code class="sig-prename descclassname"> &lt;pattern&gt;</code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--func</code><code class="sig-prename descclassname"> &lt;pattern&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-f" title="Permalink to this definition">¶</a></dt>
+<code class="descname">-f</code><code class="descclassname"> &lt;pattern&gt;</code><code class="descclassname">, </code><code class="descname">--func</code><code class="descclassname"> &lt;pattern&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-f" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUCNTION)</p>
 </dd></dl>
 
@@ -372,7 +381,9 @@
 
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -381,7 +392,7 @@
         <a href="reference/geoslurp.html" class="btn btn-neutral float-right" title="geoslurp package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tableconventions.html" class="btn btn-neutral float-left" title="Conventions on naming tables and their columns" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tableconventions.html" class="btn btn-neutral" title="Conventions on naming tables and their columns" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -390,11 +401,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -407,15 +418,36 @@
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

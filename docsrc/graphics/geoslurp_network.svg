@@ -14,7 +14,7 @@
    viewBox="0 0 404.48865 197.29145"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
    sodipodi:docname="geoslurp_network.svg"
    inkscape:export-filename="/home/roelof/work2/Proposals/Juelich_geoslurp/geoslurp_components.png"
    inkscape:export-xdpi="99.959221"
@@ -703,6 +703,37 @@
          style="fill:#3d90ff;fill-opacity:1;fill-rule:evenodd;stroke:#3d90ff;stroke-width:1.00000003pt;stroke-opacity:1"
          transform="scale(0.8)" />
     </marker>
+    <marker
+       inkscape:stockid="TriangleInL"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleInL-2-8"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path1470-61-7"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         style="fill:#3d90ff;fill-opacity:1;fill-rule:evenodd;stroke:#3d90ff;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="scale(-0.8)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker2587-8-9"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path2466-7-2"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         style="fill:#3d90ff;fill-opacity:1;fill-rule:evenodd;stroke:#3d90ff;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="scale(0.8)"
+         inkscape:connector-curvature="0" />
+    </marker>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -712,15 +743,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35355339"
-     inkscape:cx="687.15437"
+     inkscape:cx="108.74102"
      inkscape:cy="355.63008"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:snap-global="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="703"
-     inkscape:window-x="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1021"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      showguides="false"
@@ -736,7 +767,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1222,5 +1253,11 @@
        d="m 170.65099,254.99641 v 13.87061"
        id="path6484-1-0"
        inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#3d90ff;stroke-width:0.75518131;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#TriangleInL-2-8);marker-end:url(#marker2587-8-9)"
+       d="m 199.70144,228.83473 31.70165,-0.19393"
+       id="path1335-1-9-0"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
   </g>
 </svg>

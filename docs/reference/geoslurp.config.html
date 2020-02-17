@@ -19,37 +19,43 @@
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="geoslurp.datapull package" href="geoslurp.datapull.html" />
-    <link rel="prev" title="geoslurp package" href="geoslurp.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/>
+        <link rel="up" title="geoslurp package" href="geoslurp.html"/>
+        <link rel="next" title="geoslurp.datapull package" href="geoslurp.datapull.html"/>
+        <link rel="prev" title="geoslurp package" href="geoslurp.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -105,7 +111,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -113,10 +119,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -167,23 +172,18 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
+.nbinput.nblast,
+.nboutput.nblast {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast.container + .nbinput.container {
+.nblast + .nbinput {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
 }
 </style>
 <div class="section" id="module-geoslurp.config">
@@ -195,73 +195,58 @@
 <span id="geoslurp-config-localsettings-module"></span><h2>geoslurp.config.localsettings module<a class="headerlink" href="#module-geoslurp.config.localsettings" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="geoslurp.config.localsettings.readLocalSettings">
-<code class="sig-prename descclassname">geoslurp.config.localsettings.</code><code class="sig-name descname">readLocalSettings</code><span class="sig-paren">(</span><em class="sig-param">args=&lt;geoslurp.config.localsettings.settingsArgs object&gt;</em>, <em class="sig-param">update=True</em>, <em class="sig-param">readonlyuser=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/localsettings.html#readLocalSettings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.localsettings.readLocalSettings" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.config.localsettings.</code><code class="descname">readLocalSettings</code><span class="sig-paren">(</span><em>args=&lt;geoslurp.config.localsettings.settingsArgs object&gt;</em>, <em>update=True</em>, <em>readonlyuser=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/localsettings.html#readLocalSettings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.localsettings.readLocalSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves/updates last used settings from the local settings file .geoslurp_lastused.yaml</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="geoslurp.config.localsettings.settingsArgs">
-<em class="property">class </em><code class="sig-prename descclassname">geoslurp.config.localsettings.</code><code class="sig-name descname">settingsArgs</code><span class="sig-paren">(</span><em class="sig-param">host=None</em>, <em class="sig-param">user=None</em>, <em class="sig-param">usekeyring=True</em>, <em class="sig-param">password=None</em>, <em class="sig-param">port=None</em>, <em class="sig-param">mirror=None</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/localsettings.html#settingsArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">geoslurp.config.localsettings.</code><code class="descname">settingsArgs</code><span class="sig-paren">(</span><em>host=None</em>, <em>user=None</em>, <em>usekeyring=True</em>, <em>password=None</em>, <em>port=None</em>, <em>mirror=None</em>, <em>cache=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/localsettings.html#settingsArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stand-in class with several settings.
 This class can be used as a stand-in for the
 command line argparse arguments from the <a class="reference internal" href="../clitools.html#clihelp"><span class="std std-ref">Command line tools</span></a></p>
 <dl class="attribute">
 <dt id="geoslurp.config.localsettings.settingsArgs.cache">
-<code class="sig-name descname">cache</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.cache" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alternative local settings file (instead of ${HOME}/.geoslurp_lastused.yaml)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>(str)</p>
-</dd>
-</dl>
+<code class="descname">cache</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.cache" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(str)</em> – Alternative local settings file (instead of ${HOME}/.geoslurp_lastused.yaml)</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.config.localsettings.settingsArgs.host">
-<code class="sig-name descname">host</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.host" title="Permalink to this definition">¶</a></dt>
-<dd><p>Database host name</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>(str)</p>
-</dd>
-</dl>
+<code class="descname">host</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.host" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(str)</em> – Database host name</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.config.localsettings.settingsArgs.local_settings">
-<code class="sig-name descname">local_settings</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.local_settings" title="Permalink to this definition">¶</a></dt>
+<code class="descname">local_settings</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.local_settings" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.config.localsettings.settingsArgs.mirror">
-<code class="sig-name descname">mirror</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.mirror" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mirror</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.mirror" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.config.localsettings.settingsArgs.password">
-<code class="sig-name descname">password</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.password" title="Permalink to this definition">¶</a></dt>
+<code class="descname">password</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.password" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.config.localsettings.settingsArgs.port">
-<code class="sig-name descname">port</code><em class="property"> = 5432</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.port" title="Permalink to this definition">¶</a></dt>
-<dd><p>database port to connect to</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>(int)</p>
-</dd>
-</dl>
+<code class="descname">port</code><em class="property"> = 5432</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.port" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(int)</em> – database port to connect to</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.config.localsettings.settingsArgs.usekeyring">
-<code class="sig-name descname">usekeyring</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.usekeyring" title="Permalink to this definition">¶</a></dt>
+<code class="descname">usekeyring</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.usekeyring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="geoslurp.config.localsettings.settingsArgs.user">
-<code class="sig-name descname">user</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.user" title="Permalink to this definition">¶</a></dt>
+<code class="descname">user</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.config.localsettings.settingsArgs.user" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -271,76 +256,76 @@ command line argparse arguments from the <a class="reference internal" href="../
 <span id="geoslurp-config-register-module"></span><h2>geoslurp.config.register module<a class="headerlink" href="#module-geoslurp.config.register" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="geoslurp.config.register.DatasetRegister">
-<em class="property">class </em><code class="sig-prename descclassname">geoslurp.config.register.</code><code class="sig-name descname">DatasetRegister</code><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">geoslurp.config.register.</code><code class="descname">DatasetRegister</code><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="method">
+<dl class="staticmethod">
 <dt id="geoslurp.config.register.DatasetRegister.addUserPlugPaths">
-<em class="property">static </em><code class="sig-name descname">addUserPlugPaths</code><span class="sig-paren">(</span><em class="sig-param">conf</em>, <em class="sig-param">loadmod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.addUserPlugPaths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.addUserPlugPaths" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">addUserPlugPaths</code><span class="sig-paren">(</span><em>conf</em>, <em>loadmod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.addUserPlugPaths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.addUserPlugPaths" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="staticmethod">
 <dt id="geoslurp.config.register.DatasetRegister.getCacheFile">
-<em class="property">static </em><code class="sig-name descname">getCacheFile</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.getCacheFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.getCacheFile" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">getCacheFile</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.getCacheFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.getCacheFile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.getDatasets">
-<code class="sig-name descname">getDatasets</code><span class="sig-paren">(</span><em class="sig-param">conf</em>, <em class="sig-param">regex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.getDatasets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.getDatasets" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getDatasets</code><span class="sig-paren">(</span><em>conf</em>, <em>regex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.getDatasets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.getDatasets" title="Permalink to this definition">¶</a></dt>
 <dd><p>retrieves a list of dataset classes possibly obeying a certain regex</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.getDsetClass">
-<code class="sig-name descname">getDsetClass</code><span class="sig-paren">(</span><em class="sig-param">conf</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.getDsetClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.getDsetClass" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getDsetClass</code><span class="sig-paren">(</span><em>conf</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.getDsetClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.getDsetClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads a dataset as an class (but check cache first)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.getFuncs">
-<code class="sig-name descname">getFuncs</code><span class="sig-paren">(</span><em class="sig-param">conf</em>, <em class="sig-param">regex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.getFuncs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.getFuncs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getFuncs</code><span class="sig-paren">(</span><em>conf</em>, <em>regex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.getFuncs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.getFuncs" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is currently a stub (returns en empty list)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.listDataSets">
-<code class="sig-name descname">listDataSets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.listDataSets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.listDataSets" title="Permalink to this definition">¶</a></dt>
+<code class="descname">listDataSets</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.listDataSets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.listDataSets" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.listFactories">
-<code class="sig-name descname">listFactories</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.listFactories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.listFactories" title="Permalink to this definition">¶</a></dt>
+<code class="descname">listFactories</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.listFactories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.listFactories" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.listFunctions">
-<code class="sig-name descname">listFunctions</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.listFunctions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.listFunctions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">listFunctions</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.listFunctions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.listFunctions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.loadCatalogue">
-<code class="sig-name descname">loadCatalogue</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.loadCatalogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.loadCatalogue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadCatalogue</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.loadCatalogue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.loadCatalogue" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.refresh">
-<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.refresh" title="Permalink to this definition">¶</a></dt>
+<code class="descname">refresh</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.refresh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refresh the dataset catalogue</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.registerAllDataSets">
-<code class="sig-name descname">registerAllDataSets</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.registerAllDataSets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.registerAllDataSets" title="Permalink to this definition">¶</a></dt>
+<code class="descname">registerAllDataSets</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.registerAllDataSets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.registerAllDataSets" title="Permalink to this definition">¶</a></dt>
 <dd><p>load all dataset classes (but don’t construct them)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.registerDataset">
-<code class="sig-name descname">registerDataset</code><span class="sig-paren">(</span><em class="sig-param">datasetcls</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.registerDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.registerDataset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">registerDataset</code><span class="sig-paren">(</span><em>datasetcls</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.registerDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.registerDataset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.register.DatasetRegister.registerDatasetFactory">
-<code class="sig-name descname">registerDatasetFactory</code><span class="sig-paren">(</span><em class="sig-param">datasetclsfac</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.registerDatasetFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.registerDatasetFactory" title="Permalink to this definition">¶</a></dt>
+<code class="descname">registerDatasetFactory</code><span class="sig-paren">(</span><em>datasetclsfac</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/register.html#DatasetRegister.registerDatasetFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.register.DatasetRegister.registerDatasetFactory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -350,37 +335,37 @@ command line argparse arguments from the <a class="reference internal" href="../
 <span id="geoslurp-config-slurplogger-module"></span><h2>geoslurp.config.slurplogger module<a class="headerlink" href="#module-geoslurp.config.slurplogger" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="geoslurp.config.slurplogger.debugging">
-<code class="sig-prename descclassname">geoslurp.config.slurplogger.</code><code class="sig-name descname">debugging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#debugging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.debugging" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.config.slurplogger.</code><code class="descname">debugging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#debugging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.debugging" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test if the logging level is set to DEBUG</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geoslurp.config.slurplogger.setDebugLevel">
-<code class="sig-prename descclassname">geoslurp.config.slurplogger.</code><code class="sig-name descname">setDebugLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#setDebugLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.setDebugLevel" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.config.slurplogger.</code><code class="descname">setDebugLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#setDebugLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.setDebugLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set logging level to DEBUG severity</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geoslurp.config.slurplogger.setErrorLevel">
-<code class="sig-prename descclassname">geoslurp.config.slurplogger.</code><code class="sig-name descname">setErrorLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#setErrorLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.setErrorLevel" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.config.slurplogger.</code><code class="descname">setErrorLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#setErrorLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.setErrorLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set logging level to ERROR severity</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geoslurp.config.slurplogger.setInfoLevel">
-<code class="sig-prename descclassname">geoslurp.config.slurplogger.</code><code class="sig-name descname">setInfoLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#setInfoLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.setInfoLevel" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.config.slurplogger.</code><code class="descname">setInfoLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#setInfoLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.setInfoLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set logging level to INFO severity</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geoslurp.config.slurplogger.setWarningLevel">
-<code class="sig-prename descclassname">geoslurp.config.slurplogger.</code><code class="sig-name descname">setWarningLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#setWarningLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.setWarningLevel" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.config.slurplogger.</code><code class="descname">setWarningLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#setWarningLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.setWarningLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set logging level to WARNING severity</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geoslurp.config.slurplogger.slurplogger">
-<code class="sig-prename descclassname">geoslurp.config.slurplogger.</code><code class="sig-name descname">slurplogger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#slurplogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.slurplogger" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.config.slurplogger.</code><code class="descname">slurplogger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/slurplogger.html#slurplogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.slurplogger.slurplogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the geoslurp specific logger (deprecated, only for compatibility)</p>
 </dd></dl>
 
@@ -389,7 +374,9 @@ command line argparse arguments from the <a class="reference internal" href="../
 
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -398,7 +385,7 @@ command line argparse arguments from the <a class="reference internal" href="../
         <a href="geoslurp.datapull.html" class="btn btn-neutral float-right" title="geoslurp.datapull package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="geoslurp.html" class="btn btn-neutral float-left" title="geoslurp package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="geoslurp.html" class="btn btn-neutral" title="geoslurp package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -407,11 +394,11 @@ command line argparse arguments from the <a class="reference internal" href="../
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -424,15 +411,36 @@ command line argparse arguments from the <a class="reference internal" href="../
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

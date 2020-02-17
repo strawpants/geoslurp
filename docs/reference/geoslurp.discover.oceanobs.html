@@ -19,37 +19,43 @@
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="geoslurp.tools package" href="geoslurp.tools.html" />
-    <link rel="prev" title="geoslurp.discover.gravity package" href="geoslurp.discover.gravity.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/>
+        <link rel="up" title="geoslurp.discover package" href="geoslurp.discover.html"/>
+        <link rel="next" title="geoslurp.tools package" href="geoslurp.tools.html"/>
+        <link rel="prev" title="geoslurp.discover.gravity package" href="geoslurp.discover.gravity.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -105,7 +111,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -113,10 +119,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -169,23 +174,18 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
+.nbinput.nblast,
+.nboutput.nblast {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast.container + .nbinput.container {
+.nblast + .nbinput {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
 }
 </style>
 <div class="section" id="module-geoslurp.discover.oceanobs">
@@ -197,12 +197,12 @@
 <span id="geoslurp-discover-oceanobs-argo-module"></span><h2>geoslurp.discover.oceanobs.argo module<a class="headerlink" href="#module-geoslurp.discover.oceanobs.argo" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="geoslurp.discover.oceanobs.argo.argoQuery">
-<code class="sig-prename descclassname">geoslurp.discover.oceanobs.argo.</code><code class="sig-name descname">argoQuery</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em>, <em class="sig-param">geoWKT=None</em>, <em class="sig-param">tspan=None</em>, <em class="sig-param">withinDmeter=None</em>, <em class="sig-param">tsort=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argo.html#argoQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argo.argoQuery" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.discover.oceanobs.argo.</code><code class="descname">argoQuery</code><span class="sig-paren">(</span><em>dbcon</em>, <em>geoWKT=None</em>, <em>tspan=None</em>, <em>withinDmeter=None</em>, <em>tsort=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argo.html#argoQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argo.argoQuery" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="geoslurp.discover.oceanobs.argo.queryMonthlyArgo">
-<code class="sig-prename descclassname">geoslurp.discover.oceanobs.argo.</code><code class="sig-name descname">queryMonthlyArgo</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em>, <em class="sig-param">geoWKT</em>, <em class="sig-param">tstart</em>, <em class="sig-param">tend</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argo.html#queryMonthlyArgo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argo.queryMonthlyArgo" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.discover.oceanobs.argo.</code><code class="descname">queryMonthlyArgo</code><span class="sig-paren">(</span><em>dbcon</em>, <em>geoWKT</em>, <em>tstart</em>, <em>tend</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argo.html#queryMonthlyArgo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argo.queryMonthlyArgo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the database for lists of monthly Argo profiles within a certain polygon and time span</p>
 </dd></dl>
 
@@ -211,7 +211,7 @@
 <span id="geoslurp-discover-oceanobs-psmsl-module"></span><h2>geoslurp.discover.oceanobs.psmsl module<a class="headerlink" href="#module-geoslurp.discover.oceanobs.psmsl" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="geoslurp.discover.oceanobs.psmsl.psmslQuery">
-<code class="sig-prename descclassname">geoslurp.discover.oceanobs.psmsl.</code><code class="sig-name descname">psmslQuery</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em>, <em class="sig-param">psmsltable</em>, <em class="sig-param">polyWKT</em>, <em class="sig-param">tspan=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/psmsl.html#psmslQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.psmsl.psmslQuery" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.discover.oceanobs.psmsl.</code><code class="descname">psmslQuery</code><span class="sig-paren">(</span><em>dbcon</em>, <em>psmsltable</em>, <em>polyWKT</em>, <em>tspan=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/psmsl.html#psmslQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.psmsl.psmslQuery" title="Permalink to this definition">¶</a></dt>
 <dd><p>queries the geoslurp database for tide gauge series</p>
 </dd></dl>
 
@@ -220,7 +220,9 @@
 
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -229,7 +231,7 @@
         <a href="geoslurp.tools.html" class="btn btn-neutral float-right" title="geoslurp.tools package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="geoslurp.discover.gravity.html" class="btn btn-neutral float-left" title="geoslurp.discover.gravity package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="geoslurp.discover.gravity.html" class="btn btn-neutral" title="geoslurp.discover.gravity package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -238,11 +240,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -255,15 +257,36 @@
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>
