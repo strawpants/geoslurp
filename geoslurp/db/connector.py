@@ -42,12 +42,14 @@ class GeoslurpConnector():
         else:
             self.passw=getpass.getpass(prompt='Please enter password for %s: '%(user))
 
-        if not host:
+        if not host or host == 'unixsocket':
             #this will attempt to read from a unix socket
-            host=""
-        self.host=host
+            self.host=""
+        else:
+            self.host=host
+
         echo=debugging()
-        dburl="postgresql+psycopg2://"+user+":"+self.passw+"@"+host+":"+str(port)+"/geoslurp"
+        dburl="postgresql+psycopg2://"+user+":"+self.passw+"@"+self.host+":"+str(port)+"/geoslurp"
         self.dbeng = create_engine(dburl, echo=echo)
         # self.conn=self.dbeng.connect()
         self.Session = sessionmaker(bind=self.dbeng)

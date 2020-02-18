@@ -57,6 +57,9 @@ class Inventory:
             self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.inventory to geoslurp;')
             self.db.dbeng.execute('GRANT USAGE ON SEQUENCE admin.inventory_id_seq to geoslurp')
 
+            #read only user's may need to access information in the inventory table
+            self.db.dbeng.execute('GRANT SELECT ON admin.inventory to geobrowse;')
+
 
     def __iter__(self):
         """Query the Inventory table and returns a generator"""

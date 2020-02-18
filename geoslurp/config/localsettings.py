@@ -77,8 +77,8 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
         with open(settingsFile, 'r') as fid:
             lastOpts=yaml.safe_load(fid)
     else:
-        #set the defaults
-        lastOpts={"host":"localhost","user":"geoslurp","port":5432,"readOnlyUser":"slurpy","useKeyring":False,"cache":"tmp/geoslurp_cache"}
+        #set the defaults (note a host with None will try to connect to a local unix socket
+        lastOpts={"host":None,"user":"geoslurp","port":5432,"readOnlyUser":"slurpy","useKeyring":False,"cache":"tmp/geoslurp_cache"}
 
     isUpdated=False
 

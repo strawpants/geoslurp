@@ -270,8 +270,8 @@ def addCommandLineArgs():
         parser.add_argument("--admin-config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register admin/default settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
        
-        parser.add_argument("--host",metavar="hostname",type=str,
-                            help='Select host where the PostgreSQL/PostGIS server is running')
+        parser.add_argument("--host",metavar="hostname",type=str,nargs="?",default=False,const="unixsocket",
+                            help='Select host where the PostgreSQL/PostGIS server is running. Specifying --host without a hostname will try to connect to the local unix socket')
 
         parser.add_argument("--user",metavar="user",type=str,
                             help='Select postgresql user')
