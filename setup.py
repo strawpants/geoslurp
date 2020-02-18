@@ -14,7 +14,7 @@
 # License along with Frommle; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
+# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2020
 import setuptools
 from setuptools import find_packages
 
@@ -26,17 +26,21 @@ setuptools.setup(
     name="geoslurp",
     author="Roelof Rietbroek",
     author_email="roelof@wobbly.earth",
-    description="Python datapull for management of earth science data",
+    version="1.0.0",
+    description="Python postgreSQL-PostGIS client for managing earth science datasets",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/strawpants/geoslurp",
     packages=find_packages("."),
     package_dir={"":"."},
     scripts=['clitools/geoslurper.py'],
-    install_requires=['numpy','SQLAlchemy','pycurl','cryptography','PyYAML','lxml','keyring','pandas','easywebdav','motuclient','netCDF4','GDAL','Shapely','GeoAlchemy2','pyshtools'],
+    install_requires=['numpy','SQLAlchemy','pycurl','cryptography','PyYAML','lxml','keyring','pandas','easywebdav','motuclient','netCDF4','GDAL','Shapely','GeoAlchemy2'],
+    extra_requires=["pyshtools"],
     classifiers=["Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Operating System :: POSIX :: Linux",
         "Topic :: Scientific/Engineering",
-        "Development Status :: 1 - Planning"]
+        "Intended Audience :: Science/Research",
+        "Development Status :: 4 - Beta"]
     
 )
