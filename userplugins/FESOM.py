@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 from geoslurp.dataset.dataSetBase import DataSet
-from geoslurp.config.slurplogger import slurplogger
+from geoslurp.config.slurplogger import slurplog
 from geoslurp.config.catalogue import geoslurpCatalogue
 
 from sqlalchemy.ext.declarative import declared_attr, as_declarative
@@ -83,20 +83,27 @@ class FESOMRunTBase(object):
 
 def FESOMMetaExtractor(uri):
     """Extract meta information from a FESOM output file"""
-    slurplogger().info("extracting data from %s"%(uri.url))
+    slurplog.info("extracting data from %s"%(uri.url))
 
     try:
         ncFESOM=ncDset(uri.url)
     except OSError:
-        slurplogger().error("Cannot open netcdf file, skipping")
+        slurplog.error("Cannot open netcdf file, skipping")
         return None
     tvar=ncFESOM["time"]
 
     if tvar.shape[0] == 0:
         #quick return 
         return None
+    
+    if tvar.calendar == "noleap":
+        slurplog.warning("Note found 'noleap' calendar string but assuming 'standard'")
+        cal='standard'
+    else:
+        cal=tvar.calendar
+
     #parse time
-    time=num2date(tvar[:], tvar.units)
+    time=num2date(tvar[:], tvar.units,cal,only_use_cftime_datetimes=False)
     # try to estimate the time step fromt he median
     deltamedian=np.median(np.diff(time))
     if deltamedian.days > 28 and deltamedian.days <= 32 :
@@ -124,7 +131,7 @@ def FESOMMetaExtractor(uri):
 
 
     meta={"tstart":tstart,
-          "tend":time[-1],
+          "tend":time[-1]+deltamedian,
           "lastupdate":uri.lastmod,
           "interval":freq,
           "uri":uri.url,
