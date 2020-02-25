@@ -169,12 +169,11 @@ class GeoslurpConnector():
 
 
     #ay, adapted from geoslurptools.db.connector
-    def getInvent(self,tname,scheme):
+    def getInventEntry(self,tname,scheme):
         mdata=MetaData(bind=self.dbeng,schema='admin')
         tbl=Table('inventory', mdata, autoload=True, autoload_with=self.dbeng)
         qry=select([tbl]).where(and_((tbl.c.scheme == scheme) & (tbl.c.dataset == tname)))
         return self.dbeng.execute(qry).first()
-
 
 
 
