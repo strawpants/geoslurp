@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine, MetaData,and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import exists,select,column,table,text
 from sqlalchemy.schema import CreateSchema, DropSchema
@@ -166,6 +166,14 @@ class GeoslurpConnector():
             self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geoslurp;"%(name,passw))
 
 
+
+
+    #ay, adapted from geoslurptools.db.connector
+    def getInventEntry(self,tname,scheme):
+        mdata=MetaData(bind=self.dbeng,schema='admin')
+        tbl=Table('inventory', mdata, autoload=True, autoload_with=self.dbeng)
+        qry=select([tbl]).where(and_((tbl.c.scheme == scheme) & (tbl.c.dataset == tname)))
+        return self.dbeng.execute(qry).first()
 
 
 
