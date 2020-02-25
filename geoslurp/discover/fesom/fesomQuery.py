@@ -24,7 +24,7 @@ def getFesomRunInfo(dbcon,runname):
     """return a dictionary with info on the registered run"""
     #first query the inventory on the requested run
     scheme='fesom'
-    invent=dbcon.getInvent(runname,scheme)
+    invent=dbcon.getInventEntry(runname,scheme)
     vtablename="vertices_"+invent.data["grid"]
     #extract info on the vertices table
     vertinvent=dbcon.getInvent(vtablename,scheme)
