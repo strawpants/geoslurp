@@ -42,7 +42,7 @@ class settingsArgs:
     cache=None
     """(str): Alternative local settings file (instead of ${HOME}/.geoslurp_lastused.yaml)"""
 
-    def __init__(self,host=None,user=None,usekeyring=True,password=None,port=None,mirror=None,cache=None):
+    def __init__(self,host=None,user=None,usekeyring=False,password=None,port=None,mirror=None,cache=None):
         if host:
             self.host=host
 
