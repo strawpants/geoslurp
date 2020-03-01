@@ -21,6 +21,7 @@ from datetime import datetime
 import keyring
 import getpass
 import copy
+from geoslurp.config import slurplog
 
 
 class settingsArgs:
@@ -134,10 +135,18 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
     # we take a different strategy for the password as we don't want to store this unencrypted in a file
     if not argsout.password:
         if argsout.usekeyring:
-            argsout.password=keyring.get_password("geoslurp",argsout.user)
+            try:
+                argsout.password=keyring.get_password("geoslurp",argsout.user)
+                hasBackend=True
+            except RuntimeError:
+                slurplog.warning("no suitable python keyring backend found")
+                argsout.password=None
+                hasBackend=False
+
             if not argsout.password:
                 argsout.password=getpass.getpass(prompt='Please enter password for %s: '%(argsout.user))
-                keyring.set_password("geoslurp",argsout.user,argsout.password)
+                if hasBackend:
+                    keyring.set_password("geoslurp",argsout.user,argsout.password)
         else:
             #try checking the environment variable GEOSLURP_PGPASS
             try:

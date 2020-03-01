@@ -16,10 +16,11 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 from sqlalchemy import select
 
-def queryStatic(dbcon,name):
+def queryStatic(dbcon,regex):
 
     # retrieve/reflect the table
     tbl = dbcon.getTable('icgem_static', 'gravity')
     qry = select([tbl])
-    qry = qry.where(tbl.c.data["name"].astext == name)
+    qry=qry.where(tbl.c.data["name"].astext.op("~")(regex))
+    # qry = qry.where(tbl.c.data["name"].astext == name)
     return dbcon.dbeng.execute(qry)

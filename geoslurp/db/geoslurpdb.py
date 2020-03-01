@@ -14,16 +14,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
-from geoslurp.config.localsettings import readLocalSettings
+from geoslurp.config.localsettings import readLocalSettings,settingsArgs
 from geoslurp.db.connector import GeoslurpConnector
 
-def geoslurpConnect(args=None,readonlyuser=True,update=False):
+def geoslurpConnect(args=None,readonlyuser=True,update=False,local_settings=None):
     """Return a database connection while taking use of stored settings from the users 
     configuration file ($HOME/.geoslurp_lastused.yaml).
     :param args: Class which encapsulates different connection parameters
     :type args: geoslurp.localsettings.settingsArgs"""
-    if args:
-        userSettings=readLocalSettings(args=args,update=update,readonlyuser=readonlyuser)
-    else:
-        userSettings=readLocalSettings(update=update,readonlyuser=readonlyuser)
+   
+    if not args:
+        args=settingsArgs()
+
+    if local_settings:
+        args.local_settings=local_settings
+
+
+    userSettings=readLocalSettings(args=args,update=update,readonlyuser=readonlyuser)
+
     return GeoslurpConnector(host=userSettings.host,user=userSettings.user,passwd=userSettings.password,cache=userSettings.cache)

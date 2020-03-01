@@ -18,6 +18,7 @@
 
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 import os
 class CrawlerBase(ABC):
     rooturl=None
@@ -45,7 +46,8 @@ class CrawlerBase(ABC):
         futures=[]
         with ThreadPoolExecutor(max_workers=maxconn) as connectionPool:
             for uri in self.uris():
-                futures.append(connectionPool.submit(uri.download,outdir,check,gzip,None,continueonError))
+                # print("add ",uri.url)
+                futures.append(connectionPool.submit(deepcopy(uri).download,outdir,check,gzip,None,continueonError))
 
         for future in futures:
             if future.result()[1]:

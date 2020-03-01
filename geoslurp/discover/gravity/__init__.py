@@ -15,4 +15,5 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 
-from .staticfields import *
+from .staticQuery import *
+from .graceQuery import *

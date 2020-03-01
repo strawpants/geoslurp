@@ -22,8 +22,8 @@ import time
 from datetime import datetime
 from geoslurp.datapull import UriBase, UriFile, setFtime
 from geoslurp.datapull import CrawlerBase
-from geoslurp.config.slurplogger import slurplogger
-
+from geoslurp.config.slurplogger import slurplog
+from dateutil.parser import parse
 #python 3 hacks for easywebdav (see https://stackoverflow.com/questions/26130644/how-to-overcome-python-3-4-nameerror-name-basestring-is-not-defined)
 easywebdav.basestring = str
 easywebdav.client.basestring = str
@@ -64,10 +64,10 @@ class Uri(UriBase):
         if check and self.lastmod and uri.lastmod:
             if self.lastmod <= uri.lastmod:
                 #no need to download the file
-                slurplogger().info("Already Downloaded, skipping %s"%(uri.url))
+                slurplog.info("Already Downloaded, skipping %s"%(uri.url))
                 return uri,False
 
-        slurplogger().info("Downloading %s"%(uri.url))
+        slurplog.info("Downloading %s"%(uri.url))
         self.webdav.download(self.fname, uri.url)
 
         #change modification and access time to that provided by the ftp server
@@ -79,7 +79,8 @@ class Uri(UriBase):
         tmp=self
 
         #get modification time of the remote file
-        tmp.lastmod=datetime.strptime(remf.mtime, "%a, %d %b %Y %H:%M:%S %Z")
+        # tmp.lastmod=datetime.strptime(remf.mtime, "%a, %d %b %Y %H:%M:%S %Z")
+        tmp.lastmod=parse(remf.mtime).replace(tzinfo=None)
 
         #check if file already exists and whether it is too old
         tmp.fname=os.path.basename(remf.name)

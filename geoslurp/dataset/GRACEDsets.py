@@ -17,7 +17,7 @@
 
 from geoslurp.dataset.dataSetBase import DataSet
 from geoslurp.datapull.webdav import Crawler as WbCrawler
-from geoslurp.config.slurplogger import slurplogger
+from geoslurp.config.slurplogger import slurplog
 from geoslurp.datapull import findFiles
 from glob import glob
 import gzip
@@ -35,7 +35,7 @@ def graceMetaExtractor(uri):
     """Extract meta information from a GRACE file"""
     buf=StringIO()
     with gzip.open(uri.url,'rt') as fid:
-        slurplogger().info("Extracting info from %s"%(uri.url))
+        slurplog.info("Extracting info from %s"%(uri.url))
         for ln in fid:
             if '# End of YAML header' in ln:
                 break
@@ -84,7 +84,7 @@ class GRACEL2Base(DataSet):
     def pull(self):
         cred=self.conf.authCred("podaac")
         url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/L2/"+self.center+"/"+self.release
-        webdav=WbCrawler(url,auth=cred,pattern='G.*gz')
+        webdav=WbCrawler(url,auth=cred,pattern='G.*gz$')
         self.updated=webdav.parallelDownload(self.dataDir(),check=True)
 
     def register(self):
