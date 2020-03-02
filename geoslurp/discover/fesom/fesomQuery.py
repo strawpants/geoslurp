@@ -27,7 +27,7 @@ def getFesomRunInfo(dbcon,runname):
     invent=dbcon.getInventEntry(runname,scheme)
     vtablename="vertices_"+invent.data["grid"]
     #extract info on the vertices table
-    vertinvent=dbcon.getInvent(vtablename,scheme)
+    vertinvent=dbcon.getInventEntry(vtablename,scheme)
     rundict={"run":{"runTable":runname,"datadir":invent.datadir},"mesh":{"vertTable":vtablename,"zlevels":vertinvent.data["zlevels"]}}
 
     return rundict
