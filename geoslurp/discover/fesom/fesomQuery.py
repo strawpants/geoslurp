@@ -17,7 +17,7 @@
 
 
 from sqlalchemy import select,func,asc,and_,or_,literal_column
-from geoslurptools.gis.shapelytools import shpextract
+from geoslurp.tools.shapelytools import shpextract
 import numpy as np
 
 def getFesomRunInfo(dbcon,runname):
