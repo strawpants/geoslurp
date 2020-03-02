@@ -17,7 +17,7 @@
 
 
 from sqlalchemy import select,func,asc,and_,or_,literal_column
-from geoslurptools.gis.shapelytools import shpextract
+from geoslurp.tools.shapelytools import shpextract
 import numpy as np
 
 def getFesomRunInfo(dbcon,runname):
@@ -27,7 +27,7 @@ def getFesomRunInfo(dbcon,runname):
     invent=dbcon.getInventEntry(runname,scheme)
     vtablename="vertices_"+invent.data["grid"]
     #extract info on the vertices table
-    vertinvent=dbcon.getInvent(vtablename,scheme)
+    vertinvent=dbcon.getInventEntry(vtablename,scheme)
     rundict={"run":{"runTable":runname,"datadir":invent.datadir},"mesh":{"vertTable":vtablename,"zlevels":vertinvent.data["zlevels"]}}
 
     return rundict
