@@ -217,6 +217,13 @@ class increaseVerboseAction(argparse.Action):
         levels=[logging.CRITICAL, logging.ERROR, logging.WARNING, logging.INFO,logging.DEBUG]
         logging.basicConfig(level=levels[min(namespace.verbose,4)])
 
+
+# see https://stackoverflow.com/questions/34735831/python-argparse-toggle-no-toggle-flag
+class NegateAction(argparse.Action):
+    """Toggle option between True and False depending on whether the option starts with --no"""
+    def __call__(self, parser, ns, values, option):
+        setattr(ns, self.dest, option[2:4] != 'no')
+
 def addCommandLineArgs():
         """Add top level command line arguments (and request arguments from the loaded schema)"""
         usage=" Program to download and manage Earth Science data"
@@ -256,6 +263,10 @@ def addCommandLineArgs():
         parser.add_argument("--local-settings",metavar="LOCALSETTINGSFILE",type=str, 
                             help='Specify a different file to read the local settings from (default= ${HOME}/.geoslurp_lastused.yaml)')
 
+
+        parser.add_argument("--write-local-settings",action="store_true",
+                            help='Write relevant command line options to local-settings file')
+
         parser.add_argument("--config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register user settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
 
@@ -289,9 +300,12 @@ def addCommandLineArgs():
         parser.add_argument("--port",metavar="port",type=int, default=5432,
                             help='Select the port where the database is served')
 
-        parser.add_argument("--usekeyring",action='store_true',
-                            help='Set and get the system keyring to store the database password (alternatives are '
-                                 'using --password or the environment variable GEOSLURP_PGPASS')
+        # parser.add_argument("--usekeyring",action='store_true',
+        #                     help='Set and get the system keyring to store the database password (alternatives are '
+        #                          'using --password or the environment variable GEOSLURP_PGPASS')
+        parser.add_argument("--keyring","--no-keyring",dest="usekeyring",action=NegateAction, nargs=0,
+                            help=" Use/don't use the system keyring to store and retrieve the database password (alternatives are "
+                                 "using --password or the environment variable GEOSLURP_PGPASS")
 
         parser.add_argument("-v","--verbose", action=increaseVerboseAction, nargs="?",const='',default=3,
                             help="Increase verbosity of the output one cvan use multiple v's after another (e.g. -vv) "

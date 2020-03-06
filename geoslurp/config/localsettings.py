@@ -39,8 +39,10 @@ class settingsArgs:
     mirror=None
 
     local_settings=None
-    cache=None
     """(str): Alternative local settings file (instead of ${HOME}/.geoslurp_lastused.yaml)"""
+
+    cache=None
+    write_local_settings=False
 
     def __init__(self,host=None,user=None,usekeyring=False,password=None,port=None,mirror=None,cache=None):
         if host:
@@ -65,9 +67,12 @@ class settingsArgs:
             self.cache=cache
 
 
-def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
+def readLocalSettings(args=settingsArgs(),readonlyuser=True):
     """Retrieves/updates last used settings from the local settings file .geoslurp_lastused.yaml"""
+
+    #We need a deepcopy to properly separate input from output, and funny behavior
     argsout=copy.deepcopy(args)
+
     if argsout.local_settings:
         settingsFile=argsout.local_settings
     else:
@@ -120,7 +125,8 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
             print("--user option is needed for initialization",file=sys.stderr)
             sys.exit(1)
 
-    if argsout.usekeyring:
+    if argsout.usekeyring != None:
+        #use the provided value (when explicitly set to False or True)
         lastOpts["useKeyring"]=True
         isUpdated=True
     else:
@@ -162,17 +168,17 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
                     argsout.password=lastOpts["readonlyPasswd"]
                 else:
                     #prompt for password
-                    argsout.password=getpass.getpass(prompt='Please enter password: ')
-                    if update:
+                    argsout.password=getpass.getpass(prompt='Please enter password for %s: '%(argsout.user))
+                    if argsout.write_local_settings:
                         print("Warning: user database password will be stored unencrypted in the geoslurp configuration file,"
-                              "consider setting usekeyring=True")
+                              "consider using a keyring")
                         if readonlyuser:
                             lastOpts["readonlyPasswd"]=argsout.password
                         else:
                             lastOpts["passwd"]=argsout.password
     else:
         #update keyring
-        if argsout.usekeyring and update:
+        if argsout.usekeyring and argsout.write_local_settings:
             keyring.set_password("geoslurp",argsout.user,argsout.password)
     
     if argsout.mirror:
@@ -193,7 +199,7 @@ def readLocalSettings(args=settingsArgs(),update=True,readonlyuser=True):
             argsout.cache="/tmp/geoslurp_cache"
 
     #write out  options to file to store these settings
-    if isUpdated and update:
+    if isUpdated and argsout.write_local_settings:
         lastOpts["lastupdate"]=datetime.now()
         with open(settingsFile,'w') as fid:
             yaml.dump(lastOpts, fid, default_flow_style=False)
