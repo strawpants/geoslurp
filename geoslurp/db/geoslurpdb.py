@@ -30,6 +30,6 @@ def geoslurpConnect(args=None,readonlyuser=True,update=False,local_settings=None
         args.local_settings=local_settings
 
 
-    userSettings=readLocalSettings(args=args,update=update,readonlyuser=readonlyuser)
+    userSettings=readLocalSettings(args=args,readonlyuser=readonlyuser)
 
     return GeoslurpConnector(host=userSettings.host,user=userSettings.user,passwd=userSettings.password,cache=userSettings.cache)
