@@ -4,19 +4,18 @@ from netCDF4 import num2date
 
 def sec2month(nc_id):
     """convert seconds since.. to yyyy-mm-dd format"""
-    times=nc_id["JULD"]
+    times=nc_id["time"]
     units=times.units
     # calendar=times.calendar
+    tt=[entry for entry in num2date(times[:],units)]
     # month=[entry.month for entry in num2date(times[:],units,calendar=calendar)]
     # year=[entry.year for entry in num2date(times[:],units,calendar=calendar)]
-    month=[entry.month for entry in num2date(times[:],units)]
-    year=[entry.year for entry in num2date(times[:],units)]
-    tt=[]
-    for j in range(len(month)):
-        if int(month[j])<10:
-            tt.append(str(int(year[j])) + '-0' + str(int(month[j])) + '-01')
-        else: 
-            tt.append(str(int(year[j])) + '-' + str(int(month[j])) + '-01')
+    # tt=[]
+    # for j in range(len(month)):
+    #     if int(month[j])<10:
+    #         tt.append(str(int(year[j])) + '-0' + str(int(month[j])) + '-01')
+    #     else: 
+    #         tt.append(str(int(year[j])) + '-' + str(int(month[j])) + '-01')
       
     return tt
 
