@@ -29,24 +29,24 @@ def sec2month(nc_id):
         
 #         #loop over nodes
 
-def getTemp(fesomURI,tspan,zlvlid):
-    temp_all=[]
-    #loop over single files 
-    for i in range(len(fesomURI)):
-        nc_id = Dataset(fesomURI[i]["uri"], 'r')  # open file and obtain its id
-        with nc_id as nc:
-            # extract valid time nodes
-            times=nc_id["time"]
-            units=times.units
-            calendar=times.calendar
-            firstdate=num2date(times[0],units,calendar=calendar)
-            time=sec2month(nc_id)
-            #loop over inside the file
-            for j, t in enumerate(time):
-                if tspan[0] <= t and t < tspan[1]:
-                    temp=np.array(nc_id["temp"][j,zlvlid])
-                    if len(temp_all)==0:
-                        temp_all=[temp]
-                    else: 
-                        temp_all = np.concatenate((temp_all, [temp])) 
-    return temp_all
+# def getTemp(fesomURI,tspan,zlvlid):
+#     temp_all=[]
+#     #loop over single files 
+#     for i in range(len(fesomURI)):
+#         nc_id = Dataset(fesomURI[i]["uri"], 'r')  # open file and obtain its id
+#         with nc_id as nc:
+#             # extract valid time nodes
+#             times=nc_id["time"]
+#             units=times.units
+#             calendar=times.calendar
+#             firstdate=num2date(times[0],units,calendar=calendar)
+#             time=sec2month(nc_id)
+#             #loop over inside the file
+#             for j, t in enumerate(time):
+#                 if tspan[0] <= t and t < tspan[1]:
+#                     temp=np.array(nc_id["temp"][j,zlvlid])
+#                     if len(temp_all)==0:
+#                         temp_all=[temp]
+#                     else: 
+#                         temp_all = np.concatenate((temp_all, [temp])) 
+#     return temp_all

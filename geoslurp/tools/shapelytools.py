@@ -21,3 +21,7 @@ import shapely.wkb
 def shpextract(entry):
     """ extract a shapely object from the database entry"""
     return shapely.wkb.loads(str(entry['geom']), hex=True)
+
+
+# def closestDistance():
+    

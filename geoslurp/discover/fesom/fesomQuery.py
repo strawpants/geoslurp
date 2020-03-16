@@ -87,3 +87,31 @@ def fesomDataQueryURI(dbcon, fesominfo, tspan, interval=None):
         tmpdict = {"uri": entry._row[5], "tstart": entry.tstart, "tend": entry.tend}
         out.append(tmpdict)
     return out
+
+    
+def closest2Fesom(dbcon, fesominfo, geoWKT=None, samplePoints=[]):
+    """returns vertices of a FESOM grid that have the smallest distance to sample points"""
+    
+    #retrieve/reflect the table
+    tbl=dbcon.getTable(fesominfo["mesh"]["vertTable"],'fesom')
+    qry=select([tbl.c.topo, tbl.c.nodeid,literal_column('geom::geometry').label('geom')])
+    
+    if geoWKT:
+        qry=qry.where(func.ST_within(literal_column('geom::geometry'),
+                                     func.ST_GeomFromText(geoWKT,4326)))   
+    if len(samplePoints)!=0:
+        pp=[]
+        for p in samplePoints:
+            # print(p)
+            qry1=qry.order_by(func.ST_Distance(literal_column('geom::geometry'),
+                                              func.ST_GeomFromText(p.wkt,4326)))
+            qry1=qry1.limit(1)
+            pp.append(dbcon.dbeng.execute(qry1).first()._row)
+    
+    return pp
+    
+
+def fesomMeshQueryWKB(dbcon, fesominfo, geoWKT):
+    """Query the database positions of OBP points"""
+    
+    return [(shpextract(x)) for x in fesomMeshQueryXY(dbcon, fesominfo, geoWKT)]
