@@ -55,7 +55,6 @@ class DatasetCatalogue:
 
     def refresh(self,conf):
         """Refresh the dataset catalogue"""
-        slurplog.info("Refreshing cached catalogue %s"%cachefile)
         self.registerAllDataSets(conf)
 
         #load inventory of existing datasets (for the templated)

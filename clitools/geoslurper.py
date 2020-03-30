@@ -40,7 +40,7 @@ def main(argv):
 
     # We need a point of contact to communicate with the database
     try:
-        DbConn=GeoslurpConnector(args.host,args.user,args.password,readonlyuser=False)
+        DbConn=GeoslurpConnector(args.host,args.user,args.password,readonlyuser=False,cache=args.cache)
     except Exception as e:
         print(e)
         print("Cannot connect to postgresql database, quitting")

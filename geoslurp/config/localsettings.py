@@ -189,7 +189,7 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True):
             argsout.mirror=lastOpts["mirror"]
         else:
             argsout.mirror="default"
-
+    
     if argsout.cache:
         lastOpts["cache"]=argsout.cache
     else:

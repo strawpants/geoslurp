@@ -64,6 +64,7 @@ class DataSet(ABC):
     updatefreq=None
     commitperN=500
     stripuri=False
+    
     def __init__(self,dbcon):
         if re.search("TEMPLATE",".".join([self.scheme,self.__class__.__name__])):
             raise RuntimeError("Refusing to instantiate templated dataset")
