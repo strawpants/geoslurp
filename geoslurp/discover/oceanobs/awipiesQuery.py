@@ -13,7 +13,7 @@
 # License along with geoslurp; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
+# Author alisa yakhontova (yakhontova@geod.uni-bonn.de), 2020
 from sqlalchemy import text
 # from geoslurptools.aux.ogrgeom import lonlat2ogr
 from sqlalchemy import select,func,asc,and_,literal_column,between
@@ -31,17 +31,6 @@ def awipiesQuery(dbcon,tspan=None, geoWKT=False):
     if tspan:
         subqry=subqry.where(func.overlaps(tbl.c.tstart,tbl.c.tend,tspan[0],tspan[1]))
    
-    
-    # # Apply initial geospatial constraints 
-    # if geoWKT:
-    #     if withinDmeter:
-    #         #only base initial constraints ont he bounding box
-    #         subqry=subqry.where(func.ST_DWithin(literal_column('ST_Envelope(geom::geometry)::geography'),func.ST_GeogFromText(geoWKT),withinDmeter))
-    #     else:
-    #         subqry=subqry.where(func.ST_Intersects(literal_column('geom::geometry'),func.ST_GeomFromText(geoWKT,4326)))
-    
-    
-    #we need to assign an alias to this subquery in order to work with it
     subqry=subqry.alias("ar")
     #expand the arrays and points int he subquery
     qry=select([
@@ -56,14 +45,6 @@ def awipiesQuery(dbcon,tspan=None, geoWKT=False):
     finalqry=qry 
     qry=qry.alias("arex")
     
-
-    # if geoWKT:
-    #     if withinDmeter:
-    #         #only base initial constraints ont he bounding box
-    #         finalqry=finalqry.where(func.ST_DWithin(qry.c.geom,func.ST_GeogFromText(geoWKT),withinDmeter))
-    #     else:
-    #         finalqry=finalqry.where(func.ST_Within(literal_column("arex.geom"),func.ST_GeomFromText(geoWKT,4326)))
-
     return dbcon.dbeng.execute(finalqry)
 
 def awipiesWKB(dbcon, tspan, geoWKT=False):
