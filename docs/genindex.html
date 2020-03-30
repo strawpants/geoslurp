@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; geoslurp Wannabe v1.0 documentation</title>
+  <title>Index &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
         <link rel="index" title="Index"
               href="#"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="index.html"/> 
+    <link rel="top" title="geoslurp v1.1.0 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -251,6 +251,13 @@
 </li>
       </ul></li>
       <li>
+    --keyring, --no-keyring
+
+      <ul>
+        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-keyring">clitools/geoslurper.py command line option</a>
+</li>
+      </ul></li>
+      <li>
     --local-settings &lt;localsettingsfile&gt;
 
       <ul>
@@ -285,6 +292,8 @@
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-pull">clitools/geoslurper.py command line option</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     --purge-cache &lt;filter&gt;
 
@@ -292,8 +301,6 @@
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-purge-cache">clitools/geoslurper.py command line option</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     --purge-data &lt;filter&gt;
 
@@ -330,17 +337,17 @@
 </li>
       </ul></li>
       <li>
-    --usekeyring
-
-      <ul>
-        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-usekeyring">clitools/geoslurper.py command line option</a>
-</li>
-      </ul></li>
-      <li>
     --user &lt;user&gt;
 
       <ul>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-user">clitools/geoslurper.py command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --write-local-settings
+
+      <ul>
+        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-write-local-settings">clitools/geoslurper.py command line option</a>
 </li>
       </ul></li>
       <li>
@@ -531,6 +538,8 @@
 </li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-host">--host &lt;hostname&gt;</a>
 </li>
+        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-keyring">--keyring, --no-keyring</a>
+</li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-local-settings">--local-settings &lt;localsettingsfile&gt;</a>
 </li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-mirror">--mirror &lt;mirroralias&gt;</a>
@@ -553,9 +562,9 @@
 </li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-show-config">--show-config</a>
 </li>
-        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-usekeyring">--usekeyring</a>
-</li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-user">--user &lt;user&gt;</a>
+</li>
+        <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-write-local-settings">--write-local-settings</a>
 </li>
         <li><a href="clitools.html#cmdoption-clitools-geoslurper-py-d">-d &lt;pattern&gt;, --dset &lt;pattern&gt;</a>
 </li>
@@ -2187,7 +2196,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'Wannabe v1.0',
+            VERSION:'v1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

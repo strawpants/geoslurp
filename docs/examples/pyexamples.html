@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Examples &mdash; geoslurp Wannabe v1.0 documentation</title>
+  <title>Python Examples &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/>
+    <link rel="top" title="geoslurp v1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="Tutorial" href="../examples.html"/>
         <link rel="next" title="Establish a database connection and retrieve the inventory and User settings" href="connectnQuery.html"/>
         <link rel="prev" title="Using the command line tool geoslurp" href="../usingcli.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -105,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="UsingCataloguedDsets.html">Downloading and registering “catalogue” datasets</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CreateDynDSet.html">Download and register a dynamic dataset of (crowd-sourced?) US Marijuana street prices</a></li>
 <li class="toctree-l3"><a class="reference internal" href="BasicDiscovery.html">Discovery techniques</a></li>
+<li class="toctree-l3"><a class="reference internal" href="export2Portable.html">Exporting parts of the database to portable formats</a></li>
 </ul>
 </li>
 </ul>
@@ -196,7 +197,7 @@
 </style>
 <div class="section" id="python-examples">
 <h1>Python Examples<a class="headerlink" href="#python-examples" title="Permalink to this headline">¶</a></h1>
-<p>All operations which are supported by the command line tool can also be performed in a more modular sense from python. In fact, actions can be defined more broadly when using the python interface. The use of the commandline interface is therefore not strictly necessary. The following sections show python examples which illustrate this. The Jupyter notebooks, which are used to build these examples can be downloaded from <a class="reference external" href="https://github.com/strawpants/geoslurp/tree/master/examples">the github repository</a>.</p>
+<p>All operations which are supported by the command line tool can also be performed in a more modular sense from python. In fact, actions can be defined more broadly when using the python interface. The use of the commandline interface is therefore not strictly necessary. The following sections show python examples which illustrate this. The Jupyter notebooks, which are used to build these examples can be downloaded from <a class="reference external" href="https://github.com/strawpants/geoslurp/tree/master/docsrc/examples">the github repository</a>.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="connectnQuery.html">Establish a database connection and retrieve the inventory and User settings</a><ul>
@@ -232,6 +233,11 @@
 <li class="toctree-l3"><a class="reference internal" href="BasicDiscovery.html#Visualize-the-result-geographically-using-matplotlib">Visualize the result geographically using matplotlib</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="export2Portable.html">Exporting parts of the database to portable formats</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="export2Portable.html#Exporting-a-subset-of-the-PSMSL-table">Exporting a subset of the PSMSL table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="export2Portable.html#Exporting-an-Argo-query-and-the-profile-files-in-the-South-China-Sea-for-the-first-2-weeks-of-December-2010">Exporting an Argo query and the profile files in the South China Sea for the first 2 weeks of December 2010</a></li>
 </ul>
 </li>
 </ul>
@@ -282,7 +288,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'Wannabe v1.0',
+            VERSION:'v1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

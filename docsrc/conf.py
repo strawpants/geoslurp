@@ -24,9 +24,9 @@ copyright = str(datetime.now().year)+', Roelof Rietbroek'
 author = 'Roelof Rietbroek'
 
 # The short X.Y version
-version = '1.0'
+version = '1.1.0'
 # The full version, including alpha/beta/rc tags
-release = 'Wannabe v1.0'
+release = 'v1.1.0'
 
 
 # -- General configuration ---------------------------------------------------

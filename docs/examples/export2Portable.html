@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Exporting parts of the database to portable formats &mdash; geoslurp Wannabe v1.0 documentation</title>
+  <title>Exporting parts of the database to portable formats &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
@@ -37,7 +37,10 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/> 
+    <link rel="top" title="geoslurp v1.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Python Examples" href="pyexamples.html"/>
+        <link rel="next" title="Reference Documentation" href="../reference.html"/>
+        <link rel="prev" title="Discovery techniques" href="BasicDiscovery.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -66,7 +69,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -91,11 +94,26 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">An introduction to Geoslurp</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../confsettings.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../usingcli.html">Using the command line tool geoslurp</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyexamples.html">Python Examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="connectnQuery.html">Establish a database connection and retrieve the inventory and User settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="UsingCataloguedDsets.html">Downloading and registering “catalogue” datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CreateDynDSet.html">Download and register a dynamic dataset of (crowd-sourced?) US Marijuana street prices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="BasicDiscovery.html">Discovery techniques</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Exporting parts of the database to portable formats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Exporting-a-subset-of-the-PSMSL-table">Exporting a subset of the PSMSL table</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Exporting-an-Argo-query-and-the-profile-files-in-the-South-China-Sea-for-the-first-2-weeks-of-December-2010">Exporting an Argo query and the profile files in the South China Sea for the first 2 weeks of December 2010</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference Documentation</a></li>
 </ul>
 
@@ -140,6 +158,10 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../examples.html">Tutorial</a> &raquo;</li>
+        
+          <li><a href="pyexamples.html">Python Examples</a> &raquo;</li>
         
       <li>Exporting parts of the database to portable formats</li>
     
@@ -441,6 +463,15 @@ layers.</p>
           </div>
           <footer>
   
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../reference.html" class="btn btn-neutral float-right" title="Reference Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="BasicDiscovery.html" class="btn btn-neutral" title="Discovery techniques" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
   <hr/>
 
@@ -468,7 +499,7 @@ layers.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'Wannabe v1.0',
+            VERSION:'v1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

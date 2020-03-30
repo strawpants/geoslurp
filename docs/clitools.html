@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Command line tools &mdash; geoslurp Wannabe v1.0 documentation</title>
+  <title>Command line tools &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="index.html"/>
+    <link rel="top" title="geoslurp v1.1.0 documentation" href="index.html"/>
         <link rel="up" title="Reference Documentation" href="reference.html"/>
         <link rel="next" title="geoslurp package" href="reference/geoslurp.html"/>
         <link rel="prev" title="Conventions on naming tables and their columns" href="tableconventions.html"/> 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -203,15 +203,15 @@
 <span class="go">                              [--purge-entry] [--pull [JSON]]</span>
 <span class="go">                              [--register [JSON]]</span>
 <span class="go">                              [--local-settings LOCALSETTINGSFILE]</span>
-<span class="go">                              [--config [JSON]] [--show-config]</span>
-<span class="go">                              [--auth-config [JSON]] [--admin-config [JSON]]</span>
-<span class="go">                              [--host hostname] [--user user]</span>
-<span class="go">                              [--add-user username]</span>
+<span class="go">                              [--write-local-settings] [--config [JSON]]</span>
+<span class="go">                              [--show-config] [--auth-config [JSON]]</span>
+<span class="go">                              [--admin-config [JSON]] [--host [hostname]]</span>
+<span class="go">                              [--user user] [--add-user username]</span>
 <span class="go">                              [--add-readonly-user username]</span>
-<span class="go">                              [--password password] [--port port]</span>
-<span class="go">                              [--usekeyring] [-v [VERBOSE]] [--data-dir DIR]</span>
-<span class="go">                              [--cache DIR] [-d [PATTERN]]</span>
-<span class="go">                              [--mirror [MIRRORALIAS]] [-f [PATTERN]]</span>
+<span class="go">                              [--password password] [--port port] [--keyring]</span>
+<span class="go">                              [-v [VERBOSE]] [--data-dir DIR] [--cache DIR]</span>
+<span class="go">                              [-d [PATTERN]] [--mirror [MIRRORALIAS]]</span>
+<span class="go">                              [-f [PATTERN]]</span>
 </pre></div>
 </div>
 <dl class="option">
@@ -275,6 +275,12 @@
 </dd></dl>
 
 <dl class="option">
+<dt id="cmdoption-clitools-geoslurper-py-write-local-settings">
+<code class="descname">--write-local-settings</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-write-local-settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write relevant command line options to local-settings file</p>
+</dd></dl>
+
+<dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-config">
 <code class="descname">--config</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register user settings  (pass as a JSON dict, e.g. {“DataDir”:”path/”})</p>
@@ -301,7 +307,7 @@
 <dl class="option">
 <dt id="cmdoption-clitools-geoslurper-py-host">
 <code class="descname">--host</code><code class="descclassname"> &lt;hostname&gt;</code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-host" title="Permalink to this definition">¶</a></dt>
-<dd><p>Select host where the PostgreSQL/PostGIS server is running</p>
+<dd><p>Select host where the PostgreSQL/PostGIS server is running. Specifying –host without a hostname will try to connect to the local unix socket</p>
 </dd></dl>
 
 <dl class="option">
@@ -335,9 +341,9 @@
 </dd></dl>
 
 <dl class="option">
-<dt id="cmdoption-clitools-geoslurper-py-usekeyring">
-<code class="descname">--usekeyring</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-usekeyring" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set and get the system keyring to store the database password (alternatives are using –password or the environment variable GEOSLURP_PGPASS</p>
+<dt id="cmdoption-clitools-geoslurper-py-keyring">
+<code class="descname">--keyring</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--no-keyring</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-clitools-geoslurper-py-keyring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use/don’t use the system keyring to store and retrieve the database password (alternatives are using –password or the environment variable GEOSLURP_PGPASS</p>
 </dd></dl>
 
 <dl class="option">
@@ -423,7 +429,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'Wannabe v1.0',
+            VERSION:'v1.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
