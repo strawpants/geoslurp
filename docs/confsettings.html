@@ -19,37 +19,42 @@
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial" href="examples.html" />
-    <link rel="prev" title="Installation of the geoslurp package and setting up the PostgreSQL instance" href="installation.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="index.html"/>
+        <link rel="next" title="Tutorial" href="examples.html"/>
+        <link rel="prev" title="Installation of the geoslurp package and setting up the PostgreSQL instance" href="installation.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -115,7 +120,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">geoslurp</a>
@@ -123,10 +128,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -173,23 +177,18 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
+.nbinput.nblast,
+.nboutput.nblast {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast.container + .nbinput.container {
+.nblast + .nbinput {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
 }
 </style>
 <div class="section" id="configuration">
@@ -210,10 +209,10 @@
 <h3>Specifying passwords<a class="headerlink" href="#specifying-passwords" title="Permalink to this headline">¶</a></h3>
 <p>There are several ways to specify passwords, some which are more secure than others. The follin</p>
 <ol class="arabic simple">
-<li><p><strong>Use a keyring recognized by python keyring</strong>. This requires that <a class="reference external" href="https://pypi.org/project/keyring/">python keyring  is installed with a suitable backend</a>. When the option <code class="docutils literal notranslate"><span class="pre">useKeyring=true</span></code> is specified in <code class="docutils literal notranslate"><span class="pre">${HOME}/.geoslurp_lastused.yaml</span></code>, users will be prompted for a  password when they connect for the first time, but subsequent accesses don’t require entering a password, and are therefore non-interactive.</p></li>
-<li><p><strong>Use an environment variable</strong>. If <code class="docutils literal notranslate"><span class="pre">useKeyRing=false</span></code>, one can use an environment variable to specify the password e.g.: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASS=&quot;supersecretpassword</span></code>, or <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASSRO</span></code> (for the readonly user).</p></li>
-<li><p>If both methods 1 and 2 fail. one will be interactively prompted for a password</p></li>
-<li><p>As an alternative the constructor of the <a class="reference external" href="reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector">GeoslurpConnector</a> class allows the explicit input of a password.</p></li>
+<li><strong>Use a keyring recognized by python keyring</strong>. This requires that <a class="reference external" href="https://pypi.org/project/keyring/">python keyring  is installed with a suitable backend</a>. When the option <code class="docutils literal notranslate"><span class="pre">useKeyring=true</span></code> is specified in <code class="docutils literal notranslate"><span class="pre">${HOME}/.geoslurp_lastused.yaml</span></code>, users will be prompted for a  password when they connect for the first time, but subsequent accesses don’t require entering a password, and are therefore non-interactive.</li>
+<li><strong>Use an environment variable</strong>. If <code class="docutils literal notranslate"><span class="pre">useKeyRing=false</span></code>, one can use an environment variable to specify the password e.g.: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASS=&quot;supersecretpassword</span></code>, or <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASSRO</span></code> (for the readonly user).</li>
+<li>If both methods 1 and 2 fail. one will be interactively prompted for a password</li>
+<li>As an alternative the constructor of the <a class="reference external" href="reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector">GeoslurpConnector</a> class allows the explicit input of a password.</li>
 </ol>
 </div>
 </div>
@@ -223,9 +222,9 @@
 <div class="section" id="important-configuration-parameters">
 <h3>Important configuration parameters<a class="headerlink" href="#important-configuration-parameters" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p><strong>DataDir</strong>:This is the root directory where out-of-db datafiles will be stored. This can be overruled for individual datasets (e.g. when the files belonging to a datase are already downloaded and available)</p></li>
-<li><p><strong>CacheDir</strong>: Temporary files will be stored in this directory. Note that this can be overruled per user.</p></li>
-<li><p><strong>userplugins</strong>: A list of directories where custom <em>dataset</em> classes are stored.</p></li>
+<li><strong>DataDir</strong>:This is the root directory where out-of-db datafiles will be stored. This can be overruled for individual datasets (e.g. when the files belonging to a datase are already downloaded and available)</li>
+<li><strong>CacheDir</strong>: Temporary files will be stored in this directory. Note that this can be overruled per user.</li>
+<li><strong>userplugins</strong>: A list of directories where custom <em>dataset</em> classes are stored.</li>
 </ol>
 </div>
 </div>
@@ -233,7 +232,9 @@
 
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -242,7 +243,7 @@
         <a href="examples.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installation.html" class="btn btn-neutral float-left" title="Installation of the geoslurp package and setting up the PostgreSQL instance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral" title="Installation of the geoslurp package and setting up the PostgreSQL instance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -251,11 +252,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -268,15 +269,36 @@
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

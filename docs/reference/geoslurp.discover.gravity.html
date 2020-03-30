@@ -19,37 +19,43 @@
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="geoslurp.discover.oceanobs package" href="geoslurp.discover.oceanobs.html" />
-    <link rel="prev" title="geoslurp.discover package" href="geoslurp.discover.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/>
+        <link rel="up" title="geoslurp.discover package" href="geoslurp.discover.html"/>
+        <link rel="next" title="geoslurp.discover.oceanobs package" href="geoslurp.discover.oceanobs.html"/>
+        <link rel="prev" title="geoslurp.discover.fesom package" href="geoslurp.discover.fesom.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -105,7 +111,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -113,10 +119,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -169,23 +174,18 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
+.nbinput.nblast,
+.nboutput.nblast {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast.container + .nbinput.container {
+.nblast + .nbinput {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
 }
 </style>
 <div class="section" id="module-geoslurp.discover.gravity">
@@ -193,11 +193,26 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-geoslurp.discover.gravity.staticfields">
-<span id="geoslurp-discover-gravity-staticfields-module"></span><h2>geoslurp.discover.gravity.staticfields module<a class="headerlink" href="#module-geoslurp.discover.gravity.staticfields" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-geoslurp.discover.gravity.graceQuery">
+<span id="geoslurp-discover-gravity-gracequery-module"></span><h2>geoslurp.discover.gravity.graceQuery module<a class="headerlink" href="#module-geoslurp.discover.gravity.graceQuery" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="geoslurp.discover.gravity.staticfields.queryStatic">
-<code class="sig-prename descclassname">geoslurp.discover.gravity.staticfields.</code><code class="sig-name descname">queryStatic</code><span class="sig-paren">(</span><em class="sig-param">dbcon</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/gravity/staticfields.html#queryStatic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.gravity.staticfields.queryStatic" title="Permalink to this definition">¶</a></dt>
+<dt id="geoslurp.discover.gravity.graceQuery.joinByPeriod">
+<code class="descclassname">geoslurp.discover.gravity.graceQuery.</code><code class="descname">joinByPeriod</code><span class="sig-paren">(</span><em>left</em>, <em>right</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/gravity/graceQuery.html#joinByPeriod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.gravity.graceQuery.joinByPeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to make an inner table join based upon similar start times</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.discover.gravity.graceQuery.queryGRACE">
+<code class="descclassname">geoslurp.discover.gravity.graceQuery.</code><code class="descname">queryGRACE</code><span class="sig-paren">(</span><em>dbcon</em>, <em>gravtablename</em>, <em>withAtm=False</em>, <em>withOceAtm=False</em>, <em>withOce=False</em>, <em>withSurfP=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/gravity/graceQuery.html#queryGRACE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.gravity.graceQuery.queryGRACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query GRACE solutions and add accompanying background products</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-geoslurp.discover.gravity.staticQuery">
+<span id="geoslurp-discover-gravity-staticquery-module"></span><h2>geoslurp.discover.gravity.staticQuery module<a class="headerlink" href="#module-geoslurp.discover.gravity.staticQuery" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="geoslurp.discover.gravity.staticQuery.queryStatic">
+<code class="descclassname">geoslurp.discover.gravity.staticQuery.</code><code class="descname">queryStatic</code><span class="sig-paren">(</span><em>dbcon</em>, <em>regex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/gravity/staticQuery.html#queryStatic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.gravity.staticQuery.queryStatic" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -205,7 +220,9 @@
 
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -214,7 +231,7 @@
         <a href="geoslurp.discover.oceanobs.html" class="btn btn-neutral float-right" title="geoslurp.discover.oceanobs package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="geoslurp.discover.html" class="btn btn-neutral float-left" title="geoslurp.discover package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="geoslurp.discover.fesom.html" class="btn btn-neutral" title="geoslurp.discover.fesom package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -223,11 +240,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -240,15 +257,36 @@
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

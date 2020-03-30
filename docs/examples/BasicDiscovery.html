@@ -19,37 +19,43 @@
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Reference Documentation" href="../reference.html" />
-    <link rel="prev" title="Download and register a dynamic dataset of (crowd-sourced?) US Marijuana street prices" href="CreateDynDSet.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Python Examples" href="pyexamples.html"/>
+        <link rel="next" title="Reference Documentation" href="../reference.html"/>
+        <link rel="prev" title="Download and register a dynamic dataset of (crowd-sourced?) US Marijuana street prices" href="CreateDynDSet.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -119,7 +125,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -127,10 +133,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -181,16 +186,16 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput.container,
-div.nbinput.container div.prompt,
-div.nbinput.container div.input_area,
-div.nbinput.container div[class*=highlight],
-div.nbinput.container div[class*=highlight] pre,
-div.nboutput.container,
-div.nboutput.container div.prompt,
-div.nboutput.container div.output_area,
-div.nboutput.container div[class*=highlight],
-div.nboutput.container div[class*=highlight] pre {
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
     background: none;
     border: none;
     padding: 0 0;
@@ -199,13 +204,13 @@ div.nboutput.container div[class*=highlight] pre {
 }
 
 /* avoid gaps between output lines */
-div.nboutput.container div[class*=highlight] pre {
+div.nboutput div[class*=highlight] pre {
     line-height: normal;
 }
 
 /* input/output containers */
-div.nbinput.container,
-div.nboutput.container {
+div.nbinput,
+div.nboutput {
     display: -webkit-flex;
     display: flex;
     align-items: flex-start;
@@ -213,91 +218,92 @@ div.nboutput.container {
     width: 100%;
 }
 @media (max-width: 540px) {
-    div.nbinput.container,
-    div.nboutput.container {
+    div.nbinput,
+    div.nboutput {
         flex-direction: column;
     }
 }
 
 /* input container */
-div.nbinput.container {
+div.nbinput {
     padding-top: 5px;
 }
 
 /* last container */
-div.nblast.container {
+div.nblast {
     padding-bottom: 5px;
 }
 
 /* input prompt */
-div.nbinput.container div.prompt pre {
-    color: #307FC1;
+div.nbinput div.prompt pre {
+    color: #303F9F;
 }
 
 /* output prompt */
-div.nboutput.container div.prompt pre {
-    color: #BF5B3D;
+div.nboutput div.prompt pre {
+    color: #D84315;
 }
 
 /* all prompts */
-div.nbinput.container div.prompt,
-div.nboutput.container div.prompt {
-    min-width: 5ex;
-    padding-top: 0.3rem;
-    padding-right: 0.3rem;
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
     text-align: right;
     flex: 0;
 }
 @media (max-width: 540px) {
-    div.nbinput.container div.prompt,
-    div.nboutput.container div.prompt {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
         text-align: left;
         padding: 0.4em;
     }
-    div.nboutput.container div.prompt.empty {
+    div.nboutput div.prompt.empty {
         padding: 0;
     }
 }
 
 /* disable scrollbars on prompts */
-div.nbinput.container div.prompt pre,
-div.nboutput.container div.prompt pre {
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
     overflow: hidden;
 }
 
 /* input/output area */
-div.nbinput.container div.input_area,
-div.nboutput.container div.output_area {
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
 }
 @media (max-width: 540px) {
-    div.nbinput.container div.input_area,
-    div.nboutput.container div.output_area {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
         width: 100%;
     }
 }
 
 /* input area */
-div.nbinput.container div.input_area {
-    border: 1px solid #e0e0e0;
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
     border-radius: 2px;
-    background: #f5f5f5;
+    background: #f7f7f7;
 }
 
 /* override MathJax center alignment in output cells */
-div.nboutput.container div[class*=MathJax] {
+div.nboutput div[class*=MathJax] {
     text-align: left !important;
 }
 
-/* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput.container div.math p {
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
     text-align: left;
 }
 
 /* standard error */
-div.nboutput.container div.output_area.stderr {
+div.nboutput div.output_area.stderr {
     background: #fdd;
 }
 
@@ -341,156 +347,111 @@ div.nboutput.container div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
-
-div.nbinput.container div.input_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight].math,
-div.nboutput.container div.output_area.rendered_html,
-div.nboutput.container div.output_area > div.output_javascript,
-div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 0.3rem;
-}
-
-/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
-div.nbinput.container div.input_area > div[class^='highlight'],
-div.nboutput.container div.output_area > div[class^='highlight']{
-    overflow-y: hidden;
-}
-
-/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
-    display: none;
-}
-
-/* Some additional styling taken form the Jupyter notebook CSS */
-div.rendered_html table {
-  border: none;
-  border-collapse: collapse;
-  border-spacing: 0;
-  color: black;
-  font-size: 12px;
-  table-layout: fixed;
-}
-div.rendered_html thead {
-  border-bottom: 1px solid black;
-  vertical-align: bottom;
-}
-div.rendered_html tr,
-div.rendered_html th,
-div.rendered_html td {
-  text-align: right;
-  vertical-align: middle;
-  padding: 0.5em 0.5em;
-  line-height: normal;
-  white-space: normal;
-  max-width: none;
-  border: none;
-}
-div.rendered_html th {
-  font-weight: bold;
-}
-div.rendered_html tbody tr:nth-child(odd) {
-  background: #f5f5f5;
-}
-div.rendered_html tbody tr:hover {
-  background: rgba(66, 165, 245, 0.2);
-}
-
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
+.nbinput.nblast,
+.nboutput.nblast {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast.container + .nbinput.container {
+.nblast + .nbinput {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
 }
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
 </style>
 <div class="section" id="Discovery-techniques">
 <h1>Discovery techniques<a class="headerlink" href="#Discovery-techniques" title="Permalink to this headline">¶</a></h1>
-<p>Querying the database can be done with anything which support attaching to a PostGreSQL database. Many interface libraries for a variety of programming languages exist, so this is in the end a user’s choice.</p>
-<p>That being said, often there are queries which need to be done more often, and it pays off to build convenience functions which wrap a database query. Commonly used query wrapper are found in the <a class="reference external" href="../reference/geoslurp.discover.html#module-geoslurp.discover">discover subdirectory</a>.</p>
-<p>Below are a few examples which demonstrate the use of sqlalchemy to perform queries. They make use of the data which has been registered in <a class="reference external" href="../examples/CreateDynDSet.html#Download-and-register-a-dataset-of-(fictious?)-US-Marijuana-street-prices">this notebook</a>. The queries are encapsulated in functions which return an iteratable object which is the result of the query. This is also the same pattern as most functions in the <em>discover</em> directory obey.</p>
+<p>Querying the database can be done with anything which support attaching
+to a PostGreSQL database. Many interface libraries for a variety of
+programming languages exist, so this is in the end a user’s choice.</p>
+<p>That being said, often there are queries which need to be done more
+often, and it pays off to build convenience functions which wrap a
+database query. Commonly used query wrapper are found in the <a class="reference external" href="../reference/geoslurp.discover.html#module-geoslurp.discover">discover
+subdirectory</a>.</p>
+<p>Below are a few examples which demonstrate the use of sqlalchemy to
+perform queries. They make use of the data which has been registered in
+<a class="reference external" href="../examples/CreateDynDSet.html#Download-and-register-a-dataset-of-(fictious?)-US-Marijuana-street-prices">this
+notebook</a>.
+The queries are encapsulated in functions which return an iteratable
+object which is the result of the query. This is also the same pattern
+as most functions in the <em>discover</em> directory obey.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from geoslurp.config import setInfoLevel
-from geoslurp.db import geoslurpConnect
-setInfoLevel()
+<span></span><span class="kn">from</span> <span class="nn">geoslurp.config</span> <span class="k">import</span> <span class="n">setInfoLevel</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="k">import</span> <span class="n">geoslurpConnect</span>
+<span class="n">setInfoLevel</span><span class="p">()</span>
 
-gpcon=geoslurpConnect() # this will be a connection based on the readonly user
+<span class="n">gpcon</span><span class="o">=</span><span class="n">geoslurpConnect</span><span class="p">()</span> <span class="c1"># this will be a connection based on the readonly user</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="Query-a-single-table-and-visualize-the-result">
 <h2>Query a single table and visualize the result<a class="headerlink" href="#Query-a-single-table-and-visualize-the-result" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from sqlalchemy import select,asc
-def queryState(dbcon,state):
-    &quot;&quot;&quot;Query the usweedprices2 table for a given state, while sorting the results according to their timestamp&quot;&quot;&quot;
-    #retrieve/reflect the table (note the lowercase table name)
-    tbl=dbcon.getTable(&#39;usweedprices2&#39;,&#39;public&#39;)
+<span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">select</span><span class="p">,</span><span class="n">asc</span>
+<span class="k">def</span> <span class="nf">queryState</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span><span class="n">state</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Query the usweedprices2 table for a given state, while sorting the results according to their timestamp&quot;&quot;&quot;</span>
+    <span class="c1">#retrieve/reflect the table (note the lowercase table name)</span>
+    <span class="n">tbl</span><span class="o">=</span><span class="n">dbcon</span><span class="o">.</span><span class="n">getTable</span><span class="p">(</span><span class="s1">&#39;usweedprices2&#39;</span><span class="p">,</span><span class="s1">&#39;public&#39;</span><span class="p">)</span>
 
-    qry=select([tbl]).where(tbl.c.State == state).order_by(asc(tbl.c.date))
+    <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="p">])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">State</span> <span class="o">==</span> <span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">asc</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
 
-    return dbcon.dbeng.execute(qry)
+    <span class="k">return</span> <span class="n">dbcon</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">qry</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="Pick-a-state-and-plot-the-results-using-matplotlib">
 <h3>Pick a state and plot the results using matplotlib<a class="headerlink" href="#Pick-a-state-and-plot-the-results-using-matplotlib" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>import matplotlib.pyplot as mpl
-from datetime import datetime
-%matplotlib inline
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
 
-statename=&quot;California&quot;
+<span class="n">statename</span><span class="o">=</span><span class="s2">&quot;California&quot;</span>
 
-t=[]
-medq=[]
-for entry in queryState(gpcon,statename):
-    t.append(datetime.strptime(entry.date, &quot;%Y-%m-%d&quot;))
-    medq.append(entry.MedQ)
+<span class="n">t</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">medq</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">queryState</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="n">statename</span><span class="p">):</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">medq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">MedQ</span><span class="p">)</span>
 
 
-fig,ax=mpl.subplots(figsize=(10,2))
-ax.plot(t,medq)
-mpl.ylabel(&quot;USD&quot;)
-mpl.title(&quot;%s Medium quality Street price Marijuana&quot;%statename)
-mpl.xlabel(&quot;date&quot;)
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">medq</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;USD&quot;</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> Medium quality Street price Marijuana&quot;</span><span class="o">%</span><span class="k">statename</span>)
+<span class="n">mpl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[3]:
 </pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Text(0.5, 0, &#39;date&#39;)
-</pre></div></div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Text(0.5, 0, &#39;date&#39;)
+</pre></div>
+</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
@@ -503,67 +464,71 @@ Text(0.5, 0, &#39;date&#39;)
 </div>
 <div class="section" id="A-more-complicated-query-which-joins-data-between-tables">
 <h2>A more complicated query which joins data between tables<a class="headerlink" href="#A-more-complicated-query-which-joins-data-between-tables" title="Permalink to this headline">¶</a></h2>
-<p>Imagine you want to geographically compare the average street price in 2024 between US states, and geographically visualize this.</p>
-<p>This requires a query which computes the average per State and an inner join with a table which contains the polygons of the states.</p>
+<p>Imagine you want to geographically compare the average street price in
+2024 between US states, and geographically visualize this.</p>
+<p>This requires a query which computes the average per State and an inner
+join with a table which contains the polygons of the states.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>from sqlalchemy.sql import join,func
-def queryAveragePerState(dbcon):
+<span></span><span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="k">import</span> <span class="n">join</span><span class="p">,</span><span class="n">func</span>
+<span class="k">def</span> <span class="nf">queryAveragePerState</span><span class="p">(</span><span class="n">dbcon</span><span class="p">):</span>
 
-    #find the two relevant tables
-    usw=dbcon.getTable(&#39;usweedprices2&#39;,&#39;public&#39;)
-    stategeo=dbcon.getTable(&#39;ne_110m_admin_1_states_provinces&#39;,&#39;globalgis&#39;)
+    <span class="c1">#find the two relevant tables</span>
+    <span class="n">usw</span><span class="o">=</span><span class="n">dbcon</span><span class="o">.</span><span class="n">getTable</span><span class="p">(</span><span class="s1">&#39;usweedprices2&#39;</span><span class="p">,</span><span class="s1">&#39;public&#39;</span><span class="p">)</span>
+    <span class="n">stategeo</span><span class="o">=</span><span class="n">dbcon</span><span class="o">.</span><span class="n">getTable</span><span class="p">(</span><span class="s1">&#39;ne_110m_admin_1_states_provinces&#39;</span><span class="p">,</span><span class="s1">&#39;globalgis&#39;</span><span class="p">)</span>
 
-    #create a subquery with averages per state
-    subqry1=select([usw.c.State,func.avg(usw.c.MedQ).label(&quot;avg&quot;)]).group_by(usw.c.State).alias(&quot;uswt&quot;)
+    <span class="c1">#create a subquery with averages per state</span>
+    <span class="n">subqry1</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">usw</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">State</span><span class="p">,</span><span class="n">func</span><span class="o">.</span><span class="n">avg</span><span class="p">(</span><span class="n">usw</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">MedQ</span><span class="p">)</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;avg&quot;</span><span class="p">)])</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">usw</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">State</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;uswt&quot;</span><span class="p">)</span>
 
-    #join the subquery with polygon data from the stategeo table
-    j=join(subqry1,stategeo,subqry1.c.State == stategeo.c.name)
+    <span class="c1">#join the subquery with polygon data from the stategeo table</span>
+    <span class="n">j</span><span class="o">=</span><span class="n">join</span><span class="p">(</span><span class="n">subqry1</span><span class="p">,</span><span class="n">stategeo</span><span class="p">,</span><span class="n">subqry1</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">State</span> <span class="o">==</span> <span class="n">stategeo</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-    qry=select([subqry1.c.State,subqry1.c.avg,stategeo.c.geom]).select_from(j)
+    <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">subqry1</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">State</span><span class="p">,</span><span class="n">subqry1</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">avg</span><span class="p">,</span><span class="n">stategeo</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">geom</span><span class="p">])</span><span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
 
-    return dbcon.dbeng.execute(qry)
+    <span class="k">return</span> <span class="n">dbcon</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">qry</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="Visualize-the-result-geographically-using-matplotlib">
 <h3>Visualize the result geographically using matplotlib<a class="headerlink" href="#Visualize-the-result-geographically-using-matplotlib" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>import cartopy.crs as ccrs
-import cartopy
-from geoslurp.tools.shapelytools import shpextract
-from cartopy.feature import ShapelyFeature
+<span></span><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">cartopy</span>
+<span class="kn">from</span> <span class="nn">geoslurp.tools.shapelytools</span> <span class="k">import</span> <span class="n">shpextract</span>
+<span class="kn">from</span> <span class="nn">cartopy.feature</span> <span class="k">import</span> <span class="n">ShapelyFeature</span>
 
 
-cmap = mpl.cm.viridis
-proj=ccrs.EquidistantConic(central_longitude=-100.0, central_latitude=37.5, standard_parallels=(30.0, 45.0))
-proj=ccrs.PlateCarree()
-mpl.figure(figsize=(10,7))
-ax = mpl.axes(projection=proj)
-ax.set_extent((-180., -45., 20.,75.),crs=ccrs.PlateCarree())
-background=ax.stock_img()
-background.set_alpha(0.6)
-ax.coastlines(linewidth=0.3)
-minprice=100
-maxprice=400
-for entry in queryAveragePerState(gpcon):
-    geom=ShapelyFeature([shpextract(entry)],crs=ccrs.PlateCarree(),edgecolor=&#39;gray&#39;,facecolor=cmap((entry.avg-minprice)/(maxprice-minprice)),zorder=10,linewidth=0.5)
-    ax.add_feature(geom)
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span>
+<span class="n">proj</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">EquidistantConic</span><span class="p">(</span><span class="n">central_longitude</span><span class="o">=-</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">central_latitude</span><span class="o">=</span><span class="mf">37.5</span><span class="p">,</span> <span class="n">standard_parallels</span><span class="o">=</span><span class="p">(</span><span class="mf">30.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">))</span>
+<span class="n">proj</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">proj</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">((</span><span class="o">-</span><span class="mf">180.</span><span class="p">,</span> <span class="o">-</span><span class="mf">45.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span><span class="mf">75.</span><span class="p">),</span><span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">background</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">stock_img</span><span class="p">()</span>
+<span class="n">background</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">minprice</span><span class="o">=</span><span class="mi">100</span>
+<span class="n">maxprice</span><span class="o">=</span><span class="mi">400</span>
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">queryAveragePerState</span><span class="p">(</span><span class="n">gpcon</span><span class="p">):</span>
+    <span class="n">geom</span><span class="o">=</span><span class="n">ShapelyFeature</span><span class="p">([</span><span class="n">shpextract</span><span class="p">(</span><span class="n">entry</span><span class="p">)],</span><span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span><span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span><span class="n">facecolor</span><span class="o">=</span><span class="n">cmap</span><span class="p">((</span><span class="n">entry</span><span class="o">.</span><span class="n">avg</span><span class="o">-</span><span class="n">minprice</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">maxprice</span><span class="o">-</span><span class="n">minprice</span><span class="p">)),</span><span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
 
 
-sm = mpl.cm.ScalarMappable(cmap=cmap,norm=mpl.Normalize(minprice,maxprice))
-sm._A = []
-cbar=mpl.colorbar(sm,ax=ax,orientation=&#39;horizontal&#39;)
-cbar.set_label(&quot;USD per ounce&quot;)
-mpl.title(&quot;Average US Marijuana Street price for an ounce of medium quality&quot;)
-mpl.show()
+<span class="n">sm</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">minprice</span><span class="p">,</span><span class="n">maxprice</span><span class="p">))</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">_A</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">cbar</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;USD per ounce&quot;</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Average US Marijuana Street price for an ounce of medium quality&quot;</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 </pre></div>
 </div>
@@ -581,7 +546,9 @@ mpl.show()
 
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -590,7 +557,7 @@ mpl.show()
         <a href="../reference.html" class="btn btn-neutral float-right" title="Reference Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="CreateDynDSet.html" class="btn btn-neutral float-left" title="Download and register a dynamic dataset of (crowd-sourced?) US Marijuana street prices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="CreateDynDSet.html" class="btn btn-neutral" title="Download and register a dynamic dataset of (crowd-sourced?) US Marijuana street prices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -599,11 +566,11 @@ mpl.show()
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -616,15 +583,36 @@ mpl.show()
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

@@ -19,37 +19,43 @@
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="geoslurp.config package" href="geoslurp.config.html" />
-    <link rel="prev" title="Command line tools" href="../clitools.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Reference Documentation" href="../reference.html"/>
+        <link rel="next" title="geoslurp.config package" href="geoslurp.config.html"/>
+        <link rel="prev" title="Command line tools" href="../clitools.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -105,7 +111,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -113,10 +119,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -165,23 +170,18 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
+.nbinput.nblast,
+.nboutput.nblast {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast.container + .nbinput.container {
+.nblast + .nbinput {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
 }
 </style>
 <div class="section" id="module-geoslurp">
@@ -247,6 +247,7 @@
 <li class="toctree-l1"><a class="reference internal" href="geoslurp.db.html">geoslurp.db package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="geoslurp.db.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geoslurp.db.html#module-geoslurp.db.connector">geoslurp.db.connector module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoslurp.db.html#module-geoslurp.db.exporter">geoslurp.db.exporter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geoslurp.db.html#module-geoslurp.db.geoslurpdb">geoslurp.db.geoslurpdb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geoslurp.db.html#module-geoslurp.db.inventory">geoslurp.db.inventory module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geoslurp.db.html#module-geoslurp.db.settings">geoslurp.db.settings module</a></li>
@@ -261,14 +262,22 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="geoslurp.discover.html">geoslurp.discover package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoslurp.discover.fesom.html">geoslurp.discover.fesom package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.fesom.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.fesom.html#module-geoslurp.discover.fesom.extractprofiles">geoslurp.discover.fesom.extractprofiles module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.fesom.html#module-geoslurp.discover.fesom.fesomQuery">geoslurp.discover.fesom.fesomQuery module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="geoslurp.discover.gravity.html">geoslurp.discover.gravity package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.gravity.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.gravity.html#module-geoslurp.discover.gravity.staticfields">geoslurp.discover.gravity.staticfields module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.gravity.html#module-geoslurp.discover.gravity.graceQuery">geoslurp.discover.gravity.graceQuery module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.gravity.html#module-geoslurp.discover.gravity.staticQuery">geoslurp.discover.gravity.staticQuery module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="geoslurp.discover.oceanobs.html">geoslurp.discover.oceanobs package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.oceanobs.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.argo">geoslurp.discover.oceanobs.argo module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.argoProfiles">geoslurp.discover.oceanobs.argoProfiles module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.argoQuery">geoslurp.discover.oceanobs.argoQuery module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.psmsl">geoslurp.discover.oceanobs.psmsl module</a></li>
 </ul>
 </li>
@@ -294,7 +303,9 @@
 
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -303,7 +314,7 @@
         <a href="geoslurp.config.html" class="btn btn-neutral float-right" title="geoslurp.config package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../clitools.html" class="btn btn-neutral float-left" title="Command line tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../clitools.html" class="btn btn-neutral" title="Command line tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -312,11 +323,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -329,15 +340,36 @@
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

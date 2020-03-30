@@ -7,7 +7,7 @@ The main documentation lives at [wobbly.earth/geoslurp](https://wobbly.earth/geo
 
 The geoslurp module itself is a pure python module, which acts as a client. For this to work one needs to [set up a running PostGreSQL database](https://github.com/strawpants/docker-geoslurp).
 
-![Image of geoslurp clients versus database server](https://github.com/strawpants/geoslurp/raw/master/docsrc/graphics/geoslurp_network.svg)
+![Image of geoslurp clients versus database server](graphics/geoslurp_network.svg)
 
 
 

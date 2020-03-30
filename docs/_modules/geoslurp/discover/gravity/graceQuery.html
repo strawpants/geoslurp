@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.discover.gravity.graceQuery &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../index.html"/> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../confsettings.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.discover.gravity.graceQuery</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.discover.gravity.graceQuery</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with geoslurp; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2020</span>
+
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">select</span><span class="p">,</span><span class="n">and_</span><span class="p">,</span><span class="n">func</span><span class="p">,</span><span class="n">join</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config</span> <span class="k">import</span> <span class="n">slurplog</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+
+
+<div class="viewcode-block" id="joinByPeriod"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.gravity.html#geoslurp.discover.gravity.graceQuery.joinByPeriod">[docs]</a><span class="k">def</span> <span class="nf">joinByPeriod</span><span class="p">(</span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience function to make an inner table join based upon similar start times&quot;&quot;&quot;</span>
+    <span class="n">dttol</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">join</span><span class="p">(</span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">,</span><span class="n">and_</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="o">-</span><span class="n">dttol</span><span class="p">,</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="o">+</span><span class="n">dttol</span><span class="p">,</span><span class="n">right</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="o">-</span><span class="n">dttol</span><span class="p">,</span><span class="n">right</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="o">+</span><span class="n">dttol</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="queryGRACE"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.gravity.html#geoslurp.discover.gravity.graceQuery.queryGRACE">[docs]</a><span class="k">def</span> <span class="nf">queryGRACE</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span><span class="n">gravtablename</span><span class="p">,</span><span class="n">withAtm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">withOceAtm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">withOce</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">withSurfP</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Query GRACE solutions and add accompanying background products&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;itsg&quot;</span><span class="p">,</span><span class="n">gravtablename</span><span class="p">):</span>
+        <span class="c1">#Special treatment using table joins because the backgroundmodels are in a different table</span>
+
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># retrieve/reflect the table</span>
+        <span class="n">tbl</span> <span class="o">=</span> <span class="n">dbcon</span><span class="o">.</span><span class="n">getTable</span><span class="p">(</span><span class="n">gravtablename</span><span class="p">,</span> <span class="s1">&#39;gravity&#39;</span><span class="p">)</span>
+        <span class="c1">#get the different types from the table</span>
+        <span class="n">qry</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tend</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;gsm&quot;</span><span class="p">)])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s2">&quot;%/GSM%BA%&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;subq1&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">withAtm</span><span class="p">:</span>
+            <span class="n">gaa</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tend</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;gaa&quot;</span><span class="p">)])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s2">&quot;%/GAA%&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;qgaa&#39;</span><span class="p">)</span>
+            <span class="n">j</span><span class="o">=</span><span class="n">joinByPeriod</span><span class="p">(</span><span class="n">qry</span><span class="p">,</span><span class="n">gaa</span><span class="p">)</span>
+            <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">qry</span><span class="p">,</span><span class="n">gaa</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">gaa</span><span class="p">])</span><span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;subq2&quot;</span><span class="p">)</span>
+            <span class="c1"># qry=select([qry,gaa.c.gaa]).where(func.overlaps(qry.c.tstart,qry.c.tend,gaa.c.tstart,gaa.c.tend)).alias(&quot;subq2&quot;)</span>
+
+        <span class="k">if</span> <span class="n">withOceAtm</span><span class="p">:</span>
+            <span class="n">gac</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tend</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;gac&quot;</span><span class="p">)])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s2">&quot;%/GAC%&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;qgac&#39;</span><span class="p">)</span>
+            <span class="n">j</span><span class="o">=</span><span class="n">joinByPeriod</span><span class="p">(</span><span class="n">qry</span><span class="p">,</span><span class="n">gac</span><span class="p">)</span>
+            <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">qry</span><span class="p">,</span><span class="n">gac</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">gac</span><span class="p">])</span><span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;subq3&quot;</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="n">withOce</span><span class="p">:</span>
+            <span class="n">gab</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tend</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;gab&quot;</span><span class="p">)])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s2">&quot;%/GAB%&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;qgab&#39;</span><span class="p">)</span>
+            <span class="n">j</span><span class="o">=</span><span class="n">joinByPeriod</span><span class="p">(</span><span class="n">qry</span><span class="p">,</span><span class="n">gab</span><span class="p">)</span>
+            <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">qry</span><span class="p">,</span><span class="n">gab</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">gab</span><span class="p">])</span><span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;subq4&quot;</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="n">withSurfP</span><span class="p">:</span>
+            <span class="n">gad</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tend</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;gad&quot;</span><span class="p">)])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">uri</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="s2">&quot;%/GAD%&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;qgad&#39;</span><span class="p">)</span>
+            <span class="n">j</span><span class="o">=</span><span class="n">joinByPeriod</span><span class="p">(</span><span class="n">qry</span><span class="p">,</span><span class="n">gad</span><span class="p">)</span>
+            <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">qry</span><span class="p">,</span><span class="n">gad</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">gad</span><span class="p">])</span><span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;subq5&quot;</span><span class="p">)</span>
+
+
+        <span class="c1"># slurplog.debug(str(qry))</span>
+        <span class="k">return</span> <span class="n">dbcon</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">select</span><span class="p">([</span><span class="n">qry</span><span class="p">])</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">qry</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="p">))</span></div>
+
+
+
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

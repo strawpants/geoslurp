@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Exporting parts of the database to portable formats &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../confsettings.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Exporting parts of the database to portable formats</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/examples/export2Portable.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Exporting-parts-of-the-database-to-portable-formats">
+<h1>Exporting parts of the database to portable formats<a class="headerlink" href="#Exporting-parts-of-the-database-to-portable-formats" title="Permalink to this headline">¶</a></h1>
+<p>Users may not always want, or have the means, to setup a fully fledged
+PostGIS enabled server. For the sake of facilitating reproducibility,
+geoslurp allows exporting parts of the database to portable file-based
+formats such as <a class="reference external" href="http://www.geopackage.org/">geopackage</a>. This
+functionality, available since version 1.1.0, can be used according to
+the python examples below.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">geoslurp.config</span> <span class="k">import</span> <span class="n">setInfoLevel</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="k">import</span> <span class="n">geoslurpConnect</span>
+<span class="n">setInfoLevel</span><span class="p">()</span>
+
+<span class="n">gpcon</span><span class="o">=</span><span class="n">geoslurpConnect</span><span class="p">()</span> <span class="c1"># this will be a connection based on the readonly user</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Exporting-a-subset-of-the-PSMSL-table">
+<h2>Exporting a subset of the PSMSL table<a class="headerlink" href="#Exporting-a-subset-of-the-PSMSL-table" title="Permalink to this headline">¶</a></h2>
+<p>Here we export a query which extracts a subset (i.e.&nbsp;only stations
+within a certain polygon) of the tide gauge data from the permanent
+service of mean sea level (PSMSL). The resulting geopackage contains 2
+layers.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">geoslurp.db.exporter</span> <span class="k">import</span> <span class="n">exportGeoQuery</span>
+<span class="kn">from</span> <span class="nn">geoslurp.discover.oceanobs.psmsl</span> <span class="k">import</span> <span class="n">psmslQuery</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">wkt</span><span class="o">=</span><span class="s2">&quot;Polygon ((-0.91442683789107093 57.69161380668427341, 6.80867139814095879 60.46400804525987382, 10.76923459610610223 51.94879716963480121, -3.48879291656842838 50.95865637014351535, -0.91442683789107093 57.69161380668427341))&quot;</span>
+<span class="n">geopout</span><span class="o">=</span><span class="s2">&quot;/tmp/PSMSL_subset.gpkg&quot;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">geopout</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="c1">#export to queries as layers</span>
+<span class="n">exportGeoQuery</span><span class="p">(</span><span class="n">psmslQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="s2">&quot;psmsl_rlr_monthly&quot;</span><span class="p">,</span><span class="n">wkt</span><span class="p">),</span><span class="n">geopout</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;tgm&quot;</span><span class="p">)</span>
+<span class="n">exportGeoQuery</span><span class="p">(</span><span class="n">psmslQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="s2">&quot;psmsl_rlr_annual&quot;</span><span class="p">,</span><span class="n">wkt</span><span class="p">),</span><span class="n">geopout</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;tga&quot;</span><span class="p">)</span>
+
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Exporting-an-Argo-query-and-the-profile-files-in-the-South-China-Sea-for-the-first-2-weeks-of-December-2010">
+<h2>Exporting an Argo query and the profile files in the South China Sea for the first 2 weeks of December 2010<a class="headerlink" href="#Exporting-an-Argo-query-and-the-profile-files-in-the-South-China-Sea-for-the-first-2-weeks-of-December-2010" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">geoslurp.discover.oceanobs.argoQuery</span> <span class="k">import</span> <span class="n">argoQuery</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="n">southchinaDeepWKT</span><span class="o">=</span><span class="s2">&quot;Polygon ((111.16091417910448058 13.48740671641791522, 113.98180970149255131 18.24766791044776326, 117.59608208955224029 20.3633395522388092, 119.97621268656716609 21.50932835820895761, 119.62360074626866435 16.92537313432836044, 119.88805970149255131 13.75186567164179507, 119.53544776119403537 12.6940298507462721, 116.36194029850747711 11.45988805970149826, 112.8358208955223887 10.40205223880597174, 110.54384328358209189 10.22574626865672087, 111.16091417910448058 13.48740671641791522))&quot;</span>
+
+<span class="n">tspan</span><span class="o">=</span><span class="p">[</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">)]</span>
+
+<span class="n">exportGeoQuery</span><span class="p">(</span><span class="n">argoQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="n">geoWKT</span><span class="o">=</span><span class="n">southchinaDeepWKT</span><span class="p">,</span><span class="n">tspan</span><span class="o">=</span><span class="n">tspan</span><span class="p">),</span><span class="s2">&quot;argoSouthChinaDec2010.gpkg&quot;</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s1">&#39;argo&#39;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

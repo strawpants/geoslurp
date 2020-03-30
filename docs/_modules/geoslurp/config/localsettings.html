@@ -19,35 +19,41 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -103,7 +109,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -111,10 +117,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -143,6 +148,8 @@
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
         
       </li>
     
@@ -174,10 +181,11 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">keyring</span>
 <span class="kn">import</span> <span class="nn">getpass</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config</span> <span class="k">import</span> <span class="n">slurplog</span>
 
 
 <div class="viewcode-block" id="settingsArgs"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.localsettings.settingsArgs">[docs]</a><span class="k">class</span> <span class="nc">settingsArgs</span><span class="p">:</span>
@@ -195,10 +203,12 @@
     <span class="n">mirror</span><span class="o">=</span><span class="kc">None</span>
 
     <span class="n">local_settings</span><span class="o">=</span><span class="kc">None</span>
-    <span class="n">cache</span><span class="o">=</span><span class="kc">None</span>
     <span class="sd">&quot;&quot;&quot;(str): Alternative local settings file (instead of ${HOME}/.geoslurp_lastused.yaml)&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">usekeyring</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">mirror</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cache</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">cache</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">write_local_settings</span><span class="o">=</span><span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">usekeyring</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">mirror</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cache</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">host</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">=</span><span class="n">host</span>
 
@@ -221,9 +231,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">=</span><span class="n">cache</span></div>
 
 
-<div class="viewcode-block" id="readLocalSettings"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.localsettings.readLocalSettings">[docs]</a><span class="k">def</span> <span class="nf">readLocalSettings</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">settingsArgs</span><span class="p">(),</span><span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">readonlyuser</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="readLocalSettings"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.localsettings.readLocalSettings">[docs]</a><span class="k">def</span> <span class="nf">readLocalSettings</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">settingsArgs</span><span class="p">(),</span><span class="n">readonlyuser</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Retrieves/updates last used settings from the local settings file .geoslurp_lastused.yaml&quot;&quot;&quot;</span>
+
+    <span class="c1">#We need a deepcopy to properly separate input from output, and funny behavior</span>
     <span class="n">argsout</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">local_settings</span><span class="p">:</span>
         <span class="n">settingsFile</span><span class="o">=</span><span class="n">argsout</span><span class="o">.</span><span class="n">local_settings</span>
     <span class="k">else</span><span class="p">:</span>
@@ -234,8 +247,8 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">settingsFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">lastOpts</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1">#set the defaults</span>
-        <span class="n">lastOpts</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;geoslurp&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">5432</span><span class="p">,</span><span class="s2">&quot;readOnlyUser&quot;</span><span class="p">:</span><span class="s2">&quot;slurpy&quot;</span><span class="p">,</span><span class="s2">&quot;useKeyring&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span><span class="s2">&quot;cache&quot;</span><span class="p">:</span><span class="s2">&quot;tmp/geoslurp_cache&quot;</span><span class="p">}</span>
+        <span class="c1">#set the defaults (note a host with None will try to connect to a local unix socket</span>
+        <span class="n">lastOpts</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;geoslurp&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">5432</span><span class="p">,</span><span class="s2">&quot;readOnlyUser&quot;</span><span class="p">:</span><span class="s2">&quot;slurpy&quot;</span><span class="p">,</span><span class="s2">&quot;useKeyring&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span><span class="s2">&quot;cache&quot;</span><span class="p">:</span><span class="s2">&quot;tmp/geoslurp_cache&quot;</span><span class="p">}</span>
 
     <span class="n">isUpdated</span><span class="o">=</span><span class="kc">False</span>
 
@@ -276,7 +289,8 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--user option is needed for initialization&quot;</span><span class="p">,</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">usekeyring</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">usekeyring</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">#use the provided value (when explicitly set to False or True)</span>
         <span class="n">lastOpts</span><span class="p">[</span><span class="s2">&quot;useKeyring&quot;</span><span class="p">]</span><span class="o">=</span><span class="kc">True</span>
         <span class="n">isUpdated</span><span class="o">=</span><span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
@@ -291,10 +305,18 @@
     <span class="c1"># we take a different strategy for the password as we don&#39;t want to store this unencrypted in a file</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">usekeyring</span><span class="p">:</span>
-            <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="o">=</span><span class="n">keyring</span><span class="o">.</span><span class="n">get_password</span><span class="p">(</span><span class="s2">&quot;geoslurp&quot;</span><span class="p">,</span><span class="n">argsout</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="o">=</span><span class="n">keyring</span><span class="o">.</span><span class="n">get_password</span><span class="p">(</span><span class="s2">&quot;geoslurp&quot;</span><span class="p">,</span><span class="n">argsout</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+                <span class="n">hasBackend</span><span class="o">=</span><span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+                <span class="n">slurplog</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;no suitable python keyring backend found&quot;</span><span class="p">)</span>
+                <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="o">=</span><span class="kc">None</span>
+                <span class="n">hasBackend</span><span class="o">=</span><span class="kc">False</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="p">:</span>
                 <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="o">=</span><span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;Please enter password for </span><span class="si">%s</span><span class="s1">: &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">argsout</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
-                <span class="n">keyring</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="s2">&quot;geoslurp&quot;</span><span class="p">,</span><span class="n">argsout</span><span class="o">.</span><span class="n">user</span><span class="p">,</span><span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">hasBackend</span><span class="p">:</span>
+                    <span class="n">keyring</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="s2">&quot;geoslurp&quot;</span><span class="p">,</span><span class="n">argsout</span><span class="o">.</span><span class="n">user</span><span class="p">,</span><span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1">#try checking the environment variable GEOSLURP_PGPASS</span>
             <span class="k">try</span><span class="p">:</span>
@@ -310,17 +332,17 @@
                     <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="o">=</span><span class="n">lastOpts</span><span class="p">[</span><span class="s2">&quot;readonlyPasswd&quot;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1">#prompt for password</span>
-                    <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="o">=</span><span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;Please enter password: &#39;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+                    <span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="o">=</span><span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;Please enter password for </span><span class="si">%s</span><span class="s1">: &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">argsout</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">write_local_settings</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: user database password will be stored unencrypted in the geoslurp configuration file,&quot;</span>
-                              <span class="s2">&quot;consider setting usekeyring=True&quot;</span><span class="p">)</span>
+                              <span class="s2">&quot;consider using a keyring&quot;</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">readonlyuser</span><span class="p">:</span>
                             <span class="n">lastOpts</span><span class="p">[</span><span class="s2">&quot;readonlyPasswd&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">argsout</span><span class="o">.</span><span class="n">password</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">lastOpts</span><span class="p">[</span><span class="s2">&quot;passwd&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">argsout</span><span class="o">.</span><span class="n">password</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1">#update keyring</span>
-        <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">usekeyring</span> <span class="ow">and</span> <span class="n">update</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">usekeyring</span> <span class="ow">and</span> <span class="n">argsout</span><span class="o">.</span><span class="n">write_local_settings</span><span class="p">:</span>
             <span class="n">keyring</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="s2">&quot;geoslurp&quot;</span><span class="p">,</span><span class="n">argsout</span><span class="o">.</span><span class="n">user</span><span class="p">,</span><span class="n">argsout</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">mirror</span><span class="p">:</span>
@@ -331,7 +353,7 @@
             <span class="n">argsout</span><span class="o">.</span><span class="n">mirror</span><span class="o">=</span><span class="n">lastOpts</span><span class="p">[</span><span class="s2">&quot;mirror&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">argsout</span><span class="o">.</span><span class="n">mirror</span><span class="o">=</span><span class="s2">&quot;default&quot;</span>
-
+    
     <span class="k">if</span> <span class="n">argsout</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
         <span class="n">lastOpts</span><span class="p">[</span><span class="s2">&quot;cache&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">argsout</span><span class="o">.</span><span class="n">cache</span>
     <span class="k">else</span><span class="p">:</span>
@@ -341,7 +363,7 @@
             <span class="n">argsout</span><span class="o">.</span><span class="n">cache</span><span class="o">=</span><span class="s2">&quot;/tmp/geoslurp_cache&quot;</span>
 
     <span class="c1">#write out  options to file to store these settings</span>
-    <span class="k">if</span> <span class="n">isUpdated</span> <span class="ow">and</span> <span class="n">update</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">isUpdated</span> <span class="ow">and</span> <span class="n">argsout</span><span class="o">.</span><span class="n">write_local_settings</span><span class="p">:</span>
         <span class="n">lastOpts</span><span class="p">[</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">settingsFile</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">lastOpts</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -351,7 +373,9 @@
 </pre></div>
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -360,11 +384,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -377,15 +401,36 @@
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

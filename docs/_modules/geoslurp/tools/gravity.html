@@ -19,35 +19,41 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav" role="document">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -103,7 +109,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" aria-label="top navigation">
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -111,10 +117,9 @@
       </nav>
 
 
+      
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
           
 
 
@@ -144,6 +149,8 @@
     
       <li class="wy-breadcrumbs-aside">
         
+            
+        
       </li>
     
   </ul>
@@ -172,14 +179,15 @@
 
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
-<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declared_attr</span><span class="p">,</span> <span class="n">as_declarative</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span><span class="p">,</span> <span class="n">Boolean</span><span class="p">,</span><span class="n">Float</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">TIMESTAMP</span><span class="p">,</span> <span class="n">JSONB</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declared_attr</span><span class="p">,</span> <span class="n">as_declarative</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span><span class="p">,</span> <span class="n">Boolean</span><span class="p">,</span><span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="k">import</span> <span class="n">TIMESTAMP</span><span class="p">,</span> <span class="n">JSONB</span>
 <span class="kn">import</span> <span class="nn">gzip</span> <span class="k">as</span> <span class="nn">gz</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplogger</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 
 <span class="c1">#define a declarative baseclass for spherical harmonics gravity  data</span>
 <span class="nd">@as_declarative</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="s1">&#39;gravity&#39;</span><span class="p">))</span>
@@ -192,14 +200,16 @@
     <span class="n">lastupdate</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">)</span>
     <span class="n">tstart</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">tend</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">nmax</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
     <span class="n">omax</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
     <span class="n">gm</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
     <span class="n">re</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
     <span class="n">tidesystem</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">origin</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
     <span class="nb">format</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
     <span class="nb">type</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">uri</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">uri</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
     <span class="n">data</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">JSONB</span><span class="p">)</span>
 
 <div class="viewcode-block" id="icgemMetaExtractor"><a class="viewcode-back" href="../../../reference/geoslurp.tools.html#geoslurp.tools.gravity.icgemMetaExtractor">[docs]</a><span class="k">def</span> <span class="nf">icgemMetaExtractor</span><span class="p">(</span><span class="n">uri</span><span class="p">):</span>
@@ -250,10 +260,70 @@
     <span class="k">return</span> <span class="n">meta</span></div>
 
 
+<div class="viewcode-block" id="Trig"><a class="viewcode-back" href="../../../reference/geoslurp.tools.html#geoslurp.tools.gravity.Trig">[docs]</a><span class="k">class</span> <span class="nc">Trig</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Enum to distinguish between a trigonometric cosine and sine coefficient&quot;&quot;&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="JSONSHArchive"><a class="viewcode-back" href="../../../reference/geoslurp.tools.html#geoslurp.tools.gravity.JSONSHArchive">[docs]</a><span class="k">class</span> <span class="nc">JSONSHArchive</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;JSON Archive which stores SH data, with sigmas and possibly a covariance</span>
+<span class="sd">    Note this mimics the Archive interface of frommle without actually requiring its import&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">datadict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="n">nmax</span><span class="p">:</span>
+            <span class="c1">#create from maximum degree</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;attr&quot;</span><span class="p">:{},</span><span class="s2">&quot;vars&quot;</span><span class="p">:{</span><span class="s2">&quot;shg&quot;</span><span class="p">:[]}}</span>
+            <span class="n">shg</span><span class="o">=</span><span class="p">[]</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nmax</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">shg</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">Trig</span><span class="o">.</span><span class="n">c</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">m</span><span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">shg</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">Trig</span><span class="o">.</span><span class="n">s</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">][</span><span class="s2">&quot;shg&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">shg</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;attr&quot;</span><span class="p">][</span><span class="s2">&quot;nmax&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">nmax</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">nmax</span> <span class="ow">and</span> <span class="n">datadict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="o">=</span><span class="n">datadic</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RunTimeError</span><span class="p">(</span><span class="s2">&quot;Can only construct a JSONSHArchive from either nmax or a datadict&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;retrieves a named variable, and lazily creates allowed variables when requested&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;cnm&quot;</span><span class="p">,</span><span class="s2">&quot;sigcnm&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">][</span><span class="s2">&quot;shg&quot;</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;covcnm&quot;</span><span class="p">:</span>
+                <span class="n">nl</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">][</span><span class="s2">&quot;shg&quot;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">nl</span><span class="p">]</span><span class="o">*</span><span class="n">nl</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">item</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">item</span>
+
+
+<div class="viewcode-block" id="JSONSHArchive.idx"><a class="viewcode-back" href="../../../reference/geoslurp.tools.html#geoslurp.tools.gravity.JSONSHArchive.idx">[docs]</a>    <span class="k">def</span> <span class="nf">idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nmt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns the index of the n,m,t tuple&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;vars&quot;</span><span class="p">][</span><span class="s2">&quot;shg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">nmt</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">attr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;get the stored global attributes of the file&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;attr&quot;</span><span class="p">]</span>
+
+    <span class="nd">@attr</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attrdict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;sets the stored global attributes of the file&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_</span><span class="p">[</span><span class="s2">&quot;attr&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">attrdict</span>
+    
+    <span class="nd">@property</span>    
+    <span class="k">def</span> <span class="nf">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_</span></div>
+    
 </pre></div>
 
            </div>
-           
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -262,11 +332,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek
+        &copy; Copyright 2020, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -279,15 +349,36 @@
   
 
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
 
   
   
-    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
    
 
 </body>

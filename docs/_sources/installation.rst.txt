@@ -28,5 +28,5 @@ To setup the database one is (currently) referred to the documentation of `Runni
 2. create a database called *geoslurp*,
 3. Add an *admin* scheme (for storing the *settings*, and *inventory* table)
 4. set up a *geoslurp* role (read and write), a *geobrowse* role (readonly)
-5. Add users
+5. Add users with appropriate privileges
 

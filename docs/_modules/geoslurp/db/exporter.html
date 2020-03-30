@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.db.exporter &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.db.exporter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.db.exporter</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp</span>
+<span class="c1"># geoslurp-tools is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp-tools is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with geoslurp; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2020</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">geoslurp.tools.shapelytools</span> <span class="k">import</span> <span class="n">shpextract</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db.settings</span> <span class="k">import</span> <span class="n">MirrorMap</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<div class="viewcode-block" id="exportGeoQuery"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.exportGeoQuery">[docs]</a><span class="k">def</span> <span class="nf">exportGeoQuery</span><span class="p">(</span><span class="n">qryresult</span><span class="p">,</span><span class="n">outputfile</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">driver</span><span class="o">=</span><span class="s2">&quot;GPKG&quot;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">striproot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Export the results of a query to a (portable output file, e.g. a geopackage and possibly a filearchive)&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;geom&quot;</span> <span class="ow">in</span> <span class="n">qryresult</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">RunTimeError</span><span class="p">(</span><span class="s2">&quot;no geometry found in the specified query&quot;</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+    
+    <span class="c1">#specify columns</span>
+    <span class="k">for</span> <span class="n">ky</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ky</span> <span class="k">for</span> <span class="n">ky</span> <span class="ow">in</span> <span class="n">qryresult</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">ky</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;geom&quot;</span><span class="p">,</span><span class="s2">&quot;id&quot;</span><span class="p">]):</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">ky</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+   
+    <span class="k">if</span> <span class="n">packFiles</span><span class="p">:</span>
+        <span class="c1">#open a tgz archive</span>
+        <span class="n">farchive</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;_files.tgz&quot;</span>
+        <span class="k">if</span> <span class="n">striproot</span><span class="p">:</span>
+            <span class="n">mmap</span><span class="o">=</span><span class="n">MirrorMap</span><span class="p">(</span><span class="n">striproot</span><span class="p">,</span><span class="n">farchive</span><span class="o">+</span><span class="s2">&quot;:/&quot;</span><span class="p">)</span>
+
+        <span class="c1">#open/reopen archive </span>
+        <span class="n">tarar</span><span class="o">=</span><span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">farchive</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w:gz&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tarar</span><span class="o">=</span><span class="kc">None</span>
+
+    <span class="c1">#add new rows</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">qryresult</span><span class="p">:</span>
+        <span class="n">entrymod</span><span class="o">=</span><span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ky</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;geom&quot;</span><span class="p">:</span>
+                <span class="n">val</span><span class="o">=</span><span class="n">shpextract</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+                <span class="n">ky</span><span class="o">=</span><span class="s2">&quot;geometry&quot;</span>
+            <span class="k">elif</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span>
+                <span class="n">val</span><span class="o">=</span><span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;uri&quot;</span> <span class="ow">and</span> <span class="n">packFiles</span><span class="p">:</span>
+                <span class="c1">#modify the uri and add file in the archive</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">striproot</span><span class="p">:</span>
+                    <span class="c1">#try stripping of everything before and including &#39;geoslurp&#39; from the path</span>
+                    <span class="n">striproot</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;^.*/geoslurp/&quot;</span><span class="p">,</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">mmap</span><span class="o">=</span><span class="n">MirrorMap</span><span class="p">(</span><span class="n">striproot</span><span class="p">,</span><span class="n">farchive</span><span class="o">+</span><span class="s2">&quot;:/&quot;</span><span class="p">)</span>
+                <span class="n">uriorig</span><span class="o">=</span><span class="n">val</span>
+                <span class="n">val</span><span class="o">=</span><span class="n">mmap</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                <span class="c1">#create a new tarfile member if needed</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">basef</span><span class="o">=</span><span class="n">mmap</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">uriorig</span><span class="p">)</span>
+                    <span class="n">tinfo</span><span class="o">=</span><span class="n">tarar</span><span class="o">.</span><span class="n">getmember</span><span class="p">(</span><span class="n">basef</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="c1">#create a new member</span>
+                    <span class="n">tarar</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">uriorig</span><span class="p">,</span><span class="n">arcname</span><span class="o">=</span><span class="n">basef</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
+                <span class="n">entrymod</span><span class="p">[</span><span class="n">ky</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
+
+        <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entrymod</span><span class="p">,</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">packFiles</span><span class="p">:</span>
+        <span class="n">tarar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="c1">#export to file</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">outputfile</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="exportQuery"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.exportQuery">[docs]</a><span class="k">def</span> <span class="nf">exportQuery</span><span class="p">(</span><span class="n">qryresult</span><span class="p">,</span><span class="n">outputfile</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">driver</span><span class="o">=</span><span class="s2">&quot;SQL&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Export a query without a geometry column, and possibly pack corresponding files&quot;&quot;&quot;</span>
+    
+    
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="exportGeoTable"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.exportGeoTable">[docs]</a><span class="k">def</span> <span class="nf">exportGeoTable</span><span class="p">(</span><span class="n">table</span><span class="p">,</span><span class="n">outfile</span><span class="p">,</span><span class="n">addFiles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Export a entire table with a geometry column&quot;&quot;&quot;</span> 
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This functionality is currently not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="exportTable"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.exportTable">[docs]</a><span class="k">def</span> <span class="nf">exportTable</span><span class="p">(</span><span class="n">table</span><span class="p">,</span><span class="n">outfile</span><span class="p">,</span><span class="n">addFiles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Export a entire table without a geometry column&quot;&quot;&quot;</span> 
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This functionality is currently not implemented&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

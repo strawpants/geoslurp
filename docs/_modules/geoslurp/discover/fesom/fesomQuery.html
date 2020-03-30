@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.discover.fesom.fesomQuery &mdash; geoslurp Wannabe v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../../search.html"/>
+    <link rel="top" title="geoslurp Wannabe v1.0 documentation" href="../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../index.html"/> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../confsettings.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.discover.fesom.fesomQuery</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.discover.fesom.fesomQuery</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp-tools.</span>
+<span class="c1"># geoslurp-tools is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp-tools is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with geoslurp; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019</span>
+
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">select</span><span class="p">,</span><span class="n">func</span><span class="p">,</span><span class="n">asc</span><span class="p">,</span><span class="n">and_</span><span class="p">,</span><span class="n">or_</span><span class="p">,</span><span class="n">literal_column</span>
+<span class="kn">from</span> <span class="nn">geoslurp.tools.shapelytools</span> <span class="k">import</span> <span class="n">shpextract</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="getFesomRunInfo"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.fesom.html#geoslurp.discover.fesom.fesomQuery.getFesomRunInfo">[docs]</a><span class="k">def</span> <span class="nf">getFesomRunInfo</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span><span class="n">runname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;return a dictionary with info on the registered run&quot;&quot;&quot;</span>
+    <span class="c1">#first query the inventory on the requested run</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;fesom&#39;</span>
+    <span class="n">invent</span><span class="o">=</span><span class="n">dbcon</span><span class="o">.</span><span class="n">getInventEntry</span><span class="p">(</span><span class="n">runname</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span>
+    <span class="n">vtablename</span><span class="o">=</span><span class="s2">&quot;vertices_&quot;</span><span class="o">+</span><span class="n">invent</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">]</span>
+    <span class="c1">#extract info on the vertices table</span>
+    <span class="n">vertinvent</span><span class="o">=</span><span class="n">dbcon</span><span class="o">.</span><span class="n">getInventEntry</span><span class="p">(</span><span class="n">vtablename</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span>
+    <span class="n">rundict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:{</span><span class="s2">&quot;runTable&quot;</span><span class="p">:</span><span class="n">runname</span><span class="p">,</span><span class="s2">&quot;datadir&quot;</span><span class="p">:</span><span class="n">invent</span><span class="o">.</span><span class="n">datadir</span><span class="p">},</span><span class="s2">&quot;mesh&quot;</span><span class="p">:{</span><span class="s2">&quot;vertTable&quot;</span><span class="p">:</span><span class="n">vtablename</span><span class="p">,</span><span class="s2">&quot;zlevels&quot;</span><span class="p">:</span><span class="n">vertinvent</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;zlevels&quot;</span><span class="p">]}}</span>
+
+    <span class="k">return</span> <span class="n">rundict</span></div>
+
+<div class="viewcode-block" id="fesomMeshQuery"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.fesom.html#geoslurp.discover.fesom.fesomQuery.fesomMeshQuery">[docs]</a><span class="k">def</span> <span class="nf">fesomMeshQuery</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span> <span class="n">fesominfo</span><span class="p">,</span> <span class="n">geoWKT</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;queries the geoslurp database for a valid vertices of a FESOM grid&quot;&quot;&quot;</span>
+    <span class="c1">#retrieve/reflect the table</span>
+    <span class="n">tbl</span><span class="o">=</span><span class="n">dbcon</span><span class="o">.</span><span class="n">getTable</span><span class="p">(</span><span class="n">fesominfo</span><span class="p">[</span><span class="s2">&quot;mesh&quot;</span><span class="p">][</span><span class="s2">&quot;vertTable&quot;</span><span class="p">],</span><span class="s1">&#39;fesom&#39;</span><span class="p">)</span>
+    <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">topo</span><span class="p">,</span> <span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">nodeid</span><span class="p">,</span><span class="n">literal_column</span><span class="p">(</span><span class="s1">&#39;geom::geometry&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s1">&#39;geom&#39;</span><span class="p">)])</span>
+    
+    <span class="k">if</span> <span class="n">geoWKT</span><span class="p">:</span>
+        <span class="n">qry</span><span class="o">=</span><span class="n">qry</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">ST_within</span><span class="p">(</span><span class="n">literal_column</span><span class="p">(</span><span class="s1">&#39;geom::geometry&#39;</span><span class="p">),</span><span class="n">func</span><span class="o">.</span><span class="n">ST_GeomFromText</span><span class="p">(</span><span class="n">geoWKT</span><span class="p">,</span><span class="mi">4326</span><span class="p">)))</span>
+       
+    <span class="k">return</span> <span class="n">dbcon</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">qry</span><span class="p">)</span></div>
+    <span class="c1"># qryResult=dbcon.dbeng.execute(qry)</span>
+
+<div class="viewcode-block" id="fesomMeshQueryXY"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.fesom.html#geoslurp.discover.fesom.fesomQuery.fesomMeshQueryXY">[docs]</a><span class="k">def</span> <span class="nf">fesomMeshQueryXY</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span> <span class="n">fesominfo</span><span class="p">,</span> <span class="n">geoWKT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return fesom mesh grid as [lon, lat, depth]&quot;&quot;&quot;</span>
+    <span class="n">pnt</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">pnt_id</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">fesomMeshQuery</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span> <span class="n">fesominfo</span><span class="p">,</span> <span class="n">geoWKT</span><span class="p">):</span>
+            <span class="n">tmp</span><span class="o">=</span><span class="n">shpextract</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+            <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">tmp</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">tmp</span><span class="o">.</span><span class="n">y</span><span class="p">]])</span>
+            <span class="n">pnt_id</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">_row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">tmp_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">_row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># tri_temp = </span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pnt</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">pnt</span><span class="o">=</span><span class="n">xy</span>
+                <span class="c1"># pnt_id2= tmp_id</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">pnt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">pnt</span><span class="p">,</span><span class="n">xy</span><span class="p">))</span> 
+                <span class="c1"># pnt_id2 = np.concatenate((pnt_id2,tmp_id)) </span>
+                <span class="c1"># pnt_id2.extend(tmp_id)</span>
+            
+    <span class="k">return</span> <span class="n">pnt</span><span class="p">,</span> <span class="n">pnt_id</span></div>
+    <span class="c1"># return pnt,pnt_id,pnt_id2</span>
+
+<div class="viewcode-block" id="fesomDataQuery"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.fesom.html#geoslurp.discover.fesom.fesomQuery.fesomDataQuery">[docs]</a><span class="k">def</span> <span class="nf">fesomDataQuery</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span> <span class="n">fesominfo</span><span class="p">,</span> <span class="n">tspan</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Query a fesom run for datafiles&quot;&quot;&quot;</span>
+
+    <span class="c1">#retrieve/reflect the table</span>
+    <span class="n">tbl</span><span class="o">=</span><span class="n">dbcon</span><span class="o">.</span><span class="n">getTable</span><span class="p">(</span><span class="n">fesominfo</span><span class="p">[</span><span class="s2">&quot;run&quot;</span><span class="p">][</span><span class="s2">&quot;runTable&quot;</span><span class="p">],</span><span class="s1">&#39;fesom&#39;</span><span class="p">)</span>
+
+    <span class="c1"># qry=select([tbl]).where(or_(and_(tbl.c.tstart &lt;= tspan[0],tspan[0] &lt;= tbl.c.tend),</span>
+                                <span class="c1"># and_(tbl.c.tstart &lt;= tspan[1], tspan[1] &lt;= tbl.c.tend)))</span>
+
+    <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="p">])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tstart</span><span class="p">,</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">tend</span><span class="p">,</span><span class="n">tspan</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tspan</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    
+    <span class="k">if</span> <span class="n">interval</span><span class="p">:</span>
+        <span class="n">qry</span><span class="o">=</span><span class="n">qry</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">interval</span> <span class="o">==</span> <span class="n">interval</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dbcon</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">qry</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="fesomDataQueryURI"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.fesom.html#geoslurp.discover.fesom.fesomQuery.fesomDataQueryURI">[docs]</a><span class="k">def</span> <span class="nf">fesomDataQueryURI</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span> <span class="n">fesominfo</span><span class="p">,</span> <span class="n">tspan</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">fesomDataQuery</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span> <span class="n">fesominfo</span><span class="p">,</span> <span class="n">tspan</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">tmpdict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">_row</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="s2">&quot;tstart&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">tstart</span><span class="p">,</span> <span class="s2">&quot;tend&quot;</span><span class="p">:</span> <span class="n">entry</span><span class="o">.</span><span class="n">tend</span><span class="p">}</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmpdict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'Wannabe v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
