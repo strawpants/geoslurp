@@ -78,8 +78,6 @@ def argoQuery(dbcon,geoWKT=None,tspan=None,withinDmeter=None,tsort=None):
 def queryMonthlyArgo(dbcon, geoWKT, tstart, tend):
     """Query the database for lists of monthly Argo profiles within a certain polygon and time span"""
     
-    # ogrpoly = lonlat2ogr(polygon)
-    # import pdb;pdb.set_trace()
     out = {}
 
     for entry in argoQuery(dbcon,geoWKT=geoWKT,tspan=[tstart,tend],tsort=True):
