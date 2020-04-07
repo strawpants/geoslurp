@@ -51,7 +51,7 @@ class geocenter_Rietbroeketal2016upd(DataSet):
 
 
     def register(self):
-
+        self.truncateTable()
         #set general settings
         self._dbinvent.data={"citation":"Rietbroek, R., Brunnabend, S.-E., Kusche, J., Schröter, J., Dahle, C., 2016. " \
                                       "Revisiting the Contemporary Sea Level Budget on Global and Regional Scales. " \
@@ -62,7 +62,8 @@ class geocenter_Rietbroeketal2016upd(DataSet):
 
             metacomb=[]
 
-            files=['Geocenter/GeocentCM-CF_Antarctica.txt',
+            files=['Geocenter/GeocentCM-CF_Green.txt',
+                    'Geocenter/GeocentCM-CF_Antarctica.txt',
                    'Geocenter/GeocentCM-CF_Hydrology.txt',
                    'Geocenter/GeocentCM-CF_LandGlaciers.txt',
                    'Geocenter/GeocentCM-CF_GIA.txt',
@@ -83,6 +84,7 @@ class geocenter_Rietbroeketal2016upd(DataSet):
 }
                         
                         for el,val in zip(order,lnspl[1:4]):
+                            # import pdb;pdb.set_trace()
                             shar["cnm"][shar.idx(el)]=float(val)/self.sqrt3timesRE
 
                         #also add sigmas 
@@ -163,8 +165,8 @@ geoslurpCatalogue.addDatasetFactory(GRACEGeocFac)
 class geocenter_RIES_CFCM(DataSet):
     fout30="GCN_L1_L2_30d_CF-CM.txt"
     fout60="GCN_L1_L2_60d_CF-CM.txt"
-    #note also embed mm to meter conversion in here (e-3)
-    sqrt3timesRE=11047256.23312e-3
+    #note also embed mm to meter conversion in here (e3)
+    sqrt3timesRE=11047256.23312e3
     scheme=scheme
     table=type("geocenter_ries_cfcmTable", (GravitySHTBase,), {})
     def __init__(self,dbconn):

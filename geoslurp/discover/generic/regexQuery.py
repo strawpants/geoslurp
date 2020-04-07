@@ -13,14 +13,21 @@
 # License along with geoslurp; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
-from sqlalchemy import select
+# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2020
+from sqlalchemy import select,between
 
-def queryStatic(dbcon,regex):
+def regexQuery(dbcon,table,scheme="pubic",orderBy=None,tspan=None,**kwargs):
+    """Retrieve entries from a table  by applying a regeular expressions query to specified columns"""
 
-    # retrieve/reflect the table
-    tbl = dbcon.getTable('icgem_static', 'gravity')
+    #retrieve/reflect the table
+    tbl = dbcon.getTable(table, scheme)
     qry = select([tbl])
-    qry=qry.where(tbl.c.data["name"].astext.op("~")(regex))
-    # qry = qry.where(tbl.c.data["name"].astext == name)
+    for col,regex in kwargs.items():
+        qry=qry.where(getattr(tbl.c,col).op("~")(regex))
+    
+    if tspan:
+        qry=qry.where(between(tbl.c.time,tspan[0],tspan[1]))
+
+    if orderBy:
+        qry=qry.order_by(getattr(tbl.c,orderBy))
     return dbcon.dbeng.execute(qry)

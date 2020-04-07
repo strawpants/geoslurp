@@ -22,26 +22,58 @@ from geoslurp.tools.shapelytools import shpextract
 from geoslurp.db.settings import MirrorMap
 import re
 import tarfile
+from sqlalchemy import create_engine
+import json
+import gzip
+import shutil
+
 def exportGeoQuery(qryresult,outputfile,layer=None,driver="GPKG",packFiles=False,striproot=None):
-    """Export the results of a query to a (portable output file, e.g. a geopackage and possibly a filearchive)"""
+    #just add a check and pass to exportQuery function
+
     if not "geom" in qryresult.keys():
         raise RunTimeError("no geometry found in the specified query")
+    exportQuery(qryresult,outputfile,layer=layer,driver=driver,packFiles=packFiles,striproot=striproot)
 
-    df = gpd.GeoDataFrame()
-    df["geometry"]=None
+
+def exportQuery(qryresult,outputfile,layer=None,driver="SQLITE",packFiles=False,striproot=None):
+    """Export a query without a geometry column, and possibly pack corresponding files"""
     
-    #specify columns
+    if "geom" in qryresult.keys():
+        useGeoPandas=True
+    else:
+        useGeoPandas=False 
+        
+    if useGeoPandas and driver not in ["GPKG"]:    
+        raise RunTimeError("no geometry found in the specified query")
+
+    if useGeoPandas:
+        df = gpd.GeoDataFrame()
+        df["geometry"]=None
+    else:
+        df=pd.DataFrame()
+
+    #initialize columns
     for ky in (ky for ky in qryresult.keys() if ky not in ["geom","id"]):
         df[ky]=None
    
     if packFiles:
         #open a tgz archive
         farchive=os.path.splitext(outputfile)[0]+"_files.tgz"
+        farchivetmp=os.path.splitext(outputfile)[0]+"_files.tar"
         if striproot:
             mmap=MirrorMap(striproot,farchive+":/")
 
-        #open/reopen archive 
-        tarar=tarfile.open(farchive,mode='w:gz')
+        #open/reopen archive
+        if os.path.exists(farchive):
+            #unzip to a temporary file
+            farchivetmp=os.path.splitext(outputfile)[0]+"_files.tar"
+            with gzip.open(farchive,'rb') as gzid:
+                with open(farchivetmp,'wb') as fid:
+                   shutil.copyfileobj(gzid,fid)
+
+            tarar=tarfile.open(farchivetmp,mode='a')
+        else:
+            tarar=tarfile.open(farchive,mode='w:gz')
 
     else:
         tarar=None
@@ -50,11 +82,14 @@ def exportGeoQuery(qryresult,outputfile,layer=None,driver="GPKG",packFiles=False
     for entry in qryresult:
         entrymod={}
         for ky,val in entry.items():
-            if ky == "geom":
+            if useGeoPandas and ky == "geom":
                 val=shpextract(entry)
                 ky="geometry"
             elif ky == "id":
                 val=None
+            elif ky == "data":
+                #convert to json
+                val=json.dumps(val)
             elif ky == "uri" and packFiles:
                 #modify the uri and add file in the archive
                 if not striproot:
@@ -77,16 +112,26 @@ def exportGeoQuery(qryresult,outputfile,layer=None,driver="GPKG",packFiles=False
     
     if packFiles:
         tarar.close()
+        if os.path.exists(farchivetmp):
+            #rezip the tar archive and clean up
+            with gzip.open(farchive,'wb') as gzid:
+                with open(farchivetmp,'rb') as fid:
+                   shutil.copyfileobj(fid,gzid)
+            os.remove(farchivetmp)
     #export to file
-    df.to_file(outputfile, layer=layer, driver=driver)
+    if useGeoPandas:
+        df.to_file(outputfile, layer=layer, driver=driver)
+    else:
+        if driver == "SQLITE":
+            writeToSQLite(outputfile,df,layer)
+        else:
+            raise InputError("Don't know how to interpret output driver"%driver)
 
+def writeToSQLite(outputfile,df,layer):
+    """Write a pandas dataframe as a table to a sqlite file"""
+    outeng = create_engine('sqlite:///'+outputfile)
+    df.to_sql(layer, outeng, if_exists='replace')
 
-
-def exportQuery(qryresult,outputfile,layer=None,packFiles=False,driver="SQL"):
-    """Export a query without a geometry column, and possibly pack corresponding files"""
-    
-    
-    pass
 
 
 def exportGeoTable(table,outfile,addFiles=False):

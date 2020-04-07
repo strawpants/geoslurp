@@ -13,14 +13,19 @@
 # License along with geoslurp; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
+# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2020
 from sqlalchemy import select
 
-def queryStatic(dbcon,regex):
+def queryRegex(dbcon,table,scheme="pubic",**kwargs):
+    """Retrieve entries from a table applying gravity field table by querying with simple constraints"""
 
-    # retrieve/reflect the table
-    tbl = dbcon.getTable('icgem_static', 'gravity')
-    qry = select([tbl])
-    qry=qry.where(tbl.c.data["name"].astext.op("~")(regex))
-    # qry = qry.where(tbl.c.data["name"].astext == name)
-    return dbcon.dbeng.execute(qry)
+    print(scheme)
+    for ky,val in kwargs.items():
+        print(ky,val)
+
+# retrieve/reflect the table
+    # tbl = dbcon.getTable(table, 'gravity')
+    # qry = select([tbl])
+    # if typeregex:
+        # qry=qry.where(tbl.c.type["name"].astext.op("~")(typeregex))
+    # return dbcon.dbeng.execute(qry)

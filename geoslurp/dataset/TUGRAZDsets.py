@@ -49,6 +49,12 @@ def enhanceMeta(meta):
             dd=int(yyyymmdd_match.group(3))
             meta['tstart']=datetime(yr,mn,dd)
             meta['tend']=datetime(yr,mn,dd,23,59)
+    
+    meta["time"]=meta["tstart"]+(meta["tend"]-meta["tstart"])/2
+    if re.search("_background",meta["uri"]):
+        meta["origin"]="CE"
+    else:
+        meta["origin"]="CM"
     return meta
 
 class TUGRAZGRACEL2Base(DataSet):
@@ -102,6 +108,11 @@ def TUGRAZGRACEDsets(conf):
     out=[]
     release='ITSG-Grace2018'
     for subdirs in ["daily_kalman/daily_background","daily_kalman/daily_n40","monthly/monthly_background","monthly/monthly_n60","monthly/monthly_n96","monthly/monthly_n120"]:
+        out.append(TUGRAZGRACEL2ClassFactory(release,subdirs))
+
+    #also add GRACE-FO
+    release="ITSG-Grace_operational"
+    for subdirs in ["monthly/monthly_signalSeparation","monthly/monthly_background","monthly/monthly_n60","monthly/monthly_n96","monthly/monthly_n120"]:
         out.append(TUGRAZGRACEL2ClassFactory(release,subdirs))
     return out
 
