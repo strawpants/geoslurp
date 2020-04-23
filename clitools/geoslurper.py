@@ -107,27 +107,38 @@ def main(argv):
             print("\t%s"%(catentry))
         
         print("Available functions (SCHEME.FUNCTION):")
-        for fn in geoslurpCatalogue.listFunctions(conf).keys():
-            print("\t%s.%s"%(fn.scheme,fn.__name__))
+        for catentry in geoslurpCatalogue.listFunctions(conf).keys():
+            print("\t%s"%(catentry))
         
-    if not args.dset:
+    if not ( args.dset or args.func ):
         #OK jsut gracefully exit
         sys.exit(0)
 
-    datasets=geoslurpCatalogue.getDatasets(conf, args.dset)
+    if args.dset:
+        datasets=geoslurpCatalogue.getDatasets(conf, args.dset)
+    else:
+        datasets=[]
 
-    funcs=geoslurpCatalogue.getFuncs(conf, args.func)
+    if args.func:
+        funcs=geoslurpCatalogue.getFuncs(conf, args.func)
+    else:
+        funcs=[]
 
     if not ( datasets or funcs ):
         print("No valid datasets or functions selected")
         sys.exit(1)
 
     # dataset specific help
-    if args.help and args.dset:
-        for ds in datasets:
-            print("Detailed info on %s options which may be provided as JSON dictionaries"%(ds.__name__))
-            print("\t%s.pull:\n\t\t %s"%(ds.__name__,ds.pull.__doc__))
-            print("\t%s.register:\n\t%s"%(ds.__name__,ds.register.__doc__))
+    if args.help: 
+        if args.dset:
+            for ds in datasets:
+                print("Detailed info on %s options which may be provided as JSON dictionaries"%(ds.__name__))
+                print("\t%s.pull:\n\t\t %s"%(ds.__name__,ds.pull.__doc__))
+                print("\t%s.register:\n\t%s"%(ds.__name__,ds.register.__doc__))
+        if args.func:
+            for df in funcs:
+                print("Detailed info on %s options which may be provided as JSON dictionaries"%(df.__name__))
+                print("\t%s.register:\n\t%s"%(df.__name__,df.register.__doc__))
 
         sys.exit(0)
     
@@ -182,6 +193,22 @@ def main(argv):
                 ds.halt()
         #We need to explicitly delete the dataset instance or else the database QueuePool gets exhausted 
         del ds
+    
+    #loop over requested functions
+    for dfclass in funcs:
+        #initialize the class
+        df=dfclass(DbConn)
+
+        if args.register:
+            try:
+                df.register(**regopts)
+            except KeyboardInterrupt:
+                df.halt()
+        
+        if args.purge_entry:
+            df.purgeentry()
+        #We need to explicitly delete the function instance or else the database QueuePool gets exhausted 
+        del df
 
 def addUser(conn,user,readonly):
     userpass=user.split(":")
@@ -328,7 +355,7 @@ def addCommandLineArgs():
                 help="Use a different mirror for prepending to relative filename uris, the default uses the mirror registered as 'default' in the database. A mirror can be registered in the database  with --[admin-]config '{\"DataMirrors\":{\"MIRRORALIAS\":\"MIRRORPATH\"}}'.")
         
         parser.add_argument("-f","--func",metavar="PATTERN",nargs="?",type=str,
-                help='Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUCNTION)')
+                help='Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUNCTION)')
 
         return parser
 
@@ -340,7 +367,7 @@ def check_args(args,parser):
         sys.exit(1)
 
     if args.help:
-        if not args.dset:
+        if not ( args.dset or args.func ) :
             parser.print_help()
             sys.exit(0)
 

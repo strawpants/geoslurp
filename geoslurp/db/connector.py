@@ -19,7 +19,7 @@ from sqlalchemy import create_engine, MetaData,and_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import exists,select,column,table,text
 from sqlalchemy.schema import CreateSchema, DropSchema
-from sqlalchemy import Table
+from sqlalchemy import Table,func
 from geoslurp.db.tabletools import tableMapFactory
 import re
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -138,14 +138,13 @@ class GeoslurpConnector():
         mdata=MetaData(bind=self.dbeng,schema=scheme)
         return Table(tname, mdata, autoload=True, autoload_with=self.dbeng)
 
-    def updateFunction(self, fname, schema, inpara, outtype, body, language):
-        """Updates a stored function"""
-        # explicitly add line endings after semicolons in the body when not done already
-        body = re.sub(';(?!\n)', ';\n ', body)
-        self.dbeng.execute('DROP FUNCTION IF EXISTS %s."%s";' % (schema, fname))
-        funccmd = 'CREATE OR REPLACE FUNCTION %s.%s (%s) RETURNS %s AS $$ %s $$ LANGUAGE %s ' % (
-        schema, fname, inpara, outtype, body, language)
-        self.dbeng.execute(funccmd)
+    def getFunc(self,fname,scheme="public"):
+        """returns a database function based up string names"""
+        if scheme == "public":
+            return getattr(func,fname)
+        else:
+            return getattr(getattr(func,schema),fname)
+
 
     def updateTable(self, TableContentGenerator):
         """Update/add row entries in a table"""

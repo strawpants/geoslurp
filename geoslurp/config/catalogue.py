@@ -27,10 +27,12 @@ from importlib import import_module
 class DatasetCatalogue:
     #holds dataset classes (not initiated!)
     __dsets__=[]
+    __dbfuncs__=[]
     # holds factory methods for dyanamically building datasets
     __dsetfac__=[]
     __catalogue__=None
     __dscache__={}
+    __dfcache__={}
     def __init__(self):
         pass
     
@@ -52,11 +54,14 @@ class DatasetCatalogue:
     
     def addDatasetFactory(self, datasetclsfac):
         self.__dsetfac__.append(datasetclsfac)
+    
+    def addDbFunc(self,dfclass):
+        self.__dbfuncs__.append(dfclass)
 
     def refresh(self,conf):
         """Refresh the dataset catalogue"""
         self.registerAllDataSets(conf)
-
+        
         #load inventory of existing datasets (for the templated)
         Inv=Inventory(conf.db)
 
@@ -92,13 +97,16 @@ class DatasetCatalogue:
                 self.__catalogue__["datasets"][name]={"factory":dsfac.__name__}
                 self.__dscache__[name]=ds
         
-        #also find already existing instances of templated datasets
+        for df in self.__dbfuncs__:
+            name=".".join([df.scheme,df.__name__])
+            self.__catalogue__["functions"][name]={"module":df.__module__}
+            self.__dfcache__[name]=df
 
 
         #save to yaml
         self.__catalogue__["lastupdate"]=datetime.now()
         cachefile=self.getCacheFile(conf)
-        slurplog.info("saving available Dataset catalogue to %s"%cachefile)
+        slurplog.info("saving available Datasets and functions to catalogue %s"%cachefile)
         with open(cachefile,'wt') as fid:
             yaml.dump(self.__catalogue__, fid, default_flow_style=False)
     
@@ -121,7 +129,9 @@ class DatasetCatalogue:
         
         #dynamically import all relevant datasets and class factories (including userplugin datasets)
         modgeo=__import__("geoslurp.dataset")
-        
+        #dynamically load functions
+        modgeof=__import__("geoslurp.dbfunc")
+
         #also load userplugins
         self.addUserPlugPaths(conf,True)
 
@@ -215,9 +225,47 @@ class DatasetCatalogue:
 
         return outdsets
         
+    def getDFuncClass(self,conf,name):
+        """Loads a database function as an class (but check cache first)"""
+        if name in self.__dfcache__:
+            return self.__dfcache__[name]
+        else:
+           self.loadCatalogue(conf) 
+           dfentry=self.__catalogue__["functions"][name]
+           #load isolated class
+           mod=import_module(dfentry["module"])
+           df=getattr(mod,name.split(".")[1])
+           self.__dfcache__[name]=df
+           return df
+
+
+
     def getFuncs(self,conf,regex):
-        """This is currently a stub (returns en empty list)"""
-        return []
+        """retrieves a list of database functions possibly obeying a certain regex"""
+        self.loadCatalogue(conf)        
+        #get the valid names  
+        outdfs=[] 
+        regexcomp=re.compile(regex)
+        #we expect to have only one matching entry when the regex is a fully-qualified scheme.function name
+        singleEntry=re.fullmatch("^[\w]+(?:\.[\w]+)$",regex)
+
+        for name in self.__catalogue__["functions"].keys():
+            df=None
+            if regexcomp.fullmatch(name):
+                df=self.getDFuncClass(conf,name)
+                if singleEntry:
+                    if not outdfs:
+                        outdfs=[None]
+                    #this possibly overwrites a fitting template class
+                    outdfs[0]=df
+                    #no need to look any further we found our fit
+                    break
+                else:
+                    outdf.append(df)
+                    #note: other functions may fit so we continue the loop
+                    continue
+
+        return outdfs
 
 #module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )
 geoslurpCatalogue=DatasetCatalogue()

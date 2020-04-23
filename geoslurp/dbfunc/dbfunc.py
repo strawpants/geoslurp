@@ -19,8 +19,11 @@ from abc import ABC, abstractmethod
 import os
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.db import Inventory,Settings
+
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import text
+from sqlalchemy.sql import func
+from datetime import datetime
 
 class DBFunc(ABC):
     """Abstract Base class which holds a database functione"""
@@ -63,23 +66,20 @@ class DBFunc(ABC):
     def info(self):
         return self._dbinvent
 
-    @abstractmethod
-    def register(self):
-        """Register/update the function in the database"""
-        pass
-
-    def purgeentry(self,filter):
+    def purgeentry(self):
         """Delete pgfunction entry in the database"""
-        slurplogger().info("Deleting %s entry"%(self.name))
+        slurplogger().info("Deleting %s function entry"%(self.name))
         self._ses.delete(self._dbinvent)
         self._ses.commit()
-        dropexec=text("DROP FUNCTION IF EXISTS :pgfunc;")
-        self.db.dbeng.execute(dropexec,pgfunc=self.name) 
+        
+        dropexec=text("DROP FUNCTION IF EXISTS %s.%s;"%(self.scheme,self.name))
+        self.db.dbeng.execute(dropexec) 
     
-    def createreplace(self):
+    def register(self):
         """Creates/replaces the  pgfunction in the database"""
-        fheader=text("CREATE OR REPLACE FUNCTION :pgfunc(%s) RETURNS %s AS $dbff$\n"%(self.inargs,self.outargs))
-
-        pgbody=text(self.pgbody)
-        pgfooter=text(";\n$dbff$ LANGUAGE %s;"%(self.language))
-        print(pgheader+pgbody+pgfooter)
+        pgheader="CREATE OR REPLACE FUNCTION %s(%s) RETURNS %s AS $dbff$\n"%(self.name,self.inargs,self.outargs)
+        pgbody=self.pgbody
+        pgfooter=";\n$dbff$ LANGUAGE %s;"%(self.language)
+        print(str(pgheader+pgbody+pgfooter))
+        self.db.dbeng.execute(text(pgheader+pgbody+pgfooter)) 
+        self.updateInvent()

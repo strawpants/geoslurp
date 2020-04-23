@@ -117,11 +117,18 @@ class Settings():
             self.defaultentry=SettingsTable(user='default',conf={"CacheDir":"/tmp","MirrorMaps":{"default":"${HOME}/geoslurpdata"}})
             self.ses.add(self.defaultentry)
             self.ses.commit()
+            #also create a view to the default which may be read by the geobrowse group
+            self.db.dbeng.execute("CREATE VIEW admin.settings_%sefault as select * from admin.settings as t where t.user  = 'default'")
+            self.db.eng.execute("GRANT SELECT ON admin.settings_default to geobrowse")
+
+
             #retrieve again
             self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
         #retrieve/create a user entry
         try:
             self.userentry=self.ses.query(self.table).filter(self.table.user == self.db.user).one()
+            if not self.userentry.conf:
+                self.userentry.conf={}
         except:
             #make a new empty entry
             self.userentry=self.table(user=self.db.user,conf={})
@@ -157,7 +164,7 @@ class Settings():
 
     def __delitem__(self, key):
         del self.userentry.conf[key]
-
+    
     def getdefaults(self,key):
         """returns the default"""
         return self.defaultentry.conf[key]
