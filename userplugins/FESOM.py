@@ -261,6 +261,7 @@ class FESOMRunBase(DataSet):
         self.table=type(self.name+"Table",(FESOMRunTBase,),{})
         self.createTable()
         #extract grid name from table name
+        print(self.name)
         self.grid=self.name.split("_")[3]
 
     def pull(self):
