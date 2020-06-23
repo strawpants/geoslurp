@@ -25,6 +25,14 @@ geoslurp.discover.oceanobs.argoQuery module
     :undoc-members:
     :show-inheritance:
 
+geoslurp.discover.oceanobs.awipiesQuery module
+----------------------------------------------
+
+.. automodule:: geoslurp.discover.oceanobs.awipiesQuery
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 geoslurp.discover.oceanobs.psmsl module
 ---------------------------------------
 

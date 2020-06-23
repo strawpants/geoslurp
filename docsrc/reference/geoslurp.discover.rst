@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
 
     geoslurp.discover.fesom
+    geoslurp.discover.generic
     geoslurp.discover.gravity
     geoslurp.discover.oceanobs
 

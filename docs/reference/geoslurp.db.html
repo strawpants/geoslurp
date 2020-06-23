@@ -231,6 +231,12 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="geoslurp.db.connector.GeoslurpConnector.getFunc">
+<code class="descname">getFunc</code><span class="sig-paren">(</span><em>fname</em>, <em>scheme='public'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.getFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.getFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a database function based up string names</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="geoslurp.db.connector.GeoslurpConnector.getInventEntry">
 <code class="descname">getInventEntry</code><span class="sig-paren">(</span><em>tname</em>, <em>scheme</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.getInventEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.getInventEntry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -262,12 +268,6 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.updateFunction">
-<code class="descname">updateFunction</code><span class="sig-paren">(</span><em>fname</em>, <em>schema</em>, <em>inpara</em>, <em>outtype</em>, <em>body</em>, <em>language</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.updateFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.updateFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates a stored function</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="geoslurp.db.connector.GeoslurpConnector.updateTable">
 <code class="descname">updateTable</code><span class="sig-paren">(</span><em>TableContentGenerator</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.updateTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.updateTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update/add row entries in a table</p>
@@ -287,8 +287,7 @@
 <dl class="function">
 <dt id="geoslurp.db.exporter.exportGeoQuery">
 <code class="descclassname">geoslurp.db.exporter.</code><code class="descname">exportGeoQuery</code><span class="sig-paren">(</span><em>qryresult</em>, <em>outputfile</em>, <em>layer=None</em>, <em>driver='GPKG'</em>, <em>packFiles=False</em>, <em>striproot=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#exportGeoQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.exportGeoQuery" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export the results of a query to a (portable output file, e.g. a geopackage and possibly a filearchive)</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="geoslurp.db.exporter.exportGeoTable">
@@ -298,7 +297,7 @@
 
 <dl class="function">
 <dt id="geoslurp.db.exporter.exportQuery">
-<code class="descclassname">geoslurp.db.exporter.</code><code class="descname">exportQuery</code><span class="sig-paren">(</span><em>qryresult</em>, <em>outputfile</em>, <em>layer=None</em>, <em>packFiles=False</em>, <em>driver='SQL'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#exportQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.exportQuery" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">geoslurp.db.exporter.</code><code class="descname">exportQuery</code><span class="sig-paren">(</span><em>qryresult</em>, <em>outputfile</em>, <em>layer=None</em>, <em>driver='SQLITE'</em>, <em>packFiles=False</em>, <em>striproot=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#exportQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.exportQuery" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a query without a geometry column, and possibly pack corresponding files</p>
 </dd></dl>
 
@@ -306,6 +305,12 @@
 <dt id="geoslurp.db.exporter.exportTable">
 <code class="descclassname">geoslurp.db.exporter.</code><code class="descname">exportTable</code><span class="sig-paren">(</span><em>table</em>, <em>outfile</em>, <em>addFiles=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#exportTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.exportTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a entire table without a geometry column</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.db.exporter.writeToSQLite">
+<code class="descclassname">geoslurp.db.exporter.</code><code class="descname">writeToSQLite</code><span class="sig-paren">(</span><em>outputfile</em>, <em>df</em>, <em>layer</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#writeToSQLite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.writeToSQLite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a pandas dataframe as a table to a sqlite file</p>
 </dd></dl>
 
 </div>

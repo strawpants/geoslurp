@@ -183,8 +183,11 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplogger</span>
 <span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="k">import</span> <span class="n">Inventory</span><span class="p">,</span><span class="n">Settings</span>
+
 <span class="kn">from</span> <span class="nn">sqlalchemy.orm.exc</span> <span class="k">import</span> <span class="n">NoResultFound</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="k">import</span> <span class="n">func</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 
 <div class="viewcode-block" id="DBFunc"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.dbfunc.DBFunc">[docs]</a><span class="k">class</span> <span class="nc">DBFunc</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Abstract Base class which holds a database functione&quot;&quot;&quot;</span>
@@ -227,26 +230,23 @@
 <div class="viewcode-block" id="DBFunc.info"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.dbfunc.DBFunc.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span></div>
 
-<div class="viewcode-block" id="DBFunc.register"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.dbfunc.DBFunc.register">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Register/update the function in the database&quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="DBFunc.purgeentry"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.dbfunc.DBFunc.purgeentry">[docs]</a>    <span class="k">def</span> <span class="nf">purgeentry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">filter</span><span class="p">):</span>
+<div class="viewcode-block" id="DBFunc.purgeentry"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.dbfunc.DBFunc.purgeentry">[docs]</a>    <span class="k">def</span> <span class="nf">purgeentry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete pgfunction entry in the database&quot;&quot;&quot;</span>
-        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting </span><span class="si">%s</span><span class="s2"> entry&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Deleting </span><span class="si">%s</span><span class="s2"> function entry&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="n">dropexec</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;DROP FUNCTION IF EXISTS :pgfunc;&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">dropexec</span><span class="p">,</span><span class="n">pgfunc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> </div>
+        
+        <span class="n">dropexec</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;DROP FUNCTION IF EXISTS </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">dropexec</span><span class="p">)</span> </div>
     
-<div class="viewcode-block" id="DBFunc.createreplace"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.dbfunc.DBFunc.createreplace">[docs]</a>    <span class="k">def</span> <span class="nf">createreplace</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DBFunc.register"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.dbfunc.DBFunc.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates/replaces the  pgfunction in the database&quot;&quot;&quot;</span>
-        <span class="n">fheader</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;CREATE OR REPLACE FUNCTION :pgfunc(</span><span class="si">%s</span><span class="s2">) RETURNS </span><span class="si">%s</span><span class="s2"> AS $dbff$</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inargs</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outargs</span><span class="p">))</span>
-
-        <span class="n">pgbody</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pgbody</span><span class="p">)</span>
-        <span class="n">pgfooter</span><span class="o">=</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;;</span><span class="se">\n</span><span class="s2">$dbff$ LANGUAGE </span><span class="si">%s</span><span class="s2">;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">language</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">pgheader</span><span class="o">+</span><span class="n">pgbody</span><span class="o">+</span><span class="n">pgfooter</span><span class="p">)</span></div></div>
+        <span class="n">pgheader</span><span class="o">=</span><span class="s2">&quot;CREATE OR REPLACE FUNCTION </span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">) RETURNS </span><span class="si">%s</span><span class="s2"> AS $dbff$</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">inargs</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">outargs</span><span class="p">)</span>
+        <span class="n">pgbody</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pgbody</span>
+        <span class="n">pgfooter</span><span class="o">=</span><span class="s2">&quot;;</span><span class="se">\n</span><span class="s2">$dbff$ LANGUAGE </span><span class="si">%s</span><span class="s2">;&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">language</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pgheader</span><span class="o">+</span><span class="n">pgbody</span><span class="o">+</span><span class="n">pgfooter</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">pgheader</span><span class="o">+</span><span class="n">pgbody</span><span class="o">+</span><span class="n">pgfooter</span><span class="p">))</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>

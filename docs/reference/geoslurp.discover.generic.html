@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>geoslurp.discover package &mdash; geoslurp v1.1.0 documentation</title>
+  <title>geoslurp.discover.generic package &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
@@ -38,9 +38,9 @@
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="geoslurp v1.1.0 documentation" href="../index.html"/>
-        <link rel="up" title="geoslurp package" href="geoslurp.html"/>
-        <link rel="next" title="geoslurp.discover.fesom package" href="geoslurp.discover.fesom.html"/>
-        <link rel="prev" title="geoslurp.dbfunc package" href="geoslurp.dbfunc.html"/> 
+        <link rel="up" title="geoslurp.discover package" href="geoslurp.discover.html"/>
+        <link rel="next" title="geoslurp.discover.gravity package" href="geoslurp.discover.gravity.html"/>
+        <link rel="prev" title="geoslurp.discover.fesom package" href="geoslurp.discover.fesom.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -148,13 +148,15 @@
         
           <li><a href="geoslurp.html">geoslurp package</a> &raquo;</li>
         
-      <li>geoslurp.discover package</li>
+          <li><a href="geoslurp.discover.html">geoslurp.discover package</a> &raquo;</li>
+        
+      <li>geoslurp.discover.generic package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/reference/geoslurp.discover.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/reference/geoslurp.discover.generic.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -186,41 +188,28 @@
     margin-right: 4px;  /* make room for the exclamation icon */
 }
 </style>
-<div class="section" id="module-geoslurp.discover">
-<span id="geoslurp-discover-package"></span><h1>geoslurp.discover package<a class="headerlink" href="#module-geoslurp.discover" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="geoslurp.discover.fesom.html">geoslurp.discover.fesom package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.fesom.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.fesom.html#module-geoslurp.discover.fesom.extractprofiles">geoslurp.discover.fesom.extractprofiles module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.fesom.html#module-geoslurp.discover.fesom.fesomQuery">geoslurp.discover.fesom.fesomQuery module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="geoslurp.discover.generic.html">geoslurp.discover.generic package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.generic.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.generic.html#module-geoslurp.discover.generic.getTableData">geoslurp.discover.generic.getTableData module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.generic.html#module-geoslurp.discover.generic.regexQuery">geoslurp.discover.generic.regexQuery module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="geoslurp.discover.gravity.html">geoslurp.discover.gravity package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.gravity.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.gravity.html#module-geoslurp.discover.gravity.graceQuery">geoslurp.discover.gravity.graceQuery module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.gravity.html#module-geoslurp.discover.gravity.gravQuery">geoslurp.discover.gravity.gravQuery module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.gravity.html#module-geoslurp.discover.gravity.staticQuery">geoslurp.discover.gravity.staticQuery module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="geoslurp.discover.oceanobs.html">geoslurp.discover.oceanobs package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.oceanobs.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.argoProfiles">geoslurp.discover.oceanobs.argoProfiles module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.argoQuery">geoslurp.discover.oceanobs.argoQuery module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.awipiesQuery">geoslurp.discover.oceanobs.awipiesQuery module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geoslurp.discover.oceanobs.html#module-geoslurp.discover.oceanobs.psmsl">geoslurp.discover.oceanobs.psmsl module</a></li>
-</ul>
-</li>
-</ul>
+<div class="section" id="module-geoslurp.discover.generic">
+<span id="geoslurp-discover-generic-package"></span><h1>geoslurp.discover.generic package<a class="headerlink" href="#module-geoslurp.discover.generic" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-geoslurp.discover.generic.getTableData">
+<span id="geoslurp-discover-generic-gettabledata-module"></span><h2>geoslurp.discover.generic.getTableData module<a class="headerlink" href="#module-geoslurp.discover.generic.getTableData" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="geoslurp.discover.generic.getTableData.queryTable">
+<code class="descclassname">geoslurp.discover.generic.getTableData.</code><code class="descname">queryTable</code><span class="sig-paren">(</span><em>dbcon</em>, <em>tablename</em>, <em>scheme='globalgis'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/generic/getTableData.html#queryTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.generic.getTableData.queryTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all the rows in a geoslurp table</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-geoslurp.discover.generic.regexQuery">
+<span id="geoslurp-discover-generic-regexquery-module"></span><h2>geoslurp.discover.generic.regexQuery module<a class="headerlink" href="#module-geoslurp.discover.generic.regexQuery" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="geoslurp.discover.generic.regexQuery.regexQuery">
+<code class="descclassname">geoslurp.discover.generic.regexQuery.</code><code class="descname">regexQuery</code><span class="sig-paren">(</span><em>dbcon</em>, <em>table</em>, <em>scheme='pubic'</em>, <em>orderBy=None</em>, <em>tspan=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/generic/regexQuery.html#regexQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.generic.regexQuery.regexQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve entries from a table  by applying a regeular expressions query to specified columns</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -234,10 +223,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="geoslurp.discover.fesom.html" class="btn btn-neutral float-right" title="geoslurp.discover.fesom package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="geoslurp.discover.gravity.html" class="btn btn-neutral float-right" title="geoslurp.discover.gravity package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="geoslurp.dbfunc.html" class="btn btn-neutral" title="geoslurp.dbfunc package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="geoslurp.discover.fesom.html" class="btn btn-neutral" title="geoslurp.discover.fesom package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

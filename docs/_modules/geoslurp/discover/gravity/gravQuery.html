@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>geoslurp.discover.oceanobs.argoProfiles &mdash; geoslurp v1.1.0 documentation</title>
+  <title>geoslurp.discover.gravity.gravQuery &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
@@ -144,7 +144,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>geoslurp.discover.oceanobs.argoProfiles</li>
+      <li>geoslurp.discover.gravity.gravQuery</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -161,22 +161,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for geoslurp.discover.oceanobs.argoProfiles</h1><div class="highlight"><pre>
-<span></span><span class="c1"># author alisa yakhontova (yakhontova@geod.uni-bonn.de) 2020</span>
-<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="k">import</span> <span class="n">Dataset</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="k">import</span> <span class="n">num2date</span>
+  <h1>Source code for geoslurp.discover.gravity.gravQuery</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
 
-<div class="viewcode-block" id="sec2month"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.oceanobs.html#geoslurp.discover.oceanobs.argoProfiles.sec2month">[docs]</a><span class="k">def</span> <span class="nf">sec2month</span><span class="p">(</span><span class="n">nc_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;convert seconds since.. to yyyy-mm-dd format&quot;&quot;&quot;</span>
-    <span class="n">times</span><span class="o">=</span><span class="n">nc_id</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
-    <span class="n">units</span><span class="o">=</span><span class="n">times</span><span class="o">.</span><span class="n">units</span>
-    <span class="c1"># calendar=times.calendar</span>
-    <span class="n">tt</span><span class="o">=</span><span class="p">[</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">num2date</span><span class="p">(</span><span class="n">times</span><span class="p">[:],</span><span class="n">units</span><span class="p">)]</span>
-     
-    <span class="k">return</span> <span class="n">tt</span></div>
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
 
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with geoslurp; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
 
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2020</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">select</span>
+
+<div class="viewcode-block" id="queryRegex"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.gravity.html#geoslurp.discover.gravity.gravQuery.queryRegex">[docs]</a><span class="k">def</span> <span class="nf">queryRegex</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span><span class="n">table</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;pubic&quot;</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve entries from a table applying gravity field table by querying with simple constraints&quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">scheme</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ky</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ky</span><span class="p">,</span><span class="n">val</span><span class="p">)</span></div>
+
+<span class="c1"># retrieve/reflect the table</span>
+    <span class="c1"># tbl = dbcon.getTable(table, &#39;gravity&#39;)</span>
+    <span class="c1"># qry = select([tbl])</span>
+    <span class="c1"># if typeregex:</span>
+        <span class="c1"># qry=qry.where(tbl.c.type[&quot;name&quot;].astext.op(&quot;~&quot;)(typeregex))</span>
+    <span class="c1"># return dbcon.dbeng.execute(qry)</span>
 </pre></div>
 
            </div>

@@ -17,6 +17,14 @@ geoslurp.discover.gravity.graceQuery module
     :undoc-members:
     :show-inheritance:
 
+geoslurp.discover.gravity.gravQuery module
+------------------------------------------
+
+.. automodule:: geoslurp.discover.gravity.gravQuery
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 geoslurp.discover.gravity.staticQuery module
 --------------------------------------------
 

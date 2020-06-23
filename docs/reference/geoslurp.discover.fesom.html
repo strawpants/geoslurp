@@ -39,7 +39,7 @@
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="geoslurp v1.1.0 documentation" href="../index.html"/>
         <link rel="up" title="geoslurp.discover package" href="geoslurp.discover.html"/>
-        <link rel="next" title="geoslurp.discover.gravity package" href="geoslurp.discover.gravity.html"/>
+        <link rel="next" title="geoslurp.discover.generic package" href="geoslurp.discover.generic.html"/>
         <link rel="prev" title="geoslurp.discover package" href="geoslurp.discover.html"/> 
 
   
@@ -210,6 +210,12 @@
 <div class="section" id="module-geoslurp.discover.fesom.fesomQuery">
 <span id="geoslurp-discover-fesom-fesomquery-module"></span><h2>geoslurp.discover.fesom.fesomQuery module<a class="headerlink" href="#module-geoslurp.discover.fesom.fesomQuery" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="geoslurp.discover.fesom.fesomQuery.closest2Fesom">
+<code class="descclassname">geoslurp.discover.fesom.fesomQuery.</code><code class="descname">closest2Fesom</code><span class="sig-paren">(</span><em>dbcon</em>, <em>fesominfo</em>, <em>geoWKT=None</em>, <em>samplePoints=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/fesom/fesomQuery.html#closest2Fesom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.fesom.fesomQuery.closest2Fesom" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns vertices of a FESOM grid that have the smallest distance to sample points</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="geoslurp.discover.fesom.fesomQuery.fesomDataQuery">
 <code class="descclassname">geoslurp.discover.fesom.fesomQuery.</code><code class="descname">fesomDataQuery</code><span class="sig-paren">(</span><em>dbcon</em>, <em>fesominfo</em>, <em>tspan</em>, <em>interval=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/fesom/fesomQuery.html#fesomDataQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.fesom.fesomQuery.fesomDataQuery" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query a fesom run for datafiles</p>
@@ -224,6 +230,12 @@
 <dt id="geoslurp.discover.fesom.fesomQuery.fesomMeshQuery">
 <code class="descclassname">geoslurp.discover.fesom.fesomQuery.</code><code class="descname">fesomMeshQuery</code><span class="sig-paren">(</span><em>dbcon</em>, <em>fesominfo</em>, <em>geoWKT=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/fesom/fesomQuery.html#fesomMeshQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.fesom.fesomQuery.fesomMeshQuery" title="Permalink to this definition">¶</a></dt>
 <dd><p>queries the geoslurp database for a valid vertices of a FESOM grid</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geoslurp.discover.fesom.fesomQuery.fesomMeshQueryWKB">
+<code class="descclassname">geoslurp.discover.fesom.fesomQuery.</code><code class="descname">fesomMeshQueryWKB</code><span class="sig-paren">(</span><em>dbcon</em>, <em>fesominfo</em>, <em>geoWKT</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/fesom/fesomQuery.html#fesomMeshQueryWKB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.fesom.fesomQuery.fesomMeshQueryWKB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query the database positions of OBP points</p>
 </dd></dl>
 
 <dl class="function">
@@ -251,7 +263,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="geoslurp.discover.gravity.html" class="btn btn-neutral float-right" title="geoslurp.discover.gravity package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="geoslurp.discover.generic.html" class="btn btn-neutral float-right" title="geoslurp.discover.generic package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="geoslurp.discover.html" class="btn btn-neutral" title="geoslurp.discover package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -180,7 +180,7 @@
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">copy</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
 
 <div class="viewcode-block" id="BtdBox"><a class="viewcode-back" href="../../../reference/geoslurp.tools.html#geoslurp.datapull.motu.BtdBox">[docs]</a><span class="k">class</span> <span class="nc">BtdBox</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Class which holds a geographical bounding box, a vertical depth range and a datetime range&quot;&quot;&quot;</span>
@@ -246,9 +246,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">lon</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">e</span> <span class="o">&lt;</span> <span class="n">lon</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Splitting longitude not within the bounding box&quot;</span><span class="p">)</span>
-        <span class="n">left</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">left</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">left</span><span class="o">.</span><span class="n">e</span><span class="o">=</span><span class="n">lon</span>
-        <span class="n">right</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">right</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">right</span><span class="o">.</span><span class="n">w</span><span class="o">=</span><span class="n">lon</span>
         <span class="k">return</span> <span class="n">left</span><span class="p">,</span><span class="n">right</span></div>
 
@@ -258,9 +258,9 @@
             <span class="n">t</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="o">+</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">te</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ts</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
         <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">te</span> <span class="o">&lt;</span> <span class="n">t</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Splitting Time dimension not within timerange&quot;</span><span class="p">)</span>
-        <span class="n">before</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">before</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">before</span><span class="o">.</span><span class="n">te</span><span class="o">=</span><span class="n">t</span>
-        <span class="n">after</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">after</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">after</span><span class="o">.</span><span class="n">ts</span><span class="o">=</span><span class="n">t</span>
         <span class="k">return</span> <span class="n">before</span><span class="p">,</span><span class="n">after</span></div>
 

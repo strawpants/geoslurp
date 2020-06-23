@@ -191,10 +191,12 @@
 <div class="viewcode-block" id="DatasetCatalogue"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue">[docs]</a><span class="k">class</span> <span class="nc">DatasetCatalogue</span><span class="p">:</span>
     <span class="c1">#holds dataset classes (not initiated!)</span>
     <span class="n">__dsets__</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">__dbfuncs__</span><span class="o">=</span><span class="p">[]</span>
     <span class="c1"># holds factory methods for dyanamically building datasets</span>
     <span class="n">__dsetfac__</span><span class="o">=</span><span class="p">[]</span>
     <span class="n">__catalogue__</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">__dscache__</span><span class="o">=</span><span class="p">{}</span>
+    <span class="n">__dfcache__</span><span class="o">=</span><span class="p">{}</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
     
@@ -216,11 +218,14 @@
     
 <div class="viewcode-block" id="DatasetCatalogue.addDatasetFactory"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.addDatasetFactory">[docs]</a>    <span class="k">def</span> <span class="nf">addDatasetFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasetclsfac</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dsetfac__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datasetclsfac</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DatasetCatalogue.addDbFunc"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.addDbFunc">[docs]</a>    <span class="k">def</span> <span class="nf">addDbFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dfclass</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dbfuncs__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dfclass</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DatasetCatalogue.refresh"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Refresh the dataset catalogue&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">registerAllDataSets</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
-
+        
         <span class="c1">#load inventory of existing datasets (for the templated)</span>
         <span class="n">Inv</span><span class="o">=</span><span class="n">Inventory</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
 
@@ -233,6 +238,8 @@
                 <span class="n">srch</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="s2">&quot;([^</span><span class="se">\\</span><span class="s2">\s]+)&quot;</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;\.&quot;</span><span class="p">))</span>
                 <span class="c1">#possibly also add existing datasets so they can be found by regular expressions</span>
                 <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">Inv</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">entry</span><span class="o">.</span><span class="n">dataset</span><span class="p">:</span>
+                        <span class="k">continue</span>
                     <span class="n">nameexisting</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">entry</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">entry</span><span class="o">.</span><span class="n">dataset</span><span class="p">])</span>
                     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">srch</span><span class="p">,</span><span class="n">nameexisting</span><span class="p">):</span>
                         <span class="c1">#add </span>
@@ -247,7 +254,10 @@
                 <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
                     <span class="n">srch</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;TEMPLATE&quot;</span><span class="p">,</span><span class="s2">&quot;([^</span><span class="se">\\</span><span class="s2">\s]+)&quot;</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span><span class="s2">&quot;\.&quot;</span><span class="p">))</span>
                     <span class="c1">#possibly also add existing datasets so they can be found by regular expressions</span>
+                    
                     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">Inv</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">entry</span><span class="o">.</span><span class="n">dataset</span><span class="p">:</span>
+                            <span class="k">continue</span>
                         <span class="n">nameexisting</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">entry</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">entry</span><span class="o">.</span><span class="n">dataset</span><span class="p">])</span>
                         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">srch</span><span class="p">,</span><span class="n">nameexisting</span><span class="p">):</span>
                             <span class="c1">#add </span>
@@ -256,13 +266,16 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;factory&quot;</span><span class="p">:</span><span class="n">dsfac</span><span class="o">.</span><span class="vm">__name__</span><span class="p">}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__dscache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">ds</span>
         
-        <span class="c1">#also find already existing instances of templated datasets</span>
+        <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dbfuncs__</span><span class="p">:</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">df</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">df</span><span class="o">.</span><span class="vm">__name__</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;functions&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span><span class="n">df</span><span class="o">.</span><span class="vm">__module__</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__dfcache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">df</span>
 
 
         <span class="c1">#save to yaml</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="n">cachefile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getCacheFile</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
-        <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saving available Dataset catalogue to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">cachefile</span><span class="p">)</span>
+        <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saving available Datasets and functions to catalogue </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">cachefile</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cachefile</span><span class="p">,</span><span class="s1">&#39;wt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
     
@@ -285,7 +298,9 @@
         
         <span class="c1">#dynamically import all relevant datasets and class factories (including userplugin datasets)</span>
         <span class="n">modgeo</span><span class="o">=</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;geoslurp.dataset&quot;</span><span class="p">)</span>
-        
+        <span class="c1">#dynamically load functions</span>
+        <span class="n">modgeof</span><span class="o">=</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;geoslurp.dbfunc&quot;</span><span class="p">)</span>
+
         <span class="c1">#also load userplugins</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addUserPlugPaths</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span></div>
 
@@ -379,9 +394,47 @@
 
         <span class="k">return</span> <span class="n">outdsets</span></div>
         
+<div class="viewcode-block" id="DatasetCatalogue.getDFuncClass"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.getDFuncClass">[docs]</a>    <span class="k">def</span> <span class="nf">getDFuncClass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loads a database function as an class (but check cache first)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dfcache__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dfcache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span> 
+           <span class="n">dfentry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;functions&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span>
+           <span class="c1">#load isolated class</span>
+           <span class="n">mod</span><span class="o">=</span><span class="n">import_module</span><span class="p">(</span><span class="n">dfentry</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">])</span>
+           <span class="n">df</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">__dfcache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">df</span>
+           <span class="k">return</span> <span class="n">df</span></div>
+
+
+
 <div class="viewcode-block" id="DatasetCatalogue.getFuncs"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.getFuncs">[docs]</a>    <span class="k">def</span> <span class="nf">getFuncs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">,</span><span class="n">regex</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This is currently a stub (returns en empty list)&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[]</span></div></div>
+        <span class="sd">&quot;&quot;&quot;retrieves a list of database functions possibly obeying a certain regex&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>        
+        <span class="c1">#get the valid names  </span>
+        <span class="n">outdfs</span><span class="o">=</span><span class="p">[]</span> 
+        <span class="n">regexcomp</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+        <span class="c1">#we expect to have only one matching entry when the regex is a fully-qualified scheme.function name</span>
+        <span class="n">singleEntry</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="s2">&quot;^[\w]+(?:\.[\w]+)$&quot;</span><span class="p">,</span><span class="n">regex</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;functions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">df</span><span class="o">=</span><span class="kc">None</span>
+            <span class="k">if</span> <span class="n">regexcomp</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="n">df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getDFuncClass</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">singleEntry</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">outdfs</span><span class="p">:</span>
+                        <span class="n">outdfs</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+                    <span class="c1">#this possibly overwrites a fitting template class</span>
+                    <span class="n">outdfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">df</span>
+                    <span class="c1">#no need to look any further we found our fit</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outdf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                    <span class="c1">#note: other functions may fit so we continue the loop</span>
+                    <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="n">outdfs</span></div></div>
 
 <span class="c1">#module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )</span>
 <span class="n">geoslurpCatalogue</span><span class="o">=</span><span class="n">DatasetCatalogue</span><span class="p">()</span>

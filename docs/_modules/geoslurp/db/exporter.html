@@ -186,26 +186,58 @@
 <span class="kn">from</span> <span class="nn">geoslurp.db.settings</span> <span class="k">import</span> <span class="n">MirrorMap</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">create_engine</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">gzip</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
 <div class="viewcode-block" id="exportGeoQuery"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.exportGeoQuery">[docs]</a><span class="k">def</span> <span class="nf">exportGeoQuery</span><span class="p">(</span><span class="n">qryresult</span><span class="p">,</span><span class="n">outputfile</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">driver</span><span class="o">=</span><span class="s2">&quot;GPKG&quot;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">striproot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Export the results of a query to a (portable output file, e.g. a geopackage and possibly a filearchive)&quot;&quot;&quot;</span>
+    <span class="c1">#just add a check and pass to exportQuery function</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;geom&quot;</span> <span class="ow">in</span> <span class="n">qryresult</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">raise</span> <span class="n">RunTimeError</span><span class="p">(</span><span class="s2">&quot;no geometry found in the specified query&quot;</span><span class="p">)</span>
+    <span class="n">exportQuery</span><span class="p">(</span><span class="n">qryresult</span><span class="p">,</span><span class="n">outputfile</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span><span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="n">packFiles</span><span class="p">,</span><span class="n">striproot</span><span class="o">=</span><span class="n">striproot</span><span class="p">)</span></div>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">()</span>
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+
+<div class="viewcode-block" id="exportQuery"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.exportQuery">[docs]</a><span class="k">def</span> <span class="nf">exportQuery</span><span class="p">(</span><span class="n">qryresult</span><span class="p">,</span><span class="n">outputfile</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">driver</span><span class="o">=</span><span class="s2">&quot;SQLITE&quot;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">striproot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Export a query without a geometry column, and possibly pack corresponding files&quot;&quot;&quot;</span>
     
-    <span class="c1">#specify columns</span>
+    <span class="k">if</span> <span class="s2">&quot;geom&quot;</span> <span class="ow">in</span> <span class="n">qryresult</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">useGeoPandas</span><span class="o">=</span><span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">useGeoPandas</span><span class="o">=</span><span class="kc">False</span> 
+        
+    <span class="k">if</span> <span class="n">useGeoPandas</span> <span class="ow">and</span> <span class="n">driver</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GPKG&quot;</span><span class="p">]:</span>    
+        <span class="k">raise</span> <span class="n">RunTimeError</span><span class="p">(</span><span class="s2">&quot;no geometry found in the specified query&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">useGeoPandas</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">()</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="c1">#initialize columns</span>
     <span class="k">for</span> <span class="n">ky</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ky</span> <span class="k">for</span> <span class="n">ky</span> <span class="ow">in</span> <span class="n">qryresult</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">ky</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;geom&quot;</span><span class="p">,</span><span class="s2">&quot;id&quot;</span><span class="p">]):</span>
         <span class="n">df</span><span class="p">[</span><span class="n">ky</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
    
     <span class="k">if</span> <span class="n">packFiles</span><span class="p">:</span>
         <span class="c1">#open a tgz archive</span>
         <span class="n">farchive</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;_files.tgz&quot;</span>
+        <span class="n">farchivetmp</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;_files.tar&quot;</span>
         <span class="k">if</span> <span class="n">striproot</span><span class="p">:</span>
             <span class="n">mmap</span><span class="o">=</span><span class="n">MirrorMap</span><span class="p">(</span><span class="n">striproot</span><span class="p">,</span><span class="n">farchive</span><span class="o">+</span><span class="s2">&quot;:/&quot;</span><span class="p">)</span>
 
-        <span class="c1">#open/reopen archive </span>
-        <span class="n">tarar</span><span class="o">=</span><span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">farchive</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w:gz&#39;</span><span class="p">)</span>
+        <span class="c1">#open/reopen archive</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">farchive</span><span class="p">):</span>
+            <span class="c1">#unzip to a temporary file</span>
+            <span class="n">farchivetmp</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;_files.tar&quot;</span>
+            <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">farchive</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">gzid</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">farchivetmp</span><span class="p">,</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+                   <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">gzid</span><span class="p">,</span><span class="n">fid</span><span class="p">)</span>
+
+            <span class="n">tarar</span><span class="o">=</span><span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">farchivetmp</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tarar</span><span class="o">=</span><span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">farchive</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w:gz&#39;</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">tarar</span><span class="o">=</span><span class="kc">None</span>
@@ -214,11 +246,14 @@
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">qryresult</span><span class="p">:</span>
         <span class="n">entrymod</span><span class="o">=</span><span class="p">{}</span>
         <span class="k">for</span> <span class="n">ky</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;geom&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">useGeoPandas</span> <span class="ow">and</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;geom&quot;</span><span class="p">:</span>
                 <span class="n">val</span><span class="o">=</span><span class="n">shpextract</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
                 <span class="n">ky</span><span class="o">=</span><span class="s2">&quot;geometry&quot;</span>
             <span class="k">elif</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span>
                 <span class="n">val</span><span class="o">=</span><span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span>
+                <span class="c1">#convert to json</span>
+                <span class="n">val</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;uri&quot;</span> <span class="ow">and</span> <span class="n">packFiles</span><span class="p">:</span>
                 <span class="c1">#modify the uri and add file in the archive</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">striproot</span><span class="p">:</span>
@@ -241,16 +276,26 @@
     
     <span class="k">if</span> <span class="n">packFiles</span><span class="p">:</span>
         <span class="n">tarar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">farchivetmp</span><span class="p">):</span>
+            <span class="c1">#rezip the tar archive and clean up</span>
+            <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">farchive</span><span class="p">,</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">gzid</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">farchivetmp</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+                   <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span><span class="n">gzid</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">farchivetmp</span><span class="p">)</span>
     <span class="c1">#export to file</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">outputfile</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">useGeoPandas</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">outputfile</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;SQLITE&quot;</span><span class="p">:</span>
+            <span class="n">writeToSQLite</span><span class="p">(</span><span class="n">outputfile</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">layer</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know how to interpret output driver&quot;</span><span class="o">%</span><span class="n">driver</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="writeToSQLite"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.writeToSQLite">[docs]</a><span class="k">def</span> <span class="nf">writeToSQLite</span><span class="p">(</span><span class="n">outputfile</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write a pandas dataframe as a table to a sqlite file&quot;&quot;&quot;</span>
+    <span class="n">outeng</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;sqlite:///&#39;</span><span class="o">+</span><span class="n">outputfile</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">outeng</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="exportQuery"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.exportQuery">[docs]</a><span class="k">def</span> <span class="nf">exportQuery</span><span class="p">(</span><span class="n">qryresult</span><span class="p">,</span><span class="n">outputfile</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">driver</span><span class="o">=</span><span class="s2">&quot;SQL&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Export a query without a geometry column, and possibly pack corresponding files&quot;&quot;&quot;</span>
-    
-    
-    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="exportGeoTable"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.exporter.exportGeoTable">[docs]</a><span class="k">def</span> <span class="nf">exportGeoTable</span><span class="p">(</span><span class="n">table</span><span class="p">,</span><span class="n">outfile</span><span class="p">,</span><span class="n">addFiles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

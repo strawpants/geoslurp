@@ -215,7 +215,7 @@
 
 
 <div class="viewcode-block" id="geocenter_Rietbroeketal2016upd.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.geocenter_Rietbroeketal2016upd.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">truncateTable</span><span class="p">()</span>
         <span class="c1">#set general settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;citation&quot;</span><span class="p">:</span><span class="s2">&quot;Rietbroek, R., Brunnabend, S.-E., Kusche, J., Schröter, J., Dahle, C., 2016. &quot;</span> \
                                       <span class="s2">&quot;Revisiting the Contemporary Sea Level Budget on Global and Regional Scales. &quot;</span> \
@@ -226,7 +226,8 @@
 
             <span class="n">metacomb</span><span class="o">=</span><span class="p">[]</span>
 
-            <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Geocenter/GeocentCM-CF_Antarctica.txt&#39;</span><span class="p">,</span>
+            <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Geocenter/GeocentCM-CF_Green.txt&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Geocenter/GeocentCM-CF_Antarctica.txt&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;Geocenter/GeocentCM-CF_Hydrology.txt&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;Geocenter/GeocentCM-CF_LandGlaciers.txt&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;Geocenter/GeocentCM-CF_GIA.txt&#39;</span><span class="p">,</span>
@@ -247,6 +248,7 @@
 <span class="p">}</span>
                         
                         <span class="k">for</span> <span class="n">el</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">order</span><span class="p">,</span><span class="n">lnspl</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]):</span>
+                            <span class="c1"># import pdb;pdb.set_trace()</span>
                             <span class="n">shar</span><span class="p">[</span><span class="s2">&quot;cnm&quot;</span><span class="p">][</span><span class="n">shar</span><span class="o">.</span><span class="n">idx</span><span class="p">(</span><span class="n">el</span><span class="p">)]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">sqrt3timesRE</span>
 
                         <span class="c1">#also add sigmas </span>
@@ -327,8 +329,8 @@
 <div class="viewcode-block" id="geocenter_RIES_CFCM"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.geocenter_RIES_CFCM">[docs]</a><span class="k">class</span> <span class="nc">geocenter_RIES_CFCM</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
     <span class="n">fout30</span><span class="o">=</span><span class="s2">&quot;GCN_L1_L2_30d_CF-CM.txt&quot;</span>
     <span class="n">fout60</span><span class="o">=</span><span class="s2">&quot;GCN_L1_L2_60d_CF-CM.txt&quot;</span>
-    <span class="c1">#note also embed mm to meter conversion in here (e-3)</span>
-    <span class="n">sqrt3timesRE</span><span class="o">=</span><span class="mf">11047256.23312e-3</span>
+    <span class="c1">#note also embed mm to meter conversion in here (e3)</span>
+    <span class="n">sqrt3timesRE</span><span class="o">=</span><span class="mf">11047256.23312e3</span>
     <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
     <span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="s2">&quot;geocenter_ries_cfcmTable&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">GravitySHTBase</span><span class="p">,),</span> <span class="p">{})</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>

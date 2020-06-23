@@ -198,12 +198,6 @@
 <em class="property">class </em><code class="descclassname">geoslurp.dbfunc.dbfunc.</code><code class="descname">DBFunc</code><span class="sig-paren">(</span><em>dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Abstract Base class which holds a database functione</p>
-<dl class="method">
-<dt id="geoslurp.dbfunc.dbfunc.DBFunc.createreplace">
-<code class="descname">createreplace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.createreplace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.createreplace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates/replaces the  pgfunction in the database</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.db">
 <code class="descname">db</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.db" title="Permalink to this definition">¶</a></dt>
@@ -236,14 +230,14 @@
 
 <dl class="method">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.purgeentry">
-<code class="descname">purgeentry</code><span class="sig-paren">(</span><em>filter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.purgeentry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.purgeentry" title="Permalink to this definition">¶</a></dt>
+<code class="descname">purgeentry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.purgeentry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.purgeentry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete pgfunction entry in the database</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.dbfunc.dbfunc.DBFunc.register">
 <code class="descname">register</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/dbfunc.html#DBFunc.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.dbfunc.DBFunc.register" title="Permalink to this definition">¶</a></dt>
-<dd><p>Register/update the function in the database</p>
+<dd><p>Creates/replaces the  pgfunction in the database</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -306,6 +300,45 @@
 <dt id="geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.scheme">
 <code class="descname">scheme</code><em class="property"> = 'altim'</em><a class="headerlink" href="#geoslurp.dbfunc.radsfuncs.gs_rads_subsegment.scheme" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-geoslurp.dbfunc.readfile">
+<span id="geoslurp-dbfunc-readfile-module"></span><h2>geoslurp.dbfunc.readfile module<a class="headerlink" href="#module-geoslurp.dbfunc.readfile" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="geoslurp.dbfunc.readfile.readfile">
+<em class="property">class </em><code class="descclassname">geoslurp.dbfunc.readfile.</code><code class="descname">readfile</code><span class="sig-paren">(</span><em>dbcon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/readfile.html#readfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.readfile.readfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.dbfunc.dbfunc.DBFunc" title="geoslurp.dbfunc.dbfunc.DBFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.dbfunc.dbfunc.DBFunc</span></code></a></p>
+<p>Registers a plpython function which can read a file from the server and return a bytestring</p>
+<dl class="attribute">
+<dt id="geoslurp.dbfunc.readfile.readfile.inargs">
+<code class="descname">inargs</code><em class="property"> = 'uri text'</em><a class="headerlink" href="#geoslurp.dbfunc.readfile.readfile.inargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dbfunc.readfile.readfile.language">
+<code class="descname">language</code><em class="property"> = 'plpython3u'</em><a class="headerlink" href="#geoslurp.dbfunc.readfile.readfile.language" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dbfunc.readfile.readfile.outargs">
+<code class="descname">outargs</code><em class="property"> = 'bytea'</em><a class="headerlink" href="#geoslurp.dbfunc.readfile.readfile.outargs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="geoslurp.dbfunc.readfile.readfile.pgbody">
+<code class="descname">pgbody</code><em class="property"> = 'import os\nimport re\nrlpath=os.path.realpath(uri)\nallowedp=plpy.execute(&quot;select jsonb_array_elements_text(data-&gt;\'allowedpaths\') as apath from admin.inventory where pgfunc = \'readfile\'&quot;,1)\nfor pth in allowedp[0][&quot;apath&quot;]:\n   plpy.info(pth+ &quot; &quot;+uri)\n   if re.search(&quot;^&quot;+pth,rlpath):\n       if os.path.exists(&quot;/geoslurp_data&quot;):\n           mirrmap=plpy.execute(&quot;select conf-&gt;\'MirrorMaps\'-&gt;&gt;\'docker\' as to,conf-&gt;\'MirrorMaps\'-&gt;&gt;\'default\' as from from admin.settings_default&quot;,1)[0]\n           rlpath=rlpath.replace(mirrmap[&quot;from&quot;],mirrmap[&quot;to&quot;])\n       with open(rlpath,\'rb\') as fid:\n           return fid.read()\nraise plpy.Error(&quot;readfile() is not allowed to read files from this path&quot;)'</em><a class="headerlink" href="#geoslurp.dbfunc.readfile.readfile.pgbody" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.dbfunc.readfile.readfile.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>allowedpaths=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/dbfunc/readfile.html#readfile.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.dbfunc.readfile.readfile.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the readfile function together with allowed paths to read files from
+:param allowedpaths:
+:type allowedpaths: listlike
+:param listlike variable containing paths where this function is allowed to read files from:</p>
+</dd></dl>
 
 </dd></dl>
 

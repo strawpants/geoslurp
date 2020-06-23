@@ -242,8 +242,6 @@
 <div class="viewcode-block" id="queryMonthlyArgo"><a class="viewcode-back" href="../../../../reference/geoslurp.discover.oceanobs.html#geoslurp.discover.oceanobs.argoQuery.queryMonthlyArgo">[docs]</a><span class="k">def</span> <span class="nf">queryMonthlyArgo</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span> <span class="n">geoWKT</span><span class="p">,</span> <span class="n">tstart</span><span class="p">,</span> <span class="n">tend</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Query the database for lists of monthly Argo profiles within a certain polygon and time span&quot;&quot;&quot;</span>
     
-    <span class="c1"># ogrpoly = lonlat2ogr(polygon)</span>
-    <span class="c1"># import pdb;pdb.set_trace()</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">argoQuery</span><span class="p">(</span><span class="n">dbcon</span><span class="p">,</span><span class="n">geoWKT</span><span class="o">=</span><span class="n">geoWKT</span><span class="p">,</span><span class="n">tspan</span><span class="o">=</span><span class="p">[</span><span class="n">tstart</span><span class="p">,</span><span class="n">tend</span><span class="p">],</span><span class="n">tsort</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>

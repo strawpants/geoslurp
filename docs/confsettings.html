@@ -98,6 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#local-client-side-settings">Local (client-side) settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#populate-a-new-local-settings-file">Populate a new local settings file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#specifying-passwords">Specifying passwords</a></li>
 </ul>
 </li>
@@ -202,12 +203,21 @@
 <span class="n">readonlyUser</span><span class="p">:</span> <span class="n">slurpy</span> <span class="c1"># user which has readonly access to the database (This is the preferred user to use when browsing and using the database but not for registering)</span>
 <span class="n">useKeyring</span><span class="p">:</span> <span class="n">true</span> <span class="c1">#This allows users to store their database password in a system keyring (e.g. kwallet, gnome-keyring, ..) Requires the python package keyring with a sutable backend</span>
 <span class="n">user</span><span class="p">:</span> <span class="n">username</span> <span class="c1">#username which also has write access to the database</span>
+<span class="n">cache</span><span class="p">:</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">client</span><span class="o">/</span><span class="n">cachedir</span> <span class="c1">#One can explicitly specify a cache directoryfor the client here (e.g. on a fast ssd drive)</span>
 </pre></div>
 </div>
 <p>Note that settings in this file may be overwritten with last used values when using the <a class="reference internal" href="clitools.html#clihelp"><span class="std std-ref">Command line tools</span></a>.</p>
+<div class="section" id="populate-a-new-local-settings-file">
+<h3>Populate a new local settings file<a class="headerlink" href="#populate-a-new-local-settings-file" title="Permalink to this headline">¶</a></h3>
+<p>The command line client can be used to generate a local settings file with settings specified on the command line e.g.:
+``
+geoslurper.py –host dbserverhost –user johndoe –keyring –write-local-settings
+``
+This will create a file <code class="docutils literal notranslate"><span class="pre">${HOME}/.geoslurp_lastused.yaml</span></code> with the specified settings, and prompt the user for the database password.</p>
+</div>
 <div class="section" id="specifying-passwords">
 <h3>Specifying passwords<a class="headerlink" href="#specifying-passwords" title="Permalink to this headline">¶</a></h3>
-<p>There are several ways to specify passwords, some which are more secure than others. The follin</p>
+<p>There are several ways to specify passwords, some which are more secure than others. The following options are available.</p>
 <ol class="arabic simple">
 <li><strong>Use a keyring recognized by python keyring</strong>. This requires that <a class="reference external" href="https://pypi.org/project/keyring/">python keyring  is installed with a suitable backend</a>. When the option <code class="docutils literal notranslate"><span class="pre">useKeyring=true</span></code> is specified in <code class="docutils literal notranslate"><span class="pre">${HOME}/.geoslurp_lastused.yaml</span></code>, users will be prompted for a  password when they connect for the first time, but subsequent accesses don’t require entering a password, and are therefore non-interactive.</li>
 <li><strong>Use an environment variable</strong>. If <code class="docutils literal notranslate"><span class="pre">useKeyRing=false</span></code>, one can use an environment variable to specify the password e.g.: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASS=&quot;supersecretpassword</span></code>, or <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GEOSLURP_PGPASSRO</span></code> (for the readonly user).</li>
@@ -224,7 +234,7 @@
 <ol class="arabic simple">
 <li><strong>DataDir</strong>:This is the root directory where out-of-db datafiles will be stored. This can be overruled for individual datasets (e.g. when the files belonging to a datase are already downloaded and available)</li>
 <li><strong>CacheDir</strong>: Temporary files will be stored in this directory. Note that this can be overruled per user.</li>
-<li><strong>userplugins</strong>: A list of directories where custom <em>dataset</em> classes are stored.</li>
+<li><strong>userplugins</strong>: A list of semi-colon separated directories where custom <em>dataset</em> classes are stored. These directories need to contain a <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file so it can be imported as a module.</li>
 </ol>
 </div>
 </div>

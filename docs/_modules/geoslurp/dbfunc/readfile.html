@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>geoslurp.dbfunc.readfile &mdash; geoslurp v1.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.dbfunc.readfile</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.dbfunc.readfile</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">geoslurp.dbfunc.dbfunc</span> <span class="k">import</span> <span class="n">DBFunc</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.catalogue</span> <span class="k">import</span> <span class="n">geoslurpCatalogue</span>
+
+
+<div class="viewcode-block" id="readfile"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.readfile.readfile">[docs]</a><span class="k">class</span> <span class="nc">readfile</span><span class="p">(</span><span class="n">DBFunc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Registers a plpython function which can read a file from the server and return a bytestring&quot;&quot;&quot;</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;plpython3u&quot;</span>
+    <span class="n">inargs</span><span class="o">=</span><span class="s2">&quot;uri text&quot;</span>
+    <span class="n">outargs</span><span class="o">=</span><span class="s2">&quot;bytea&quot;</span>
+    <span class="n">pgbody</span><span class="o">=</span><span class="s2">&quot;import os</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;import re</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;rlpath=os.path.realpath(uri)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;allowedp=plpy.execute(</span><span class="se">\&quot;</span><span class="s2">select jsonb_array_elements_text(data-&gt;&#39;allowedpaths&#39;) as apath from admin.inventory where pgfunc = &#39;readfile&#39;</span><span class="se">\&quot;</span><span class="s2">,1)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;for pth in allowedp[0][</span><span class="se">\&quot;</span><span class="s2">apath</span><span class="se">\&quot;</span><span class="s2">]:</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;   plpy.info(pth+ </span><span class="se">\&quot;</span><span class="s2"> </span><span class="se">\&quot;</span><span class="s2">+uri)</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;   if re.search(</span><span class="se">\&quot;</span><span class="s2">^</span><span class="se">\&quot;</span><span class="s2">+pth,rlpath):</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;       if os.path.exists(</span><span class="se">\&quot;</span><span class="s2">/geoslurp_data</span><span class="se">\&quot;</span><span class="s2">):</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;           mirrmap=plpy.execute(</span><span class="se">\&quot;</span><span class="s2">select conf-&gt;&#39;MirrorMaps&#39;-&gt;&gt;&#39;docker&#39; as to,conf-&gt;&#39;MirrorMaps&#39;-&gt;&gt;&#39;default&#39; as from from admin.settings_default</span><span class="se">\&quot;</span><span class="s2">,1)[0]</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;           rlpath=rlpath.replace(mirrmap[</span><span class="se">\&quot;</span><span class="s2">from</span><span class="se">\&quot;</span><span class="s2">],mirrmap[</span><span class="se">\&quot;</span><span class="s2">to</span><span class="se">\&quot;</span><span class="s2">])</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;       with open(rlpath,&#39;rb&#39;) as fid:</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;           return fid.read()</span><span class="se">\n</span><span class="s2">&quot;</span> \
+        <span class="s2">&quot;raise plpy.Error(</span><span class="se">\&quot;</span><span class="s2">readfile() is not allowed to read files from this path</span><span class="se">\&quot;</span><span class="s2">)&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbcon</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbcon</span><span class="p">)</span>
+<div class="viewcode-block" id="readfile.register"><a class="viewcode-back" href="../../../reference/geoslurp.dbfunc.html#geoslurp.dbfunc.readfile.readfile.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">allowedpaths</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register the readfile function together with allowed paths to read files from</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        allowedpaths: listlike</span>
+<span class="sd">        listlike variable containing paths where this function is allowed to read files from</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">allowedpaths</span><span class="p">:</span>
+            <span class="c1">#update or create new entry</span>
+            <span class="n">allpaths</span><span class="o">=</span><span class="n">allowedpaths</span>
+            <span class="k">if</span> <span class="s2">&quot;allowedpaths&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                <span class="c1">#append old paths and make unique</span>
+                <span class="n">allpaths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;allowedpaths&quot;</span><span class="p">])</span>
+                <span class="n">allpaths</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">allpaths</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;allowedpaths&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">allpaths</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="s2">&quot;allowedpaths&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Allowedpaths must be specified when first registering the readfile function&quot;</span><span class="p">)</span>
+       
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">register</span><span class="p">()</span></div></div>
+
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addDbFunc</span><span class="p">(</span><span class="n">readfile</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Roelof Rietbroek.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'v1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

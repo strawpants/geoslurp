@@ -110,6 +110,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#Exporting-an-Argo-query-and-the-profile-files-in-the-South-China-Sea-for-the-first-2-weeks-of-December-2010">Exporting an Argo query and the profile files in the South China Sea for the first 2 weeks of December 2010</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#Exporting-a-selection-of-GRACE-datasets-and-auxiliary-datasets-(without-geographical-information)-to-a-local-sqlite-database.">Exporting a selection of GRACE datasets and auxiliary datasets (without geographical information) to a local sqlite database.</a></li>
 </ul>
 </li>
 </ul>
@@ -373,9 +374,9 @@ geoslurp allows exporting parts of the database to portable file-based
 formats such as <a class="reference external" href="http://www.geopackage.org/">geopackage</a>. This
 functionality, available since version 1.1.0, can be used according to
 the python examples below.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [1]:
+<span></span>In [23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -384,9 +385,18 @@ the python examples below.</p>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The autoreload extension is already loaded. To reload it, use:
+  %reload_ext autoreload
+</pre></div></div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [9]:
+<span></span>In [24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -406,7 +416,7 @@ service of mean sea level (PSMSL). The resulting geopackage contains 2
 layers.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [4]:
+<span></span>In [7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -435,7 +445,7 @@ layers.</p>
 <h2>Exporting an Argo query and the profile files in the South China Sea for the first 2 weeks of December 2010<a class="headerlink" href="#Exporting-an-Argo-query-and-the-profile-files-in-the-South-China-Sea-for-the-first-2-weeks-of-December-2010" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [29]:
+<span></span>In [8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -446,11 +456,55 @@ layers.</p>
 
 <span class="n">tspan</span><span class="o">=</span><span class="p">[</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">)]</span>
 
-<span class="n">exportGeoQuery</span><span class="p">(</span><span class="n">argoQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="n">geoWKT</span><span class="o">=</span><span class="n">southchinaDeepWKT</span><span class="p">,</span><span class="n">tspan</span><span class="o">=</span><span class="n">tspan</span><span class="p">),</span><span class="s2">&quot;argoSouthChinaDec2010.gpkg&quot;</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s1">&#39;argo&#39;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">exportGeoQuery</span><span class="p">(</span><span class="n">argoQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="n">geoWKT</span><span class="o">=</span><span class="n">southchinaDeepWKT</span><span class="p">,</span><span class="n">tspan</span><span class="o">=</span><span class="n">tspan</span><span class="p">)</span>
+               <span class="p">,</span><span class="s2">&quot;argoSouthChinaDec2010.gpkg&quot;</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s1">&#39;argo&#39;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 </pre></div>
 </div>
+</div>
+</div>
+</div>
+<div class="section" id="Exporting-a-selection-of-GRACE-datasets-and-auxiliary-datasets-(without-geographical-information)-to-a-local-sqlite-database.">
+<h1>Exporting a selection of GRACE datasets and auxiliary datasets (without geographical information) to a local sqlite database.<a class="headerlink" href="#Exporting-a-selection-of-GRACE-datasets-and-auxiliary-datasets-(without-geographical-information)-to-a-local-sqlite-database." title="Permalink to this headline">¶</a></h1>
+<p>This locally exported dataset will form the basis of a GRACE procesing
+demo using <a class="reference external" href="https://wobbly.earth/frommle">frommle</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">geoslurp.db.exporter</span> <span class="k">import</span> <span class="n">exportQuery</span>
+<span class="kn">from</span> <span class="nn">geoslurp.discover.generic</span> <span class="k">import</span> <span class="n">regexQuery</span>
+<span class="n">outdb</span><span class="o">=</span><span class="s2">&quot;itsg2018_sample.db&quot;</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">outdb</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="c1">#export GRACE monthly solutions</span>
+<span class="n">exportQuery</span><span class="p">(</span><span class="n">regexQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="s2">&quot;itsg_grace2018_monthly_n60&quot;</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span><span class="p">,</span><span class="n">uri</span><span class="o">=</span><span class="s1">&#39;n60_2003&#39;</span><span class="p">)</span>
+            <span class="p">,</span><span class="s2">&quot;itsg2018_sample.db&quot;</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;grace&quot;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#export modelled ocean bottom pressure for restoring</span>
+<span class="n">exportQuery</span><span class="p">(</span><span class="n">regexQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="s2">&quot;itsg_grace2018_monthly_background&quot;</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span><span class="p">,</span><span class="n">uri</span><span class="o">=</span><span class="s1">&#39;oceanBottomPressure.+2003&#39;</span><span class="p">)</span>
+            <span class="p">,</span><span class="s2">&quot;itsg2018_sample.db&quot;</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;obp&quot;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#export a  static gravity model</span>
+<span class="n">exportQuery</span><span class="p">(</span><span class="n">regexQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="s2">&quot;icgem_static&quot;</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span><span class="p">,</span><span class="n">uri</span><span class="o">=</span><span class="s1">&#39;GOCO06s&#39;</span><span class="p">)</span>
+            <span class="p">,</span><span class="s2">&quot;itsg2018_sample.db&quot;</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;static&quot;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#export degree 1 corrections</span>
+<span class="n">exportQuery</span><span class="p">(</span><span class="n">regexQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="s2">&quot;geocenter_csrrl06_tn13&quot;</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span><span class="p">,</span><span class="n">tspan</span><span class="o">=</span><span class="p">[</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">31</span><span class="p">)])</span>
+            <span class="p">,</span><span class="s2">&quot;itsg2018_sample.db&quot;</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;deg1&quot;</span><span class="p">)</span>
+
+<span class="c1">#also export load Love numbers</span>
+<span class="n">exportQuery</span><span class="p">(</span><span class="n">regexQuery</span><span class="p">(</span><span class="n">gpcon</span><span class="p">,</span><span class="s2">&quot;loadlove&quot;</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;earthmodels&quot;</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;PREM$&#39;</span><span class="p">),</span><span class="s2">&quot;itsg2018_sample.db&quot;</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;loadlove&quot;</span><span class="p">,</span><span class="n">packFiles</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+
+</pre></div>
 </div>
 </div>
 </div>

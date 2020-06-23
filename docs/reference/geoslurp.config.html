@@ -207,6 +207,11 @@
 <code class="descname">addDatasetFactory</code><span class="sig-paren">(</span><em>datasetclsfac</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/catalogue.html#DatasetCatalogue.addDatasetFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.catalogue.DatasetCatalogue.addDatasetFactory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="geoslurp.config.catalogue.DatasetCatalogue.addDbFunc">
+<code class="descname">addDbFunc</code><span class="sig-paren">(</span><em>dfclass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/catalogue.html#DatasetCatalogue.addDbFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.catalogue.DatasetCatalogue.addDbFunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="staticmethod">
 <dt id="geoslurp.config.catalogue.DatasetCatalogue.addUserPlugPaths">
 <em class="property">static </em><code class="descname">addUserPlugPaths</code><span class="sig-paren">(</span><em>conf</em>, <em>loadmod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/catalogue.html#DatasetCatalogue.addUserPlugPaths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.catalogue.DatasetCatalogue.addUserPlugPaths" title="Permalink to this definition">¶</a></dt>
@@ -216,6 +221,12 @@
 <dt id="geoslurp.config.catalogue.DatasetCatalogue.getCacheFile">
 <em class="property">static </em><code class="descname">getCacheFile</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/catalogue.html#DatasetCatalogue.getCacheFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.catalogue.DatasetCatalogue.getCacheFile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="geoslurp.config.catalogue.DatasetCatalogue.getDFuncClass">
+<code class="descname">getDFuncClass</code><span class="sig-paren">(</span><em>conf</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/catalogue.html#DatasetCatalogue.getDFuncClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.catalogue.DatasetCatalogue.getDFuncClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a database function as an class (but check cache first)</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="geoslurp.config.catalogue.DatasetCatalogue.getDatasets">
@@ -232,7 +243,7 @@
 <dl class="method">
 <dt id="geoslurp.config.catalogue.DatasetCatalogue.getFuncs">
 <code class="descname">getFuncs</code><span class="sig-paren">(</span><em>conf</em>, <em>regex</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/config/catalogue.html#DatasetCatalogue.getFuncs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.config.catalogue.DatasetCatalogue.getFuncs" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is currently a stub (returns en empty list)</p>
+<dd><p>retrieves a list of database functions possibly obeying a certain regex</p>
 </dd></dl>
 
 <dl class="method">

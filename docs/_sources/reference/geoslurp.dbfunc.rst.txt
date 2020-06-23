@@ -25,4 +25,12 @@ geoslurp.dbfunc.radsfuncs module
     :undoc-members:
     :show-inheritance:
 
+geoslurp.dbfunc.readfile module
+-------------------------------
+
+.. automodule:: geoslurp.dbfunc.readfile
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
