@@ -235,7 +235,7 @@ def radsclassFactory(clnm):
 
 def getRADSDsets(conf):
     """Create all tables for all satellite missions and phases"""
-    satphases={"j1":["a","b","c"],"j2":["a","b","c"],"j3":["a"],"3a":["a"],"c2":["a"],"n1":["b","c"],"sa":["a","b"],"tx":["a","b","n"]}
+    satphases={"j1":["a","b","c"],"j2":["a","b","c"],"j3":["a"],"3a":["a"],"c2":["a"],"n1":["b","c"],"sa":["a","b"],"tx":["a","b","n"],"3a":["a"]}
     out=[]
     for sat,phases in satphases.items():
         for  phase in phases:

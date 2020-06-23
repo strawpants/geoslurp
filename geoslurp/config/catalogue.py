@@ -74,6 +74,8 @@ class DatasetCatalogue:
                 srch=re.sub("TEMPLATE","([^\\\s]+)",name.replace(".","\."))
                 #possibly also add existing datasets so they can be found by regular expressions
                 for entry in Inv:
+                    if not entry.dataset:
+                        continue
                     nameexisting=".".join([entry.scheme,entry.dataset])
                     if re.search(srch,nameexisting):
                         #add 
@@ -88,7 +90,10 @@ class DatasetCatalogue:
                 if re.search("TEMPLATE",name):
                     srch=re.sub("TEMPLATE","([^\\\s]+)",name.replace(".","\."))
                     #possibly also add existing datasets so they can be found by regular expressions
+                    
                     for entry in Inv:
+                        if not entry.dataset:
+                            continue
                         nameexisting=".".join([entry.scheme,entry.dataset])
                         if re.search(srch,nameexisting):
                             #add 

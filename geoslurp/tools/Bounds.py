@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 from datetime import datetime
 import sys
-from copy import copy
+from copy import deepcopy
 
 class BtdBox():
     """Class which holds a geographical bounding box, a vertical depth range and a datetime range"""
@@ -82,9 +82,9 @@ class BtdBox():
         """
         if lon < self.w or self.e < lon:
             raise RuntimeError("Splitting longitude not within the bounding box")
-        left=copy.deepcopy(self)
+        left=deepcopy(self)
         left.e=lon
-        right=copy.deepcopy(self)
+        right=deepcopy(self)
         right.w=lon
         return left,right
 
@@ -94,9 +94,9 @@ class BtdBox():
             t=self.ts+(self.te-self.ts)/2
         if t < self.ts or self.te < t:
             raise RuntimeError("Splitting Time dimension not within timerange")
-        before=copy.deepcopy(self)
+        before=deepcopy(self)
         before.te=t
-        after=copy.deepcopy(self)
+        after=deepcopy(self)
         after.ts=t
         return before,after
 
