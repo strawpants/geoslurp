@@ -376,14 +376,14 @@ orasRuns.register(rundir='/home/alisa/Div/test/test/oras5/temp/opa0/')
 
 #%% catalogue
 
-# def getOrasDsets(conf):
-#     """Create dummy tables for displaying"""
-#     out=[]
-#     # out.append(type("run_TEMPLATE_g_", (orasRunBase,), {}))
-#     out.append(type(orasRunBase.tablename, (orasRunBase,), {}))
-#     return out
+def getOrasDsets(conf):
+    """Create dummy tables for displaying"""
+    out=[]
+    # out.append(type("run_TEMPLATE_g_", (orasRunBase,), {}))
+    out.append(type("oras5run_TEMPLATE_TEMPLATE", (orasRunBase,), {}))
+    return out
 
-# # geoslurpCatalogue.addDatasetFactory(getOrasDsets)
+geoslurpCatalogue.addDatasetFactory(getOrasDsets)
 
 # # from geoslurp.config.catalogue import geoslurpCatalogue
 # from geoslurp.db import Settings
