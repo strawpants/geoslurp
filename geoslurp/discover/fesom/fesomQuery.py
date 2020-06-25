@@ -28,9 +28,10 @@ def getFesomRunInfo(dbcon,runname):
     vtablename="vertices_"+invent.data["grid"]
     #extract info on the vertices table
     vertinvent=dbcon.getInventEntry(vtablename,scheme)
-    rundict={"run":{"runTable":runname,"datadir":invent.datadir},"mesh":{"vertTable":vtablename,"zlevels":vertinvent.data["zlevels"]}}
+    rundict={"run":{"runTable":runname,"datadir":invent.datadir},"mesh":{"vertTable":vtablename,"datadir":vertinvent.datadir,"zlevels":vertinvent.data["zlevels"]}}
 
     return rundict
+    
 
 def fesomMeshQuery(dbcon, fesominfo, geoWKT=None):
     """queries the geoslurp database for a valid vertices of a FESOM grid"""
