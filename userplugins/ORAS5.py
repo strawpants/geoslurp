@@ -9,7 +9,6 @@ Created on Wed Jun 17 09:25:09 2020
 import numpy as np
 
 from geoslurp.dataset import DataSet
-# from geoslurp.datapull.http import Uri as http
 import os
 from datetime import datetime
 from sqlalchemy import MetaData,Column,Float,Integer,String
@@ -17,9 +16,6 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
 from geoalchemy2.types import Geography
 
-# from geoslurp.config import setInfoLevel
-# from geoslurp.db import geoslurpConnect
-# from shapely.geometry import Point
 from queue import Queue
 
 from osgeo import ogr
@@ -41,13 +37,8 @@ scheme='oras'
 # =============================================================================
 # 1. vertices
 # =============================================================================
-# dont use pointz: https://github.com/geoalchemy/geoalchemy2/issues/233
 geopointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True, dimension=3)
-# datadir='/shares/nis/data1/bernd/oras5/grid/'
-# datafile='GLO-MFC_001_018_mask.nc'
 
-
-# Setup the postgres table using methods as specified with sqlalchemy
 orasVerticesTBase=declarative_base(metadata=MetaData(schema=scheme))
 
 class orasVerticesTable(orasVerticesTBase):
@@ -63,9 +54,7 @@ def orasVerticesMetaExtract(datadir, datafile,cachedir=False):
     """A little generator which extracts rows from """
     with Dataset(datadir+datafile, 'r') as nc_id:
         nav_lat=nc_id['nav_lat'][:]
-        # deptht=nc_id['deptht'][:]
         nav_lon=nc_id['nav_lon'][:]
-        # mask=nc_id['mask'][:]
         deptho_lev=nc_id['deptho_lev'][:]
         
         meta=[]
@@ -76,7 +65,6 @@ def orasVerticesMetaExtract(datadir, datafile,cachedir=False):
                 point.AddPoint_2D(float(nav_lon[row,column]),float(nav_lat[row,column]))
         
                 meta_entry=({"depthlevel":np.float(deptho_lev[row,column]),
-                             # "mask":np.int(mask[row,column]),
                              "geom":WKBElement(point.ExportToIsoWkb(),srid=4326,extended=True)
                              })
                 meta.append(meta_entry)
@@ -86,7 +74,6 @@ def orasVerticesMetaExtract(datadir, datafile,cachedir=False):
 class orasVerticesBase(DataSet):
     scheme=scheme
     version=(0,0,0)
-    # datadir='/shares/nis/data1/bernd/oras5/grid/'
     datafile='GLO-MFC_001_018_mask.nc'
     table=orasVerticesTable
     def __init__(self,dbcon):
@@ -103,8 +90,6 @@ class orasVerticesBase(DataSet):
             pass
 
     def register(self, datadir=None):
-        # self.truncateTable()
-
         meta=orasVerticesMetaExtract(datadir,self.datafile)
         for i,meta_entry in enumerate(meta):
             self.addEntry(meta_entry)
@@ -113,13 +98,6 @@ class orasVerticesBase(DataSet):
         self.updateInvent()
 
 
-
-# geoslurpCatalogue.addDataset(oras5_meshgrid_025deg)
-
-# setInfoLevel()
-# gpcon=geoslurpConnect(readonlyuser=False)
-# orasVertices=oras5_meshgrid_025deg(gpcon)
-# orasVertices.register()
 
 #%% =============================================================================
 # 2. data files
@@ -133,12 +111,9 @@ class orasRunTBase(object):
     def __tablename__(cls):
         #strip of the 'Table' from the class name
         return cls.__name__[:-5].lower()
-        # return cls.__name__.lower()
     id=Column(Integer,primary_key=True)
     lastupdate=Column(TIMESTAMP)
     tstart=Column(TIMESTAMP)
-    # tend=Column(TIMESTAMP)
-    # interval=Column(String)
     uri=Column(String, index=True)
     data=Column(JSONB) # variables in the nc file
 
@@ -188,19 +163,9 @@ class orasRunBase(DataSet):
     version=(0,0,0)
     scheme=scheme
     grid=None
-    # rundir='/shares/nis/data1/bernd/oras5/temp/opa0/'
-    # rundir='/home/alisa/Div/test/test/oras5/temp/opa0/'
-    # rundir_split = rundir.split("/")
-    # tablename = rundir_split[5]+"_"+rundir_split[6]+"_"+rundir_split[7]
-    # name=name 
-    # print(name)
     
     def __init__(self,dbcon):
-        # self.name = self.tablename
         super().__init__(dbcon)
-        #setup table type
-        # self.name = tablename
-        # print(self.name)
         self.table=type(self.name+"Table",(orasRunTBase,),{})
         self.createTable()
         
