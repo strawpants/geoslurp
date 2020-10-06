@@ -118,7 +118,7 @@ class Settings():
             self.ses.add(self.defaultentry)
             self.ses.commit()
             #also create a view to the default which may be read by the geobrowse group
-            self.db.dbeng.execute("CREATE VIEW admin.settings_%sefault as select * from admin.settings as t where t.user  = 'default'")
+            self.db.dbeng.execute("CREATE VIEW admin.settings_default as select * from admin.settings as t where t.user  = 'default'")
             self.db.eng.execute("GRANT SELECT ON admin.settings_default to geobrowse")
 
 
