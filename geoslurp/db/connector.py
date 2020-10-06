@@ -162,7 +162,7 @@ class GeoslurpConnector():
         if readonly:
             self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geobrowse;"%(name,passw))
         else:
-            self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geoslurp;"%(name,passw))
+            self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geoslurp,geobrowse;"%(name,passw))
 
 
 
