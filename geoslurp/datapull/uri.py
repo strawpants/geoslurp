@@ -22,7 +22,7 @@ import time
 from io  import BytesIO
 from geoslurp.config.slurplogger import slurplog
 import gzip as gz
-
+from urllib.parse import urlencode
 
 def findFiles(dir,pattern,since=None):
     """Generator to recursively search adirecctor (returns a generator)"""
@@ -57,7 +57,7 @@ def setFtime(file,modTime=None):
         mtime=time.mktime(modTime.timetuple())
         os.utime(file,(mtime,mtime))
 
-def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None):
+def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,postdic=None):
     """
     Download  the content of an url to an open file or buffer using pycurl
     :param url: url to download from
@@ -67,6 +67,7 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None):
     :param gzip: additionally gzip the file on disk (note this routine does not append \*.gz to the file name)
     :param gunzip: automatically gunzip the downloaded file
     :param auth: supply authentification data (user and passw)
+    :param postdic: a set of (REST) API name-value pairs to be added to the url
     :return: modification time of remote file
     """
 
@@ -88,12 +89,17 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None):
         fid=fileorfid
 
     crl=pycurl.Curl()
+    crl.setopt(pycurl.USERAGENT,"curl/7.72.0")
     crl.setopt(pycurl.URL,url.replace(' ','%20'))
     crl.setopt(pycurl.FOLLOWLOCATION, 1)
     crl.setopt(pycurl.WRITEDATA,fid)
     if auth:
         #use authentification
         crl.setopt(pycurl.USERPWD,auth.user+":"+auth.passw)
+    
+    if postdic:
+        crl.setopt(crl.POSTFIELDS,urlencode(postdic))
+
     try:
         crl.perform()
     except pycurl.error as pyexc:
@@ -150,7 +156,7 @@ class UriBase():
         self.lastmod=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))
         return self.lastmod
 
-    def download(self,direc,check=False,gzip=False,gunzip=False,outfile=None,continueonError=False):
+    def download(self,direc,check=False,gzip=False,gunzip=False,outfile=None,continueonError=False,postdic=None):
         """Download file into directory and possibly check the modification time
         :param check : check whether the file needs updating
         :param gzip: additionally gzips the file (adds .gz to file name)
@@ -184,9 +190,9 @@ class UriBase():
         slurplog.info("Downloading %s"%(uri.url))
         try:
             if self.lastmod:
-                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth)
+                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.authi,postdic=postdic)
             else:
-                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth)
+                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth,postdic=postdic)
         except pycurl.error as pyexc:
             slurplog.info("Download failed, skipping %s"%(uri.url))
             if not continueonError:
