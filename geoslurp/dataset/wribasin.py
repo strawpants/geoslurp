@@ -32,10 +32,14 @@ class WriBasin(OGRBase):
 
     def pull(self):
         """Pulls the wribasin data from the internet and unpacks it in the cache directory"""
-        fzip=os.path.join(self.cacheDir(),"wri_basin.zip")
-        urllib.request.urlretrieve("http://www.fao.org/geonetwork/srv/en/resources.get?id=30914&fname=wri_basins.zip&access=private",fzip)
+        #wrisource=http("http://www.fao.org/geonetwork/srv/en/resources.get")
+        wrisource=http("http://www.fao.org/geonetwork/srv/en/resources.get?id=30914&fname=wri_basins.zip&access=private")
+        
+        # urif, upd=wrisource.download(self.cacheDir(),check=True,outfile=os.path.join(self.cacheDir(),"wri_basin.zip"),postdic={"id":"30914","fname":"wri_basins.zip","access":"private"})
+        urif, upd=wrisource.download(self.cacheDir(),check=True,outfile=os.path.join(self.cacheDir(),"wri_basin.zip"))
 
-        with ZipFile(os.path.join(self.cacheDir(),"wri_basin.zip"),'r') as zp:
-            zp.extractall(self.cacheDir())
+        if upd:
+            with ZipFile(urif.url,'r') as zp:
+                    zp.extractall(self.cacheDir())
 
 geoslurpCatalogue.addDataset(WriBasin)

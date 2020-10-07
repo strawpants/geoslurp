@@ -93,7 +93,7 @@ class IceSatDDivBase(DataSet):
         super().__init__(dbcon)
         self.table.metadata.create_all(self.db.dbeng, checkfirst=True)
         self._dbinvent.data={"citation":"Zwally, H. Jay, Mario B. Giovinetto, Matthew A. Beckley, and Jack L. Saba, 2012, Antarctic and Greenland Drainage Systems, GSFC Cryospheric Sciences Laboratory, at http://icesat4.gsfc.nasa.gov/cryo_data/ant_grn_drainage_systems.php. "}
-        self.setCacheDir(os.path.join(self.conf.getDir(self.scheme,'CacheDir','Icesat_Draindiv')))
+        self.setCacheDir(self.conf.getCacheDir(self.scheme,'Icesat_Draindiv'))
 
     def pull(self):
         """Download ascii file"""

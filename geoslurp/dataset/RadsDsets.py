@@ -161,7 +161,7 @@ class RadsBase(DataSet):
             if 'RADSDATAROOT' in os.environ:
                 self._dbinvent.datadir=getCreateDir(os.environ['RADSDATAROOT'])
             else:
-                self._dbinvent.datadir=self.conf.getDir(self.scheme,"DataDir")
+                self._dbinvent.datadir=self.conf.getDataDir(self.scheme,subdirs="RADS")
             self.updateInvent(False)
         #initialize postgreslq table
         self.table.__table__.create(self.db.dbeng,checkfirst=True)

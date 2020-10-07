@@ -36,7 +36,7 @@ class GSHHGBase(OGRBase):
     updatefreq=365
     def __init__(self,dbconn):
         super().__init__(dbconn)
-        self.cache=os.path.join(self.conf.getDir(self.scheme,'CacheDir','GSHHG'))
+        self.cache=self.conf.getCacheDir(self.scheme,subdirs="GSHHG")
         self.ogrfile=os.path.join(self.cache,self.path)
         self.ftpt=ftp('ftp://ftp.soest.hawaii.edu/gshhg/')
         if self._dbinvent.data:

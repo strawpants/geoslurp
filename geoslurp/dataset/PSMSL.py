@@ -21,7 +21,7 @@ from sqlalchemy import Column,Integer,String, Boolean,Float
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 from geoslurp.datapull.http import Uri as http
 from geoalchemy2.types import Geography
-from geoalchemy2.elements import WKBElement
+# from geoalchemy2.elements import WKBElement
 from datetime import datetime,timedelta
 from geoslurp.tools.time import dt2yearlyinterval,dt2monthlyinterval,decyear2dt
 import os
@@ -93,9 +93,9 @@ class PSMSLBase(DataSet):
                     "statname":lnspl[3],
                     "countrycode":lnspl[4],
                     "formerid":lnspl[5],
-                    "geom":WKBElement(geoLoc.ExportToWkb(),srid=4326,extended=True),
+                    "geom":geoLoc.ExportToWkt(),
+                    # "geom":WKBElement(geoLoc.ExportToWkb(),srid=4326,extended=True),
                 }
-
                 #also open data file
                 data={"time":[],"sl":[]}
                 tmin=datetime.max

@@ -91,9 +91,6 @@ class RGIBase(OGRBase):
         else:
             self._dbinvent.data["RGIversion"] = (0, 0)
         
-        if not self._dbinvent.cache:
-                self._dbinvent.cache=self.conf.getDir(self.scheme,"CacheDir")
-
 
         self.ogrfile=os.path.join(self.cacheDir(),'extract',self.filename)
 
@@ -118,9 +115,6 @@ class RGICSVBase(CSVBase):
             self._dbinvent.data["RGIversion"]=tuple(self._dbinvent.data["RGIversion"])
         else:
             self._dbinvent.data["RGIversion"] = (0, 0)
-        
-        if not self._dbinvent.cache:
-                self._dbinvent.cache=self.conf.getDir(self.scheme,"CacheDir")
         
         self.csvfile=os.path.join(self.cacheDir(),'extract',self.filename)
 

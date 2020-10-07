@@ -190,7 +190,7 @@ class UriBase():
         slurplog.info("Downloading %s"%(uri.url))
         try:
             if self.lastmod:
-                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.authi,postdic=postdic)
+                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth,postdic=postdic)
             else:
                 self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth,postdic=postdic)
         except pycurl.error as pyexc:

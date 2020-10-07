@@ -31,7 +31,7 @@ import re
 scheme='cryo'
 
 def pullFoG(downloaddir):
-    """Pulls various GRDC datasets from the webdav folder"""
+    """Pulls a zip archive of the WGMS data"""
     fogSource=http("http://www.wgms.ch/downloads/DOI-WGMS-FoG-2018-06.zip")
     urif,upd=fogSource.download(downloaddir)
     if upd:
@@ -49,7 +49,7 @@ class wgms_fogBase(PandasBase):
     def __init__(self,dbconn):
         super().__init__(dbconn)
         if not self._dbinvent.cache:
-                self._dbinvent.cache=self.conf.getDir(self.scheme,"CacheDir",subdirs='WGMSFOG')
+                self._dbinvent.cache=self.conf.getCacheDir(self.scheme,subdirs="WGMSFOG")
         self.pdfile=os.path.join(self._dbinvent.cache,'DOI-WGMS-FoG-2018-06',self.pdfile)
 
     def pull(self):

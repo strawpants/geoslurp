@@ -21,7 +21,7 @@ from sqlalchemy import Column,Integer,String, Boolean,Float,ARRAY
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 from geoslurp.datapull.geodesyunr import Crawler as UnrCrawler
 from geoalchemy2.types import Geography
-from geoalchemy2.elements import WKBElement
+# from geoalchemy2.elements import WKBElement
 from datetime import datetime,timedelta
 import os
 from osgeo import ogr
@@ -62,7 +62,7 @@ def enhancetenv3Meta(meta,file):
 
     geoLoc=ogr.Geometry(ogr.wkbPoint)
     geoLoc.AddPoint(meta.pop("lon"),meta.pop("lat"),meta.pop("height"))
-    meta["geom"]=WKBElement(geoLoc.ExportToWkb(),srid=4326,extended=True)
+    meta["geom"]=geoLoc.ExportToWkt()
     return meta
 
 
