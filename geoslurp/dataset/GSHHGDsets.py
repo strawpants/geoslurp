@@ -34,6 +34,7 @@ class GSHHGBase(OGRBase):
     scheme='globalgis'
     gshhgversion=(2,3,7)
     updatefreq=365
+    swapxy=True
     def __init__(self,dbconn):
         super().__init__(dbconn)
         self.cache=self.conf.getCacheDir(self.scheme,subdirs="GSHHG")
