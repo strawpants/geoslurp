@@ -86,14 +86,14 @@ def main(argv):
         conf.update(args.config)
 
     if args.show_config:
-        conf.show()
+        conf.show(args.show_config)
 
     if args.admin_config:
         #register admin/default settings in the database
         conf.defaultupdate(args.admin_config)
 
     if args.auth_config:
-        for alias,dvals in args.auth_config:
+        for alias,dvals in args.auth_config.items():
             conf.updateAuth(Credentials(alias=alias,**dvals))
 
     if args.refresh:
@@ -298,7 +298,7 @@ def addCommandLineArgs():
                             help="Register user settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")
 
 
-        parser.add_argument("--show-config",action='store_true', help="Show user configurations as stored in the database")
+        parser.add_argument("--show-config",type=str,metavar="SHOWPASS", help="Show user configurations as stored in the database, specify '--show-config nohide' to also show passwords",nargs="?",const="hide",default=False)
 
 
         parser.add_argument("--auth-config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,

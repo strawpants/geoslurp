@@ -81,7 +81,7 @@ class LLove(DataSet):
         commitsha="e61d3e2a9eb328d48f56f5aa73fa2aaba60f1d5c"
     
         try:
-            cred=self.conf.authCred("github")
+            cred=self.conf.authCred("github",['oauthtoken'])
             token=cred.oauthtoken
         except:
             token=None

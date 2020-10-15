@@ -13,7 +13,7 @@
 # License along with Frommle; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
+# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2020
 
 
 from geoslurp.datapull.ftp import Uri as ftp
@@ -41,8 +41,8 @@ from datetime import datetime
 scheme='grdc'
 
 def pullGRDC(downloaddir,auth,pattern,unzip=True):
-    """Pulls various GRDC datasets from the webdav folder"""
-    gissource=webdav("https://uni-bonn.sciebo.de/public.php/webdav",auth=auth,pattern=pattern)
+    """Pulls various GRDC datasets from a webdav folder"""
+    gissource=webdav(auth.url,auth=auth,pattern=pattern)
     for uri in gissource.uris():
         urif,upd=uri.download(downloaddir,check=True)
         #unzip if newly updated
@@ -57,7 +57,7 @@ class grdc_gis_base(OGRBase):
     def __init__(self,dbconn):
         super().__init__(dbconn)
         if not self._dbinvent.cache:
-                self._dbinvent.cache=self.conf.getDir(self.scheme,"CacheDir",subdirs='GIS_layers')
+                self._dbinvent.cache=self.conf.getCacheDir(self.scheme,subdirs='GIS_layers')
         self.ogrfile=os.path.join(self._dbinvent.cache,self.filename)
     
     def pull(self):
@@ -78,7 +78,7 @@ class grdc_catalogue(PandasBase):
     def __init__(self,dbconn):
         super().__init__(dbconn)
         if not self._dbinvent.cache:
-                self._dbinvent.cache=self.conf.getDir(self.scheme,"CacheDir")
+                self._dbinvent.cache=self.conf.getCacheDir(self.scheme)
         self.pdfile=os.path.join(self.cacheDir(),self.pdfile)
 
     def pull(self):

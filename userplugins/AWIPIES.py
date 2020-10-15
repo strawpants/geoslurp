@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 
-from geoslurp.datapull.webdav import Uri as webdav
+from geoslurp.datapull.http import Uri as http
 import os
 from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.dataset.dataSetBase import DataSet
@@ -75,9 +75,9 @@ class awipies(DataSet):
 
     def pull(self):
         """Pulls the OBP matlab file from the cloud"""
-        cred=self.conf.authCred("awipies")
-        obpsource=webdav(os.path.join(cred.url,self.obpfile),auth=cred)
-        obpsource.download(self.dataDir())
+        cred=self.conf.authCred("awipies",['url','user','passw'])
+        obpsource=http(cred.url,auth=cred)
+        obpsource.download(self.dataDir(),outfile=self.obpfile)
 
     def register(self):
 

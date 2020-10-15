@@ -6,7 +6,6 @@ PyYAML
 lxml
 keyring
 pandas
-easywebdav
 motuclient
 numpy
 netCDF4

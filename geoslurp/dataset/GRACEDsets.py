@@ -83,7 +83,7 @@ class GRACEL2Base(DataSet):
 
     def pull(self):
         cred=self.conf.authCred("podaac")
-        url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/L2/"+self.center+"/"+self.release
+        url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/L2/"+self.center+"/"+self.release+"/"
         webdav=WbCrawler(url,auth=cred,pattern='G.*gz$')
         self.updated=webdav.parallelDownload(self.dataDir(),check=True)
 
@@ -93,7 +93,7 @@ class GRACEL2Base(DataSet):
         if self.updated:
             files=self.updated
         else:
-            files=[UriFile(file) for file in findFiles(self.dataDir(),'G.*\.gz',self._dbinvent.lastupdate)]
+            files=[UriFile(file) for file in findFiles(self.dataDir(),'G.*\.gz$',self._dbinvent.lastupdate)]
 
         filesnew=self.retainnewUris(files)
         

@@ -54,7 +54,7 @@ def getGeoshapesDsets(conf):
     commitsha="23ab6daab0bf2c6e9a3f3d685bed52cb48ac97ea"
     cachedir=conf.getCacheDir("githubcache")
     try:
-        cred=conf.authCred("github")
+        cred=conf.authCred("github",['oauthtoken'])
         token=cred.oauthtoken
     except:
         token=None

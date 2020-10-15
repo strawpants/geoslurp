@@ -29,8 +29,7 @@ from geoslurp.config.slurplogger import slurplogger
 import sys
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
-
-
+import getpass
 
 class MirrorMap:
     def __init__(self,from_mirror,to_mirror):
@@ -65,7 +64,7 @@ def stripPasswords(d):
     for serv,dsub in d.items():
         # print(serv)
         for ky,v in dsub.items():
-            if ky == "passw" or ky == "oauth":
+            if ky == "passw" or ky == "oauthtoken":
                 d[serv][ky]="*****"
     return d
 
@@ -81,6 +80,12 @@ Attributes:
 """
 
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
+
+
+
+
+
+
 
 GSBase=declarative_base(metadata=MetaData(schema='admin'))
 
@@ -172,19 +177,31 @@ class Settings():
     def setdefault(self,key,val):
         self.defaultentry.conf[key]=val
 
-    def show(self):
+    def show(self,hideflag="hide"):
         """Show the loaded user configuration"""
         print(self.userentry.conf)
         #also shows the registered authentification services (but don't show passwords
-        print(stripPasswords(self.auth))
+        if hideflag == "nohide":
+            print(self.auth)
+        else:
+            print(stripPasswords(self.auth))
 
-    def authCred(self,service):
+    def authCred(self,service,qryfields=["user","passw"]):
         """obtains username credentials for a certain service
         :param service: name of the service
         :returns a namedtuple with credentials"""
 
         if service not in self.auth:
-            raise RuntimeError("No credentials for service %s found in the database. Please register your credentials using Settings.updateAuth()"%service)
+            #prompt for the necessary fields and store in database
+            creddict={"alias":service}
+            for key in qryfields:
+                if key == "passw":
+                    val=getpass.getpass(prompt='Please enter passw for authentication service %s\n'%service)
+                else:
+                    val=input('Please enter %s for authentication service %s\n'%(key,service))
+                creddict[key]=val
+            self.updateAuth(cred=Credentials(**creddict))
+            
         return Credentials(alias=service, **self.auth[service])
 
     def updateAuth(self, cred:Credentials):

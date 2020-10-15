@@ -55,7 +55,7 @@ def getNaturalEarthDsets(conf):
     commitsha="bf7720b54dd9ac2d4d7f735174901b3862b5362a"
     cachedir=conf.getCacheDir("githubcache")
     try:
-        cred=conf.authCred("github")
+        cred=conf.authCred("github",['oauthtoken'])
         token=cred.oauthtoken
     except:
         token=None
