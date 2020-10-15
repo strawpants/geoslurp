@@ -52,7 +52,7 @@ class Crawler(CrawlerBase):
                 continue
 
             nameelem=elem.find(".//td[@class='tom-cell-name']")
-            if nameelem.text.strip() is not '':
+            if nameelem.text.strip() != '':
                 #just find the name end strip line ending
                 uridict["name"]=nameelem.text.lstrip()[:-1]
             else:

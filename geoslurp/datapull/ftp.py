@@ -29,7 +29,7 @@ class Uri(UriBase):
 class Crawler(CrawlerBase):
     """Crawler for ftp directories"""
     def __init__(self,url,pattern='.*',followpattern='.*',auth=None):
-        if url[-1] is not '/':
+        if url[-1] != '/':
             url+='/'
         super().__init__(url)
         self.pattern=pattern
@@ -43,7 +43,7 @@ class Crawler(CrawlerBase):
         regexthisyear=re.compile(b'((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{1,2} +[0-9]{2}:[0-9]{2})')
         regexdir=re.compile(b'^d[\-r][\-w][\-x]')
         url=os.path.join(self.rooturl,subdirs)
-        if url[-1] is not '/':
+        if url[-1] != '/':
             url+='/'
 
         buf=Uri(url,auth=self.auth).buffer()
