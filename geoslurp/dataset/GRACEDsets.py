@@ -28,20 +28,47 @@ import os
 from datetime import datetime
 from geoslurp.tools.gravity import GravitySHTBase
 from geoslurp.config.catalogue import geoslurpCatalogue
-
+import re
 scheme="gravity"
 
 def graceMetaExtractor(uri):
     """Extract meta information from a GRACE file"""
+
+    #some dirty search rand replace hacks to fix faulty yaml header in the grace/fo data
+    hdrpatches=[(re.compile("0000-00-00T00:00:00"),"1970-01-01T00:00:00"),
+            (re.compile("Dahle et al\. \(2019\)\:"),"Dahle et al. (2019),"),
+            (re.compile("Dobslaw et al\. \(2019\)\:"),"Dobslaw et al. (2019),")]
+    patchedLines=0
+
     buf=StringIO()
     with gzip.open(uri.url,'rt') as fid:
         slurplog.info("Extracting info from %s"%(uri.url))
         for ln in fid:
             if '# End of YAML header' in ln:
+                #parse the yaml header
+                hdr=yaml.safe_load(buf.getvalue())["header"]
                 break
             else:
+                # if re.search("Dahle",ln):
+                    # import pdb;pdb.set_trace()
+                #see if the line needs patching
+                for reg,repl in hdrpatches:
+                    ln,nr=re.subn(reg,repl,ln,count=1)
+                    patchedLines+=nr
+                #hack replace 0000-00-00 dates because yaml can't parse them
                 buf.write(ln)
-    hdr=yaml.safe_load(buf.getvalue())["header"]
+        if patchedLines > 0:
+            #we want to fix the header and patch the input file
+            buf.write(ln) #write end of YAML file
+            #dunp the remainder of the file in the stringio buffer
+            buf.write(fid.read())
+
+    
+    if patchedLines > 0:
+        slurplog.info("Patching faulty yaml header in file %s"%uri.url)
+        with gzip.open(uri.url,'wt') as fidout:
+            fidout.write(buf.getvalue())
+
     nonstand=hdr["non-standard_attributes"]
 
 
@@ -83,8 +110,14 @@ class GRACEL2Base(DataSet):
 
     def pull(self):
         cred=self.conf.authCred("podaac")
-        url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/L2/"+self.center+"/"+self.release+"/"
-        webdav=WbCrawler(url,auth=cred,pattern='G.*gz$')
+        url="https://podaac-tools.jpl.nasa.gov/drive/files/allData/"+self.mission+"/L2/"+self.center+"/"+self.release+"/"
+        if self.mission == "grace":
+            depth=1
+        else:
+            #for gracefo we also need to descend in the year folders
+            depth=2
+
+        webdav=WbCrawler(url,auth=cred,pattern='G.*gz$',depth=depth)
         self.updated=webdav.parallelDownload(self.dataDir(),check=True)
 
     def register(self):
@@ -108,8 +141,13 @@ class GRACEL2Base(DataSet):
 def GRACEL2ClassFactory(clsName):
     """Dynamically construct GRACE Level 2 dataset classes"""
     base,center,release=clsName.split("_")
+    if base == "GRACEL2":
+        mission="grace"
+    else:
+        mission="gracefo"
+
     table=type(clsName +"Table", (GravitySHTBase,), {})
-    return type(clsName, (GRACEL2Base,), {"release": release, "center":center,"table":table})
+    return type(clsName, (GRACEL2Base,), {"release": release, "center":center,"table":table,"mission":mission})
 
 # setup GRACE datasets
 def GRACEDsets(conf):
@@ -117,6 +155,11 @@ def GRACEDsets(conf):
     for release in ["RL06"]:
         for center in ["CSR", "GFZ", "JPL"]:
             clsName="GRACEL2"+"_"+center+"_"+release
+            out.append(GRACEL2ClassFactory(clsName))
+    
+    for release in ["RL06"]:
+        for center in ["CSR", "GFZ", "JPL"]:
+            clsName="GRACEFOL2"+"_"+center+"_"+release
             out.append(GRACEL2ClassFactory(clsName))
     return out
 
