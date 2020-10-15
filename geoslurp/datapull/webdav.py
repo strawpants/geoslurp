@@ -30,22 +30,27 @@ from dateutil.parser import parse as isoParser
 class Crawler(CrawlerBase):
     """Webdav Crawler (list content of a directory)"""
     pattern=None
-    def __init__(self,rooturl,pattern,auth):
+    def __init__(self,rooturl,pattern,auth,depth=1):
         if not rooturl.endswith('/'):
             rooturl+='/'
         super().__init__(rooturl)
-        self.pattern=pattern
         self.auth=auth
-
-    def uris(self):
+        self.depth=depth
+        
         # #extract protocol from url
         proto,url=self.rooturl.split('://')
         # #also strip off directory
         baseurl, tmp=url.split('/', 1)
-        baseurl=proto+"://"+baseurl
-        
-        regex=re.compile(self.pattern)
-        
+        self.baseurl=proto+"://"+baseurl
+        self.regex=re.compile(pattern)
+
+    def find(self,urlin,depth):
+        """List files in a webdav directory and recursively do this for directories untill the depth is exhausted"""
+        if depth == 0:
+            return
+        else:
+            depth-=1
+
         buffer=BytesIO()
         buffer.write(b'<?xml version="1.0"?>'
             b'<a:propfind xmlns:a="DAV:">'
@@ -54,13 +59,26 @@ class Crawler(CrawlerBase):
     
         #retrieve the directory listing as xml by making a PROPFIND HTTP request tot eh webdav server
         xmlout=BytesIO()
-        curlDownload(self.rooturl,xmlout,auth=self.auth,headers=["Depth: 1"],customRequest="PROPFIND",upfid=buffer)
+        curlDownload(urlin,xmlout,auth=self.auth,headers=["Depth: 1"],customRequest="PROPFIND",upfid=buffer)
         xmlroot=XMLTree.fromstring(xmlout.getvalue())
         #walk through the xml tree and gather files with their modification dates
         for xelem in xmlroot.iterfind('{DAV:}response'):
+
             url=xelem.find('{DAV:}href').text
+            #is this a directory?
+            isdir=xelem.find("{DAV:}propstat/{DAV:}prop/{DAV:}resourcetype/{DAV:}collection")
+            if isdir is not None and self.baseurl+url != urlin and depth > 0:
+                #call this function recursively
+                yield from self.find(self.baseurl+url,depth)
+
+            if not self.regex.search(url):
+                continue
             lastmod=xelem.find('{DAV:}propstat/{DAV:}prop/{DAV:}getlastmodified').text
             mdate=isoParser(lastmod).replace(tzinfo=None)
-            if not regex.search(url):
-                continue
-            yield UriBase(baseurl+url,lastmod=mdate,auth=self.auth)
+            
+            yield self.baseurl+url,mdate
+
+
+    def uris(self):
+        for url,mdate in self.find(self.rooturl,depth=self.depth):
+            yield UriBase(url,lastmod=mdate,auth=self.auth)
