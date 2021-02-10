@@ -137,7 +137,7 @@ def RGICSVClassFactory(fileName,hskip=0):
 
 
 def getRGIDsets(conf):
-    """Automatically create all classes contained within the GSHHG database"""
+    """Automatically create all classes contained within the RGI data"""
     out=[]
     regionnames=['01_rgi60_Alaska', '02_rgi60_WesternCanadaUS', '03_rgi60_ArcticCanadaNorth',
                '04_rgi60_ArcticCanadaSouth', '05_rgi60_GreenlandPeriphery', '06_rgi60_Iceland',

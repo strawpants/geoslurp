@@ -74,7 +74,7 @@ class grdc_catalogue(PandasBase):
     scheme=scheme
     ftype='excel'
     dtypes={"geom":geoPointtype}
-    pdfile='grdc_stations.xlsx'
+    pdfile='GRDC_Stations.xlsx'
     def __init__(self,dbconn):
         super().__init__(dbconn)
         if not self._dbinvent.cache:
@@ -184,7 +184,8 @@ def GRDCmetaExtractor(uri):
                 "country":header["Country"],
                 "nextstation":nextdownstream,
                 "uri":uri.url,
-                "geom":WKBElement(wkbdump(location),srid=4326,extended=True)}
+                "geom":WKTElement(wktdump(location),srid=4326,extended=True)}
+                # "geom":WKBElement(wkbdump(location),srid=4326,extended=True)}
     except KeyError as e:
         import pdb;pdb.set_trace()
         raise(e)

@@ -110,7 +110,11 @@ def main(argv):
         for catentry in geoslurpCatalogue.listFunctions(conf).keys():
             print("\t%s"%(catentry))
         
-    if not ( args.dset or args.func ):
+        print("Available views (SCHEME.VIEW):")
+        for catentry in geoslurpCatalogue.listViews(conf).keys():
+            print("\t%s"%(catentry))
+
+    if not ( args.dset or args.func or args.view ):
         #OK jsut gracefully exit
         sys.exit(0)
 
@@ -123,8 +127,13 @@ def main(argv):
         funcs=geoslurpCatalogue.getFuncs(conf, args.func)
     else:
         funcs=[]
+     
+    if args.view:
+        views=geoslurpCatalogue.getViews(conf, args.view)
+    else:
+        views=[]
 
-    if not ( datasets or funcs ):
+    if not ( datasets or funcs or views ):
         print("No valid datasets or functions selected")
         sys.exit(1)
 
@@ -140,6 +149,10 @@ def main(argv):
                 print("Detailed info on %s options which may be provided as JSON dictionaries"%(df.__name__))
                 print("\t%s.register:\n\t%s"%(df.__name__,df.register.__doc__))
 
+        if args.view:
+            for dv in views:
+                print("Detailed info on %s options which may be provided as JSON dictionaries"%(dv.__name__))
+                print("\t%s.register:\n\t%s"%(dv.__name__,dv.register.__doc__))
         sys.exit(0)
     
     
@@ -200,15 +213,26 @@ def main(argv):
         df=dfclass(DbConn)
 
         if args.register:
-            try:
-                df.register(**regopts)
-            except KeyboardInterrupt:
-                df.halt()
+            df.register(**regopts)
         
         if args.purge_entry:
             df.purgeentry()
         #We need to explicitly delete the function instance or else the database QueuePool gets exhausted 
         del df
+
+    #loop over requested views
+    for dvclass in views:
+        #initialize the class
+        dv=dvclass(DbConn)
+
+        if args.register:
+            dv.register(**regopts)
+        
+        if args.purge_entry:
+            dv.purgeentry()
+        #We need to explicitly delete the function instance or else the database QueuePool gets exhausted 
+        del dv
+
 
 def addUser(conn,user,readonly):
     userpass=user.split(":")
@@ -357,6 +381,8 @@ def addCommandLineArgs():
         parser.add_argument("-f","--func",metavar="PATTERN",nargs="?",type=str,
                 help='Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUNCTION)')
 
+        parser.add_argument("-V","--view",metavar="PATTERN",nargs="?",type=str,
+                help='Select geoslurp database views or all views in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.VIEW)')
         return parser
 
 def check_args(args,parser):

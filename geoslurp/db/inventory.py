@@ -31,6 +31,7 @@ class InventTable(GSBase):
     scheme=Column(String)
     dataset=Column(String,unique=True)
     pgfunc=Column(String,unique=True)
+    view=Column(String,unique=True)
     owner=Column(String)
     lastupdate=Column(TIMESTAMP)
     updatefreq=Column(Integer)

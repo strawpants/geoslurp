@@ -44,7 +44,7 @@ class PandasBase(DataSet):
         if self.ftype == "csv":
             df=pd.read_csv(self.pdfile,skipfooter=self.skipfooter,encoding=self.encoding)
         elif self.ftype == "excel":
-            df=pd.read_excel(self.pdfile,skipfooter=self.skipfooter)
+            df=pd.read_excel(self.pdfile,skipfooter=self.skipfooter,engine="openpyxl")
 
         else:
             raise RuntimeError("Don't know how to open %s, specify ftype"%(self.pdfile))

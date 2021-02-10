@@ -145,16 +145,17 @@ class GeoslurpConnector():
         else:
             return getattr(getattr(func,schema),fname)
 
-
-    def updateTable(self, TableContentGenerator):
-        """Update/add row entries in a table"""
-
-        #extract table columnn
-
-        #possibly create table (if it does not exist)
-
-        #loop over entries of the TableContentGenerator
-        pass
+    def createView(self, viewname, qry,schema=None):
+        if schema:
+            self.dbeng.execute('CREATE VIEW %s."%s" AS %s;' % (schema.lower(), viewname.lower(),qry))
+        else:
+            self.dbeng.execute('CREATE VIEW  "%s" AS %s;' % (viewname.lower(),qry))
+    
+    def dropView(self, viewname, schema=None):
+        if schema:
+            self.dbeng.execute('DROP VIEW IF EXISTS %s."%s";' % (schema.lower(), viewname.lower()))
+        else:
+            self.dbeng.execute('DROP TABLE IF EXISTS "%s";' % (viewname.lower()))
 
     def addUser(self,name,passw,readonly=False):
         """Adds a user to the database (note executing this functions requires appropriate database rights"""

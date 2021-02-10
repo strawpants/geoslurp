@@ -164,3 +164,9 @@ def GRACEDsets(conf):
     return out
 
 geoslurpCatalogue.addDatasetFactory(GRACEDsets)
+
+
+
+#also add specific convenience views to work with GRACE+GRACEFO data
+
+

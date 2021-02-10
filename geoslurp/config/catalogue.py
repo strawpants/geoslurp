@@ -28,11 +28,13 @@ class DatasetCatalogue:
     #holds dataset classes (not initiated!)
     __dsets__=[]
     __dbfuncs__=[]
+    __dviews__=[]
     # holds factory methods for dyanamically building datasets
     __dsetfac__=[]
     __catalogue__=None
     __dscache__={}
     __dfcache__={}
+    __dvcache__={}
     def __init__(self):
         pass
     
@@ -58,6 +60,9 @@ class DatasetCatalogue:
     def addDbFunc(self,dfclass):
         self.__dbfuncs__.append(dfclass)
 
+    def addView(self,dvclass):
+        self.__dviews__.append(dvclass)
+
     def refresh(self,conf):
         """Refresh the dataset catalogue"""
         self.registerAllDataSets(conf)
@@ -65,7 +70,7 @@ class DatasetCatalogue:
         #load inventory of existing datasets (for the templated)
         Inv=Inventory(conf.db)
 
-        self.__catalogue__={"datasets":{},"factories":{},"functions":{}}
+        self.__catalogue__={"datasets":{},"factories":{},"functions":{},"views":{}}
         #loop over dataset in the factories
 
         for ds in self.__dsets__:
@@ -108,10 +113,15 @@ class DatasetCatalogue:
             self.__dfcache__[name]=df
 
 
+        for dv in self.__dviews__:
+            name=".".join([dv.scheme,dv.__name__])
+            self.__catalogue__["views"][name]={"module":dv.__module__}
+            self.__dvcache__[name]=dv
+
         #save to yaml
         self.__catalogue__["lastupdate"]=datetime.now()
         cachefile=self.getCacheFile(conf)
-        slurplog.info("saving available Datasets and functions to catalogue %s"%cachefile)
+        slurplog.info("saving available Datasets, functions and views to catalogue %s"%cachefile)
         with open(cachefile,'wt') as fid:
             yaml.dump(self.__catalogue__, fid, default_flow_style=False)
     
@@ -134,8 +144,12 @@ class DatasetCatalogue:
         
         #dynamically import all relevant datasets and class factories (including userplugin datasets)
         modgeo=__import__("geoslurp.dataset")
+       
         #dynamically load functions
         modgeof=__import__("geoslurp.dbfunc")
+
+        #dynamically load views
+        modgeov=__import__("geoslurp.view")
 
         #also load userplugins
         self.addUserPlugPaths(conf,True)
@@ -154,6 +168,9 @@ class DatasetCatalogue:
         self.loadCatalogue(conf)
         return self.__catalogue__["factories"]
 
+    def listViews(self,conf):
+        self.loadCatalogue(conf)
+        return self.__catalogue__["views"]
             
     def getDsetClass(self,conf,name):
         """Loads a dataset as an class (but check cache first)"""
@@ -253,7 +270,6 @@ class DatasetCatalogue:
         regexcomp=re.compile(regex)
         #we expect to have only one matching entry when the regex is a fully-qualified scheme.function name
         singleEntry=re.fullmatch("^[\w]+(?:\.[\w]+)$",regex)
-
         for name in self.__catalogue__["functions"].keys():
             df=None
             if regexcomp.fullmatch(name):
@@ -272,7 +288,49 @@ class DatasetCatalogue:
 
         return outdfs
 
-#module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )
+    def getViewClass(self,conf,name):
+        """Loads a database view as an class (but check cache first)"""
+        if name in self.__dvcache__:
+            return self.__dvcache__[name]
+        else:
+           self.loadCatalogue(conf) 
+           dventry=self.__catalogue__["views"][name]
+           #load isolated class
+           mod=import_module(dventry["module"])
+           dv=getattr(mod,name.split(".")[1])
+           self.__dvcache__[name]=dv
+           return dv
+
+
+
+    def getViews(self,conf,regex):
+        """retrieves a list of database views possibly obeying a certain regex"""
+        self.loadCatalogue(conf)        
+        #get the valid names  
+        outdvs=[] 
+        regexcomp=re.compile(regex)
+        #we expect to have only one matching entry when the regex is a fully-qualified scheme.function name
+        singleEntry=re.fullmatch("^[\w]+(?:\.[\w]+)$",regex)
+
+        for name in self.__catalogue__["views"].keys():
+            dv=None
+            if regexcomp.fullmatch(name):
+                dv=self.getViewClass(conf,name)
+                if singleEntry:
+                    if not outdvs:
+                        outdvs=[None]
+                    #this possibly overwrites a fitting template class
+                    outdvs[0]=dv
+                    #no need to look any further we found our fit
+                    break
+                else:
+                    outdvs.append(dv)
+                    #note: other functions may fit so we continue the loop
+                    continue
+
+        return outdvs
+
+#module wide variable which allows registration of dataset classes, functions, datasetfactories and views
 geoslurpCatalogue=DatasetCatalogue()
 
 
