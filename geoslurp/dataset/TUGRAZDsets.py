@@ -15,19 +15,65 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
+from sqlalchemy.ext.declarative import declared_attr, as_declarative
+from sqlalchemy import MetaData
+from sqlalchemy import Column,Integer,String, Boolean,Float
+from sqlalchemy.dialects.postgresql import TIMESTAMP
 from geoslurp.dataset import DataSet
 from geoslurp.datapull.ftp import Crawler as ftpCrawler
 from geoslurp.datapull.uri import findFiles
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.datapull import UriFile
-from datetime import datetime
+from datetime import datetime,timedelta
 from geoslurp.tools.gravity import GravitySHTBase, icgemMetaExtractor
 import re
 import os
 from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.db.settings import getCreateDir
+import gzip as gz
 
 scheme='gravity'
+
+@as_declarative(metadata=MetaData(schema=scheme))
+class GravityNormals(object):
+    @declared_attr
+    def __tablename__(cls):
+        #strip of the 'Table' from the class name
+        return cls.__name__[:-5].lower()
+    id = Column(Integer, primary_key=True)
+    lastupdate=Column(TIMESTAMP)
+    tstart=Column(TIMESTAMP,index=True)
+    tend=Column(TIMESTAMP,index=True)
+    time=Column(TIMESTAMP,index=True)
+    nmax=Column(Integer)
+    format=Column(String)
+    uri=Column(String)
+
+def snxdate2datetime(snxd):
+    yr,doy,sec=[int(x) for x in snxd.split(":")]
+    if yr > 50:
+        yr+=1900
+    else:
+        yr+=2000
+
+    return datetime(yr,1,1)+timedelta(days=doy-1,seconds=sec)
+
+def NormalsMetaExtractor(uri):
+
+    #read some stuff from the sinex files
+    with gz.open(uri.url,'rt') as fid:
+        slurplogger().info("Extracting info from %s"%(uri.url))
+        ln=fid.readline()
+        if ln[0:5] != '%=SNX':
+            raise IOError("This doesn't seem like a valid SINEX file")
+        lnspl=ln.split()
+        tstart=snxdate2datetime(lnspl[5])
+        tend=snxdate2datetime(lnspl[6])
+        tcent=tstart+(tend-tstart)/2
+
+    meta={"uri":uri.url,"lastupdate":uri.lastmod,"tend":tend,"tstart":tstart,"time":tcent}
+    return meta
+
 
 def enhanceMeta(meta):
     """Extract addtional timestamps from the TU graz filename data"""
@@ -96,12 +142,52 @@ class TUGRAZGRACEL2Base(DataSet):
         self.updateInvent()
 
 
+class TUGRAZGRACEL2NormalBase(DataSet):
+    """Derived type representing GRACE Normal equation systems from the TU GRAZ"""
+    table=None
+    scheme=scheme
+    release=''
+    subdirs=''
+    updated=False
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+
+    def pull(self):
+        url=os.path.join("ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/",self.release,self.subdirs)
+        ftp=ftpCrawler(url,pattern='.*.snx.gz',followpattern='([0-9]{4})')
+
+        self.updated=ftp.parallelDownload(self.dataDir(),check=True, maxconn=5)
+
+    def register(self):
+
+        #create a list of files which need to be (re)registered
+        if self.updated:
+            files=self.updated
+        else:
+            files=[UriFile(file) for file in findFiles(self.dataDir(),'.*snx.gz',since=self._dbinvent.lastupdate)]
+
+        newfiles=self.retainnewUris(files)
+        #loop over files
+        for uri in newfiles:
+            slurplogger().info("extracting meta info from %s"%(uri.url))
+            meta=NormalsMetaExtractor(uri)
+            self.addEntry(meta)
+
+        self.updateInvent()
+
 def TUGRAZGRACEL2ClassFactory(release,subdirs):
     """Dynamically construct GRACE Level 2 dataset classes for TU GRAZ"""
     base,gtype=subdirs.split('/')
     clsName="_".join([release,gtype])
     table=type(clsName.replace('-',"_") +"Table", (GravitySHTBase,), {})
     return type(clsName, (TUGRAZGRACEL2Base,), {"release": release, "table":table,"subdirs":subdirs})
+
+def TUGRAZNormalsClassFactory(release,subdirs):
+    """Dynamically construct GRACE Level 2 dataset classes for TU GRAZ"""
+    base,_,gtype=subdirs.split('/')
+    clsName="_".join([release,"normals",gtype])
+    table=type(clsName.replace('-',"_") +"Table", (GravityNormals,), {})
+    return type(clsName, (TUGRAZGRACEL2NormalBase,), {"release": release, "table":table,"subdirs":subdirs})
 
 # setup GRACE datasets
 def TUGRAZGRACEDsets(conf):
@@ -110,10 +196,18 @@ def TUGRAZGRACEDsets(conf):
     for subdirs in ["daily_kalman/daily_background","daily_kalman/daily_n40","monthly/monthly_background","monthly/monthly_n60","monthly/monthly_n96","monthly/monthly_n120"]:
         out.append(TUGRAZGRACEL2ClassFactory(release,subdirs))
 
+    #and normal equation systems
+    out.append(TUGRAZNormalsClassFactory(release,'monthly/normals_SINEX/monthly_n96')) 
+
     #also add GRACE-FO
     release="ITSG-Grace_operational"
     for subdirs in ["monthly/monthly_signalSeparation","monthly/monthly_background","monthly/monthly_n60","monthly/monthly_n96","monthly/monthly_n120"]:
         out.append(TUGRAZGRACEL2ClassFactory(release,subdirs))
+
+
+    #and normal equation systems
+    out.append(TUGRAZNormalsClassFactory(release,'monthly/normals_SINEX/monthly_n96')) 
+
     return out
 
 geoslurpCatalogue.addDatasetFactory(TUGRAZGRACEDsets)
