@@ -24,7 +24,7 @@ def decyear2dt(decyear):
 
 def dt2monthlyinterval (dtin):
     """retrieves the start end end of a month"""
-    if dtin.month is not 12:
+    if dtin.month != 12:
         endofmonth=datetime(dtin.year,dtin.month+1,1)-timedelta(seconds=1)
     else:
         endofmonth=datetime(dtin.year+1,1,1)-timedelta(seconds=1)

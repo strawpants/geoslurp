@@ -86,11 +86,11 @@ class RGIBase(OGRBase):
     filename=''
     def __init__(self,dbconn):
         super().__init__(dbconn)
+        self.setCacheDir(self.conf.getCacheDir(self.scheme,subdirs='RGI'))
         if "RGIversion"  in self._dbinvent.data:
             self._dbinvent.data["RGIversion"]=tuple(self._dbinvent.data["RGIversion"])
         else:
             self._dbinvent.data["RGIversion"] = (0, 0)
-        
 
         self.ogrfile=os.path.join(self.cacheDir(),'extract',self.filename)
 
@@ -98,8 +98,7 @@ class RGIBase(OGRBase):
         """Pulls the entire RGI archive from the web and stores it in a cache"""
         version,updated=pullRGI(self.cacheDir(),self._dbinvent.data['RGIversion'])
         
-        if updated:
-            self._dbinvent.data["RGIversion"] = version
+        self._dbinvent.data["RGIversion"] = version
         self.updateInvent(False)
 
 class RGICSVBase(CSVBase):
@@ -111,18 +110,18 @@ class RGICSVBase(CSVBase):
     filename=''
     def __init__(self,dbconn):
         super().__init__(dbconn)
+        self.setCacheDir(self.conf.getCacheDir(self.scheme,subdirs='RGI'))
         if "RGIversion"  in self._dbinvent.data:
             self._dbinvent.data["RGIversion"]=tuple(self._dbinvent.data["RGIversion"])
         else:
             self._dbinvent.data["RGIversion"] = (0, 0)
-        
+
         self.csvfile=os.path.join(self.cacheDir(),'extract',self.filename)
 
     def pull(self):
         """Pulls the entire RGI archive from the web and stores it in a cache"""
         version,updated=pullRGI(self.cacheDir(),self._dbinvent.data['RGIversion'])
-        if updated:
-            self._dbinvent.data["RGIversion"] = version
+        self._dbinvent.data["RGIversion"] = version
         self.updateInvent(False)
 
 

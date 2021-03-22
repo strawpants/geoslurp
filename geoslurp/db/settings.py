@@ -33,10 +33,16 @@ import getpass
 
 class MirrorMap:
     def __init__(self,from_mirror,to_mirror):
-        if not (from_mirror.endswith("/") and to_mirror.endswith("/")):
-            raise RuntimeError("The url of the data mirrors used for mapping should end with a '/'") 
-        self.from_mirror=from_mirror
-        self.to_mirror=to_mirror
+        if from_mirror.endswith("/"):
+            self.from_mirror=from_mirror
+        else:
+            self.from_mirror=from_mirror+"/"
+        
+        if to_mirror.endswith("/"):
+            self.to_mirror=to_mirror
+        else:
+            self.to_mirror=to_mirror+"/"
+            
     def apply(self,url):
         return url.replace(self.from_mirror,self.to_mirror)
     
