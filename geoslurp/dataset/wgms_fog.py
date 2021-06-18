@@ -27,7 +27,7 @@ from sqlalchemy.types import String
 from shapely.wkt import dumps as wktdump
 from shapely.geometry import Point
 import re
-
+import geopandas as gpd
 scheme='cryo'
 
 def pullFoG(downloaddir):
@@ -39,13 +39,10 @@ def pullFoG(downloaddir):
                 zp.extractall(downloaddir)
 
 
-geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
-
 class wgms_fogBase(PandasBase):
     scheme=scheme
     ftype='csv'
-
-    # dtypes={"geom":geoPointtype}
+    # inbulk=True
     def __init__(self,dbconn):
         super().__init__(dbconn)
         if not self._dbinvent.cache:
@@ -57,33 +54,26 @@ class wgms_fogBase(PandasBase):
         pullFoG(self._dbinvent.cache)
     
     def modify_df(self,df):
-        """Adds a geometry column extracted from the other columns"""
-        self.dtypes={}
-        #change all panda object types to ocnvert to a Sqlalcehmy String
-        for ky,typ in df.dtypes.items():
-            if type(object) == typ:
-                self.dtypes[ky]=String
-            
-             
+        """Creates a pandas geodataframe using the given coordinates"""
         if re.search('A-GLACIER.csv',self.pdfile):
             #extract longitude and latitude
-            self.dtypes["geom"]=geoPointtype
-            df.LONGITUDE=df.LONGITUDE.fillna(0)
-            df.LATITUDE=df.LATITUDE.fillna(0)
+            df.LONGITUDE.fillna(0,inplace=True)
+            df.LATITUDE.fillna(0,inplace=True)
+            # df.GEN_LOCATION.fillna("",inplace=True)
+            # df.SPEC_LOCATION.fillna("",inplace=True)
 
-            df['geom']=[WKTElement(wktdump(Point(lon,lat,0)),srid=4326,extended=True) for lon,lat in zip(df.LONGITUDE,df.LATITUDE)] 
-        
+            df=gpd.GeoDataFrame(df,geometry=gpd.points_from_xy(df.LONGITUDE,df.LATITUDE)) 
+            df.set_crs(epsg=4326, inplace=True)
+            df=df.drop(columns=["LONGITUDE","LATITUDE"]) 
        
         if re.search('EEE-MASS-BALANCE-POINT.csv',self.pdfile):
             #extract longitude and latitude
             df.POINT_LON=df.POINT_LON.fillna(0)
             df.POINT_LAT=df.POINT_LAT.fillna(0)
             df.POINT_ELEVATION=df.POINT_ELEVATION.fillna(0)
-            df['geom']=[WKTElement(wktdump(Point(lon,lat,h)),srid=4326,extended=True) for lon,lat,h in zip(df.POINT_LON,df.POINT_LAT,df.POINT_ELEVATION)] 
-
-            self.dtypes["geom"]=geoPointtype
-        
-        
+            df=gpd.GeoDataFrame(df,geometry=gpd.points_from_xyz(df.LONGITUDE,df.LATITUDE,df.POINT_ELEVATION)) 
+            df.set_crs(epsg=4326, inplace=True)
+            df=df.drop(columns=["LONGITUDE","LATITUDE","POINT_ELEVATION"]) 
         return df
 
 
