@@ -153,7 +153,7 @@ class DataSet(ABC):
 
     def purgeentry(self):
         """Delete dataset entry in the database"""
-        slurplogger().info("Deleting %s entry"%(self.name))
+        slurplogger().info(f"Deleting {self.scheme}.{self.name} entry")
         self._ses.delete(self._dbinvent)
         self._ses.commit()
         self.db.dropTable(self.name,self.scheme)
@@ -314,4 +314,6 @@ class DataSet(ABC):
             raise RuntimeError("No migration implemented")
         if version > self.version:
             raise RuntimeError("Registered database has a higher version number than supported")
+
+
 

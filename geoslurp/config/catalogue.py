@@ -244,6 +244,13 @@ class DatasetCatalogue:
                         #derive a new class from the template class
                         ds=type(tbl,(dsbase,),{"scheme":scheme})
                     outdsets=[ds]
+        
+        if not outdsets and singleEntry:
+            #fall back with a generic type
+
+            scheme,tbl=regex.split(".")
+            dsgen=self.getDsetClass(conf,"anyscheme.DataSetGeneric")
+            outdsets.append(type(tbl,(dsgen,),{"scheme":scheme}))
 
         return outdsets
         

@@ -16,12 +16,12 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
 #contains a class to work with  the geoslurp inventory table
-from sqlalchemy import Column,Integer,String,Float
+from sqlalchemy import Column,Integer,String,Float,DateTime,ARRAY,JSON
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.dialects.postgresql import TIMESTAMP, ARRAY,JSONB
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy import MetaData
-
+scheme="admin"
 GSBase=declarative_base(metadata=MetaData(schema='admin'))
 
 class InventTable(GSBase):
@@ -33,12 +33,12 @@ class InventTable(GSBase):
     pgfunc=Column(String,unique=True)
     view=Column(String,unique=True)
     owner=Column(String)
-    lastupdate=Column(TIMESTAMP)
+    lastupdate=Column(DateTime)
     updatefreq=Column(Integer)
     version=Column(ARRAY(Integer,as_tuple=True))
     cache=Column(String)
     datadir=Column(String)
-    data=Column(MutableDict.as_mutable(JSONB))
+    data=Column(MutableDict.as_mutable(JSON))
         
 class Inventory:
     """Class which provides read/write access to the postgresql inventory table"""

@@ -128,7 +128,7 @@ class PandasBase(DataSet):
             if self.geoinfo.geoname in row:
                 row[self.geoinfo.geoname]=WKBElement(shapely.wkb.dumps(row[self.geoinfo.geoname]),srid=self.geoinfo.srid)
             
-            slurplog.info(f"Adding entry {k}")
+            # slurplog.info(f"Adding entry {k}")
             if self.inbulk:
                 bulk.append(row) 
             else:

@@ -40,7 +40,7 @@ def main(argv):
 
     # We need a point of contact to communicate with the database
     try:
-        DbConn=GeoslurpConnector(args.host,args.user,args.password,readonlyuser=False,cache=args.cache)
+        DbConn=GeoslurpConnector(args.host,args.user,args.password,cache=args.cache)
     except Exception as e:
         print(e)
         print("Cannot connect to postgresql database, quitting")
@@ -156,6 +156,9 @@ def main(argv):
         sys.exit(0)
     
     
+    if not (args.pull or args.register or args.purge_cache or args.purge_data or args.purge_entry):
+        sys.exit(0)
+    
     if args.pull:
         if type(args.pull) == dict:
             pullopts=args.pull
@@ -169,9 +172,6 @@ def main(argv):
         else:
             regopts={}
         args.register=True
-    
-    if not (args.pull or args.register or args.purge_cache or args.purge_data or args.purge_entry):
-        sys.exit(0)
     
     for dsclass in datasets:
         #initialize the class

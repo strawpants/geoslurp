@@ -25,17 +25,19 @@ import re
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from geoslurp.config.slurplogger import  slurplogger, debugging
 import getpass
+from geoslurp.db.connectorbase import GeoslurpConnectorBase
 
-class GeoslurpConnector():
+class GeoslurpConnector(GeoslurpConnectorBase):
     """Holds a connector to a geoslurp database"""
-    mirror=None
-    cache=None
-    def __init__(self, host, user, passwd=None, port=5432,readonlyuser=True,datamirror=None,cache=None):
+    def __init__(self, host, user, passwd=None, port=5432,datamirror=None,cache=None):
         """
         establishes a database engine whoch provides the base
         for creating sessions (ORM) or connections (SQL expressions)
         :param dburl: url of the database e.g.: postgresql+psycopg2://geoslurp:password@host/geoslurp
         """
+        super().__init__(datamirror=datamirror,cache=cache)
+
+
         self.user=user
         if passwd:
             self.passw=passwd
@@ -51,21 +53,11 @@ class GeoslurpConnector():
         echo=debugging()
         dburl="postgresql+psycopg2://"+user+":"+self.passw+"@"+self.host+":"+str(port)+"/geoslurp"
         self.dbeng = create_engine(dburl, echo=echo)
-        # self.conn=self.dbeng.connect()
         self.Session = sessionmaker(bind=self.dbeng)
         self.mdata = MetaData(bind=self.dbeng)
 
         if not self.schemaexists('admin'):
             raise RuntimeError("The database does not have an admin scheme, is it properly initialized?")
-
-        if datamirror:
-            self.mirror=datamirror
-
-        if cache:
-            self.cache=cache
-        else:
-            #default when not specified
-            self.cache="/tmp/geoslurp_cache"
 
 
     def transsession(self):
@@ -133,6 +125,9 @@ class GeoslurpConnector():
             self.dbeng.execute('DROP TABLE IF EXISTS %s."%s";' % (schema.lower(), tablename.lower()))
         else:
             self.dbeng.execute('DROP TABLE IF EXISTS "%s";' % (tablename.lower()))
+    
+    def hasTable(self,tablename):
+        return self.dbeng.has_table(tablename)
 
     def getTable(self,tname,scheme="public"):
         mdata=MetaData(bind=self.dbeng,schema=scheme)
