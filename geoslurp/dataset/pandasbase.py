@@ -28,6 +28,9 @@ import shapely.wkb
 from sqlalchemy import func
 import numpy as np
 from collections import namedtuple
+from geoslurp.types.zarr import OutDBZarrType
+import xarray as xr
+
 
 geoinfo=namedtuple("geoinfo",["srid","geoname","geomtype","dims","rastname"],defaults=(4326,"geom","GEOMETRY",2,"rast",))
 
@@ -76,8 +79,7 @@ class PandasBase(DataSet):
                 np.int64:BIGINT,
                 float:Float,np.float64:Float,
                 "string": String, "integer": Integer, 
-                "floating":Float}
-        
+                "floating":Float,xr.DataArray:OutDBZarrType(zstore="".join([self.scheme,"_",self.name,".zarr"]))}
         cols = [Column('id', Integer, primary_key=True)]
         
         for name,col in df.iteritems():
@@ -95,7 +97,6 @@ class PandasBase(DataSet):
 
             else:
                 dtype=pd.api.types.infer_dtype(col,skipna=True)
-                # import pdb;pdb.set_trace()
                 if dtype == "mixed":
                     val=col.iloc[col.first_valid_index()]
                     if type(val) == np.ndarray:

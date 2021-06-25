@@ -157,11 +157,7 @@ class RasterBase(DataSet):
             emptyrast=func.ST_MakeEmptyRaster(nx,ny,ulx,uly,xres,yres,xskew,yskew,self.srid)
 
             #create an out of db rasterband
-            try:
-                #possibly we require a change of the path when we run postgresql in a container
-                outdbfile=uri.url.replace(self.conf["DataDir"],self.conf["InternalDataDir"])
-            except:
-                outdbfile=uri.url
+            outdbfile=self.conf.get_PG_path(uri.url)
 
             rastb=fraster.GetRasterBand(bandnr)
             nodata=rastb.GetNoDataValue()

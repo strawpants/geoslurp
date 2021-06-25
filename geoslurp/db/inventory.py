@@ -38,7 +38,7 @@ class InventTable(GSBase):
     version=Column(ARRAY(Integer,as_tuple=True))
     cache=Column(String)
     datadir=Column(String)
-    data=Column(MutableDict.as_mutable(JSON))
+    data=Column(MutableDict.as_mutable(JSONB))
         
 class Inventory:
     """Class which provides read/write access to the postgresql inventory table"""

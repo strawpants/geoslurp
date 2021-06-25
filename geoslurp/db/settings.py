@@ -256,10 +256,27 @@ class Settings():
         self.ses.commit()
     
     def getMirror(self,alias):
+        if "MirrorMaps" in self.userentry.conf:
+            if alias in self.userentry.conf["MirrorMaps"]:
+                return self.userentry.conf["MirrorMaps"][alias]
+        
         if "MirrorMaps" in self.defaultentry.conf:
-            return self.defaultentry.conf["MirrorMaps"][alias]
-        else:
+            if alias in self.defaultentry.conf["MirrorMaps"]:
+                return self.defaultentry.conf["MirrorMaps"][alias]
+
+        #for compatibility
+        if "DataDir" in self.defaultentry.conf:
             return self.defaultentry.conf["DataDir"]
+
+        #else assume it's a path and just return the input
+        return alias
+
+    def get_PG_path(url):
+        """ Possibly modifies a path so it becomes a path accessible by the Database host"""
+        if "pg_geoslurpmount" in self.defaultentry.conf:
+            if not url.startswith("/"):
+                url=os.path.join(self.defaultentry.conf["pg_geoslurpmount"],url)
+        return uri
 
     def setMirror(self,alias,mirror):
         self.defaultupdate({"MirrorMaps":{alias:mirror}})
@@ -314,7 +331,10 @@ class Settings():
     def getDataDir(self,scheme,dataset=None,subdirs=None):
         """Retrieves the data Directory, possibly appended with a dataset and subdirs"""
         #begin with setting the default
-        ddir=self.getMirror("default")
+        if self.mirrorMap:
+            ddir=self.mirrorMap.to_mirror
+        else:
+            ddir=self.getMirror("default")
         ddir=os.path.join(ddir,scheme)
 
         #Possibly we need to append a dataset directory 

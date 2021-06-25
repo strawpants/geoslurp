@@ -110,6 +110,7 @@ class DataSet(ABC):
     def dataDir(self,subdirs=None):
         """Returns the specialized data directory of this scheme and dataset
         The directory will be created if it does not exist"""
+        
         if self._dbinvent.datadir:
             return getCreateDir(self._dbinvent.datadir,self.conf.mirrorMap)
         #else try to retrieve the standard datadir from the configuration
