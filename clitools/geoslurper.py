@@ -40,7 +40,7 @@ def main(argv):
 
     # We need a point of contact to communicate with the database
     try:
-        DbConn=GeoslurpConnector(args.host,args.user,args.password,cache=args.cache)
+        DbConn=GeoslurpConnector(args.host,args.user,args.password,cache=args.cache,dataroot=args.dataroot)
     except Exception as e:
         print(e)
         print("Cannot connect to postgresql database, quitting")
@@ -80,7 +80,6 @@ def main(argv):
     
     # Initializes an object which holds the current settings
     conf=Settings(DbConn)
-
     if args.config:
         #register user settings in the database
         conf.update(args.config)
@@ -351,6 +350,10 @@ def addCommandLineArgs():
         parser.add_argument("--port",metavar="port",type=int, default=5432,
                             help='Select the port where the database is served')
 
+        parser.add_argument("--dataroot",metavar="DATAROOT",nargs="?",type=str, help="Specify the local root of the data directory. Defaults to ${HOME}/geoslurp_data")
+
+
+        parser.add_argument("--dbalias",metavar="DBALIAS",nargs="?",type=str, help="Specify the database alias to connect to. Each database alias can have a different host,port,user,password,dataroot,etc (see the localsettings file")
         # parser.add_argument("--usekeyring",action='store_true',
         #                     help='Set and get the system keyring to store the database password (alternatives are '
         #                          'using --password or the environment variable GEOSLURP_PGPASS')
@@ -363,7 +366,7 @@ def addCommandLineArgs():
                                  "to increase verbosity. The default prints errors only")
 
         parser.add_argument('--data-dir',type=str,metavar='DIR',nargs=1,
-                help="Specify (and register) a dataset specific data directory DIR")
+                help="Specify a dataset specific data directory DIR")
         
         # parser.add_argument('--cache-dir',type=str,metavar='DIR',nargs=1,
         #         help="Specify (and register) a dataset specific cache directory DIR")
@@ -375,8 +378,8 @@ def addCommandLineArgs():
         parser.add_argument("-d","--dset",metavar="PATTERN",nargs="?",type=str,
                 help='Select datasets or all datasets in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.DATASET)')
 
-        parser.add_argument("--mirror",metavar="MIRRORALIAS",nargs="?",type=str,
-                help="Use a different mirror for prepending to relative filename uris, the default uses the mirror registered as 'default' in the database. A mirror can be registered in the database  with --[admin-]config '{\"MirrorMaps\":{\"MIRRORALIAS\":\"MIRRORPATH\"}}'.")
+        # parser.add_argument("--mirror",metavar="MIRRORALIAS",nargs="?",type=str,
+                # help="Use a different mirror for prepending to relative filename uris, the default uses the mirror registered as 'default' in the database. A mirror can be registered in the database  with --[admin-]config '{\"MirrorMaps\":{\"MIRRORALIAS\":\"MIRRORPATH\"}}'.")
         
         parser.add_argument("-f","--func",metavar="PATTERN",nargs="?",type=str,
                 help='Select geoslurp database functions or all functions in a scheme (PATTERN is treated as a regular expression applied to the string SCHEME.FUNCTION)')

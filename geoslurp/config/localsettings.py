@@ -36,15 +36,16 @@ class settingsArgs:
     password=None
     port=5432
     """(int): database port to connect to"""
-    mirror=None
+    dataroot=None
 
     local_settings=None
     """(str): Alternative local settings file (instead of ${HOME}/.geoslurp_lastused.yaml)"""
 
     cache=None
     write_local_settings=False
+    dbalias=None
 
-    def __init__(self,host=None,user=None,usekeyring=False,password=None,port=None,mirror=None,cache=None):
+    def __init__(self,host=None,user=None,usekeyring=False,password=None,port=None,dataroot=None,cache=None,dbalias=None):
         if host:
             self.host=host
 
@@ -60,18 +61,24 @@ class settingsArgs:
         if port:
             self.port=port
         
-        if mirror:
-            self.mirror=mirror
-
+        if dataroot:
+            self.dataroot=dataroot
         if cache:
             self.cache=cache
+        if dbalias:
+            self.dbalias=dbalias
+
+defaultdbdict={"host":None,"user":"geoslurp","port":5432,"readonlyUser":"slurpy","cache":"/tmp/geoslurp_cache","dataroot":os.path.join(os.path.expanduser('~'),'geoslurp_data')}
 
 
-def readLocalSettings(args=settingsArgs(),readonlyuser=True):
+def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
     """Retrieves/updates last used settings from the local settings file .geoslurp_lastused.yaml"""
 
     #We need a deepcopy to properly separate input from output, and funny behavior
     argsout=copy.deepcopy(args)
+    
+    if dbalias:
+        args.dbalias=dbalias
 
     if argsout.local_settings:
         settingsFile=argsout.local_settings
@@ -83,19 +90,30 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True):
         with open(settingsFile, 'r') as fid:
             lastOpts=yaml.safe_load(fid)
     else:
+        if not args.dbalias:
+            args.dbalias="geoslurp"
         #set the defaults (note a host with None will try to connect to a local unix socket
-        lastOpts={"host":None,"user":"geoslurp","port":5432,"readOnlyUser":"slurpy","useKeyring":False,"cache":"/tmp/geoslurp_cache"}
+        lastOpts={"dbalias":args.dbalias,args.dbalias:defaultdbdict}
 
     isUpdated=False
+    if args.dbalias:
+        lastOpts["dbalias"]=argsout.dbalias
+        dbalias=args.dbalias
+    else:
+        dbalias=lastOpts["dbalias"]
+        args.dbalias=dbalias
+
+    if not args.dbalias in lastOpts:
+        lastOpts[dbalias]=defaultdbdict
 
     #update dict with provided options from argsout
     if argsout.host:
-        lastOpts["host"]=argsout.host
+        lastOpts[dbalias]["host"]=argsout.host
         isUpdated=True
     else:
         #take data from file options
         try:
-            argsout.host=lastOpts["host"]
+            argsout.host=lastOpts[dbalias]["host"]
         except KeyError:
             #this will be interpreted as a unix socket
             argsout.host=""
@@ -103,23 +121,23 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True):
             # sys.exit(1)
 
     if argsout.port:
-        lastOpts["port"]=argsout.port
+        lastOpts[dbalias]["port"]=argsout.port
         isUpdated=True
     else:
-        lastOpts["port"]=5432
+        lastOpts[dbalias]["port"]=5432
 
     if argsout.user:
         if readonlyuser:
-            lastOpts["readonlyUser"]=argsout.user
+            lastOpts[dbalias]["readonlyUser"]=argsout.user
         else:
-            lastOpts["user"]=argsout.user
+            lastOpts[dbalias]["user"]=argsout.user
         isUpdated=True
     else:
         try:
             if readonlyuser:
-                argsout.user=lastOpts["readonlyUser"]
+                argsout.user=lastOpts[dbalias]["readonlyUser"]
             else:
-                argsout.user=lastOpts["user"]
+                argsout.user=lastOpts[dbalias]["user"]
 
         except KeyError:
             print("--user option is needed for initialization",file=sys.stderr)
@@ -162,10 +180,10 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True):
                     argsout.password=os.environ["GEOSLURP_PGPASS"]
             except KeyError:
                 #check for password in the lastused file (needs to be manually entered)
-                if "passwd" in lastOpts and not readonlyuser:
-                    argsout.password=lastOpts["passwd"]
-                elif "readonlyPasswd" in lastOpts and readonlyuser:
-                    argsout.password=lastOpts["readonlyPasswd"]
+                if "passwd" in lastOpts[dbalias] and not readonlyuser:
+                    argsout.password=lastOpts[dbalias]["passwd"]
+                elif "readonlyPasswd" in lastOpt[dbalias] and readonlyuser:
+                    argsout.password=lastOpts[dbalias]["readonlyPasswd"]
                 else:
                     #prompt for password
                     argsout.password=getpass.getpass(prompt='Please enter password for %s: '%(argsout.user))
@@ -173,28 +191,28 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True):
                         print("Warning: user database password will be stored unencrypted in the geoslurp configuration file,"
                               "consider using a keyring")
                         if readonlyuser:
-                            lastOpts["readonlyPasswd"]=argsout.password
+                            lastOpts[dbalias]["readonlyPasswd"]=argsout.password
                         else:
-                            lastOpts["passwd"]=argsout.password
+                            lastOpts[dbalias]["passwd"]=argsout.password
     else:
         #update keyring
         if argsout.usekeyring and argsout.write_local_settings:
             keyring.set_password("geoslurp",argsout.user,argsout.password)
     
-    if argsout.mirror:
-        #register alias to which datamirror to use
-        lastOpts["mirror"]=argsout.mirror
+    if argsout.dataroot:
+        #register path to local data root
+        lastOpts[dbalias]["dataroot"]=argsout.dataroot
     else:
-        if "mirror" in lastOpts:
-            argsout.mirror=lastOpts["mirror"]
+        if "dataroot" in lastOpts[dbalias]:
+            argsout.dataroot=lastOpts[dbalias]["dataroot"]
         else:
-            argsout.mirror="default"
+            argsout.dataroot=os.path.join(os.path.expanduser('~'),'geoslurp_data')
     
     if argsout.cache:
-        lastOpts["cache"]=argsout.cache
+        lastOpts[dbalias]["cache"]=argsout.cache
     else:
-        if "cache"  in lastOpts:
-            argsout.cache=lastOpts["cache"]
+        if "cache"  in lastOpts[dbalias]:
+            argsout.cache=lastOpts[dbalias]["cache"]
         else:
             argsout.cache="/tmp/geoslurp_cache"
 

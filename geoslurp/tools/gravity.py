@@ -21,6 +21,7 @@ from sqlalchemy import Column,Integer,String, Boolean,Float
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 import gzip as gz
 from geoslurp.config.slurplogger import slurplogger
+from geoslurp.types import DataArrayJSONType
 import re
 from datetime import datetime
 from enum import Enum
@@ -47,6 +48,27 @@ class GravitySHTBase(object):
     type=Column(String)
     uri=Column(String)
     data=Column(JSONB)
+
+@as_declarative(metadata=MetaData(schema='gravity'))
+class GravitySHinDBTBase(object):
+    @declared_attr
+    def __tablename__(cls):
+        #strip of the 'Table' from the class name
+        return cls.__name__[:-5].lower()
+    id = Column(Integer, primary_key=True)
+    lastupdate=Column(TIMESTAMP)
+    tstart=Column(TIMESTAMP,index=True)
+    tend=Column(TIMESTAMP,index=True)
+    time=Column(TIMESTAMP,index=True)
+    nmax=Column(Integer)
+    omax=Column(Integer)
+    gm=Column(Float)
+    re=Column(Float)
+    tidesystem=Column(String)
+    origin=Column(String)
+    format=Column(String)
+    type=Column(String)
+    data=Column(DataArrayJSONType)
 
 def icgemMetaExtractor(uri):
     """Extract meta information from a gzipped icgem file"""

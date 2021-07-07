@@ -29,13 +29,13 @@ from geoslurp.db.connectorbase import GeoslurpConnectorBase
 
 class GeoslurpConnector(GeoslurpConnectorBase):
     """Holds a connector to a geoslurp database"""
-    def __init__(self, host, user, passwd=None, port=5432,datamirror=None,cache=None):
+    def __init__(self, host, user, passwd=None, port=5432,dataroot=None,cache=None):
         """
         establishes a database engine whoch provides the base
         for creating sessions (ORM) or connections (SQL expressions)
         :param dburl: url of the database e.g.: postgresql+psycopg2://geoslurp:password@host/geoslurp
         """
-        super().__init__(datamirror=datamirror,cache=cache)
+        super().__init__(dataroot=dataroot,cache=cache)
 
 
         self.user=user
@@ -129,9 +129,12 @@ class GeoslurpConnector(GeoslurpConnectorBase):
     def hasTable(self,tablename):
         return self.dbeng.has_table(tablename)
 
-    def getTable(self,tname,scheme="public"):
+    def getTable(self,tname,scheme="public",customcolumns=None):
         mdata=MetaData(bind=self.dbeng,schema=scheme)
-        return Table(tname, mdata, autoload=True, autoload_with=self.dbeng)
+        if customcolumns:
+            return Table(tname, mdata, *customcolumns,autoload=True, autoload_with=self.dbeng)
+        else:
+            return Table(tname, mdata, autoload=True, autoload_with=self.dbeng)
 
     def getFunc(self,fname,scheme="public"):
         """returns a database function based up string names"""
@@ -169,6 +172,4 @@ class GeoslurpConnector(GeoslurpConnectorBase):
         tbl=Table('inventory', mdata, autoload=True, autoload_with=self.dbeng)
         qry=select([tbl]).where(and_((tbl.c.scheme == scheme) & (tbl.c.dataset == tname)))
         return self.dbeng.execute(qry).first()
-
-
 

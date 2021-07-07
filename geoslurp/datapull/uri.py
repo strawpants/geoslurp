@@ -150,12 +150,13 @@ class UriBase():
     lastmod=None
     auth=None #link to a certain authentification alias
     subdirs='' #create these subdrectories when downloading the file
-    
-    def __init__(self,url,lastmod=None,auth=None,subdirs=''):
+    headers=None 
+    def __init__(self,url,lastmod=None,auth=None,subdirs='',headers=None):
         self.url=url
         self.lastmod=lastmod
         self.auth=auth
         self.subdirs=subdirs
+        self.headers=headers
 
     def updateModTime(self):
         """Tries to retrieve the last modification time of a file
@@ -203,9 +204,9 @@ class UriBase():
         slurplog.info("Downloading %s"%(uri.url))
         try:
             if self.lastmod:
-                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict)
+                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers)
             else:
-                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict)
+                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers)
         except pycurl.error as pyexc:
             slurplog.info("Download failed, skipping %s"%(uri.url))
             if not continueonError:

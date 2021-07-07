@@ -31,36 +31,11 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 import getpass
 
-class MirrorMap:
-    def __init__(self,from_mirror,to_mirror):
-        if from_mirror.endswith("/"):
-            self.from_mirror=from_mirror
-        else:
-            self.from_mirror=from_mirror+"/"
-        
-        if to_mirror.endswith("/"):
-            self.to_mirror=to_mirror
-        else:
-            self.to_mirror=to_mirror+"/"
-            
-    def apply(self,url):
-        return url.replace(self.from_mirror,self.to_mirror)
-    
-    def reverseApply(self,url):
-        return url.replace(self.to_mirror,self.from_mirror)
-    
-    def strip(self,url):
-        return url.replace(self.from_mirror,"")
-
-def getCreateDir(returndir,mirrormapper=None):
-    """creates a directory when not existent and return it
-    When a mirrormapper is specified the base is converted"""
+def getCreateDir(returndir):
+    """creates a directory when not existent and return it"""
 
     #possibly expand environment variables in the string
     returnex=os.path.expandvars(returndir)
-
-    if mirrormapper:
-        returnex=mirrormapper.apply(returnex)
 
     if not os.path.exists(returnex):
         os.makedirs(returnex)
@@ -108,7 +83,7 @@ class SettingsTable(GSBase):
 class Settings():
     """Read and write default and user specific settings to and from the database"""
     table=SettingsTable
-    mirrorMap=None
+    pgmount=None
     def __init__(self,dbconn):
         self.db=dbconn
         self.ses=self.db.Session()
@@ -125,7 +100,7 @@ class Settings():
             self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
         except:
             #create a new default entry
-            self.defaultentry=SettingsTable(user='default',conf={"CacheDir":"/tmp","MirrorMaps":{"default":"${HOME}/geoslurpdata"}})
+            self.defaultentry=SettingsTable(user='default',conf={})
             self.ses.add(self.defaultentry)
             self.ses.commit()
             #also create a view to the default which may be read by the geobrowse group
@@ -146,19 +121,11 @@ class Settings():
             self.ses.add(self.userentry)
             self.ses.commit()
 
-        self.decryptAuth()
+        if "pg_geoslurpmount" in self.defaultentry.conf:
+            #retrieve the dataroot to which the postgresql instance itself has access (e.g. for out-db-raster)
+            self.pgmount=self.defaultentry.conf["pg_geoslurpmount"]
 
-        if dbconn.mirror:
-            if dbconn.mirror != "default":
-                #we need to apply a mapping of the directory names for this instance
-                self.mirrorMap=MirrorMap(self.getMirror(dbconn.mirror),self.getMirror("default"))
-        elif "MirrorMaps" in self.defaultentry.conf:
-            #automatically try to figure out whether a mapping is needed by checking the existence of directories
-            for alias,pth in self.defaultentry.conf["MirrorMaps"].items():
-                if os.path.isdir(pth):
-                    self.mirrorMap=MirrorMap(self.getMirror("default"),pth)
-                    break
-        # self.loaduserplugins()
+        self.decryptAuth()
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
     def __getitem__(self, key):
@@ -254,32 +221,30 @@ class Settings():
 
 
         self.ses.commit()
-    
-    def getMirror(self,alias):
-        if "MirrorMaps" in self.userentry.conf:
-            if alias in self.userentry.conf["MirrorMaps"]:
-                return self.userentry.conf["MirrorMaps"][alias]
-        
-        if "MirrorMaps" in self.defaultentry.conf:
-            if alias in self.defaultentry.conf["MirrorMaps"]:
-                return self.defaultentry.conf["MirrorMaps"][alias]
-
-        #for compatibility
-        if "DataDir" in self.defaultentry.conf:
-            return self.defaultentry.conf["DataDir"]
-
-        #else assume it's a path and just return the input
-        return alias
 
     def get_PG_path(url):
-        """ Possibly modifies a path so it becomes a path accessible by the Database host"""
-        if "pg_geoslurpmount" in self.defaultentry.conf:
+        """ Possibly modifies a path so it becomes a path accessible by the Database host itself"""
+        if self.pgmount:
             if not url.startswith("/"):
-                url=os.path.join(self.defaultentry.conf["pg_geoslurpmount"],url)
-        return uri
+                #just prepend to a relative path
+                url=os.path.join(self.pgmount,url)
+            else:
+                #try modifying the path
+                url=url.replace(self.db.localdataroot,self.pgmount)
+        return url
 
-    def setMirror(self,alias,mirror):
-        self.defaultupdate({"MirrorMaps":{alias:mirror}})
+    def get_local_path(url):
+        """possibly prepend the localdataroot root to the path"""
+
+        if not url.startswith("/"):
+            url=os.path.join(self.db.localdataroot,url)
+
+        return url
+    
+    def strip_path(self,url,rootpath=None):
+        if not rootpath:
+            rootpath=self.db
+        return url.replace(self.localdataroot,"")
 
     def encryptAuth(self):
         """Encrypt the authentification credentials to store in the database"""
@@ -331,10 +296,8 @@ class Settings():
     def getDataDir(self,scheme,dataset=None,subdirs=None):
         """Retrieves the data Directory, possibly appended with a dataset and subdirs"""
         #begin with setting the default
-        if self.mirrorMap:
-            ddir=self.mirrorMap.to_mirror
-        else:
-            ddir=self.getMirror("default")
+        ddir=self.db.localdataroot
+
         ddir=os.path.join(ddir,scheme)
 
         #Possibly we need to append a dataset directory 
@@ -345,20 +308,12 @@ class Settings():
         if subdirs:
             ddir=os.path.join(ddir,subdirs)
 
-        #NOTE: this posssibly applies a mapping of the root part of the directory 
-        return getCreateDir(ddir,self.mirrorMap)
+        return getCreateDir(ddir)
 
     def getCacheDir(self,scheme,dataset=None,subdirs=None):
         """Obtain and create a cache directory"""
         #starting point
         ddir=os.path.join(self.db.cache,scheme)
-
-        # if "CacheDir" in self.userentry.conf:
-        #     ddir=self.userentry.conf["CacheDir"]
-        # else:
-        #     ddir=self.defaultentry.conf["CacheDir"]
-        #
-        # ddir=os.path.join(ddir,scheme)
 
         #POssibly we need to append a dataset directory 
         if dataset:

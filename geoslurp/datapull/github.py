@@ -55,9 +55,11 @@ class Crawler(CrawlerBase):
 
     def getSubTree(self,url):
         if self.token:
-            #add the api token to the end
-            url+="?access_token=%s"%(self.token)
-        return json.loads(http(url).buffer().getvalue())
+            #add the api token to the header
+            headers=[f"Authorization: token {self.token}"]
+        else:
+            headers=None
+        return json.loads(http(url,headers=headers).buffer().getvalue())
 
     def uris(self,depth=10):
         """Construct Uris from tree nodes"""
@@ -83,10 +85,8 @@ class Crawler(CrawlerBase):
         if not rootelem:
             rootelem=self.getSubTree(url=self.rooturl)
 
-        # import pdb;pdb.set_trace() 
         if not dirpath:
             dirpath=self.repo
-
         for treelem in rootelem['tree']:
 
             if self.filter.isValid(treelem):

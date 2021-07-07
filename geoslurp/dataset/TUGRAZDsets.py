@@ -115,7 +115,7 @@ class TUGRAZGRACEL2Base(DataSet):
         #initialize postgreslq table
         GravitySHTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
         if not self._dbinvent.datadir:
-            self._dbinvent.datadir=getCreateDir(os.path.join(self.conf.getDataDir(self.scheme),self.release,self.subdirs),self.conf.mirrorMap)
+            self._dbinvent.datadir=getCreateDir(os.path.join(self.conf.getDataDir(self.scheme),self.release,self.subdirs))
 
     def pull(self):
         url=os.path.join("ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/",self.release,self.subdirs)

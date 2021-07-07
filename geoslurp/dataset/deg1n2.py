@@ -30,8 +30,8 @@ import tarfile
 import re
 from copy import deepcopy
 from geoslurp.config.catalogue import geoslurpCatalogue
-from geoslurp.tools.gravity import GravitySHTBase,Trig,JSONSHArchive
-
+from geoslurp.tools.gravity import GravitySHTBase,GravitySHinDBTBase,Trig,JSONSHArchive
+import xarray as xr
 
 scheme="gravity"
 
@@ -106,7 +106,7 @@ class geocenter_GRCRL06_TN13(DataSet):
     rooturl="https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/docs/"
     # fout="TN-13_GEOC_CSR_RL06.txt"
     def __init__(self,dbconn):
-        self.table=type(self.__class__.__name__.lower().replace('-',"_")+"Table", (GravitySHTBase,), {})
+        self.table=type(self.__class__.__name__.lower().replace('-',"_")+"Table", (GravitySHinDBTBase,), {})
         super().__init__(dbconn)
     
     def pull(self):
@@ -124,18 +124,33 @@ class geocenter_GRCRL06_TN13(DataSet):
             for ln in fid:
                 if re.search("end of header",ln):
                     break
+            
+            nv=[]
+            mv=[]
+            tv=[]
+            cnmv=[]
+            sigcnmv=[]
             #loop over entry lines 
-            shar=JSONSHArchive(1)
             for ln in fid:
                 
                 tp,n,m,cnm,snm,sigcnm,sigsnm,ts,te=ln.split()
+                
+                #Append cosine coefficients
                 n=int(n)
                 m=int(m)
-                shar["cnm"][shar.idx((n,m,Trig.c))]=float(cnm)
-                shar["sigcnm"][shar.idx((n,m,Trig.c))]=float(sigcnm)
+                nv.append(n)
+                mv.append(m)
+                tv.append(0)
+                cnmv.append(float(cnm))
+                sigcnmv.append(float(sigcnm))
+
+                #append sine coefficients
                 if m > 0:
-                    shar["cnm"][shar.idx((n,m,Trig.s))]=float(snm)
-                    shar["sigcnm"][shar.idx((n,m,Trig.s))]=float(sigsnm)
+                    nv.append(n)
+                    mv.append(m)
+                    tv.append(1)
+                    cnmv.append(float(snm))
+                    sigcnmv.append(float(sigsnm))
 
                 if m == 1: 
                     #register the accumulated entry
@@ -144,10 +159,15 @@ class geocenter_GRCRL06_TN13(DataSet):
                     #snap the central epoch to the 15th of the month
                     tcent=datetime(tstart.year,tstart.month,15)
                 
-                    meta={"type":"GSM","time":tcent,"tstart":tstart,"tend":tend,"lastupdate":lastupdate,"nmax":1,"omax":1,"origin":"CF","format":"JSONB","uri":"self:data","gm":0.3986004415e+15,"re":0.6378136460e+07}
-                    meta["data"]=deepcopy(shar.dict)
-
+                    meta={"type":"GSM","time":tcent,"tstart":tstart,"tend":tend,"lastupdate":lastupdate,"nmax":1,"omax":1,"origin":"CF","format":"JSONB","gm":0.3986004415e+15,"re":0.6378136460e+07}
+                    meta["data"]=xr.Dataset(data_vars=dict(cnm=(["shg"],cnmv),sigcnm=(["shg"],sigcnmv)),coords=dict(n=(["shg"],nv),m=(["shg"],mv),t=(["shg"],tv)))
+                    
                     self.addEntry(meta)
+                    nv=[]
+                    mv=[]
+                    tv=[]
+                    cnmv=[]
+                    sigcnmv=[]
 
             self.updateInvent()
         

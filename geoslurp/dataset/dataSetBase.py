@@ -102,6 +102,14 @@ class DataSet(ABC):
         if updateTime:
             self._dbinvent.lastupdate=datetime.now()
         self._dbinvent.updatefreq=self.updatefreq
+        
+        #see if there are custom columns defined inthe table
+        for col in self.table.__table__.columns:
+            if re.search('geoslurp\.types\.',str(col.type.__class__)):
+                if not "customcolumns" in self._dbinvent.data:
+                    self._dbinvent.data["customcolumns"]={}
+                self._dbinvent.data["customcolumns"][col.name]={"type":col.type.__repr__(),"class":str(col.type.__class__)}
+
         self._ses.commit()
 
     def info(self):
@@ -112,7 +120,7 @@ class DataSet(ABC):
         The directory will be created if it does not exist"""
         
         if self._dbinvent.datadir:
-            return getCreateDir(self._dbinvent.datadir,self.conf.mirrorMap)
+            return getCreateDir(self._dbinvent.datadir)
         #else try to retrieve the standard datadir from the configuration
         return self.conf.getDataDir(self.scheme, dataset=self.name,subdirs=subdirs)
     
@@ -263,7 +271,7 @@ class DataSet(ABC):
 
     def addEntry(self,metadict):
         if self.stripuri and "uri" in metadict:
-            metadict["uri"]=self.conf.mirrorMap.strip(metadict["uri"])
+            metadict["uri"]=self.conf.strip_path(metadict["uri"])
 
         entry=self.table(**metadict)
         
@@ -291,7 +299,7 @@ class DataSet(ABC):
         if self.table == None:
             if cols == None:
                 raise RuntimeError("Creating a dynamic table requires the specification of columns")
-            self.table=Table(self.name, self.db.mdata, *cols, schema=self.scheme)
+            self.table=Table(self.name, self.db.mdata, *cols, schema=self.scheme,extend_existing=True)
             self.table.create(checkfirst=True)
             tableMap=tableMapFactory(self.name,self.table)
             self.table=tableMap
@@ -317,4 +325,12 @@ class DataSet(ABC):
             raise RuntimeError("Registered database has a higher version number than supported")
 
 
+    # def loadTable(self):
+        # """Reflects a dataset table from the database"""
+        # if self.table:
+            # slurplogger().warning("Reflecting and overwriting existing database table with data from server")
 
+
+        # if custumcolumns in self._dbinvent.data:
+            # #override columns with customn types
+            # cols=

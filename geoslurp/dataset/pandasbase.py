@@ -30,7 +30,7 @@ import numpy as np
 from collections import namedtuple
 from geoslurp.types.zarr import OutDBZarrType
 import xarray as xr
-
+import os
 
 geoinfo=namedtuple("geoinfo",["srid","geoname","geomtype","dims","rastname"],defaults=(4326,"geom","GEOMETRY",2,"rast",))
 
@@ -70,6 +70,7 @@ class PandasBase(DataSet):
 
     def modify_df(self,df):
         """A derived type can overload this to make modifications to the dataframe before registering it in the database"""
+
         return df
     
     def columnsFromDataframe(self,df):
@@ -79,7 +80,7 @@ class PandasBase(DataSet):
                 np.int64:BIGINT,
                 float:Float,np.float64:Float,
                 "string": String, "integer": Integer, 
-                "floating":Float,xr.DataArray:OutDBZarrType(zstore="".join([self.scheme,"_",self.name,".zarr"]))}
+                "floating":Float,xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName())}
         cols = [Column('id', Integer, primary_key=True)]
         
         for name,col in df.iteritems():
@@ -98,7 +99,7 @@ class PandasBase(DataSet):
             else:
                 dtype=pd.api.types.infer_dtype(col,skipna=True)
                 if dtype == "mixed":
-                    val=col.iloc[col.first_valid_index()]
+                    val=col.loc[col.first_valid_index()]
                     if type(val) == np.ndarray:
                         #wrap the type in an array
                         cType=ARRAY(Map[val.dtype],dimensions=val.ndim)
@@ -106,7 +107,6 @@ class PandasBase(DataSet):
                         cType=Map[type(val)]
                 else:
                     cType=Map[dtype]
-
 
             cols.append(Column(name,cType))
         return cols
@@ -166,3 +166,7 @@ class PandasBase(DataSet):
     def pull(self):
         """overload when needed"""
         pass
+
+
+    def outdbArchiveName(self):
+        return os.path.join(self.dataDir(),self.name+"_data.zarr")

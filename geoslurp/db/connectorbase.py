@@ -23,14 +23,15 @@ def raiseNotImpl():
 class GeoslurpConnectorBase():
     """Holds the base class for a connector to a geoslurp database"""
     cache=None
-    mirror=None
-    def __init__(self,cache=None,datamirror=None):
+    localdataroot=None
+    def __init__(self,cache=None,dataroot=None):
         """
         Sets the variables which all connectors have in common"""
 
-        if datamirror:
-            self.mirror=datamirror
-
+        if dataroot:
+            self.localdataroot=dataroot
+        else:
+            self.localdataroot=os.path.join(os.path.expanduser('~'),'geoslurp_data')
         if cache:
             self.cache=cache
         else:

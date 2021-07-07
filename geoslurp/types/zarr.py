@@ -16,21 +16,52 @@
 # Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2021
 
 
-from sqlalchemy.types import UserDefinedType, String
+from sqlalchemy.types import UserDefinedType
+import xarray as xr
+from psycopg2.extras import Json
+from geoslurp.tools.xarray import XarGeoslurp
+import os
 
 class OutDBZarrType(UserDefinedType):
     """Converts a column of xarray Dataarrays to an out-of-db data representation"""
-    def __init__(self,zstore=None):
-        self.zstore=zstore
+    def __init__(self,defaultZstore=None):
+        self.defaultZstore=defaultZstore
 
     def get_col_spec(self, **kw):
-        return "TEXT"
+        return "JSONB"
 
     def bind_processor(self, dialect):
         def process(value):
             """Stores an xarray DataArray to a zarr-archive and return a JSON with meta info"""
+            if type(value) != xr.DataArray:
+                raise TypeError(f"Expected a xarrayDataArray got {type(value)}")
+            
+            if value.gslrp.storage:
+                #possibly overrule storage location (could be different per dataarray)
+                storage=value.gslrp.storage
+            else:
+                storage=self.defaultZstore
+            
+            #find out whether this dataset needs to be appended to an existing
+            append_dim=value.gslrp.append_dim
+            if not append_dim:
+                #Expand a dimension and add a coordinate for lookup
+                append_dim="gslrp"
+                value=value.expand_dims({append_dim:1})
+            value=value.to_dataset()
 
-            return self.zstore
+            if os.path.exists(storage):
+                #append
+                zstore=xr.open_zarr(storage)
+                iappend=zstore.sizes[append_dim]+1
+                value.to_zarr(storage,mode='a',append_dim=append_dim)
+            else:
+                #start with a new file
+                iappend=1
+                value.to_zarr(storage,mode='w')
+            
+            metadict=Json({"uri":storage,"slice":{append_dim:iappend}})
+            return metadict
         return process
 
     def result_processor(self, dialect, coltype):
