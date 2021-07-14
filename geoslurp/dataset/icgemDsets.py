@@ -35,6 +35,7 @@ class ICGEM_static(DataSet):
     """Manages the static gravity fields which are hosted at http://icgem.gfz-potsdam.de/tom_longtime"""
     table=type("ICGEM_staticTable",(GravitySHTBase,), {})
     scheme='gravity'
+    stripuri=True
     def __init__(self, dbconn):
         super().__init__(dbconn)
         #initialize postgreslq table

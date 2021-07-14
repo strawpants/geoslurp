@@ -245,6 +245,69 @@ class geocenter_RIES_CFCM(DataSet):
 
 geoslurpCatalogue.addDataset(geocenter_RIES_CFCM)
 
+class  TN14_SLR_GSFC(DataSet):
+    scheme=scheme
+    rooturl="ftp://isdcftp.gfz-potsdam.de/grace-fo/DOCUMENTS/TECHNICAL_NOTES/"
+    fout="TN-14_C30_C20_SLR_GSFC.txt"
+    def __init__(self,dbconn):
+        self.table=type(self.__class__.__name__.lower().replace('-',"_")+"Table", (GravitySHinDBTBase,), {})
+        super().__init__(dbconn)
+    
+    def pull(self):
+        """Pulls the C20 Technical note 14"""
+        uri=ftp(self.rooturl+self.fout,lastmod=datetime(2019,12,1)).download(self.cacheDir(),check=True)
+
+
+    def register(self):
+        self.truncateTable()
+        #set general settings
+        self._dbinvent.data={"citation":"GRACE technical note 14"}
+        lastupdate=datetime.now()
+        mjd00=datetime(1858,11,17)
+        with open(os.path.join(self.cacheDir(),self.fout),'r') as fid:
+            #skip header
+            for ln in fid:
+                if re.search("^Product:",ln):
+                    break
+            
+            #loop over entry lines 
+            for ln in fid:
+                
+                mjd0,decy0,c20,dc20,sigc20,c30,dc30,sigc30,mjd1,decyr1=ln.split()
+                
+                nv=[]
+                mv=[]
+                tv=[]
+                cnmv=[]
+                sigcnmv=[]
+                
+                #Append c20 coefficients
+                nv.append(2)
+                mv.append(0)
+                tv.append(0)
+                cnmv.append(float(c20))
+                sigcnmv.append(float(sigc20))
+                if c30 != "NaN":
+                    nv.append(3)
+                    mv.append(0)
+                    tv.append(0)
+                    cnmv.append(float(c30))
+                    sigcnmv.append(float(sigc30))
+
+                #register the accumulated entry
+                tstart=mjd00+timedelta(days=float(mjd0))
+                tend=mjd00+timedelta(days=float(mjd1))
+                #snap the central epoch to the 15th of the month
+                tcent=datetime(tstart.year,tstart.month,15)
+            
+                meta={"type":"GSM","time":tcent,"tstart":tstart,"tend":tend,"lastupdate":lastupdate,"nmax":1,"omax":1,"format":"JSONB","gm":0.3986004415e+15,"re":0.6378136460e+07}
+                meta["data"]=xr.Dataset(data_vars=dict(cnm=(["shg"],cnmv),sigcnm=(["shg"],sigcnmv)),coords=dict(n=(["shg"],nv),m=(["shg"],mv),t=(["shg"],tv)))
+                
+                self.addEntry(meta)
+            self.updateInvent()
+
+
+geoslurpCatalogue.addDataset(TN14_SLR_GSFC)
 # class Sun2017Comb(LowdegreeSource):
     # def __init__(self,direc,uri=None):
         # if not uri:

@@ -221,8 +221,8 @@ class Settings():
 
 
         self.ses.commit()
-
-    def get_PG_path(url):
+    
+    def get_PG_path(self,url):
         """ Possibly modifies a path so it becomes a path accessible by the Database host itself"""
         if self.pgmount:
             if not url.startswith("/"):
@@ -232,19 +232,17 @@ class Settings():
                 #try modifying the path
                 url=url.replace(self.db.localdataroot,self.pgmount)
         return url
-
-    def get_local_path(url):
-        """possibly prepend the localdataroot root to the path"""
+    
+    def get_local_path(self,url):
+        """possibly prepend the localdataroot root to the path or"""
 
         if not url.startswith("/"):
             url=os.path.join(self.db.localdataroot,url)
 
         return url
     
-    def strip_path(self,url,rootpath=None):
-        if not rootpath:
-            rootpath=self.db
-        return url.replace(self.localdataroot,"")
+    def generalize_path(self,url):
+        return url.replace(self.db.localdataroot,"${LOCALDATAROOT}")
 
     def encryptAuth(self):
         """Encrypt the authentification credentials to store in the database"""

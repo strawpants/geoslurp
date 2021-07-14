@@ -9,14 +9,12 @@ class readfile(DBFunc):
     outargs="bytea"
     pgbody="import os\n" \
         "import re\n" \
-        "rlpath=os.path.realpath(uri)\n" \
+        "pgroot=plpy.execute(\"select conf->>'pg_geoslurpmount' as pgroot from admin.settings_default\")[0][\"pgroot\"]\n" \
+        "rlpath=os.path.realpath(uri.replace('${LOCALDATAROOT}/',pgroot))\n" \
         "allowedp=plpy.execute(\"select jsonb_array_elements_text(data->'allowedpaths') as apath from admin.inventory where pgfunc = 'readfile'\",1)\n" \
         "for pth in allowedp[0][\"apath\"]:\n" \
         "   plpy.info(pth+ \" \"+uri)\n" \
         "   if re.search(\"^\"+pth,rlpath):\n" \
-        "       if os.path.exists(\"/geoslurp_data\"):\n" \
-        "           mirrmap=plpy.execute(\"select conf->'MirrorMaps'->>'docker' as to,conf->'MirrorMaps'->>'default' as from from admin.settings_default\",1)[0]\n" \
-        "           rlpath=rlpath.replace(mirrmap[\"from\"],mirrmap[\"to\"])\n" \
         "       with open(rlpath,'rb') as fid:\n" \
         "           return fid.read()\n" \
         "raise plpy.Error(\"readfile() is not allowed to read files from this path\")"

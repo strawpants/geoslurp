@@ -271,7 +271,7 @@ class DataSet(ABC):
 
     def addEntry(self,metadict):
         if self.stripuri and "uri" in metadict:
-            metadict["uri"]=self.conf.strip_path(metadict["uri"])
+            metadict["uri"]=self.conf.generalize_path(metadict["uri"])
 
         entry=self.table(**metadict)
         

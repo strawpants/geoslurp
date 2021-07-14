@@ -103,6 +103,7 @@ class GRACEL2Base(DataSet):
     center=None
     updated=None
     scheme=scheme
+    stripuri=True
     def __init__(self,dbconn):
         super().__init__(dbconn)
         #initialize postgreslq table
