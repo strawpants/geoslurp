@@ -1,59 +1,59 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.datapull.uri &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,13 +104,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,10 +119,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -148,8 +153,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -180,13 +183,13 @@
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">pycurl</span><span class="o">,</span><span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">io</span>  <span class="k">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplog</span>
+<span class="kn">from</span> <span class="nn">io</span>  <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplog</span>
 <span class="kn">import</span> <span class="nn">gzip</span> <span class="k">as</span> <span class="nn">gz</span>
-
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlencode</span>
 
 <div class="viewcode-block" id="findFiles"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.findFiles">[docs]</a><span class="k">def</span> <span class="nf">findFiles</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span><span class="n">pattern</span><span class="p">,</span><span class="n">since</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generator to recursively search adirecctor (returns a generator)&quot;&quot;&quot;</span>
@@ -221,16 +224,19 @@
         <span class="n">mtime</span><span class="o">=</span><span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">modTime</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())</span>
         <span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">file</span><span class="p">,(</span><span class="n">mtime</span><span class="p">,</span><span class="n">mtime</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="curlDownload"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.curlDownload">[docs]</a><span class="k">def</span> <span class="nf">curlDownload</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">fileorfid</span><span class="p">,</span><span class="n">mtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="curlDownload"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.curlDownload">[docs]</a><span class="k">def</span> <span class="nf">curlDownload</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">fileorfid</span><span class="p">,</span><span class="n">mtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">restdict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">customRequest</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">upfid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download  the content of an url to an open file or buffer using pycurl</span>
 <span class="sd">    :param url: url to download from</span>
 <span class="sd">    :param fileorfid: filename or open file or buffer</span>
-<span class="sd">    :param mtimee: explicitly set the modification time to this (usefull when modification times are not supported</span>
+<span class="sd">    :param mtime: explicitly set the modification time to this (usefull when modification times are not supported</span>
 <span class="sd">    b the server)</span>
 <span class="sd">    :param gzip: additionally gzip the file on disk (note this routine does not append \*.gz to the file name)</span>
 <span class="sd">    :param gunzip: automatically gunzip the downloaded file</span>
 <span class="sd">    :param auth: supply authentification data (user and passw)</span>
+<span class="sd">    :param restdic: a set of (REST) API name-value pairs to be added to the url (provide as a dict)</span>
+<span class="sd">    :param headers (array of header values): additionally set header elements</span>
+<span class="sd">    :param customRequest: set a custoi request (e.g. for WEBDAV servers)</span>
 <span class="sd">    :return: modification time of remote file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -252,12 +258,28 @@
         <span class="n">fid</span><span class="o">=</span><span class="n">fileorfid</span>
 
     <span class="n">crl</span><span class="o">=</span><span class="n">pycurl</span><span class="o">.</span><span class="n">Curl</span><span class="p">()</span>
+    <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">USERAGENT</span><span class="p">,</span><span class="s2">&quot;curl/7.72.0&quot;</span><span class="p">)</span>
     <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">URL</span><span class="p">,</span><span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;%20&#39;</span><span class="p">))</span>
     <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">FOLLOWLOCATION</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">WRITEDATA</span><span class="p">,</span><span class="n">fid</span><span class="p">)</span>
+     
+    <span class="k">if</span> <span class="n">customRequest</span><span class="p">:</span>
+        <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">CUSTOMREQUEST</span><span class="p">,</span><span class="n">customRequest</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">headers</span><span class="p">:</span>
+        <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">HTTPHEADER</span><span class="p">,</span><span class="n">headers</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">auth</span><span class="p">:</span>
         <span class="c1">#use authentification</span>
         <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">USERPWD</span><span class="p">,</span><span class="n">auth</span><span class="o">.</span><span class="n">user</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="n">auth</span><span class="o">.</span><span class="n">passw</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">restdict</span><span class="p">:</span>
+        <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">crl</span><span class="o">.</span><span class="n">POSTFIELDS</span><span class="p">,</span><span class="n">urlencode</span><span class="p">(</span><span class="n">restdict</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">upfid</span><span class="p">:</span>
+        <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">UPLOAD</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">crl</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">READDATA</span><span class="p">,</span><span class="n">upfid</span><span class="p">)</span>
+
     <span class="k">try</span><span class="p">:</span>
         <span class="n">crl</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">pyexc</span><span class="p">:</span>
@@ -295,12 +317,13 @@
     <span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">auth</span><span class="o">=</span><span class="kc">None</span> <span class="c1">#link to a certain authentification alias</span>
     <span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span> <span class="c1">#create these subdrectories when downloading the file</span>
-    <span class="n">basedir</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">basedir</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">headers</span><span class="o">=</span><span class="kc">None</span> 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">=</span><span class="n">url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">lastmod</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="o">=</span><span class="n">auth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="o">=</span><span class="n">subdirs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">=</span><span class="n">headers</span>
 
 <div class="viewcode-block" id="UriBase.updateModTime"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.updateModTime">[docs]</a>    <span class="k">def</span> <span class="nf">updateModTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tries to retrieve the last modification time of a file</span>
@@ -314,7 +337,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">timeFromStamp</span><span class="p">(</span><span class="n">crl</span><span class="o">.</span><span class="n">getinfo</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">INFO_FILETIME</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span></div>
 
-<div class="viewcode-block" id="UriBase.download"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">continueonError</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UriBase.download"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriBase.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">direc</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">continueonError</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">restdict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Download file into directory and possibly check the modification time</span>
 <span class="sd">        :param check : check whether the file needs updating</span>
 <span class="sd">        :param gzip: additionally gzips the file (adds .gz to file name)</span>
@@ -348,9 +371,9 @@
         <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Downloading </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="p">:</span>
-                <span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="n">gunzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+                <span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="n">gunzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span><span class="n">restdict</span><span class="o">=</span><span class="n">restdict</span><span class="p">,</span><span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="n">gunzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lastmod</span><span class="o">=</span><span class="n">curlDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">gzip</span><span class="o">=</span><span class="n">gzip</span><span class="p">,</span><span class="n">gunzip</span><span class="o">=</span><span class="n">gunzip</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span><span class="n">restdict</span><span class="o">=</span><span class="n">restdict</span><span class="p">,</span><span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">pyexc</span><span class="p">:</span>
             <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Download failed, skipping </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">continueonError</span><span class="p">:</span>
@@ -367,7 +390,7 @@
         <span class="k">return</span> <span class="n">buf</span></div></div>
 
 <div class="viewcode-block" id="UriFile"><a class="viewcode-back" href="../../../reference/geoslurp.datapull.html#geoslurp.datapull.uri.UriFile">[docs]</a><span class="k">class</span> <span class="nc">UriFile</span><span class="p">(</span><span class="n">UriBase</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">lastmod</span><span class="p">)</span>
             <span class="c1">#Lets set lastmod straight away if the file exists</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">lastmod</span><span class="p">:</span>
@@ -385,25 +408,28 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -412,37 +438,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

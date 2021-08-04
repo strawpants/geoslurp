@@ -1,59 +1,59 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.db.connector &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,13 +104,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,10 +119,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -148,8 +153,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -179,27 +182,29 @@
 
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">create_engine</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">,</span><span class="n">and_</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">sessionmaker</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="k">import</span> <span class="n">exists</span><span class="p">,</span><span class="n">select</span><span class="p">,</span><span class="n">column</span><span class="p">,</span><span class="n">table</span><span class="p">,</span><span class="n">text</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.schema</span> <span class="k">import</span> <span class="n">CreateSchema</span><span class="p">,</span> <span class="n">DropSchema</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Table</span><span class="p">,</span><span class="n">func</span>
-<span class="kn">from</span> <span class="nn">geoslurp.db.tabletools</span> <span class="k">import</span> <span class="n">tableMapFactory</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">,</span><span class="n">and_</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">sessionmaker</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.sql</span> <span class="kn">import</span> <span class="n">exists</span><span class="p">,</span><span class="n">select</span><span class="p">,</span><span class="n">column</span><span class="p">,</span><span class="n">table</span><span class="p">,</span><span class="n">text</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.schema</span> <span class="kn">import</span> <span class="n">CreateSchema</span><span class="p">,</span> <span class="n">DropSchema</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span><span class="n">func</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db.tabletools</span> <span class="kn">import</span> <span class="n">tableMapFactory</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">psycopg2.extensions</span> <span class="k">import</span> <span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span>  <span class="n">slurplogger</span><span class="p">,</span> <span class="n">debugging</span>
+<span class="kn">from</span> <span class="nn">psycopg2.extensions</span> <span class="kn">import</span> <span class="n">ISOLATION_LEVEL_AUTOCOMMIT</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span>  <span class="n">slurplogger</span><span class="p">,</span> <span class="n">debugging</span>
 <span class="kn">import</span> <span class="nn">getpass</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db.connectorbase</span> <span class="kn">import</span> <span class="n">GeoslurpConnectorBase</span>
 
-<div class="viewcode-block" id="GeoslurpConnector"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector">[docs]</a><span class="k">class</span> <span class="nc">GeoslurpConnector</span><span class="p">():</span>
+<div class="viewcode-block" id="GeoslurpConnector"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector">[docs]</a><span class="k">class</span> <span class="nc">GeoslurpConnector</span><span class="p">(</span><span class="n">GeoslurpConnectorBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Holds a connector to a geoslurp database&quot;&quot;&quot;</span>
-    <span class="n">mirror</span><span class="o">=</span><span class="kc">None</span>
-    <span class="n">cache</span><span class="o">=</span><span class="kc">None</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">passwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5432</span><span class="p">,</span><span class="n">readonlyuser</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">datamirror</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cache</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">passwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5432</span><span class="p">,</span><span class="n">dataroot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cache</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        establishes a database engine whoch provides the base</span>
 <span class="sd">        for creating sessions (ORM) or connections (SQL expressions)</span>
 <span class="sd">        :param dburl: url of the database e.g.: postgresql+psycopg2://geoslurp:password@host/geoslurp</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dataroot</span><span class="o">=</span><span class="n">dataroot</span><span class="p">,</span><span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">)</span>
+
+
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">=</span><span class="n">user</span>
         <span class="k">if</span> <span class="n">passwd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">passw</span><span class="o">=</span><span class="n">passwd</span>
@@ -215,21 +220,11 @@
         <span class="n">echo</span><span class="o">=</span><span class="n">debugging</span><span class="p">()</span>
         <span class="n">dburl</span><span class="o">=</span><span class="s2">&quot;postgresql+psycopg2://&quot;</span><span class="o">+</span><span class="n">user</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">passw</span><span class="o">+</span><span class="s2">&quot;@&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;/geoslurp&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="n">dburl</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="n">echo</span><span class="p">)</span>
-        <span class="c1"># self.conn=self.dbeng.connect()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mdata</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemaexists</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;The database does not have an admin scheme, is it properly initialized?&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">datamirror</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mirror</span><span class="o">=</span><span class="n">datamirror</span>
-
-        <span class="k">if</span> <span class="n">cache</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">=</span><span class="n">cache</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1">#default when not specified</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">=</span><span class="s2">&quot;/tmp/geoslurp_cache&quot;</span>
 
 
 <div class="viewcode-block" id="GeoslurpConnector.transsession"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.transsession">[docs]</a>    <span class="k">def</span> <span class="nf">transsession</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -297,10 +292,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;DROP TABLE IF EXISTS </span><span class="si">%s</span><span class="s1">.&quot;</span><span class="si">%s</span><span class="s1">&quot;;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;DROP TABLE IF EXISTS &quot;</span><span class="si">%s</span><span class="s1">&quot;;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tablename</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span></div>
+    
+<div class="viewcode-block" id="GeoslurpConnector.hasTable"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.hasTable">[docs]</a>    <span class="k">def</span> <span class="nf">hasTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tablename</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">has_table</span><span class="p">(</span><span class="n">tablename</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GeoslurpConnector.getTable"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.getTable">[docs]</a>    <span class="k">def</span> <span class="nf">getTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tname</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;public&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="GeoslurpConnector.getTable"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.getTable">[docs]</a>    <span class="k">def</span> <span class="nf">getTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tname</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;public&quot;</span><span class="p">,</span><span class="n">customcolumns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">mdata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span><span class="n">schema</span><span class="o">=</span><span class="n">scheme</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Table</span><span class="p">(</span><span class="n">tname</span><span class="p">,</span> <span class="n">mdata</span><span class="p">,</span> <span class="n">autoload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoload_with</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">customcolumns</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Table</span><span class="p">(</span><span class="n">tname</span><span class="p">,</span> <span class="n">mdata</span><span class="p">,</span> <span class="o">*</span><span class="n">customcolumns</span><span class="p">,</span><span class="n">autoload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoload_with</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Table</span><span class="p">(</span><span class="n">tname</span><span class="p">,</span> <span class="n">mdata</span><span class="p">,</span> <span class="n">autoload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">autoload_with</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GeoslurpConnector.getFunc"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.getFunc">[docs]</a>    <span class="k">def</span> <span class="nf">getFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fname</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;public&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;returns a database function based up string names&quot;&quot;&quot;</span>
@@ -309,16 +310,17 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span><span class="n">schema</span><span class="p">),</span><span class="n">fname</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="GeoslurpConnector.updateTable"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.updateTable">[docs]</a>    <span class="k">def</span> <span class="nf">updateTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">TableContentGenerator</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Update/add row entries in a table&quot;&quot;&quot;</span>
-
-        <span class="c1">#extract table columnn</span>
-
-        <span class="c1">#possibly create table (if it does not exist)</span>
-
-        <span class="c1">#loop over entries of the TableContentGenerator</span>
-        <span class="k">pass</span></div>
+<div class="viewcode-block" id="GeoslurpConnector.createView"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.createView">[docs]</a>    <span class="k">def</span> <span class="nf">createView</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewname</span><span class="p">,</span> <span class="n">qry</span><span class="p">,</span><span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">schema</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;CREATE VIEW </span><span class="si">%s</span><span class="s1">.&quot;</span><span class="si">%s</span><span class="s1">&quot; AS </span><span class="si">%s</span><span class="s1">;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">viewname</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span><span class="n">qry</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;CREATE VIEW  &quot;</span><span class="si">%s</span><span class="s1">&quot; AS </span><span class="si">%s</span><span class="s1">;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">viewname</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span><span class="n">qry</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="GeoslurpConnector.dropView"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.dropView">[docs]</a>    <span class="k">def</span> <span class="nf">dropView</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewname</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">schema</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;DROP VIEW IF EXISTS </span><span class="si">%s</span><span class="s1">.&quot;</span><span class="si">%s</span><span class="s1">&quot;;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">viewname</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;DROP TABLE IF EXISTS &quot;</span><span class="si">%s</span><span class="s1">&quot;;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">viewname</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span></div>
 
 <div class="viewcode-block" id="GeoslurpConnector.addUser"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.connector.GeoslurpConnector.addUser">[docs]</a>    <span class="k">def</span> <span class="nf">addUser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">passw</span><span class="p">,</span><span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds a user to the database (note executing this functions requires appropriate database rights&quot;&quot;&quot;</span>
@@ -326,7 +328,7 @@
         <span class="k">if</span> <span class="n">readonly</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE USER </span><span class="si">%s</span><span class="s2"> WITH ENCRYPTED PASSWORD &#39;</span><span class="si">%s</span><span class="s2">&#39; IN ROLE geobrowse;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">passw</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE USER </span><span class="si">%s</span><span class="s2"> WITH ENCRYPTED PASSWORD &#39;</span><span class="si">%s</span><span class="s2">&#39; IN ROLE geoslurp;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">passw</span><span class="p">))</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE USER </span><span class="si">%s</span><span class="s2"> WITH ENCRYPTED PASSWORD &#39;</span><span class="si">%s</span><span class="s2">&#39; IN ROLE geoslurp,geobrowse;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">passw</span><span class="p">))</span></div>
 
 
 
@@ -338,30 +340,31 @@
         <span class="n">qry</span><span class="o">=</span><span class="n">select</span><span class="p">([</span><span class="n">tbl</span><span class="p">])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">and_</span><span class="p">((</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="n">scheme</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">tbl</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">dataset</span> <span class="o">==</span> <span class="n">tname</span><span class="p">)))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">qry</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span></div></div>
 
-
-
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -370,37 +373,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

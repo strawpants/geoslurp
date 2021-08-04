@@ -1,61 +1,61 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.db package &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../index.html"/>
-        <link rel="up" title="geoslurp package" href="geoslurp.html"/>
-        <link rel="next" title="geoslurp.dbfunc package" href="geoslurp.dbfunc.html"/>
-        <link rel="prev" title="geoslurp.dataset package" href="geoslurp.dataset.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="geoslurp.dbfunc package" href="geoslurp.dbfunc.html" />
+    <link rel="prev" title="geoslurp.dataset package" href="geoslurp.dataset.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -86,6 +86,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -105,13 +106,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -119,10 +121,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -142,7 +147,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../reference.html">Reference Documentation</a> &raquo;</li>
         
@@ -153,7 +158,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/reference/geoslurp.db.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -172,18 +177,23 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
 }
 </style>
 <div class="section" id="module-geoslurp.db">
@@ -193,132 +203,196 @@
 </div>
 <div class="section" id="module-geoslurp.db.connector">
 <span id="geoslurp-db-connector-module"></span><h2>geoslurp.db.connector module<a class="headerlink" href="#module-geoslurp.db.connector" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="geoslurp.db.connector.GeoslurpConnector">
-<em class="property">class </em><code class="descclassname">geoslurp.db.connector.</code><code class="descname">GeoslurpConnector</code><span class="sig-paren">(</span><em>host</em>, <em>user</em>, <em>passwd=None</em>, <em>port=5432</em>, <em>readonlyuser=True</em>, <em>datamirror=None</em>, <em>cache=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.db.connector.</span></span><span class="sig-name descname"><span class="pre">GeoslurpConnector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5432</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataroot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase" title="geoslurp.db.connectorbase.GeoslurpConnectorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.db.connectorbase.GeoslurpConnectorBase</span></code></a></p>
 <p>Holds a connector to a geoslurp database</p>
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.CreateSchema">
-<code class="descname">CreateSchema</code><span class="sig-paren">(</span><em>schema</em>, <em>private=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.CreateSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.CreateSchema" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.CreateSchema">
+<span class="sig-name descname"><span class="pre">CreateSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.CreateSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.CreateSchema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.addUser">
-<code class="descname">addUser</code><span class="sig-paren">(</span><em>name</em>, <em>passw</em>, <em>readonly=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.addUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.addUser" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.addUser">
+<span class="sig-name descname"><span class="pre">addUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readonly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.addUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.addUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a user to the database (note executing this functions requires appropriate database rights</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.connector.GeoslurpConnector.cache">
-<code class="descname">cache</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.cache" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.createTable">
-<code class="descname">createTable</code><span class="sig-paren">(</span><em>tablename</em>, <em>columns</em>, <em>scheme=None</em>, <em>temporary=False</em>, <em>truncate=False</em>, <em>bind=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.createTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.createTable" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.createTable">
+<span class="sig-name descname"><span class="pre">createTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.createTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.createTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.dropSchema">
-<code class="descname">dropSchema</code><span class="sig-paren">(</span><em>schema</em>, <em>cascade=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.dropSchema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.dropSchema" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.createView">
+<span class="sig-name descname"><span class="pre">createView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">viewname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.createView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.createView" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.dropTable">
-<code class="descname">dropTable</code><span class="sig-paren">(</span><em>tablename</em>, <em>schema=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.dropTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.dropTable" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.dropSchema">
+<span class="sig-name descname"><span class="pre">dropSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cascade</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.dropSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.dropSchema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.getFunc">
-<code class="descname">getFunc</code><span class="sig-paren">(</span><em>fname</em>, <em>scheme='public'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.getFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.getFunc" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.dropTable">
+<span class="sig-name descname"><span class="pre">dropTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.dropTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.dropTable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.dropView">
+<span class="sig-name descname"><span class="pre">dropView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">viewname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.dropView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.dropView" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.getFunc">
+<span class="sig-name descname"><span class="pre">getFunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'public'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.getFunc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.getFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a database function based up string names</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.getInventEntry">
-<code class="descname">getInventEntry</code><span class="sig-paren">(</span><em>tname</em>, <em>scheme</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.getInventEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.getInventEntry" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.getInventEntry">
+<span class="sig-name descname"><span class="pre">getInventEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.getInventEntry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.getInventEntry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.getTable">
-<code class="descname">getTable</code><span class="sig-paren">(</span><em>tname</em>, <em>scheme='public'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.getTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.getTable" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.getTable">
+<span class="sig-name descname"><span class="pre">getTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'public'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">customcolumns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.getTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.getTable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.connector.GeoslurpConnector.mirror">
-<code class="descname">mirror</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.mirror" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.hasTable">
+<span class="sig-name descname"><span class="pre">hasTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.hasTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.hasTable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.schemaexists">
-<code class="descname">schemaexists</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.schemaexists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.schemaexists" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.schemaexists">
+<span class="sig-name descname"><span class="pre">schemaexists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.schemaexists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.schemaexists" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.transsession">
-<code class="descname">transsession</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.transsession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.transsession" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.transsession">
+<span class="sig-name descname"><span class="pre">transsession</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.transsession"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.transsession" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a  session which is bound to a connection rather than an engine (e.g. useful for temporary tables)</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.truncateTable">
-<code class="descname">truncateTable</code><span class="sig-paren">(</span><em>tablename</em>, <em>scheme=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.truncateTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.truncateTable" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.truncateTable">
+<span class="sig-name descname"><span class="pre">truncateTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.truncateTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.truncateTable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.updateTable">
-<code class="descname">updateTable</code><span class="sig-paren">(</span><em>TableContentGenerator</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.updateTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.updateTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update/add row entries in a table</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.db.connector.GeoslurpConnector.vacuumAnalyze">
-<code class="descname">vacuumAnalyze</code><span class="sig-paren">(</span><em>tableName</em>, <em>schema</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.vacuumAnalyze"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.vacuumAnalyze" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connector.GeoslurpConnector.vacuumAnalyze">
+<span class="sig-name descname"><span class="pre">vacuumAnalyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connector.html#GeoslurpConnector.vacuumAnalyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connector.GeoslurpConnector.vacuumAnalyze" title="Permalink to this definition">¶</a></dt>
 <dd><p>vacuum and analyze a certain table</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-geoslurp.db.exporter">
-<span id="geoslurp-db-exporter-module"></span><h2>geoslurp.db.exporter module<a class="headerlink" href="#module-geoslurp.db.exporter" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.db.exporter.exportGeoQuery">
-<code class="descclassname">geoslurp.db.exporter.</code><code class="descname">exportGeoQuery</code><span class="sig-paren">(</span><em>qryresult</em>, <em>outputfile</em>, <em>layer=None</em>, <em>driver='GPKG'</em>, <em>packFiles=False</em>, <em>striproot=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#exportGeoQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.exportGeoQuery" title="Permalink to this definition">¶</a></dt>
+<div class="section" id="module-geoslurp.db.connectorbase">
+<span id="geoslurp-db-connectorbase-module"></span><h2>geoslurp.db.connectorbase module<a class="headerlink" href="#module-geoslurp.db.connectorbase" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.db.connectorbase.</span></span><span class="sig-name descname"><span class="pre">GeoslurpConnectorBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataroot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds the base class for a connector to a geoslurp database</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.CreateSchema">
+<span class="sig-name descname"><span class="pre">CreateSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.CreateSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.CreateSchema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.db.exporter.exportGeoTable">
-<code class="descclassname">geoslurp.db.exporter.</code><code class="descname">exportGeoTable</code><span class="sig-paren">(</span><em>table</em>, <em>outfile</em>, <em>addFiles=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#exportGeoTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.exportGeoTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export a entire table with a geometry column</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.addUser">
+<span class="sig-name descname"><span class="pre">addUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readonly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.addUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.addUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a user to the database (note executing this functions requires appropriate database rights</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.db.exporter.exportQuery">
-<code class="descclassname">geoslurp.db.exporter.</code><code class="descname">exportQuery</code><span class="sig-paren">(</span><em>qryresult</em>, <em>outputfile</em>, <em>layer=None</em>, <em>driver='SQLITE'</em>, <em>packFiles=False</em>, <em>striproot=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#exportQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.exportQuery" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export a query without a geometry column, and possibly pack corresponding files</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.createTable">
+<span class="sig-name descname"><span class="pre">createTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.createTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.createTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.db.exporter.exportTable">
-<code class="descclassname">geoslurp.db.exporter.</code><code class="descname">exportTable</code><span class="sig-paren">(</span><em>table</em>, <em>outfile</em>, <em>addFiles=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#exportTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.exportTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export a entire table without a geometry column</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.createView">
+<span class="sig-name descname"><span class="pre">createView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">viewname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.createView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.createView" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.dropSchema">
+<span class="sig-name descname"><span class="pre">dropSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cascade</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.dropSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.dropSchema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.dropTable">
+<span class="sig-name descname"><span class="pre">dropTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.dropTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.dropTable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.dropView">
+<span class="sig-name descname"><span class="pre">dropView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">viewname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.dropView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.dropView" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.getFunc">
+<span class="sig-name descname"><span class="pre">getFunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'public'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.getFunc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.getFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a database function based up string names</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.db.exporter.writeToSQLite">
-<code class="descclassname">geoslurp.db.exporter.</code><code class="descname">writeToSQLite</code><span class="sig-paren">(</span><em>outputfile</em>, <em>df</em>, <em>layer</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/exporter.html#writeToSQLite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.exporter.writeToSQLite" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a pandas dataframe as a table to a sqlite file</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.getTable">
+<span class="sig-name descname"><span class="pre">getTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'public'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.getTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.getTable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.localdataroot">
+<span class="sig-name descname"><span class="pre">localdataroot</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.localdataroot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.schemaexists">
+<span class="sig-name descname"><span class="pre">schemaexists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.schemaexists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.schemaexists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.transsession">
+<span class="sig-name descname"><span class="pre">transsession</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.transsession"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.transsession" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.truncateTable">
+<span class="sig-name descname"><span class="pre">truncateTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.truncateTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.truncateTable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.GeoslurpConnectorBase.vacuumAnalyze">
+<span class="sig-name descname"><span class="pre">vacuumAnalyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#GeoslurpConnectorBase.vacuumAnalyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.GeoslurpConnectorBase.vacuumAnalyze" title="Permalink to this definition">¶</a></dt>
+<dd><p>vacuum and analyze a certain table</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.db.connectorbase.raiseNotImpl">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.db.connectorbase.</span></span><span class="sig-name descname"><span class="pre">raiseNotImpl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/connectorbase.html#raiseNotImpl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.connectorbase.raiseNotImpl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="geoslurp-db-exporter-module">
+<h2>geoslurp.db.exporter module<a class="headerlink" href="#geoslurp-db-exporter-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-geoslurp.db.geoslurpdb">
 <span id="geoslurp-db-geoslurpdb-module"></span><h2>geoslurp.db.geoslurpdb module<a class="headerlink" href="#module-geoslurp.db.geoslurpdb" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.db.geoslurpdb.geoslurpConnect">
-<code class="descclassname">geoslurp.db.geoslurpdb.</code><code class="descname">geoslurpConnect</code><span class="sig-paren">(</span><em>args=None</em>, <em>readonlyuser=True</em>, <em>update=False</em>, <em>local_settings=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/geoslurpdb.html#geoslurpConnect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.geoslurpdb.geoslurpConnect" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.db.geoslurpdb.geoslurpConnect">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.db.geoslurpdb.</span></span><span class="sig-name descname"><span class="pre">geoslurpConnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readonlyuser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/geoslurpdb.html#geoslurpConnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.geoslurpdb.geoslurpConnect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a database connection while taking use of stored settings from the users
 configuration file ($HOME/.geoslurp_lastused.yaml).
 :param args: Class which encapsulates different connection parameters
@@ -328,77 +402,82 @@ configuration file ($HOME/.geoslurp_lastused.yaml).
 </div>
 <div class="section" id="module-geoslurp.db.inventory">
 <span id="geoslurp-db-inventory-module"></span><h2>geoslurp.db.inventory module<a class="headerlink" href="#module-geoslurp.db.inventory" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="geoslurp.db.inventory.InventTable">
-<em class="property">class </em><code class="descclassname">geoslurp.db.inventory.</code><code class="descname">InventTable</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/inventory.html#InventTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.inventory.InventTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.db.inventory.</span></span><span class="sig-name descname"><span class="pre">InventTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/inventory.html#InventTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.inventory.InventTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.orm.decl_api.Base</span></code></p>
 <p>Defines the GEOSLURP POSTGRESQL inventory table</p>
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.cache">
-<code class="descname">cache</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.cache" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.cache" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.data">
-<code class="descname">data</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.data" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.datadir">
-<code class="descname">datadir</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.datadir" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.datadir">
+<span class="sig-name descname"><span class="pre">datadir</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.datadir" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.dataset">
-<code class="descname">dataset</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.dataset" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.dataset">
+<span class="sig-name descname"><span class="pre">dataset</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.dataset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.id">
-<code class="descname">id</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.id" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.lastupdate">
-<code class="descname">lastupdate</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.lastupdate" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.lastupdate">
+<span class="sig-name descname"><span class="pre">lastupdate</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.lastupdate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.owner">
-<code class="descname">owner</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.owner" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.owner">
+<span class="sig-name descname"><span class="pre">owner</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.owner" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.pgfunc">
-<code class="descname">pgfunc</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.pgfunc" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.pgfunc">
+<span class="sig-name descname"><span class="pre">pgfunc</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.pgfunc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.scheme">
-<code class="descname">scheme</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.scheme" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.scheme">
+<span class="sig-name descname"><span class="pre">scheme</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.scheme" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.updatefreq">
-<code class="descname">updatefreq</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.updatefreq" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.updatefreq">
+<span class="sig-name descname"><span class="pre">updatefreq</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.updatefreq" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.InventTable.version">
-<code class="descname">version</code><a class="headerlink" href="#geoslurp.db.inventory.InventTable.version" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.version">
+<span class="sig-name descname"><span class="pre">version</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.InventTable.view">
+<span class="sig-name descname"><span class="pre">view</span></span><a class="headerlink" href="#geoslurp.db.inventory.InventTable.view" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="geoslurp.db.inventory.Inventory">
-<em class="property">class </em><code class="descclassname">geoslurp.db.inventory.</code><code class="descname">Inventory</code><span class="sig-paren">(</span><em>geoslurpConn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/inventory.html#Inventory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.inventory.Inventory" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.Inventory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.db.inventory.</span></span><span class="sig-name descname"><span class="pre">Inventory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoslurpConn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/inventory.html#Inventory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.inventory.Inventory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class which provides read/write access to the postgresql inventory table</p>
-<dl class="attribute">
-<dt id="geoslurp.db.inventory.Inventory.table">
-<code class="descname">table</code><a class="headerlink" href="#geoslurp.db.inventory.Inventory.table" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#geoslurp.db.inventory.InventTable" title="geoslurp.db.inventory.InventTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">InventTable</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.inventory.Inventory.table">
+<span class="sig-name descname"><span class="pre">table</span></span><a class="headerlink" href="#geoslurp.db.inventory.Inventory.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#geoslurp.db.inventory.InventTable" title="geoslurp.db.inventory.InventTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.db.inventory.InventTable</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -406,240 +485,250 @@ configuration file ($HOME/.geoslurp_lastused.yaml).
 </div>
 <div class="section" id="module-geoslurp.db.settings">
 <span id="geoslurp-db-settings-module"></span><h2>geoslurp.db.settings module<a class="headerlink" href="#module-geoslurp.db.settings" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="geoslurp.db.settings.Credentials">
-<em class="property">class </em><code class="descclassname">geoslurp.db.settings.</code><code class="descname">Credentials</code><span class="sig-paren">(</span><em>user</em>, <em>passw</em>, <em>alias</em>, <em>oauthtoken</em>, <em>url</em><span class="sig-paren">)</span><a class="headerlink" href="#geoslurp.db.settings.Credentials" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Credentials">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.db.settings.</span></span><span class="sig-name descname"><span class="pre">Credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oauthtoken</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geoslurp.db.settings.Credentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <p>A named tuple to store authentication credentials</p>
-<dl class="attribute">
-<dt id="geoslurp.db.settings.Credentials.user">
-<code class="descname">user</code><a class="headerlink" href="#geoslurp.db.settings.Credentials.user" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – Username for the service</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Credentials.user">
+<span class="sig-name descname"><span class="pre">user</span></span><a class="headerlink" href="#geoslurp.db.settings.Credentials.user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Username for the service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.Credentials.alias">
-<code class="descname">alias</code><a class="headerlink" href="#geoslurp.db.settings.Credentials.alias" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – (obligatory) The short name of this service</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Credentials.alias">
+<span class="sig-name descname"><span class="pre">alias</span></span><a class="headerlink" href="#geoslurp.db.settings.Credentials.alias" title="Permalink to this definition">¶</a></dt>
+<dd><p>(obligatory) The short name of this service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.Credentials.passw">
-<code class="descname">passw</code><a class="headerlink" href="#geoslurp.db.settings.Credentials.passw" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – The password associated with the username</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Credentials.passw">
+<span class="sig-name descname"><span class="pre">passw</span></span><a class="headerlink" href="#geoslurp.db.settings.Credentials.passw" title="Permalink to this definition">¶</a></dt>
+<dd><p>The password associated with the username</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.Credentials.oauthtoken">
-<code class="descname">oauthtoken</code><a class="headerlink" href="#geoslurp.db.settings.Credentials.oauthtoken" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – An oauth2 token</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Credentials.oauthtoken">
+<span class="sig-name descname"><span class="pre">oauthtoken</span></span><a class="headerlink" href="#geoslurp.db.settings.Credentials.oauthtoken" title="Permalink to this definition">¶</a></dt>
+<dd><p>An oauth2 token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.Credentials.url">
-<code class="descname">url</code><a class="headerlink" href="#geoslurp.db.settings.Credentials.url" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – The root url which is linked to this service</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Credentials.url">
+<span class="sig-name descname"><span class="pre">url</span></span><a class="headerlink" href="#geoslurp.db.settings.Credentials.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The root url which is linked to this service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="descname">alias</code></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">alias</span></span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 2</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="descname">oauthtoken</code></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">oauthtoken</span></span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 3</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="descname">passw</code></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">passw</span></span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 1</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="descname">url</code></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">url</span></span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 4</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt>
-<code class="descname">user</code></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">user</span></span><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 0</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="geoslurp.db.settings.MirrorMap">
-<em class="property">class </em><code class="descclassname">geoslurp.db.settings.</code><code class="descname">MirrorMap</code><span class="sig-paren">(</span><em>from_mirror</em>, <em>to_mirror</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#MirrorMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.MirrorMap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="geoslurp.db.settings.MirrorMap.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#MirrorMap.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.MirrorMap.apply" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.db.settings.MirrorMap.reverseApply">
-<code class="descname">reverseApply</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#MirrorMap.reverseApply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.MirrorMap.reverseApply" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.db.settings.MirrorMap.strip">
-<code class="descname">strip</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#MirrorMap.strip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.MirrorMap.strip" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="geoslurp.db.settings.Settings">
-<em class="property">class </em><code class="descclassname">geoslurp.db.settings.</code><code class="descname">Settings</code><span class="sig-paren">(</span><em>dbconn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.db.settings.</span></span><span class="sig-name descname"><span class="pre">Settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbconn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Read and write default and user specific settings to and from the database</p>
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.authCred">
-<code class="descname">authCred</code><span class="sig-paren">(</span><em>service</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.authCred"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.authCred" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.authCred">
+<span class="sig-name descname"><span class="pre">authCred</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qryfields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['user',</span> <span class="pre">'passw']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.authCred"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.authCred" title="Permalink to this definition">¶</a></dt>
 <dd><p>obtains username credentials for a certain service
 :param service: name of the service
 :returns a namedtuple with credentials</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.decryptAuth">
-<code class="descname">decryptAuth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.decryptAuth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.decryptAuth" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.decryptAuth">
+<span class="sig-name descname"><span class="pre">decryptAuth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.decryptAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.decryptAuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decrypt the authenficiation credentials as stored in the database</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.defaultupdate">
-<code class="descname">defaultupdate</code><span class="sig-paren">(</span><em>indict=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.defaultupdate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.defaultupdate" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.defaultupdate">
+<span class="sig-name descname"><span class="pre">defaultupdate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.defaultupdate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.defaultupdate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the default conf dictionary in postgresql settings table</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.delAuth">
-<code class="descname">delAuth</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.delAuth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.delAuth" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.delAuth">
+<span class="sig-name descname"><span class="pre">delAuth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.delAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.delAuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete an authentication entry by specifying it’s alias</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.encryptAuth">
-<code class="descname">encryptAuth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.encryptAuth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.encryptAuth" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.encryptAuth">
+<span class="sig-name descname"><span class="pre">encryptAuth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.encryptAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.encryptAuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encrypt the authentification credentials to store in the database</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.getCacheDir">
-<code class="descname">getCacheDir</code><span class="sig-paren">(</span><em>scheme</em>, <em>dataset=None</em>, <em>subdirs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.getCacheDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.getCacheDir" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.generalize_path">
+<span class="sig-name descname"><span class="pre">generalize_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.generalize_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.generalize_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.getCacheDir">
+<span class="sig-name descname"><span class="pre">getCacheDir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.getCacheDir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.getCacheDir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtain and create a cache directory</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.getDataDir">
-<code class="descname">getDataDir</code><span class="sig-paren">(</span><em>scheme</em>, <em>dataset=None</em>, <em>subdirs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.getDataDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.getDataDir" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.getDataDir">
+<span class="sig-name descname"><span class="pre">getDataDir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.getDataDir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.getDataDir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the data Directory, possibly appended with a dataset and subdirs</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.getMirror">
-<code class="descname">getMirror</code><span class="sig-paren">(</span><em>alias</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.getMirror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.getMirror" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.get_PG_path">
+<span class="sig-name descname"><span class="pre">get_PG_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.get_PG_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.get_PG_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Possibly modifies a path so it becomes a path accessible by the Database host itself</p>
+</dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.getdefaults">
-<code class="descname">getdefaults</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.getdefaults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.getdefaults" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.get_local_path">
+<span class="sig-name descname"><span class="pre">get_local_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.get_local_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.get_local_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>possibly prepend the localdataroot root to the path or</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.getdefaults">
+<span class="sig-name descname"><span class="pre">getdefaults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.getdefaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.getdefaults" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the default</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.Settings.mirrorMap">
-<code class="descname">mirrorMap</code><em class="property"> = None</em><a class="headerlink" href="#geoslurp.db.settings.Settings.mirrorMap" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.pgmount">
+<span class="sig-name descname"><span class="pre">pgmount</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#geoslurp.db.settings.Settings.pgmount" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.setMirror">
-<code class="descname">setMirror</code><span class="sig-paren">(</span><em>alias</em>, <em>mirror</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.setMirror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.setMirror" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.setdefault">
+<span class="sig-name descname"><span class="pre">setdefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.setdefault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.setdefault" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.setdefault">
-<code class="descname">setdefault</code><span class="sig-paren">(</span><em>key</em>, <em>val</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.setdefault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.setdefault" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.show" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hideflag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hide'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the loaded user configuration</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.Settings.table">
-<code class="descname">table</code><a class="headerlink" href="#geoslurp.db.settings.Settings.table" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#geoslurp.db.settings.SettingsTable" title="geoslurp.db.settings.SettingsTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">SettingsTable</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.table">
+<span class="sig-name descname"><span class="pre">table</span></span><a class="headerlink" href="#geoslurp.db.settings.Settings.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#geoslurp.db.settings.SettingsTable" title="geoslurp.db.settings.SettingsTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoslurp.db.settings.SettingsTable</span></code></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.update">
-<code class="descname">update</code><span class="sig-paren">(</span><em>indict=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.update" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the conf dictionary in postgresql settings table</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.db.settings.Settings.updateAuth">
-<code class="descname">updateAuth</code><span class="sig-paren">(</span><em>cred: geoslurp.db.settings.Credentials</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.updateAuth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.updateAuth" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.db.settings.Settings.updateAuth">
+<span class="sig-name descname"><span class="pre">updateAuth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#geoslurp.db.settings.Credentials" title="geoslurp.db.settings.Credentials"><span class="pre">geoslurp.db.settings.Credentials</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#Settings.updateAuth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.Settings.updateAuth" title="Permalink to this definition">¶</a></dt>
 <dd><p>register/update a new set of authentication credentials</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="geoslurp.db.settings.SettingsTable">
-<em class="property">class </em><code class="descclassname">geoslurp.db.settings.</code><code class="descname">SettingsTable</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#SettingsTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.SettingsTable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.db.settings.SettingsTable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.db.settings.</span></span><span class="sig-name descname"><span class="pre">SettingsTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#SettingsTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.SettingsTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.orm.decl_api.Base</span></code></p>
 <p>Defines the GEOSLURP POSTGRESQL settings table</p>
-<dl class="attribute">
-<dt id="geoslurp.db.settings.SettingsTable.auth">
-<code class="descname">auth</code><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.auth" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.SettingsTable.auth">
+<span class="sig-name descname"><span class="pre">auth</span></span><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.auth" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.SettingsTable.conf">
-<code class="descname">conf</code><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.conf" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.SettingsTable.conf">
+<span class="sig-name descname"><span class="pre">conf</span></span><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.conf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.SettingsTable.id">
-<code class="descname">id</code><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.id" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.SettingsTable.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.db.settings.SettingsTable.user">
-<code class="descname">user</code><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.user" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.db.settings.SettingsTable.user">
+<span class="sig-name descname"><span class="pre">user</span></span><a class="headerlink" href="#geoslurp.db.settings.SettingsTable.user" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.db.settings.getCreateDir">
-<code class="descclassname">geoslurp.db.settings.</code><code class="descname">getCreateDir</code><span class="sig-paren">(</span><em>returndir</em>, <em>mirrormapper=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#getCreateDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.getCreateDir" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates a directory when not existent and return it
-When a mirrormapper is specified the base is converted</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.db.settings.getCreateDir">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.db.settings.</span></span><span class="sig-name descname"><span class="pre">getCreateDir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returndir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#getCreateDir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.getCreateDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a directory when not existent and return it</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.db.settings.stripPasswords">
-<code class="descclassname">geoslurp.db.settings.</code><code class="descname">stripPasswords</code><span class="sig-paren">(</span><em>d</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#stripPasswords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.settings.stripPasswords" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.db.settings.stripPasswords">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.db.settings.</span></span><span class="sig-name descname"><span class="pre">stripPasswords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/settings.html#stripPasswords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.settings.stripPasswords" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-geoslurp.db.tabletools">
 <span id="geoslurp-db-tabletools-module"></span><h2>geoslurp.db.tabletools module<a class="headerlink" href="#module-geoslurp.db.tabletools" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.db.tabletools.tableMapFactory">
-<code class="descclassname">geoslurp.db.tabletools.</code><code class="descname">tableMapFactory</code><span class="sig-paren">(</span><em>tableName</em>, <em>table=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/tabletools.html#tableMapFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.db.tabletools.tableMapFactory" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.db.tabletools.tableMapFactory">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.db.tabletools.</span></span><span class="sig-name descname"><span class="pre">tableMapFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tableName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/db/tabletools.html#tableMapFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.db.tabletools.tableMapFactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dynamically create/retrieve a mapper class from a Table object</p>
 </dd></dl>
 
@@ -648,34 +737,32 @@ When a mirrormapper is specified the base is converted</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="geoslurp.dbfunc.html" class="btn btn-neutral float-right" title="geoslurp.dbfunc package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="geoslurp.dataset.html" class="btn btn-neutral" title="geoslurp.dataset package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="geoslurp.dbfunc.html" class="btn btn-neutral float-right" title="geoslurp.dbfunc package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="geoslurp.dataset.html" class="btn btn-neutral float-left" title="geoslurp.dataset package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -684,37 +771,15 @@ When a mirrormapper is specified the base is converted</p>
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

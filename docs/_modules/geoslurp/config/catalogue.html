@@ -1,59 +1,59 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.config.catalogue &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,13 +104,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,10 +119,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -148,8 +153,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -183,21 +186,23 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplog</span>
-<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="k">import</span> <span class="n">Inventory</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="k">import</span> <span class="n">import_module</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplog</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="kn">import</span> <span class="n">Inventory</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
 
 <div class="viewcode-block" id="DatasetCatalogue"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue">[docs]</a><span class="k">class</span> <span class="nc">DatasetCatalogue</span><span class="p">:</span>
     <span class="c1">#holds dataset classes (not initiated!)</span>
     <span class="n">__dsets__</span><span class="o">=</span><span class="p">[]</span>
     <span class="n">__dbfuncs__</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">__dviews__</span><span class="o">=</span><span class="p">[]</span>
     <span class="c1"># holds factory methods for dyanamically building datasets</span>
     <span class="n">__dsetfac__</span><span class="o">=</span><span class="p">[]</span>
     <span class="n">__catalogue__</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">__dscache__</span><span class="o">=</span><span class="p">{}</span>
     <span class="n">__dfcache__</span><span class="o">=</span><span class="p">{}</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">__dvcache__</span><span class="o">=</span><span class="p">{}</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
     
 <div class="viewcode-block" id="DatasetCatalogue.getCacheFile"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.getCacheFile">[docs]</a>    <span class="nd">@staticmethod</span> 
@@ -222,6 +227,9 @@
 <div class="viewcode-block" id="DatasetCatalogue.addDbFunc"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.addDbFunc">[docs]</a>    <span class="k">def</span> <span class="nf">addDbFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dfclass</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dbfuncs__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dfclass</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="DatasetCatalogue.addView"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.addView">[docs]</a>    <span class="k">def</span> <span class="nf">addView</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dvclass</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dviews__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dvclass</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="DatasetCatalogue.refresh"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Refresh the dataset catalogue&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">registerAllDataSets</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
@@ -229,7 +237,7 @@
         <span class="c1">#load inventory of existing datasets (for the templated)</span>
         <span class="n">Inv</span><span class="o">=</span><span class="n">Inventory</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;datasets&quot;</span><span class="p">:{},</span><span class="s2">&quot;factories&quot;</span><span class="p">:{},</span><span class="s2">&quot;functions&quot;</span><span class="p">:{}}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;datasets&quot;</span><span class="p">:{},</span><span class="s2">&quot;factories&quot;</span><span class="p">:{},</span><span class="s2">&quot;functions&quot;</span><span class="p">:{},</span><span class="s2">&quot;views&quot;</span><span class="p">:{}}</span>
         <span class="c1">#loop over dataset in the factories</span>
 
         <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dsets__</span><span class="p">:</span>
@@ -272,10 +280,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__dfcache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">df</span>
 
 
+        <span class="k">for</span> <span class="n">dv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dviews__</span><span class="p">:</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">dv</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">dv</span><span class="o">.</span><span class="vm">__name__</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;views&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;module&quot;</span><span class="p">:</span><span class="n">dv</span><span class="o">.</span><span class="vm">__module__</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__dvcache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">dv</span>
+
         <span class="c1">#save to yaml</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="n">cachefile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getCacheFile</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
-        <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saving available Datasets and functions to catalogue </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">cachefile</span><span class="p">)</span>
+        <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saving available Datasets, functions and views to catalogue </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">cachefile</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cachefile</span><span class="p">,</span><span class="s1">&#39;wt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
     
@@ -298,8 +311,12 @@
         
         <span class="c1">#dynamically import all relevant datasets and class factories (including userplugin datasets)</span>
         <span class="n">modgeo</span><span class="o">=</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;geoslurp.dataset&quot;</span><span class="p">)</span>
+       
         <span class="c1">#dynamically load functions</span>
         <span class="n">modgeof</span><span class="o">=</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;geoslurp.dbfunc&quot;</span><span class="p">)</span>
+
+        <span class="c1">#dynamically load views</span>
+        <span class="n">modgeov</span><span class="o">=</span><span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;geoslurp.view&quot;</span><span class="p">)</span>
 
         <span class="c1">#also load userplugins</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addUserPlugPaths</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span></div>
@@ -318,6 +335,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;factories&quot;</span><span class="p">]</span></div>
 
+<div class="viewcode-block" id="DatasetCatalogue.listViews"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.listViews">[docs]</a>    <span class="k">def</span> <span class="nf">listViews</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;views&quot;</span><span class="p">]</span></div>
             
 <div class="viewcode-block" id="DatasetCatalogue.getDsetClass"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.getDsetClass">[docs]</a>    <span class="k">def</span> <span class="nf">getDsetClass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Loads a dataset as an class (but check cache first)&quot;&quot;&quot;</span>
@@ -391,6 +411,13 @@
                         <span class="c1">#derive a new class from the template class</span>
                         <span class="n">ds</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">tbl</span><span class="p">,(</span><span class="n">dsbase</span><span class="p">,),{</span><span class="s2">&quot;scheme&quot;</span><span class="p">:</span><span class="n">scheme</span><span class="p">})</span>
                     <span class="n">outdsets</span><span class="o">=</span><span class="p">[</span><span class="n">ds</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">outdsets</span> <span class="ow">and</span> <span class="n">singleEntry</span><span class="p">:</span>
+            <span class="c1">#fall back with a generic type</span>
+
+            <span class="n">scheme</span><span class="p">,</span><span class="n">tbl</span><span class="o">=</span><span class="n">regex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">dsgen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getDsetClass</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="s2">&quot;anyscheme.DataSetGeneric&quot;</span><span class="p">)</span>
+            <span class="n">outdsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">tbl</span><span class="p">,(</span><span class="n">dsgen</span><span class="p">,),{</span><span class="s2">&quot;scheme&quot;</span><span class="p">:</span><span class="n">scheme</span><span class="p">}))</span>
 
         <span class="k">return</span> <span class="n">outdsets</span></div>
         
@@ -417,7 +444,6 @@
         <span class="n">regexcomp</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
         <span class="c1">#we expect to have only one matching entry when the regex is a fully-qualified scheme.function name</span>
         <span class="n">singleEntry</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="s2">&quot;^[\w]+(?:\.[\w]+)$&quot;</span><span class="p">,</span><span class="n">regex</span><span class="p">)</span>
-
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;functions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">df</span><span class="o">=</span><span class="kc">None</span>
             <span class="k">if</span> <span class="n">regexcomp</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -434,9 +460,51 @@
                     <span class="c1">#note: other functions may fit so we continue the loop</span>
                     <span class="k">continue</span>
 
-        <span class="k">return</span> <span class="n">outdfs</span></div></div>
+        <span class="k">return</span> <span class="n">outdfs</span></div>
 
-<span class="c1">#module wide variable which allows registration of dataset classes and datasetfactories (dynamic reguires )</span>
+<div class="viewcode-block" id="DatasetCatalogue.getViewClass"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.getViewClass">[docs]</a>    <span class="k">def</span> <span class="nf">getViewClass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loads a database view as an class (but check cache first)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dvcache__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dvcache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span> 
+           <span class="n">dventry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;views&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span>
+           <span class="c1">#load isolated class</span>
+           <span class="n">mod</span><span class="o">=</span><span class="n">import_module</span><span class="p">(</span><span class="n">dventry</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">])</span>
+           <span class="n">dv</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">__dvcache__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">dv</span>
+           <span class="k">return</span> <span class="n">dv</span></div>
+
+
+
+<div class="viewcode-block" id="DatasetCatalogue.getViews"><a class="viewcode-back" href="../../../reference/geoslurp.config.html#geoslurp.config.catalogue.DatasetCatalogue.getViews">[docs]</a>    <span class="k">def</span> <span class="nf">getViews</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf</span><span class="p">,</span><span class="n">regex</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;retrieves a list of database views possibly obeying a certain regex&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadCatalogue</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>        
+        <span class="c1">#get the valid names  </span>
+        <span class="n">outdvs</span><span class="o">=</span><span class="p">[]</span> 
+        <span class="n">regexcomp</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+        <span class="c1">#we expect to have only one matching entry when the regex is a fully-qualified scheme.function name</span>
+        <span class="n">singleEntry</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="s2">&quot;^[\w]+(?:\.[\w]+)$&quot;</span><span class="p">,</span><span class="n">regex</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__catalogue__</span><span class="p">[</span><span class="s2">&quot;views&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">dv</span><span class="o">=</span><span class="kc">None</span>
+            <span class="k">if</span> <span class="n">regexcomp</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="n">dv</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getViewClass</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">singleEntry</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">outdvs</span><span class="p">:</span>
+                        <span class="n">outdvs</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+                    <span class="c1">#this possibly overwrites a fitting template class</span>
+                    <span class="n">outdvs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">dv</span>
+                    <span class="c1">#no need to look any further we found our fit</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">outdvs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dv</span><span class="p">)</span>
+                    <span class="c1">#note: other functions may fit so we continue the loop</span>
+                    <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="n">outdvs</span></div></div>
+
+<span class="c1">#module wide variable which allows registration of dataset classes, functions, datasetfactories and views</span>
 <span class="n">geoslurpCatalogue</span><span class="o">=</span><span class="n">DatasetCatalogue</span><span class="p">()</span>
 
 
@@ -445,25 +513,28 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -472,37 +543,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

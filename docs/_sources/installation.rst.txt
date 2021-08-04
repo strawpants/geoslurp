@@ -16,9 +16,9 @@ Currently the package is not yet in PyPI (but it hopefully will in the near futu
 
    git clone git@github.com:strawpants/geoslurp.git
    cd geoslurp
-   python3 ./setup.py install
+   pip install .
 
-For a development install you can replace the final line with ``python3 ./setup.py develop``
+For a development install you can replace the final line with ``pip install -e .``
 
 Setting up the PostgreSQL database
 ==================================

@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>geoslurp.dataset.avisoRefOrbits &mdash; geoslurp v1.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.dataset.avisoRefOrbits</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.dataset.avisoRefOrbits</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with Frommle; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019</span>
+
+
+<span class="kn">from</span> <span class="nn">geoslurp.dataset.OGRBase</span> <span class="kn">import</span> <span class="n">OGRBase</span>
+<span class="kn">from</span> <span class="nn">geoslurp.dataset.dataSetBase</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.http</span> <span class="kn">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.catalogue</span> <span class="kn">import</span> <span class="n">geoslurpCatalogue</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span><span class="n">ARRAY</span><span class="p">,</span><span class="n">String</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">TIMESTAMP</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declared_attr</span><span class="p">,</span> <span class="n">as_declarative</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">modf</span>
+
+<span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;altim&#39;</span>
+
+<div class="viewcode-block" id="AvisoRefOrbitBase"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AvisoRefOrbitBase">[docs]</a><span class="k">class</span> <span class="nc">AvisoRefOrbitBase</span><span class="p">(</span><span class="n">OGRBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for Aviso reference orbit tracks&quot;&quot;&quot;</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
+    <span class="n">fromurl</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+    <span class="n">missionids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;j1a&quot;</span><span class="p">,</span><span class="s2">&quot;j2a&quot;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
+        <span class="c1">#update ogrfile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ogrfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">ogrfile</span><span class="p">)</span>
+    
+    
+<div class="viewcode-block" id="AvisoRefOrbitBase.valuesFromOgrFeat"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AvisoRefOrbitBase.valuesFromOgrFeat">[docs]</a>    <span class="k">def</span> <span class="nf">valuesFromOgrFeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">feat</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extracts and adds the pass number from the feature&quot;&quot;&quot;</span>
+        <span class="n">vals</span><span class="o">=</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">valuesFromOgrFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span><span class="n">transform</span><span class="p">)</span>
+        <span class="n">passmatch</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;(?:Ground Track|Pass) ([0-9]+)&#39;</span><span class="p">,</span><span class="n">vals</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+<span class="c1">#         import pdb;pdb.set_trace()</span>
+        <span class="k">if</span> <span class="n">passmatch</span><span class="p">:</span>
+            <span class="n">vals</span><span class="p">[</span><span class="s2">&quot;pass&quot;</span><span class="p">]</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">passmatch</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">vals</span><span class="p">[</span><span class="s2">&quot;missionids&quot;</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">missionids</span>
+        <span class="k">return</span> <span class="n">vals</span>    </div>
+        
+
+
+<div class="viewcode-block" id="AvisoRefOrbitBase.columnsFromOgrFeat"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AvisoRefOrbitBase.columnsFromOgrFeat">[docs]</a>    <span class="k">def</span> <span class="nf">columnsFromOgrFeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">feat</span><span class="p">):</span>
+        <span class="n">cols</span><span class="o">=</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">columnsFromOgrFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">)</span>
+        <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;pass&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">))</span>
+        <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;missionids&#39;</span><span class="p">,</span> <span class="n">ARRAY</span><span class="p">(</span><span class="n">String</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">cols</span></div>
+    
+<div class="viewcode-block" id="AvisoRefOrbitBase.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AvisoRefOrbitBase.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pulls the shapefile from the aviso server&quot;&quot;&quot;</span>
+        <span class="n">httpserv</span><span class="o">=</span><span class="n">http</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fromurl</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+        <span class="n">cache</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">()</span> 
+        <span class="n">uri</span><span class="p">,</span><span class="n">upd</span><span class="o">=</span><span class="n">httpserv</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+        
+<span class="c1">#         if upd:</span>
+<span class="c1">#             with ZipFile(os.path.join(cache,self.zipf),&#39;r&#39;) as zp:</span>
+<span class="c1">#                 zp.extractall(cache)</span>
+
+
+<span class="c1"># Factory method to dynamically create classes</span>
+<div class="viewcode-block" id="AvisoClassFactory"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AvisoClassFactory">[docs]</a><span class="k">def</span> <span class="nf">AvisoClassFactory</span><span class="p">(</span><span class="n">kmzurl</span><span class="p">,</span><span class="n">missionids</span><span class="p">):</span>
+    <span class="n">splt</span><span class="o">=</span><span class="n">kmzurl</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="c1">#     splt=kmzurl.split(&quot;/&quot;)[-1].replace(&#39;-&#39;,&#39;_&#39;).replace(&#39;.&#39;,&#39;_&#39;).lower()[:-4]</span>
+    <span class="n">clsName</span><span class="o">=</span><span class="n">splt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span> <span class="p">(</span><span class="n">AvisoRefOrbitBase</span><span class="p">,),</span> <span class="p">{</span><span class="s2">&quot;ogrfile&quot;</span><span class="p">:</span><span class="n">splt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="s2">&quot;fromurl&quot;</span><span class="p">:</span><span class="n">kmzurl</span><span class="p">,</span><span class="s2">&quot;swapxy&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s2">&quot;gtype&quot;</span><span class="p">:</span><span class="s2">&quot;GEOMETRYZ&quot;</span><span class="p">,</span><span class="s2">&quot;ignoreFields&quot;</span><span class="p">:</span><span class="s2">&quot;(timestamp)|(begin)|(end)|(altitude)|(tessellate)|(extrude)|(visibility)|(drawOrder)|(icon)|(snippet)&quot;</span><span class="p">,</span><span class="s2">&quot;missionids&quot;</span><span class="p">:</span><span class="n">missionids</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="getAvisoRefOrbits"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.getAvisoRefOrbits">[docs]</a><span class="k">def</span> <span class="nf">getAvisoRefOrbits</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Automatically create all classes for the Aviso reference orbits&quot;&quot;&quot;</span>
+    <span class="n">out</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">rooturl</span><span class="o">=</span><span class="s1">&#39;https://www.aviso.altimetry.fr/fileadmin/documents/missions/Swot/&#39;</span>
+    <span class="n">swotversions</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;swot_science_orbit_sept2015-v2_10s.kmz&#39;</span><span class="p">,</span><span class="s1">&#39;sw1t&#39;</span><span class="p">),(</span><span class="s1">&#39;swot_science_orbit_sept2015-v2_perDay.kml&#39;</span><span class="p">,</span><span class="s1">&#39;sw1t&#39;</span><span class="p">),(</span><span class="s1">&#39;swot_science_hr_2.0s_4.0s_June2019-v3_perPass.kml&#39;</span><span class="p">,</span><span class="s1">&#39;sw1a&#39;</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">kmzf</span><span class="p">,</span><span class="n">missionid</span> <span class="ow">in</span> <span class="n">swotversions</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AvisoClassFactory</span><span class="p">(</span><span class="n">rooturl</span><span class="o">+</span><span class="n">kmzf</span><span class="p">,[</span><span class="n">missionid</span><span class="p">]))</span>
+
+    <span class="n">rooturl2</span><span class="o">=</span><span class="s2">&quot;https://www.aviso.altimetry.fr/fileadmin/documents/data/tools/&quot;</span>
+    <span class="n">altversions</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;Visu_RefOrbit_J3J2J1TP_Tracks_GoogleEarth_V3.kmz&#39;</span><span class="p">,[</span><span class="s1">&#39;txa&#39;</span><span class="p">,</span><span class="s1">&#39;j1a&#39;</span><span class="p">,</span><span class="s1">&#39;j2a&#39;</span><span class="p">,</span><span class="s1">&#39;j3a&#39;</span><span class="p">]),(</span><span class="s1">&#39;Visu_J1TP_Interlaced_Tracks_GE_V3.kmz&#39;</span><span class="p">,[</span><span class="s1">&#39;txb&#39;</span><span class="p">,</span><span class="s1">&#39;j1b&#39;</span><span class="p">,</span><span class="s1">&#39;j2b&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="s1">&#39;Visu_J2_LRO_Cycle500_537.kmz&#39;</span><span class="p">,[</span><span class="s1">&#39;j2c&#39;</span><span class="p">]),(</span><span class="s1">&#39;Visu_EN_Tracks_GE_OldOrbit.kmz&#39;</span><span class="p">,[</span><span class="s1">&#39;saa&#39;</span><span class="p">,</span><span class="s1">&#39;e1&#39;</span><span class="p">,</span><span class="s1">&#39;e2&#39;</span><span class="p">,</span><span class="s1">&#39;en&#39;</span><span class="p">]),(</span><span class="s1">&#39;Visu_ENN_Tracks_GE_NewOrbit.kmz&#39;</span><span class="p">,[</span><span class="s1">&#39;enn&#39;</span><span class="p">]),(</span><span class="s1">&#39;Visu_C2_Tracks_HiRes.kmz&#39;</span><span class="p">,[</span><span class="s1">&#39;c2a&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="s1">&#39;Visu_G2_Tracks_GE_V3.kmz&#39;</span><span class="p">,[</span><span class="s1">&#39;g2&#39;</span><span class="p">])]</span>
+    <span class="k">for</span> <span class="n">kmzf</span><span class="p">,</span><span class="n">misids</span> <span class="ow">in</span> <span class="n">altversions</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AvisoClassFactory</span><span class="p">(</span><span class="n">rooturl2</span><span class="o">+</span><span class="n">kmzf</span><span class="p">,</span><span class="n">misids</span><span class="p">))</span>
+     
+    <span class="k">return</span> <span class="n">out</span></div>
+
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addDatasetFactory</span><span class="p">(</span><span class="n">getAvisoRefOrbits</span><span class="p">)</span>
+
+
+<span class="c1"># #also setup tables to register cycles</span>
+<span class="nd">@as_declarative</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">scheme</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">AltCycleTBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@declared_attr</span>
+    <span class="k">def</span> <span class="nf">__tablename__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1">#strip of the &#39;Table&#39; from the class name</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cycle</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">tstart</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tend</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">missionid</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AltCycleBase"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AltCycleBase">[docs]</a><span class="k">class</span> <span class="nc">AltCycleBase</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class to register altimetry cycles&quot;&quot;&quot;</span>
+    <span class="n">url</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
+    <span class="n">auth</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">fparse</span><span class="o">=</span><span class="kc">None</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
+            <span class="n">AltCycleTBase</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span> <span class="n">checkfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AltCycleBase.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AltCycleBase.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">:</span>
+            <span class="n">cred</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">authCred</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+            <span class="n">fdown</span><span class="o">=</span><span class="n">http</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="n">cred</span><span class="p">)</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fdown</span><span class="o">=</span><span class="n">http</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="AltCycleBase.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AltCycleBase.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#currently deletes all entries in the table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">truncateTable</span><span class="p">()</span>
+        <span class="n">metalist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fparse</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">meta</span> <span class="ow">in</span> <span class="n">metalist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
+
+        
+
+<div class="viewcode-block" id="parseCycleInfoJ1"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.parseCycleInfoJ1">[docs]</a><span class="k">def</span> <span class="nf">parseCycleInfoJ1</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;Read and parse the Jason 1 cycle file and return a list of metadata dicts to be fed in the databasetable&quot;&quot;&quot;</span>
+    <span class="n">metalist</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="s1">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[0-9]+\s+[12]&#39;</span><span class="p">,</span><span class="n">ln</span><span class="p">):</span>
+                <span class="n">splt</span><span class="o">=</span><span class="n">ln</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">decimalsec</span><span class="p">,</span><span class="n">sec</span><span class="o">=</span><span class="n">modf</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+                <span class="n">tstart</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">month</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="n">day</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span><span class="n">hour</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span><span class="n">minute</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span><span class="n">second</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">sec</span><span class="p">),</span><span class="n">microsecond</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">decimalsec</span><span class="o">*</span><span class="mf">1e6</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">metalist</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;tend&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">tstart</span>
+                <span class="n">cycle</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">cycle</span> <span class="o">&lt;</span> <span class="mi">260</span><span class="p">:</span>
+                    <span class="n">missionid</span><span class="o">=</span><span class="s2">&quot;j1a&quot;</span>
+                <span class="k">elif</span> <span class="mi">260</span> <span class="o">&lt;=</span> <span class="n">cycle</span> <span class="o">&lt;=</span> <span class="mi">375</span><span class="p">:</span>
+                    <span class="n">missionid</span><span class="o">=</span><span class="s2">&quot;j1b&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">missionid</span><span class="o">=</span><span class="s1">&#39;j1c&#39;</span>
+                <span class="n">metalist</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;cycle&quot;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="s2">&quot;tstart&quot;</span><span class="p">:</span><span class="n">tstart</span><span class="p">,</span><span class="s2">&quot;missionid&quot;</span><span class="p">:</span><span class="n">missionid</span><span class="p">})</span>
+                <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="n">metalist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;tend&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">minute</span><span class="o">=</span><span class="mi">56</span><span class="p">,</span><span class="n">second</span><span class="o">=</span><span class="mi">54</span><span class="p">,</span><span class="n">microsecond</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.146e6</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">metalist</span></div>
+
+<div class="viewcode-block" id="parseCycleInfoJ2"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.parseCycleInfoJ2">[docs]</a><span class="k">def</span> <span class="nf">parseCycleInfoJ2</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;Read and parse the Jason 2 cycle file and return a list of metadata dicts to be fed in the databasetable&quot;&quot;&quot;</span>
+    <span class="n">metalist</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="s1">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[0-9]+\s+[12]&#39;</span><span class="p">,</span><span class="n">ln</span><span class="p">):</span>
+                <span class="n">splt</span><span class="o">=</span><span class="n">ln</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">decimalsec</span><span class="p">,</span><span class="n">sec</span><span class="o">=</span><span class="n">modf</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+                <span class="n">tstart</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">month</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="n">day</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span><span class="n">hour</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span><span class="n">minute</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span><span class="n">second</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">sec</span><span class="p">),</span><span class="n">microsecond</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">decimalsec</span><span class="o">*</span><span class="mf">1e6</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">metalist</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;tend&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">tstart</span>
+                <span class="n">cycle</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">cycle</span> <span class="o">&lt;</span> <span class="mi">305</span><span class="p">:</span>
+                    <span class="n">missionid</span><span class="o">=</span><span class="s2">&quot;j2a&quot;</span>
+                <span class="k">elif</span> <span class="mi">305</span> <span class="o">&lt;=</span> <span class="n">cycle</span> <span class="o">&lt;=</span> <span class="mi">327</span><span class="p">:</span>
+                    <span class="n">missionid</span><span class="o">=</span><span class="s2">&quot;j2b&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">missionid</span><span class="o">=</span><span class="s1">&#39;j2c&#39;</span>
+                <span class="n">metalist</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;cycle&quot;</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">splt</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="s2">&quot;tstart&quot;</span><span class="p">:</span><span class="n">tstart</span><span class="p">,</span><span class="s2">&quot;missionid&quot;</span><span class="p">:</span><span class="n">missionid</span><span class="p">})</span>
+                <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="n">metalist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;tend&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">minute</span><span class="o">=</span><span class="mi">56</span><span class="p">,</span><span class="n">second</span><span class="o">=</span><span class="mi">54</span><span class="p">,</span><span class="n">microsecond</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.146e6</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">metalist</span></div>
+                    
+
+<div class="viewcode-block" id="AltCycleClassFactory"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.AltCycleClassFactory">[docs]</a><span class="k">def</span> <span class="nf">AltCycleClassFactory</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">fparse</span><span class="p">,</span><span class="n">auth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">clsName</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">url</span><span class="p">)[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">clsName</span> <span class="o">+</span><span class="s2">&quot;Table&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">AltCycleTBase</span><span class="p">,),</span> <span class="p">{})</span>
+    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span> <span class="p">(</span><span class="n">AltCycleBase</span><span class="p">,),</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span><span class="n">table</span><span class="p">,</span><span class="s2">&quot;fparse&quot;</span><span class="p">:</span><span class="nb">staticmethod</span><span class="p">(</span><span class="n">fparse</span><span class="p">),</span><span class="s2">&quot;auth&quot;</span><span class="p">:</span><span class="n">auth</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="getAltCycles"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.avisoRefOrbits.getAltCycles">[docs]</a><span class="k">def</span> <span class="nf">getAltCycles</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+    <span class="n">out</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://podaac-tools.jpl.nasa.gov/drive/files/allData/jason1/L2/docs/j1_cyclelist.txt&#39;</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AltCycleClassFactory</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">parseCycleInfoJ1</span><span class="p">))</span>
+    
+    <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://podaac-tools.jpl.nasa.gov/drive/files/allData/ostm/preview/L2/docs/ostm_cyclist.txt&#39;</span>
+    
+    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AltCycleClassFactory</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">parseCycleInfoJ2</span><span class="p">,</span><span class="s2">&quot;podaac&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addDatasetFactory</span><span class="p">(</span><span class="n">getAltCycles</span><span class="p">)</span>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Roelof Rietbroek.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

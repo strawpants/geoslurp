@@ -1,60 +1,61 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.tools package &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../index.html"/>
-        <link rel="up" title="geoslurp package" href="geoslurp.html"/>
-        <link rel="prev" title="geoslurp.discover.oceanobs package" href="geoslurp.discover.oceanobs.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="geoslurp.types package" href="geoslurp.types.html" />
+    <link rel="prev" title="geoslurp.discover.oras package" href="geoslurp.discover.oras.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -85,6 +86,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -104,13 +106,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -118,10 +121,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -141,7 +147,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../reference.html">Reference Documentation</a> &raquo;</li>
         
@@ -152,7 +158,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/reference/geoslurp.tools.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -171,18 +177,23 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
 }
 </style>
 <div class="section" id="module-geoslurp.tools">
@@ -192,96 +203,96 @@
 </div>
 <div class="section" id="module-geoslurp.tools.Bounds">
 <span id="geoslurp-tools-bounds-module"></span><h2>geoslurp.tools.Bounds module<a class="headerlink" href="#module-geoslurp.tools.Bounds" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="geoslurp.tools.Bounds.BtdBox">
-<em class="property">class </em><code class="descclassname">geoslurp.tools.Bounds.</code><code class="descname">BtdBox</code><span class="sig-paren">(</span><em>s=None</em>, <em>n=None</em>, <em>w=None</em>, <em>e=None</em>, <em>ts=None</em>, <em>te=None</em>, <em>zmin=None</em>, <em>zmax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.tools.Bounds.</span></span><span class="sig-name descname"><span class="pre">BtdBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">te</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class which holds a geographical bounding box, a vertical depth range and a datetime range</p>
-<dl class="method">
-<dt id="geoslurp.tools.Bounds.BtdBox.check">
-<code class="descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.check" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the ranges are valid</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.tools.Bounds.BtdBox.crop">
-<code class="descname">crop</code><span class="sig-paren">(</span><em>btdbox</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.crop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.crop" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.crop">
+<span class="sig-name descname"><span class="pre">crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">btdbox</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.crop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.crop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Crops the bounding box based on the limits available in an other</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.Bounds.BtdBox.e">
-<code class="descname">e</code><em class="property"> = 360.0</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.e" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.e">
+<span class="sig-name descname"><span class="pre">e</span></span><em class="property"> <span class="pre">=</span> <span class="pre">360.0</span></em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.e" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.tools.Bounds.BtdBox.isGMTCentered">
-<code class="descname">isGMTCentered</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.isGMTCentered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.isGMTCentered" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.isGMTCentered">
+<span class="sig-name descname"><span class="pre">isGMTCentered</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.isGMTCentered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.isGMTCentered" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.tools.Bounds.BtdBox.lonSplit">
-<code class="descname">lonSplit</code><span class="sig-paren">(</span><em>lon=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.lonSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.lonSplit" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.lonSplit">
+<span class="sig-name descname"><span class="pre">lonSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.lonSplit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.lonSplit" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns 2 bounding boxes from the current one split at a longitude</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.Bounds.BtdBox.n">
-<code class="descname">n</code><em class="property"> = 90.0</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.n" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.n">
+<span class="sig-name descname"><span class="pre">n</span></span><em class="property"> <span class="pre">=</span> <span class="pre">90.0</span></em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.n" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.Bounds.BtdBox.s">
-<code class="descname">s</code><em class="property"> = -90.0</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.s" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.s">
+<span class="sig-name descname"><span class="pre">s</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-90.0</span></em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.s" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.Bounds.BtdBox.te">
-<code class="descname">te</code><em class="property"> = datetime.datetime(9999, 12, 31, 23, 59, 59, 999999)</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.te" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.te">
+<span class="sig-name descname"><span class="pre">te</span></span><em class="property"> <span class="pre">=</span> <span class="pre">datetime.datetime(9999,</span> <span class="pre">12,</span> <span class="pre">31,</span> <span class="pre">23,</span> <span class="pre">59,</span> <span class="pre">59,</span> <span class="pre">999999)</span></em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.te" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.tools.Bounds.BtdBox.timeSplit">
-<code class="descname">timeSplit</code><span class="sig-paren">(</span><em>t=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.timeSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.timeSplit" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.timeSplit">
+<span class="sig-name descname"><span class="pre">timeSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.timeSplit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.timeSplit" title="Permalink to this definition">¶</a></dt>
 <dd><p>return 2 bounding boxes split up at a certain time point</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.tools.Bounds.BtdBox.to0_360">
-<code class="descname">to0_360</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.to0_360"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.to0_360" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.to0_360">
+<span class="sig-name descname"><span class="pre">to0_360</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.to0_360"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.to0_360" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the longitude coordinates to span 0 .. 360</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.tools.Bounds.BtdBox.toGreenwhich">
-<code class="descname">toGreenwhich</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.toGreenwhich"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.toGreenwhich" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.toGreenwhich">
+<span class="sig-name descname"><span class="pre">toGreenwhich</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.toGreenwhich"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.toGreenwhich" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns an instance with the longitude coordinates to span -180 .. 180</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.Bounds.BtdBox.ts">
-<code class="descname">ts</code><em class="property"> = datetime.datetime(1, 1, 1, 0, 0)</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.ts" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.ts">
+<span class="sig-name descname"><span class="pre">ts</span></span><em class="property"> <span class="pre">=</span> <span class="pre">datetime.datetime(1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">0)</span></em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.ts" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.Bounds.BtdBox.w">
-<code class="descname">w</code><em class="property"> = 0.0</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.w" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.w">
+<span class="sig-name descname"><span class="pre">w</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.w" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.tools.Bounds.BtdBox.wkt">
-<code class="descname">wkt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.wkt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.wkt" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.wkt">
+<span class="sig-name descname"><span class="pre">wkt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/Bounds.html#BtdBox.wkt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.wkt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a WKT represetation of the geographical bounding box</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.Bounds.BtdBox.zmax">
-<code class="descname">zmax</code><em class="property"> = 1.7976931348623157e+308</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.zmax" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.zmax">
+<span class="sig-name descname"><span class="pre">zmax</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.7976931348623157e+308</span></em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.zmax" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.Bounds.BtdBox.zmin">
-<code class="descname">zmin</code><em class="property"> = 2.2250738585072014e-308</em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.zmin" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.Bounds.BtdBox.zmin">
+<span class="sig-name descname"><span class="pre">zmin</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2.2250738585072014e-308</span></em><a class="headerlink" href="#geoslurp.tools.Bounds.BtdBox.zmin" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -289,102 +300,102 @@
 </div>
 <div class="section" id="module-geoslurp.tools.csv">
 <span id="geoslurp-tools-csv-module"></span><h2>geoslurp.tools.csv module<a class="headerlink" href="#module-geoslurp.tools.csv" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.tools.csv.columnsFromCSV">
-<code class="descclassname">geoslurp.tools.csv.</code><code class="descname">columnsFromCSV</code><span class="sig-paren">(</span><em>line</em>, <em>lookup</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/csv.html#columnsFromCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.csv.columnsFromCSV" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.csv.columnsFromCSV">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.csv.</span></span><span class="sig-name descname"><span class="pre">columnsFromCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/csv.html#columnsFromCSV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.csv.columnsFromCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>reads column descriptors from comma separated values and creates a list of sqlalchemy columns</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.tools.csv.fillCSVTable">
-<code class="descclassname">geoslurp.tools.csv.</code><code class="descname">fillCSVTable</code><span class="sig-paren">(</span><em>filename</em>, <em>tablename</em>, <em>lookup</em>, <em>scheme</em>, <em>hskip=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/csv.html#fillCSVTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.csv.fillCSVTable" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.csv.fillCSVTable">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.csv.</span></span><span class="sig-name descname"><span class="pre">fillCSVTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hskip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/csv.html#fillCSVTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.csv.fillCSVTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update/populate a database table  from a CSV file)
 This function reads all rows from an open CSV file. The first line is expected to hold the COlumn names, which are mapped to types in the lookup string dictionary</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.tools.csv.valuesFromCSV">
-<code class="descclassname">geoslurp.tools.csv.</code><code class="descname">valuesFromCSV</code><span class="sig-paren">(</span><em>line</em>, <em>names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/csv.html#valuesFromCSV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.csv.valuesFromCSV" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.csv.valuesFromCSV">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.csv.</span></span><span class="sig-name descname"><span class="pre">valuesFromCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/csv.html#valuesFromCSV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.csv.valuesFromCSV" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-geoslurp.tools.gravity">
 <span id="geoslurp-tools-gravity-module"></span><h2>geoslurp.tools.gravity module<a class="headerlink" href="#module-geoslurp.tools.gravity" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="geoslurp.tools.gravity.JSONSHArchive">
-<em class="property">class </em><code class="descclassname">geoslurp.tools.gravity.</code><code class="descname">JSONSHArchive</code><span class="sig-paren">(</span><em>nmax=None</em>, <em>datadict=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/gravity.html#JSONSHArchive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.gravity.JSONSHArchive" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.tools.gravity.JSONSHArchive">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.tools.gravity.</span></span><span class="sig-name descname"><span class="pre">JSONSHArchive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datadict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/gravity.html#JSONSHArchive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.gravity.JSONSHArchive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>JSON Archive which stores SH data, with sigmas and possibly a covariance
 Note this mimics the Archive interface of frommle without actually requiring its import</p>
-<dl class="attribute">
-<dt id="geoslurp.tools.gravity.JSONSHArchive.attr">
-<code class="descname">attr</code><a class="headerlink" href="#geoslurp.tools.gravity.JSONSHArchive.attr" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="geoslurp.tools.gravity.JSONSHArchive.attr">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">attr</span></span><a class="headerlink" href="#geoslurp.tools.gravity.JSONSHArchive.attr" title="Permalink to this definition">¶</a></dt>
 <dd><p>get the stored global attributes of the file</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.gravity.JSONSHArchive.dict">
-<code class="descname">dict</code><a class="headerlink" href="#geoslurp.tools.gravity.JSONSHArchive.dict" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="geoslurp.tools.gravity.JSONSHArchive.dict">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dict</span></span><a class="headerlink" href="#geoslurp.tools.gravity.JSONSHArchive.dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="geoslurp.tools.gravity.JSONSHArchive.idx">
-<code class="descname">idx</code><span class="sig-paren">(</span><em>nmt</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/gravity.html#JSONSHArchive.idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.gravity.JSONSHArchive.idx" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.gravity.JSONSHArchive.idx">
+<span class="sig-name descname"><span class="pre">idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nmt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/gravity.html#JSONSHArchive.idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.gravity.JSONSHArchive.idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns the index of the n,m,t tuple</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="geoslurp.tools.gravity.Trig">
-<em class="property">class </em><code class="descclassname">geoslurp.tools.gravity.</code><code class="descname">Trig</code><a class="reference internal" href="../_modules/geoslurp/tools/gravity.html#Trig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.gravity.Trig" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.tools.gravity.Trig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.tools.gravity.</span></span><span class="sig-name descname"><span class="pre">Trig</span></span><a class="reference internal" href="../_modules/geoslurp/tools/gravity.html#Trig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.gravity.Trig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Enum to distinguish between a trigonometric cosine and sine coefficient</p>
-<dl class="attribute">
-<dt id="geoslurp.tools.gravity.Trig.c">
-<code class="descname">c</code><em class="property"> = 0</em><a class="headerlink" href="#geoslurp.tools.gravity.Trig.c" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.gravity.Trig.c">
+<span class="sig-name descname"><span class="pre">c</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#geoslurp.tools.gravity.Trig.c" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="geoslurp.tools.gravity.Trig.s">
-<code class="descname">s</code><em class="property"> = 1</em><a class="headerlink" href="#geoslurp.tools.gravity.Trig.s" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="geoslurp.tools.gravity.Trig.s">
+<span class="sig-name descname"><span class="pre">s</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#geoslurp.tools.gravity.Trig.s" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.tools.gravity.icgemMetaExtractor">
-<code class="descclassname">geoslurp.tools.gravity.</code><code class="descname">icgemMetaExtractor</code><span class="sig-paren">(</span><em>uri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/gravity.html#icgemMetaExtractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.gravity.icgemMetaExtractor" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.gravity.icgemMetaExtractor">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.gravity.</span></span><span class="sig-name descname"><span class="pre">icgemMetaExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/gravity.html#icgemMetaExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.gravity.icgemMetaExtractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract meta information from a gzipped icgem file</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-geoslurp.tools.netcdftools">
 <span id="geoslurp-tools-netcdftools-module"></span><h2>geoslurp.tools.netcdftools module<a class="headerlink" href="#module-geoslurp.tools.netcdftools" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.tools.netcdftools.ncSwapLongitude">
-<code class="descclassname">geoslurp.tools.netcdftools.</code><code class="descname">ncSwapLongitude</code><span class="sig-paren">(</span><em>ncinout</em>, <em>longitudevar='longitude'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#ncSwapLongitude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.ncSwapLongitude" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.netcdftools.ncSwapLongitude">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.netcdftools.</span></span><span class="sig-name descname"><span class="pre">ncSwapLongitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ncinout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitudevar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'longitude'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#ncSwapLongitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.ncSwapLongitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>swap the longitude representation to span 0..360 or -180..180</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.tools.netcdftools.nccopyAtt">
-<code class="descclassname">geoslurp.tools.netcdftools.</code><code class="descname">nccopyAtt</code><span class="sig-paren">(</span><em>ncin</em>, <em>ncout</em>, <em>excl=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#nccopyAtt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.nccopyAtt" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.netcdftools.nccopyAtt">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.netcdftools.</span></span><span class="sig-name descname"><span class="pre">nccopyAtt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ncin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#nccopyAtt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.nccopyAtt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to copy attributes from an open netcdf file to another</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.tools.netcdftools.stackNcFiles">
-<code class="descclassname">geoslurp.tools.netcdftools.</code><code class="descname">stackNcFiles</code><span class="sig-paren">(</span><em>ncout</em>, <em>ncA</em>, <em>ncB</em>, <em>dimension</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#stackNcFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.stackNcFiles" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.netcdftools.stackNcFiles">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.netcdftools.</span></span><span class="sig-name descname"><span class="pre">stackNcFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ncout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/netcdftools.html#stackNcFiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.netcdftools.stackNcFiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append netcdf file B after file A along the dimension specified</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-geoslurp.tools.ogrgeom">
 <span id="geoslurp-tools-ogrgeom-module"></span><h2>geoslurp.tools.ogrgeom module<a class="headerlink" href="#module-geoslurp.tools.ogrgeom" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.tools.ogrgeom.lonlat2ogr">
-<code class="descclassname">geoslurp.tools.ogrgeom.</code><code class="descname">lonlat2ogr</code><span class="sig-paren">(</span><em>lonlat</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/ogrgeom.html#lonlat2ogr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.ogrgeom.lonlat2ogr" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.ogrgeom.lonlat2ogr">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.ogrgeom.</span></span><span class="sig-name descname"><span class="pre">lonlat2ogr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lonlat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/ogrgeom.html#lonlat2ogr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.ogrgeom.lonlat2ogr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a single OGR polygon from an input lonlat array
 :param  lonlat: list like array with longitude latitude pairs
 :returns a ogr polygon</p>
@@ -393,64 +404,95 @@ Note this mimics the Archive interface of frommle without actually requiring its
 </div>
 <div class="section" id="module-geoslurp.tools.shapelytools">
 <span id="geoslurp-tools-shapelytools-module"></span><h2>geoslurp.tools.shapelytools module<a class="headerlink" href="#module-geoslurp.tools.shapelytools" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.tools.shapelytools.shpextract">
-<code class="descclassname">geoslurp.tools.shapelytools.</code><code class="descname">shpextract</code><span class="sig-paren">(</span><em>entry</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/shapelytools.html#shpextract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.shapelytools.shpextract" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.shapelytools.shpextract">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.shapelytools.</span></span><span class="sig-name descname"><span class="pre">shpextract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/shapelytools.html#shpextract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.shapelytools.shpextract" title="Permalink to this definition">¶</a></dt>
 <dd><p>extract a shapely object from the database entry</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-geoslurp.tools.time">
 <span id="geoslurp-tools-time-module"></span><h2>geoslurp.tools.time module<a class="headerlink" href="#module-geoslurp.tools.time" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.tools.time.decyear2dt">
-<code class="descclassname">geoslurp.tools.time.</code><code class="descname">decyear2dt</code><span class="sig-paren">(</span><em>decyear</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/time.html#decyear2dt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.time.decyear2dt" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.time.decyear2dt">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.time.</span></span><span class="sig-name descname"><span class="pre">decyear2dt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decyear</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/time.html#decyear2dt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.time.decyear2dt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a decimal year to a datetime object</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.tools.time.dt2monthlyinterval">
-<code class="descclassname">geoslurp.tools.time.</code><code class="descname">dt2monthlyinterval</code><span class="sig-paren">(</span><em>dtin</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/time.html#dt2monthlyinterval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.time.dt2monthlyinterval" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.time.dt2monthlyinterval">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.time.</span></span><span class="sig-name descname"><span class="pre">dt2monthlyinterval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/time.html#dt2monthlyinterval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.time.dt2monthlyinterval" title="Permalink to this definition">¶</a></dt>
 <dd><p>retrieves the start end end of a month</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.tools.time.dt2yearlyinterval">
-<code class="descclassname">geoslurp.tools.time.</code><code class="descname">dt2yearlyinterval</code><span class="sig-paren">(</span><em>dtin</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/time.html#dt2yearlyinterval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.tools.time.dt2yearlyinterval" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.tools.time.dt2yearlyinterval">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.tools.time.</span></span><span class="sig-name descname"><span class="pre">dt2yearlyinterval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/time.html#dt2yearlyinterval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.time.dt2yearlyinterval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the start eand end of the year</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-geoslurp.tools.xarray">
+<span id="geoslurp-tools-xarray-module"></span><h2>geoslurp.tools.xarray module<a class="headerlink" href="#module-geoslurp.tools.xarray" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoslurp.tools.xarray.XarGeoslurp">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">geoslurp.tools.xarray.</span></span><span class="sig-name descname"><span class="pre">XarGeoslurp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xarray_obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/xarray.html#XarGeoslurp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.xarray.XarGeoslurp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="geoslurp.tools.xarray.XarGeoslurp.append_dim">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">append_dim</span></span><a class="headerlink" href="#geoslurp.tools.xarray.XarGeoslurp.append_dim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.xarray.XarGeoslurp.expand_dim">
+<span class="sig-name descname"><span class="pre">expand_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/xarray.html#XarGeoslurp.expand_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.xarray.XarGeoslurp.expand_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expands the data array with a 1-sized dimension possibly adding a coordinate value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="geoslurp.tools.xarray.XarGeoslurp.join_at">
+<span class="sig-name descname"><span class="pre">join_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/tools/xarray.html#XarGeoslurp.join_at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.tools.xarray.XarGeoslurp.join_at" title="Permalink to this definition">¶</a></dt>
+<dd><p>When reading/writing to geoslurp, join this datarray with others at this dimension/coordinate</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="geoslurp.tools.xarray.XarGeoslurp.storage">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">storage</span></span><a class="headerlink" href="#geoslurp.tools.xarray.XarGeoslurp.storage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="geoslurp.discover.oceanobs.html" class="btn btn-neutral" title="geoslurp.discover.oceanobs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="geoslurp.types.html" class="btn btn-neutral float-right" title="geoslurp.types package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="geoslurp.discover.oras.html" class="btn btn-neutral float-left" title="geoslurp.discover.oras package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -459,37 +501,15 @@ Note this mimics the Archive interface of frommle without actually requiring its
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

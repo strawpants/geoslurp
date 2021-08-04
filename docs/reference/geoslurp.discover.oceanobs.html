@@ -1,61 +1,61 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.discover.oceanobs package &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../index.html"/>
-        <link rel="up" title="geoslurp.discover package" href="geoslurp.discover.html"/>
-        <link rel="next" title="geoslurp.tools package" href="geoslurp.tools.html"/>
-        <link rel="prev" title="geoslurp.discover.gravity package" href="geoslurp.discover.gravity.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="geoslurp.discover.oras package" href="geoslurp.discover.oras.html" />
+    <link rel="prev" title="geoslurp.discover.gravity package" href="geoslurp.discover.gravity.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -86,6 +86,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -105,13 +106,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">geoslurp</a>
@@ -119,10 +121,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -142,7 +147,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../reference.html">Reference Documentation</a> &raquo;</li>
         
@@ -155,7 +160,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/reference/geoslurp.discover.oceanobs.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -174,18 +179,23 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
 }
 </style>
 <div class="section" id="module-geoslurp.discover.oceanobs">
@@ -195,46 +205,46 @@
 </div>
 <div class="section" id="module-geoslurp.discover.oceanobs.argoProfiles">
 <span id="geoslurp-discover-oceanobs-argoprofiles-module"></span><h2>geoslurp.discover.oceanobs.argoProfiles module<a class="headerlink" href="#module-geoslurp.discover.oceanobs.argoProfiles" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.discover.oceanobs.argoProfiles.sec2month">
-<code class="descclassname">geoslurp.discover.oceanobs.argoProfiles.</code><code class="descname">sec2month</code><span class="sig-paren">(</span><em>nc_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argoProfiles.html#sec2month"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argoProfiles.sec2month" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.discover.oceanobs.argoProfiles.sec2month">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.discover.oceanobs.argoProfiles.</span></span><span class="sig-name descname"><span class="pre">sec2month</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nc_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argoProfiles.html#sec2month"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argoProfiles.sec2month" title="Permalink to this definition">¶</a></dt>
 <dd><p>convert seconds since.. to yyyy-mm-dd format</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-geoslurp.discover.oceanobs.argoQuery">
 <span id="geoslurp-discover-oceanobs-argoquery-module"></span><h2>geoslurp.discover.oceanobs.argoQuery module<a class="headerlink" href="#module-geoslurp.discover.oceanobs.argoQuery" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.discover.oceanobs.argoQuery.argoQuery">
-<code class="descclassname">geoslurp.discover.oceanobs.argoQuery.</code><code class="descname">argoQuery</code><span class="sig-paren">(</span><em>dbcon</em>, <em>geoWKT=None</em>, <em>tspan=None</em>, <em>withinDmeter=None</em>, <em>tsort=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argoQuery.html#argoQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argoQuery.argoQuery" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.discover.oceanobs.argoQuery.argoQuery">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.discover.oceanobs.argoQuery.</span></span><span class="sig-name descname"><span class="pre">argoQuery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoWKT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tspan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">withinDmeter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tsort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argoQuery.html#argoQuery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argoQuery.argoQuery" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.discover.oceanobs.argoQuery.queryMonthlyArgo">
-<code class="descclassname">geoslurp.discover.oceanobs.argoQuery.</code><code class="descname">queryMonthlyArgo</code><span class="sig-paren">(</span><em>dbcon</em>, <em>geoWKT</em>, <em>tstart</em>, <em>tend</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argoQuery.html#queryMonthlyArgo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argoQuery.queryMonthlyArgo" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.discover.oceanobs.argoQuery.queryMonthlyArgo">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.discover.oceanobs.argoQuery.</span></span><span class="sig-name descname"><span class="pre">queryMonthlyArgo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoWKT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tstart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/argoQuery.html#queryMonthlyArgo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.argoQuery.queryMonthlyArgo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the database for lists of monthly Argo profiles within a certain polygon and time span</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-geoslurp.discover.oceanobs.awipiesQuery">
 <span id="geoslurp-discover-oceanobs-awipiesquery-module"></span><h2>geoslurp.discover.oceanobs.awipiesQuery module<a class="headerlink" href="#module-geoslurp.discover.oceanobs.awipiesQuery" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.discover.oceanobs.awipiesQuery.awipiesQuery">
-<code class="descclassname">geoslurp.discover.oceanobs.awipiesQuery.</code><code class="descname">awipiesQuery</code><span class="sig-paren">(</span><em>dbcon</em>, <em>tspan=None</em>, <em>geoWKT=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/awipiesQuery.html#awipiesQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.awipiesQuery.awipiesQuery" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.discover.oceanobs.awipiesQuery.awipiesQuery">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.discover.oceanobs.awipiesQuery.</span></span><span class="sig-name descname"><span class="pre">awipiesQuery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tspan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoWKT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/awipiesQuery.html#awipiesQuery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.awipiesQuery.awipiesQuery" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="geoslurp.discover.oceanobs.awipiesQuery.awipiesWKB">
-<code class="descclassname">geoslurp.discover.oceanobs.awipiesQuery.</code><code class="descname">awipiesWKB</code><span class="sig-paren">(</span><em>dbcon</em>, <em>tspan</em>, <em>geoWKT=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/awipiesQuery.html#awipiesWKB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.awipiesQuery.awipiesWKB" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.discover.oceanobs.awipiesQuery.awipiesWKB">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.discover.oceanobs.awipiesQuery.</span></span><span class="sig-name descname"><span class="pre">awipiesWKB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tspan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoWKT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/awipiesQuery.html#awipiesWKB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.awipiesQuery.awipiesWKB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the database positions of OBP points</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-geoslurp.discover.oceanobs.psmsl">
 <span id="geoslurp-discover-oceanobs-psmsl-module"></span><h2>geoslurp.discover.oceanobs.psmsl module<a class="headerlink" href="#module-geoslurp.discover.oceanobs.psmsl" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="geoslurp.discover.oceanobs.psmsl.psmslQuery">
-<code class="descclassname">geoslurp.discover.oceanobs.psmsl.</code><code class="descname">psmslQuery</code><span class="sig-paren">(</span><em>dbcon</em>, <em>psmsltable</em>, <em>polyWKT</em>, <em>tspan=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/psmsl.html#psmslQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.psmsl.psmslQuery" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoslurp.discover.oceanobs.psmsl.psmslQuery">
+<span class="sig-prename descclassname"><span class="pre">geoslurp.discover.oceanobs.psmsl.</span></span><span class="sig-name descname"><span class="pre">psmslQuery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psmsltable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polyWKT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tspan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/geoslurp/discover/oceanobs/psmsl.html#psmslQuery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoslurp.discover.oceanobs.psmsl.psmslQuery" title="Permalink to this definition">¶</a></dt>
 <dd><p>queries the geoslurp database for tide gauge series</p>
 </dd></dl>
 
@@ -243,34 +253,32 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="geoslurp.tools.html" class="btn btn-neutral float-right" title="geoslurp.tools package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="geoslurp.discover.gravity.html" class="btn btn-neutral" title="geoslurp.discover.gravity package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="geoslurp.discover.oras.html" class="btn btn-neutral float-right" title="geoslurp.discover.oras package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="geoslurp.discover.gravity.html" class="btn btn-neutral float-left" title="geoslurp.discover.gravity package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -279,37 +287,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>
