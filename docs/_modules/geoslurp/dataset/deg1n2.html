@@ -1,59 +1,59 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.dataset.deg1n2 &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,13 +104,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,10 +119,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -148,8 +153,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -179,23 +182,23 @@
 
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="k">import</span> <span class="n">TIMESTAMP</span><span class="p">,</span> <span class="n">JSONB</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">MetaData</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
-<span class="kn">from</span> <span class="nn">geoslurp.dataset</span> <span class="k">import</span> <span class="n">DataSet</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull.ftp</span> <span class="k">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">ftp</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull.http</span> <span class="k">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">http</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span><span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">geoslurp.tools.time</span> <span class="k">import</span> <span class="n">decyear2dt</span><span class="p">,</span><span class="n">dt2monthlyinterval</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">TIMESTAMP</span><span class="p">,</span> <span class="n">JSONB</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">geoslurp.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.ftp</span> <span class="kn">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">ftp</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.http</span> <span class="kn">import</span> <span class="n">Uri</span> <span class="k">as</span> <span class="n">http</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span><span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">geoslurp.tools.time</span> <span class="kn">import</span> <span class="n">decyear2dt</span><span class="p">,</span><span class="n">dt2monthlyinterval</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">tarfile</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.catalogue</span> <span class="k">import</span> <span class="n">geoslurpCatalogue</span>
-<span class="kn">from</span> <span class="nn">geoslurp.tools.gravity</span> <span class="k">import</span> <span class="n">GravitySHTBase</span><span class="p">,</span><span class="n">Trig</span><span class="p">,</span><span class="n">JSONSHArchive</span>
-
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.catalogue</span> <span class="kn">import</span> <span class="n">geoslurpCatalogue</span>
+<span class="kn">from</span> <span class="nn">geoslurp.tools.gravity</span> <span class="kn">import</span> <span class="n">GravitySHTBase</span><span class="p">,</span><span class="n">GravitySHinDBTBase</span><span class="p">,</span><span class="n">Trig</span><span class="p">,</span><span class="n">JSONSHArchive</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
 <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span>
 
@@ -204,7 +207,7 @@
     <span class="n">sqrt3timesRE</span><span class="o">=</span><span class="mf">11047256.4063275</span>
     <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
     <span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="s2">&quot;geocenter_Rietbroeketal2016updTable&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">GravitySHTBase</span><span class="p">,),</span> <span class="p">{})</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
         <span class="c1"># super().__init__(direc=direc,uri=&#39;https://wobbly.earth/data/Geocenter_dec2017.tgz&#39;,order=[&#39;c10&#39;,&#39;c11&#39;,&#39;s11&#39;],lastupdate=datetime(2018,10,16))</span>
     
@@ -269,8 +272,8 @@
     <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
     <span class="n">rooturl</span><span class="o">=</span><span class="s2">&quot;https://podaac-tools.jpl.nasa.gov/drive/files/allData/grace/docs/&quot;</span>
     <span class="c1"># fout=&quot;TN-13_GEOC_CSR_RL06.txt&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;Table&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">GravitySHTBase</span><span class="p">,),</span> <span class="p">{})</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;Table&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">GravitySHinDBTBase</span><span class="p">,),</span> <span class="p">{})</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
     
 <div class="viewcode-block" id="geocenter_GRCRL06_TN13.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.geocenter_GRCRL06_TN13.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -288,18 +291,33 @@
             <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fid</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;end of header&quot;</span><span class="p">,</span><span class="n">ln</span><span class="p">):</span>
                     <span class="k">break</span>
+            
+            <span class="n">nv</span><span class="o">=</span><span class="p">[]</span>
+            <span class="n">mv</span><span class="o">=</span><span class="p">[]</span>
+            <span class="n">tv</span><span class="o">=</span><span class="p">[]</span>
+            <span class="n">cnmv</span><span class="o">=</span><span class="p">[]</span>
+            <span class="n">sigcnmv</span><span class="o">=</span><span class="p">[]</span>
             <span class="c1">#loop over entry lines </span>
-            <span class="n">shar</span><span class="o">=</span><span class="n">JSONSHArchive</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fid</span><span class="p">:</span>
                 
                 <span class="n">tp</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">cnm</span><span class="p">,</span><span class="n">snm</span><span class="p">,</span><span class="n">sigcnm</span><span class="p">,</span><span class="n">sigsnm</span><span class="p">,</span><span class="n">ts</span><span class="p">,</span><span class="n">te</span><span class="o">=</span><span class="n">ln</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                
+                <span class="c1">#Append cosine coefficients</span>
                 <span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
                 <span class="n">m</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-                <span class="n">shar</span><span class="p">[</span><span class="s2">&quot;cnm&quot;</span><span class="p">][</span><span class="n">shar</span><span class="o">.</span><span class="n">idx</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">Trig</span><span class="o">.</span><span class="n">c</span><span class="p">))]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">cnm</span><span class="p">)</span>
-                <span class="n">shar</span><span class="p">[</span><span class="s2">&quot;sigcnm&quot;</span><span class="p">][</span><span class="n">shar</span><span class="o">.</span><span class="n">idx</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">Trig</span><span class="o">.</span><span class="n">c</span><span class="p">))]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sigcnm</span><span class="p">)</span>
+                <span class="n">nv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                <span class="n">mv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="n">tv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">cnmv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cnm</span><span class="p">))</span>
+                <span class="n">sigcnmv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sigcnm</span><span class="p">))</span>
+
+                <span class="c1">#append sine coefficients</span>
                 <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">shar</span><span class="p">[</span><span class="s2">&quot;cnm&quot;</span><span class="p">][</span><span class="n">shar</span><span class="o">.</span><span class="n">idx</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">Trig</span><span class="o">.</span><span class="n">s</span><span class="p">))]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">snm</span><span class="p">)</span>
-                    <span class="n">shar</span><span class="p">[</span><span class="s2">&quot;sigcnm&quot;</span><span class="p">][</span><span class="n">shar</span><span class="o">.</span><span class="n">idx</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">Trig</span><span class="o">.</span><span class="n">s</span><span class="p">))]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sigsnm</span><span class="p">)</span>
+                    <span class="n">nv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                    <span class="n">mv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                    <span class="n">tv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">cnmv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">snm</span><span class="p">))</span>
+                    <span class="n">sigcnmv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sigsnm</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> 
                     <span class="c1">#register the accumulated entry</span>
@@ -308,10 +326,15 @@
                     <span class="c1">#snap the central epoch to the 15th of the month</span>
                     <span class="n">tcent</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="n">tstart</span><span class="o">.</span><span class="n">year</span><span class="p">,</span><span class="n">tstart</span><span class="o">.</span><span class="n">month</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
                 
-                    <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;GSM&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="n">tcent</span><span class="p">,</span><span class="s2">&quot;tstart&quot;</span><span class="p">:</span><span class="n">tstart</span><span class="p">,</span><span class="s2">&quot;tend&quot;</span><span class="p">:</span><span class="n">tend</span><span class="p">,</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">:</span><span class="n">lastupdate</span><span class="p">,</span><span class="s2">&quot;nmax&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;omax&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;origin&quot;</span><span class="p">:</span><span class="s2">&quot;CF&quot;</span><span class="p">,</span><span class="s2">&quot;format&quot;</span><span class="p">:</span><span class="s2">&quot;JSONB&quot;</span><span class="p">,</span><span class="s2">&quot;uri&quot;</span><span class="p">:</span><span class="s2">&quot;self:data&quot;</span><span class="p">,</span><span class="s2">&quot;gm&quot;</span><span class="p">:</span><span class="mf">0.3986004415e+15</span><span class="p">,</span><span class="s2">&quot;re&quot;</span><span class="p">:</span><span class="mf">0.6378136460e+07</span><span class="p">}</span>
-                    <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">shar</span><span class="o">.</span><span class="n">dict</span><span class="p">)</span>
-
+                    <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;GSM&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="n">tcent</span><span class="p">,</span><span class="s2">&quot;tstart&quot;</span><span class="p">:</span><span class="n">tstart</span><span class="p">,</span><span class="s2">&quot;tend&quot;</span><span class="p">:</span><span class="n">tend</span><span class="p">,</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">:</span><span class="n">lastupdate</span><span class="p">,</span><span class="s2">&quot;nmax&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;omax&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;origin&quot;</span><span class="p">:</span><span class="s2">&quot;CF&quot;</span><span class="p">,</span><span class="s2">&quot;format&quot;</span><span class="p">:</span><span class="s2">&quot;JSONB&quot;</span><span class="p">,</span><span class="s2">&quot;gm&quot;</span><span class="p">:</span><span class="mf">0.3986004415e+15</span><span class="p">,</span><span class="s2">&quot;re&quot;</span><span class="p">:</span><span class="mf">0.6378136460e+07</span><span class="p">}</span>
+                    <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">cnm</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">cnmv</span><span class="p">),</span><span class="n">sigcnm</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">sigcnmv</span><span class="p">)),</span><span class="n">coords</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">nv</span><span class="p">),</span><span class="n">m</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">mv</span><span class="p">),</span><span class="n">t</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">tv</span><span class="p">)))</span>
+                    
                     <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+                    <span class="n">nv</span><span class="o">=</span><span class="p">[]</span>
+                    <span class="n">mv</span><span class="o">=</span><span class="p">[]</span>
+                    <span class="n">tv</span><span class="o">=</span><span class="p">[]</span>
+                    <span class="n">cnmv</span><span class="o">=</span><span class="p">[]</span>
+                    <span class="n">sigcnmv</span><span class="o">=</span><span class="p">[]</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
         
@@ -333,7 +356,7 @@
     <span class="n">sqrt3timesRE</span><span class="o">=</span><span class="mf">11047256.23312e3</span>
     <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
     <span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="s2">&quot;geocenter_ries_cfcmTable&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">GravitySHTBase</span><span class="p">,),</span> <span class="p">{})</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
         <span class="c1"># super().__init__(direc=direc,uri=&#39;https://wobbly.earth/data/Geocenter_dec2017.tgz&#39;,order=[&#39;c10&#39;,&#39;c11&#39;,&#39;s11&#39;],lastupdate=datetime(2018,10,16))</span>
     
@@ -389,6 +412,69 @@
 
 <span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addDataset</span><span class="p">(</span><span class="n">geocenter_RIES_CFCM</span><span class="p">)</span>
 
+<div class="viewcode-block" id="TN14_SLR_GSFC"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.TN14_SLR_GSFC">[docs]</a><span class="k">class</span>  <span class="nc">TN14_SLR_GSFC</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
+    <span class="n">rooturl</span><span class="o">=</span><span class="s2">&quot;ftp://isdcftp.gfz-potsdam.de/grace-fo/DOCUMENTS/TECHNICAL_NOTES/&quot;</span>
+    <span class="n">fout</span><span class="o">=</span><span class="s2">&quot;TN-14_C30_C20_SLR_GSFC.txt&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;Table&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">GravitySHinDBTBase</span><span class="p">,),</span> <span class="p">{})</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="TN14_SLR_GSFC.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.TN14_SLR_GSFC.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pulls the C20 Technical note 14&quot;&quot;&quot;</span>
+        <span class="n">uri</span><span class="o">=</span><span class="n">ftp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rooturl</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">fout</span><span class="p">,</span><span class="n">lastmod</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TN14_SLR_GSFC.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.deg1n2.TN14_SLR_GSFC.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">truncateTable</span><span class="p">()</span>
+        <span class="c1">#set general settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;citation&quot;</span><span class="p">:</span><span class="s2">&quot;GRACE technical note 14&quot;</span><span class="p">}</span>
+        <span class="n">lastupdate</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">mjd00</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1858</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">17</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cacheDir</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">fout</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="c1">#skip header</span>
+            <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fid</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;^Product:&quot;</span><span class="p">,</span><span class="n">ln</span><span class="p">):</span>
+                    <span class="k">break</span>
+            
+            <span class="c1">#loop over entry lines </span>
+            <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">fid</span><span class="p">:</span>
+                
+                <span class="n">mjd0</span><span class="p">,</span><span class="n">decy0</span><span class="p">,</span><span class="n">c20</span><span class="p">,</span><span class="n">dc20</span><span class="p">,</span><span class="n">sigc20</span><span class="p">,</span><span class="n">c30</span><span class="p">,</span><span class="n">dc30</span><span class="p">,</span><span class="n">sigc30</span><span class="p">,</span><span class="n">mjd1</span><span class="p">,</span><span class="n">decyr1</span><span class="o">=</span><span class="n">ln</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                
+                <span class="n">nv</span><span class="o">=</span><span class="p">[]</span>
+                <span class="n">mv</span><span class="o">=</span><span class="p">[]</span>
+                <span class="n">tv</span><span class="o">=</span><span class="p">[]</span>
+                <span class="n">cnmv</span><span class="o">=</span><span class="p">[]</span>
+                <span class="n">sigcnmv</span><span class="o">=</span><span class="p">[]</span>
+                
+                <span class="c1">#Append c20 coefficients</span>
+                <span class="n">nv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">mv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">tv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">cnmv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">c20</span><span class="p">))</span>
+                <span class="n">sigcnmv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sigc20</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">c30</span> <span class="o">!=</span> <span class="s2">&quot;NaN&quot;</span><span class="p">:</span>
+                    <span class="n">nv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                    <span class="n">mv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">tv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">cnmv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">c30</span><span class="p">))</span>
+                    <span class="n">sigcnmv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sigc30</span><span class="p">))</span>
+
+                <span class="c1">#register the accumulated entry</span>
+                <span class="n">tstart</span><span class="o">=</span><span class="n">mjd00</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">mjd0</span><span class="p">))</span>
+                <span class="n">tend</span><span class="o">=</span><span class="n">mjd00</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">mjd1</span><span class="p">))</span>
+                <span class="c1">#snap the central epoch to the 15th of the month</span>
+                <span class="n">tcent</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="n">tstart</span><span class="o">.</span><span class="n">year</span><span class="p">,</span><span class="n">tstart</span><span class="o">.</span><span class="n">month</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+            
+                <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;GSM&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="n">tcent</span><span class="p">,</span><span class="s2">&quot;tstart&quot;</span><span class="p">:</span><span class="n">tstart</span><span class="p">,</span><span class="s2">&quot;tend&quot;</span><span class="p">:</span><span class="n">tend</span><span class="p">,</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">:</span><span class="n">lastupdate</span><span class="p">,</span><span class="s2">&quot;nmax&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;omax&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;format&quot;</span><span class="p">:</span><span class="s2">&quot;JSONB&quot;</span><span class="p">,</span><span class="s2">&quot;gm&quot;</span><span class="p">:</span><span class="mf">0.3986004415e+15</span><span class="p">,</span><span class="s2">&quot;re&quot;</span><span class="p">:</span><span class="mf">0.6378136460e+07</span><span class="p">}</span>
+                <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">cnm</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">cnmv</span><span class="p">),</span><span class="n">sigcnm</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">sigcnmv</span><span class="p">)),</span><span class="n">coords</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">nv</span><span class="p">),</span><span class="n">m</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">mv</span><span class="p">),</span><span class="n">t</span><span class="o">=</span><span class="p">([</span><span class="s2">&quot;shg&quot;</span><span class="p">],</span><span class="n">tv</span><span class="p">)))</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
+
+
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addDataset</span><span class="p">(</span><span class="n">TN14_SLR_GSFC</span><span class="p">)</span>
 <span class="c1"># class Sun2017Comb(LowdegreeSource):</span>
     <span class="c1"># def __init__(self,direc,uri=None):</span>
         <span class="c1"># if not uri:</span>
@@ -463,25 +549,28 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -490,37 +579,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

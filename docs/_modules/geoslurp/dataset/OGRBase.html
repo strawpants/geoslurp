@@ -1,59 +1,59 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.dataset.OGRBase &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,13 +104,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,10 +119,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -148,8 +153,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -179,70 +182,16 @@
 
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
-<span class="kn">from</span> <span class="nn">geoslurp.dataset.dataSetBase</span> <span class="k">import</span> <span class="n">DataSet</span>
-<span class="kn">from</span> <span class="nn">osgeo</span> <span class="k">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplogger</span>
-<span class="kn">from</span> <span class="nn">geoalchemy2</span> <span class="k">import</span> <span class="n">WKBElement</span><span class="p">,</span><span class="n">Geography</span><span class="p">,</span><span class="n">Geometry</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Table</span><span class="p">,</span><span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">BigInteger</span><span class="p">,</span><span class="n">Date</span>
-<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="k">import</span> <span class="n">tableMapFactory</span>
+<span class="kn">from</span> <span class="nn">geoslurp.dataset.dataSetBase</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2</span> <span class="kn">import</span> <span class="n">WKBElement</span><span class="p">,</span><span class="n">Geography</span><span class="p">,</span><span class="n">Geometry</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span><span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">BigInteger</span><span class="p">,</span><span class="n">Date</span><span class="p">,</span><span class="n">DateTime</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db</span> <span class="kn">import</span> <span class="n">tableMapFactory</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<div class="viewcode-block" id="columnsFromOgrFeat"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.OGRBase.columnsFromOgrFeat">[docs]</a><span class="k">def</span> <span class="nf">columnsFromOgrFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span> <span class="n">spatindex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forceGType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">targetsrid</span><span class="o">=</span><span class="mi">4326</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a list of columns from a osgeo feature&quot;&quot;&quot;</span>
-    <span class="n">gisMap</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;String&#39;</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span> <span class="s1">&#39;Real&#39;</span><span class="p">:</span> <span class="n">Float</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">:</span> <span class="n">Float</span><span class="p">,</span> <span class="s1">&#39;Integer64&#39;</span><span class="p">:</span><span class="n">BigInteger</span><span class="p">,</span> <span class="s2">&quot;Date&quot;</span><span class="p">:</span><span class="n">Date</span><span class="p">}</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">GetDefnRef</span><span class="p">()</span>
-    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">GetFieldCount</span><span class="p">()):</span>
-        <span class="n">fld</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">GetFieldDefn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">fld</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
-            <span class="c1"># skip columns with id (will be  renewed)</span>
-            <span class="k">continue</span>
-        <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">gisMap</span><span class="p">[</span><span class="n">fld</span><span class="o">.</span><span class="n">GetTypeName</span><span class="p">()]))</span>
 
-    <span class="c1"># append geometry column</span>
-    <span class="k">if</span> <span class="n">forceGType</span><span class="p">:</span>
-        <span class="n">gType</span> <span class="o">=</span> <span class="n">forceGType</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">gType</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">GetGeometryName</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">targetsrid</span> <span class="o">==</span> <span class="mi">4326</span><span class="p">:</span>
-        <span class="n">geomtype</span> <span class="o">=</span> <span class="n">Geography</span><span class="p">(</span><span class="n">gType</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="n">targetsrid</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="n">spatindex</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">geomtype</span> <span class="o">=</span> <span class="n">Geometry</span><span class="p">(</span><span class="n">gType</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="n">targetsrid</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="n">spatindex</span><span class="p">)</span>
 
-    <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span> <span class="n">geomtype</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">cols</span></div>
-
-<div class="viewcode-block" id="valuesFromOgrFeat"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.OGRBase.valuesFromOgrFeat">[docs]</a><span class="k">def</span> <span class="nf">valuesFromOgrFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">targetsrid</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span><span class="n">swapxy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a dictionary with loaded values from a feature&quot;&quot;&quot;</span>
-    <span class="n">df</span><span class="o">=</span><span class="n">feat</span><span class="o">.</span><span class="n">GetDefnRef</span><span class="p">()</span>
-
-    <span class="n">vals</span><span class="o">=</span><span class="p">{}</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">GetFieldCount</span><span class="p">()):</span>
-        <span class="n">fld</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">GetFieldDefn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">fld</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
-            <span class="c1">#skip columns with id (will be automatically filled)</span>
-            <span class="k">continue</span>
-        <span class="k">if</span> <span class="n">fld</span><span class="o">.</span><span class="n">GetTypeName</span><span class="p">()</span> <span class="o">==</span><span class="s1">&#39;String&#39;</span><span class="p">:</span>
-            <span class="c1"># vals[name.lower()]=feat.GetFieldAsBinary(i).decode(&#39;iso-8859-1&#39;)</span>
-            <span class="n">vals</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span><span class="o">=</span><span class="n">feat</span><span class="o">.</span><span class="n">GetFieldAsBinary</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">vals</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span><span class="o">=</span><span class="n">feat</span><span class="o">.</span><span class="n">GetField</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-
-    <span class="c1">#append geometry values</span>
-    
-    <span class="n">geom</span><span class="o">=</span><span class="n">feat</span><span class="o">.</span><span class="n">GetGeometryRef</span><span class="p">()</span>
-    
-    <span class="k">if</span> <span class="n">swapxy</span><span class="p">:</span> 
-        <span class="n">geom</span><span class="o">.</span><span class="n">SwapXY</span><span class="p">()</span>
-    
-    <span class="k">if</span> <span class="n">transform</span><span class="p">:</span>
-        <span class="n">geom</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
-        
-    <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;geom&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">WKBElement</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">ExportToWkb</span><span class="p">(),</span><span class="n">srid</span><span class="o">=</span><span class="n">targetsrid</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">vals</span></div>
 
 <div class="viewcode-block" id="OGRBase"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.OGRBase.OGRBase">[docs]</a><span class="k">class</span> <span class="nc">OGRBase</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class which downloads a single OGR layer (e.g. shapefile) and registers it as a postgis table&quot;&quot;&quot;</span>
@@ -254,13 +203,97 @@
     <span class="n">targetprj</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">targetsrid</span><span class="o">=</span><span class="mi">4326</span>
     <span class="n">swapxy</span><span class="o">=</span><span class="kc">False</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+    <span class="n">ignoreFields</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">spatindex</span><span class="o">=</span><span class="kc">True</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
         <span class="c1">#set default target projection if not explicitly set</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">targetprj</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">targetprj</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">targetprj</span><span class="o">.</span><span class="n">ImportFromEPSG</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targetsrid</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignoreFields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ignoreRegex</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignoreFields</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#make a regex which will never match</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ignoreRegex</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?!x)x&#39;</span><span class="p">)</span>
+        
+
+<div class="viewcode-block" id="OGRBase.valuesFromOgrFeat"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.OGRBase.OGRBase.valuesFromOgrFeat">[docs]</a>    <span class="k">def</span> <span class="nf">valuesFromOgrFeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">feat</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dictionary with loaded values from a feature&quot;&quot;&quot;</span>
+        <span class="n">df</span><span class="o">=</span><span class="n">feat</span><span class="o">.</span><span class="n">GetDefnRef</span><span class="p">()</span>
+        
+                
+            
+        <span class="n">vals</span><span class="o">=</span><span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">GetFieldCount</span><span class="p">()):</span>
+            <span class="n">fld</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">GetFieldDefn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">fld</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignoreRegex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
+                <span class="c1">#skip columns with id (will be automatically filled)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">fld</span><span class="o">.</span><span class="n">GetTypeName</span><span class="p">()</span> <span class="o">==</span><span class="s1">&#39;String&#39;</span><span class="p">:</span>
+                <span class="c1"># vals[name.lower()]=feat.GetFieldAsBinary(i).decode(&#39;iso-8859-1&#39;)</span>
+                <span class="n">vals</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span><span class="o">=</span><span class="n">feat</span><span class="o">.</span><span class="n">GetFieldAsBinary</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vals</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span><span class="o">=</span><span class="n">feat</span><span class="o">.</span><span class="n">GetField</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="c1">#append geometry values</span>
+
+        <span class="n">geom</span><span class="o">=</span><span class="n">feat</span><span class="o">.</span><span class="n">GetGeometryRef</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapxy</span><span class="p">:</span> 
+            <span class="n">geom</span><span class="o">.</span><span class="n">SwapXY</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">transform</span><span class="p">:</span>
+            <span class="n">geom</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+
+        <span class="n">vals</span><span class="p">[</span><span class="s1">&#39;geom&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">WKBElement</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">ExportToWkb</span><span class="p">(),</span><span class="n">srid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">targetsrid</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">vals</span></div>
+
+<div class="viewcode-block" id="OGRBase.columnsFromOgrFeat"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.OGRBase.OGRBase.columnsFromOgrFeat">[docs]</a>    <span class="k">def</span> <span class="nf">columnsFromOgrFeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">feat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of columns from a osgeo feature&quot;&quot;&quot;</span>
+        <span class="n">gisMap</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;String&#39;</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span> <span class="s1">&#39;Real&#39;</span><span class="p">:</span> <span class="n">Float</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">:</span> <span class="n">Float</span><span class="p">,</span> <span class="s1">&#39;Integer64&#39;</span><span class="p">:</span><span class="n">BigInteger</span><span class="p">,</span> <span class="s2">&quot;Date&quot;</span><span class="p">:</span><span class="n">Date</span><span class="p">,</span><span class="s2">&quot;DateTime&quot;</span><span class="p">:</span><span class="n">DateTime</span><span class="p">}</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">GetDefnRef</span><span class="p">()</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">GetFieldCount</span><span class="p">()):</span>
+            <span class="n">fld</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">GetFieldDefn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">fld</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignoreRegex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
+                <span class="c1"># skip columns with id (will be  renewed)</span>
+                <span class="k">continue</span>
+                
+            <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">gisMap</span><span class="p">[</span><span class="n">fld</span><span class="o">.</span><span class="n">GetTypeName</span><span class="p">()]))</span>
+
+        <span class="k">if</span> <span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">Is3D</span><span class="p">():</span>
+            <span class="n">geomdim</span><span class="o">=</span><span class="mi">3</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">geomdim</span><span class="o">=</span><span class="mi">2</span>
+
+        <span class="c1"># append geometry column</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gtype</span><span class="p">:</span>
+            <span class="n">gType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gtype</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gType</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">GetGeometryName</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">targetsrid</span> <span class="o">==</span> <span class="mi">4326</span><span class="p">:</span>
+            <span class="n">geomtype</span> <span class="o">=</span> <span class="n">Geography</span><span class="p">(</span><span class="n">gType</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">targetsrid</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spatindex</span><span class="p">,</span><span class="n">dimension</span><span class="o">=</span><span class="n">geomdim</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">geomtype</span> <span class="o">=</span> <span class="n">Geometry</span><span class="p">(</span><span class="n">gType</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">targetsrid</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spatindex</span><span class="p">,</span><span class="n">dimension</span><span class="o">=</span><span class="n">geomdim</span><span class="p">)</span>
+
+        <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span> <span class="n">geomtype</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">cols</span></div>
+    
+    
 <div class="viewcode-block" id="OGRBase.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.OGRBase.OGRBase.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update/populate a database table (creates one if it doesn&#39;t exist)</span>
 <span class="sd">        This function reads a shapefile and puts it in a single table.</span>
@@ -296,9 +329,10 @@
             <span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">shpflayer</span><span class="p">:</span>
                 <span class="n">count</span><span class="o">+=</span><span class="mi">1</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">cols</span><span class="o">=</span><span class="n">columnsFromOgrFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span><span class="n">forceGType</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gtype</span><span class="p">,</span><span class="n">targetsrid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">targetsrid</span><span class="p">)</span>
+                    <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">columnsFromOgrFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">createTable</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
-                <span class="n">values</span><span class="o">=</span><span class="n">valuesFromOgrFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span><span class="n">transform</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">targetsrid</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">swapxy</span><span class="p">)</span>
+                <span class="n">values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">valuesFromOgrFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span><span class="n">transform</span><span class="p">)</span>
+<span class="c1">#                 import pdb;pdb.set_trace()</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
                 <span class="k">except</span><span class="p">:</span>
@@ -312,25 +346,28 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -339,37 +376,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

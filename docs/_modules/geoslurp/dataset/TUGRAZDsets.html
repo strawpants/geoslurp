@@ -1,59 +1,59 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.dataset.TUGRAZDsets &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,13 +104,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,10 +119,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -148,8 +153,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -179,19 +182,65 @@
 
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
-<span class="kn">from</span> <span class="nn">geoslurp.dataset</span> <span class="k">import</span> <span class="n">DataSet</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull.ftp</span> <span class="k">import</span> <span class="n">Crawler</span> <span class="k">as</span> <span class="n">ftpCrawler</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull.uri</span> <span class="k">import</span> <span class="n">findFiles</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplogger</span>
-<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="k">import</span> <span class="n">UriFile</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">geoslurp.tools.gravity</span> <span class="k">import</span> <span class="n">GravitySHTBase</span><span class="p">,</span> <span class="n">icgemMetaExtractor</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declared_attr</span><span class="p">,</span> <span class="n">as_declarative</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span><span class="p">,</span> <span class="n">Boolean</span><span class="p">,</span><span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">TIMESTAMP</span>
+<span class="kn">from</span> <span class="nn">geoslurp.dataset</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.ftp</span> <span class="kn">import</span> <span class="n">Crawler</span> <span class="k">as</span> <span class="n">ftpCrawler</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull.uri</span> <span class="kn">import</span> <span class="n">findFiles</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">geoslurp.datapull</span> <span class="kn">import</span> <span class="n">UriFile</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span><span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">geoslurp.tools.gravity</span> <span class="kn">import</span> <span class="n">GravitySHTBase</span><span class="p">,</span> <span class="n">icgemMetaExtractor</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.catalogue</span> <span class="k">import</span> <span class="n">geoslurpCatalogue</span>
-<span class="kn">from</span> <span class="nn">geoslurp.db.settings</span> <span class="k">import</span> <span class="n">getCreateDir</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.catalogue</span> <span class="kn">import</span> <span class="n">geoslurpCatalogue</span>
+<span class="kn">from</span> <span class="nn">geoslurp.db.settings</span> <span class="kn">import</span> <span class="n">getCreateDir</span>
+<span class="kn">import</span> <span class="nn">gzip</span> <span class="k">as</span> <span class="nn">gz</span>
 
 <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;gravity&#39;</span>
+
+<span class="nd">@as_declarative</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">scheme</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">GravityNormals</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@declared_attr</span>
+    <span class="k">def</span> <span class="nf">__tablename__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1">#strip of the &#39;Table&#39; from the class name</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">lastupdate</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">)</span>
+    <span class="n">tstart</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tend</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">TIMESTAMP</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">nmax</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="nb">format</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">uri</span><span class="o">=</span><span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+<div class="viewcode-block" id="snxdate2datetime"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.snxdate2datetime">[docs]</a><span class="k">def</span> <span class="nf">snxdate2datetime</span><span class="p">(</span><span class="n">snxd</span><span class="p">):</span>
+    <span class="n">yr</span><span class="p">,</span><span class="n">doy</span><span class="p">,</span><span class="n">sec</span><span class="o">=</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">snxd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">yr</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+        <span class="n">yr</span><span class="o">+=</span><span class="mi">1900</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">yr</span><span class="o">+=</span><span class="mi">2000</span>
+
+    <span class="k">return</span> <span class="n">datetime</span><span class="p">(</span><span class="n">yr</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">doy</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">seconds</span><span class="o">=</span><span class="n">sec</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NormalsMetaExtractor"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.NormalsMetaExtractor">[docs]</a><span class="k">def</span> <span class="nf">NormalsMetaExtractor</span><span class="p">(</span><span class="n">uri</span><span class="p">):</span>
+
+    <span class="c1">#read some stuff from the sinex files</span>
+    <span class="k">with</span> <span class="n">gz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="s1">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Extracting info from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+        <span class="n">ln</span><span class="o">=</span><span class="n">fid</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ln</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;%=SNX&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;This doesn&#39;t seem like a valid SINEX file&quot;</span><span class="p">)</span>
+        <span class="n">lnspl</span><span class="o">=</span><span class="n">ln</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">tstart</span><span class="o">=</span><span class="n">snxdate2datetime</span><span class="p">(</span><span class="n">lnspl</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">tend</span><span class="o">=</span><span class="n">snxdate2datetime</span><span class="p">(</span><span class="n">lnspl</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+        <span class="n">tcent</span><span class="o">=</span><span class="n">tstart</span><span class="o">+</span><span class="p">(</span><span class="n">tend</span><span class="o">-</span><span class="n">tstart</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+
+    <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;uri&quot;</span><span class="p">:</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">,</span><span class="s2">&quot;lastupdate&quot;</span><span class="p">:</span><span class="n">uri</span><span class="o">.</span><span class="n">lastmod</span><span class="p">,</span><span class="s2">&quot;tend&quot;</span><span class="p">:</span><span class="n">tend</span><span class="p">,</span><span class="s2">&quot;tstart&quot;</span><span class="p">:</span><span class="n">tstart</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="n">tcent</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">meta</span></div>
+
 
 <div class="viewcode-block" id="enhanceMeta"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.enhanceMeta">[docs]</a><span class="k">def</span> <span class="nf">enhanceMeta</span><span class="p">(</span><span class="n">meta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract addtional timestamps from the TU graz filename data&quot;&quot;&quot;</span>
@@ -228,12 +277,12 @@
     <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
     <span class="n">release</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
     <span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
         <span class="c1">#initialize postgreslq table</span>
         <span class="n">GravitySHTBase</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span> <span class="n">checkfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">datadir</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">datadir</span><span class="o">=</span><span class="n">getCreateDir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">getDataDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">mirrorMap</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">datadir</span><span class="o">=</span><span class="n">getCreateDir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">getDataDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="p">))</span>
 
 <div class="viewcode-block" id="TUGRAZGRACEL2Base.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2Base.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="p">)</span>
@@ -260,12 +309,52 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
 
 
+<div class="viewcode-block" id="TUGRAZGRACEL2NormalBase"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2NormalBase">[docs]</a><span class="k">class</span> <span class="nc">TUGRAZGRACEL2NormalBase</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Derived type representing GRACE Normal equation systems from the TU GRAZ&quot;&quot;&quot;</span>
+    <span class="n">table</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span>
+    <span class="n">release</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+    <span class="n">subdirs</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+    <span class="n">updated</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TUGRAZGRACEL2NormalBase.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2NormalBase.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;ftp://ftp.tugraz.at/outgoing/ITSG/GRACE/&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">subdirs</span><span class="p">)</span>
+        <span class="n">ftp</span><span class="o">=</span><span class="n">ftpCrawler</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">pattern</span><span class="o">=</span><span class="s1">&#39;.*.snx.gz&#39;</span><span class="p">,</span><span class="n">followpattern</span><span class="o">=</span><span class="s1">&#39;([0-9]</span><span class="si">{4}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated</span><span class="o">=</span><span class="n">ftp</span><span class="o">.</span><span class="n">parallelDownload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maxconn</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TUGRAZGRACEL2NormalBase.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2NormalBase.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1">#create a list of files which need to be (re)registered</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">updated</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updated</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="n">UriFile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">findFiles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="s1">&#39;.*snx.gz&#39;</span><span class="p">,</span><span class="n">since</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dbinvent</span><span class="o">.</span><span class="n">lastupdate</span><span class="p">)]</span>
+
+        <span class="n">newfiles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">retainnewUris</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="c1">#loop over files</span>
+        <span class="k">for</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">newfiles</span><span class="p">:</span>
+            <span class="n">slurplogger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;extracting meta info from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">uri</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+            <span class="n">meta</span><span class="o">=</span><span class="n">NormalsMetaExtractor</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
+
 <div class="viewcode-block" id="TUGRAZGRACEL2ClassFactory"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEL2ClassFactory">[docs]</a><span class="k">def</span> <span class="nf">TUGRAZGRACEL2ClassFactory</span><span class="p">(</span><span class="n">release</span><span class="p">,</span><span class="n">subdirs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Dynamically construct GRACE Level 2 dataset classes for TU GRAZ&quot;&quot;&quot;</span>
     <span class="n">base</span><span class="p">,</span><span class="n">gtype</span><span class="o">=</span><span class="n">subdirs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
     <span class="n">clsName</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">release</span><span class="p">,</span><span class="n">gtype</span><span class="p">])</span>
     <span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">clsName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span><span class="s2">&quot;Table&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">GravitySHTBase</span><span class="p">,),</span> <span class="p">{})</span>
     <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span> <span class="p">(</span><span class="n">TUGRAZGRACEL2Base</span><span class="p">,),</span> <span class="p">{</span><span class="s2">&quot;release&quot;</span><span class="p">:</span> <span class="n">release</span><span class="p">,</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span><span class="n">table</span><span class="p">,</span><span class="s2">&quot;subdirs&quot;</span><span class="p">:</span><span class="n">subdirs</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="TUGRAZNormalsClassFactory"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.TUGRAZNormalsClassFactory">[docs]</a><span class="k">def</span> <span class="nf">TUGRAZNormalsClassFactory</span><span class="p">(</span><span class="n">release</span><span class="p">,</span><span class="n">subdirs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dynamically construct GRACE Level 2 dataset classes for TU GRAZ&quot;&quot;&quot;</span>
+    <span class="n">base</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">gtype</span><span class="o">=</span><span class="n">subdirs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">clsName</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">release</span><span class="p">,</span><span class="s2">&quot;normals&quot;</span><span class="p">,</span><span class="n">gtype</span><span class="p">])</span>
+    <span class="n">table</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">clsName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span><span class="s2">&quot;Table&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">GravityNormals</span><span class="p">,),</span> <span class="p">{})</span>
+    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">clsName</span><span class="p">,</span> <span class="p">(</span><span class="n">TUGRAZGRACEL2NormalBase</span><span class="p">,),</span> <span class="p">{</span><span class="s2">&quot;release&quot;</span><span class="p">:</span> <span class="n">release</span><span class="p">,</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span><span class="n">table</span><span class="p">,</span><span class="s2">&quot;subdirs&quot;</span><span class="p">:</span><span class="n">subdirs</span><span class="p">})</span></div>
 
 <span class="c1"># setup GRACE datasets</span>
 <div class="viewcode-block" id="TUGRAZGRACEDsets"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.TUGRAZDsets.TUGRAZGRACEDsets">[docs]</a><span class="k">def</span> <span class="nf">TUGRAZGRACEDsets</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
@@ -274,35 +363,46 @@
     <span class="k">for</span> <span class="n">subdirs</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;daily_kalman/daily_background&quot;</span><span class="p">,</span><span class="s2">&quot;daily_kalman/daily_n40&quot;</span><span class="p">,</span><span class="s2">&quot;monthly/monthly_background&quot;</span><span class="p">,</span><span class="s2">&quot;monthly/monthly_n60&quot;</span><span class="p">,</span><span class="s2">&quot;monthly/monthly_n96&quot;</span><span class="p">,</span><span class="s2">&quot;monthly/monthly_n120&quot;</span><span class="p">]:</span>
         <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TUGRAZGRACEL2ClassFactory</span><span class="p">(</span><span class="n">release</span><span class="p">,</span><span class="n">subdirs</span><span class="p">))</span>
 
+    <span class="c1">#and normal equation systems</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TUGRAZNormalsClassFactory</span><span class="p">(</span><span class="n">release</span><span class="p">,</span><span class="s1">&#39;monthly/normals_SINEX/monthly_n96&#39;</span><span class="p">))</span> 
+
     <span class="c1">#also add GRACE-FO</span>
     <span class="n">release</span><span class="o">=</span><span class="s2">&quot;ITSG-Grace_operational&quot;</span>
     <span class="k">for</span> <span class="n">subdirs</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;monthly/monthly_signalSeparation&quot;</span><span class="p">,</span><span class="s2">&quot;monthly/monthly_background&quot;</span><span class="p">,</span><span class="s2">&quot;monthly/monthly_n60&quot;</span><span class="p">,</span><span class="s2">&quot;monthly/monthly_n96&quot;</span><span class="p">,</span><span class="s2">&quot;monthly/monthly_n120&quot;</span><span class="p">]:</span>
         <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TUGRAZGRACEL2ClassFactory</span><span class="p">(</span><span class="n">release</span><span class="p">,</span><span class="n">subdirs</span><span class="p">))</span>
+
+
+    <span class="c1">#and normal equation systems</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TUGRAZNormalsClassFactory</span><span class="p">(</span><span class="n">release</span><span class="p">,</span><span class="s1">&#39;monthly/normals_SINEX/monthly_n96&#39;</span><span class="p">))</span> 
+
     <span class="k">return</span> <span class="n">out</span></div>
 
 <span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addDatasetFactory</span><span class="p">(</span><span class="n">TUGRAZGRACEDsets</span><span class="p">)</span>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -311,37 +411,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

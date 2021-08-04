@@ -1,59 +1,59 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.db.settings &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,13 +104,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,10 +119,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -148,8 +153,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -180,46 +183,26 @@
 <span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018</span>
 
 <span class="c1"># reads and writes contains a class to work with  the geoslurp inventory table</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span><span class="p">,</span><span class="n">Float</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="k">import</span> <span class="n">JSONB</span><span class="p">,</span> <span class="n">BYTEA</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.ext.mutable</span> <span class="k">import</span> <span class="n">MutableDict</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">MetaData</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span><span class="n">Integer</span><span class="p">,</span><span class="n">String</span><span class="p">,</span><span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="kn">import</span> <span class="n">JSONB</span><span class="p">,</span> <span class="n">BYTEA</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.mutable</span> <span class="kn">import</span> <span class="n">MutableDict</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplogger</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplogger</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.ciphers</span> <span class="k">import</span> <span class="n">Cipher</span><span class="p">,</span> <span class="n">algorithms</span><span class="p">,</span> <span class="n">modes</span>
-<span class="kn">from</span> <span class="nn">cryptography.hazmat.backends</span> <span class="k">import</span> <span class="n">default_backend</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.ciphers</span> <span class="kn">import</span> <span class="n">Cipher</span><span class="p">,</span> <span class="n">algorithms</span><span class="p">,</span> <span class="n">modes</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.backends</span> <span class="kn">import</span> <span class="n">default_backend</span>
+<span class="kn">import</span> <span class="nn">getpass</span>
 
-
-
-<div class="viewcode-block" id="MirrorMap"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.MirrorMap">[docs]</a><span class="k">class</span> <span class="nc">MirrorMap</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">from_mirror</span><span class="p">,</span><span class="n">to_mirror</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">from_mirror</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">to_mirror</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)):</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;The url of the data mirrors used for mapping should end with a &#39;/&#39;&quot;</span><span class="p">)</span> 
-        <span class="bp">self</span><span class="o">.</span><span class="n">from_mirror</span><span class="o">=</span><span class="n">from_mirror</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">to_mirror</span><span class="o">=</span><span class="n">to_mirror</span>
-<div class="viewcode-block" id="MirrorMap.apply"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.MirrorMap.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">from_mirror</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">to_mirror</span><span class="p">)</span></div>
-    
-<div class="viewcode-block" id="MirrorMap.reverseApply"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.MirrorMap.reverseApply">[docs]</a>    <span class="k">def</span> <span class="nf">reverseApply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_mirror</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">from_mirror</span><span class="p">)</span></div>
-    
-<div class="viewcode-block" id="MirrorMap.strip"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.MirrorMap.strip">[docs]</a>    <span class="k">def</span> <span class="nf">strip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">from_mirror</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div></div>
-
-<div class="viewcode-block" id="getCreateDir"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.getCreateDir">[docs]</a><span class="k">def</span> <span class="nf">getCreateDir</span><span class="p">(</span><span class="n">returndir</span><span class="p">,</span><span class="n">mirrormapper</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;creates a directory when not existent and return it</span>
-<span class="sd">    When a mirrormapper is specified the base is converted&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="getCreateDir"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.getCreateDir">[docs]</a><span class="k">def</span> <span class="nf">getCreateDir</span><span class="p">(</span><span class="n">returndir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;creates a directory when not existent and return it&quot;&quot;&quot;</span>
 
     <span class="c1">#possibly expand environment variables in the string</span>
     <span class="n">returnex</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">returndir</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">mirrormapper</span><span class="p">:</span>
-        <span class="n">returnex</span><span class="o">=</span><span class="n">mirrormapper</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">returnex</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">returnex</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">returnex</span><span class="p">)</span>
@@ -229,7 +212,7 @@
     <span class="k">for</span> <span class="n">serv</span><span class="p">,</span><span class="n">dsub</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="c1"># print(serv)</span>
         <span class="k">for</span> <span class="n">ky</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">dsub</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;passw&quot;</span> <span class="ow">or</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;oauth&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;passw&quot;</span> <span class="ow">or</span> <span class="n">ky</span> <span class="o">==</span> <span class="s2">&quot;oauthtoken&quot;</span><span class="p">:</span>
                 <span class="n">d</span><span class="p">[</span><span class="n">serv</span><span class="p">][</span><span class="n">ky</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;*****&quot;</span>
     <span class="k">return</span> <span class="n">d</span></div>
 
@@ -246,6 +229,12 @@
 
 <span class="n">Credentials</span><span class="o">.</span><span class="fm">__new__</span><span class="o">.</span><span class="vm">__defaults__</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">Credentials</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span>
 
+
+
+
+
+
+
 <span class="n">GSBase</span><span class="o">=</span><span class="n">declarative_base</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">))</span>
 
 
@@ -261,8 +250,8 @@
 <div class="viewcode-block" id="Settings"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings">[docs]</a><span class="k">class</span> <span class="nc">Settings</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Read and write default and user specific settings to and from the database&quot;&quot;&quot;</span>
     <span class="n">table</span><span class="o">=</span><span class="n">SettingsTable</span>
-    <span class="n">mirrorMap</span><span class="o">=</span><span class="kc">None</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+    <span class="n">pgmount</span><span class="o">=</span><span class="kc">None</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">=</span><span class="n">dbconn</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ses</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
         <span class="c1">#creates the settings table if it doesn&#39;t exists</span>
@@ -278,12 +267,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ses</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">user</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="c1">#create a new default entry</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">=</span><span class="n">SettingsTable</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span><span class="n">conf</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;CacheDir&quot;</span><span class="p">:</span><span class="s2">&quot;/tmp&quot;</span><span class="p">,</span><span class="s2">&quot;MirrorMaps&quot;</span><span class="p">:{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span><span class="s2">&quot;$</span><span class="si">{HOME}</span><span class="s2">/geoslurpdata&quot;</span><span class="p">}})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">=</span><span class="n">SettingsTable</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span><span class="n">conf</span><span class="o">=</span><span class="p">{})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
             <span class="c1">#also create a view to the default which may be read by the geobrowse group</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE VIEW admin.settings_</span><span class="si">%s</span><span class="s2">efault as select * from admin.settings as t where t.user  = &#39;default&#39;&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT SELECT ON admin.settings_default to geobrowse&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE VIEW admin.settings_default as select * from admin.settings as t where t.user  = &#39;default&#39;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;GRANT SELECT ON admin.settings_default to geobrowse&quot;</span><span class="p">)</span>
 
 
             <span class="c1">#retrieve again</span>
@@ -299,22 +288,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">ses</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">userentry</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 
+        <span class="k">if</span> <span class="s2">&quot;pg_geoslurpmount&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
+            <span class="c1">#retrieve the dataroot to which the postgresql instance itself has access (e.g. for out-db-raster)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pgmount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;pg_geoslurpmount&quot;</span><span class="p">]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">decryptAuth</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">dbconn</span><span class="o">.</span><span class="n">mirror</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">dbconn</span><span class="o">.</span><span class="n">mirror</span> <span class="o">!=</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
-                <span class="c1">#we need to apply a mapping of the directory names for this instance</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mirrorMap</span><span class="o">=</span><span class="n">MirrorMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getMirror</span><span class="p">(</span><span class="n">dbconn</span><span class="o">.</span><span class="n">mirror</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">getMirror</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="s2">&quot;MirrorMaps&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
-            <span class="c1">#automatically try to figure out whether a mapping is needed by checking the existence of directories</span>
-            <span class="k">for</span> <span class="n">alias</span><span class="p">,</span><span class="n">pth</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;MirrorMaps&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">pth</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mirrorMap</span><span class="o">=</span><span class="n">MirrorMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getMirror</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">),</span><span class="n">pth</span><span class="p">)</span>
-                    <span class="k">break</span>
-        <span class="c1"># self.loaduserplugins()</span>
-
     <span class="c1">#The operators below overload the [] operators allowing the retrieval and  setting of dictionary items</span>
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
@@ -323,10 +304,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot find setting in user configuration or defaults&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
 
-    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     
 <div class="viewcode-block" id="Settings.getdefaults"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.getdefaults">[docs]</a>    <span class="k">def</span> <span class="nf">getdefaults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">):</span>
@@ -336,19 +317,31 @@
 <div class="viewcode-block" id="Settings.setdefault"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.setdefault">[docs]</a>    <span class="k">def</span> <span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">val</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">val</span></div>
 
-<div class="viewcode-block" id="Settings.show"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Settings.show"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">hideflag</span><span class="o">=</span><span class="s2">&quot;hide&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Show the loaded user configuration&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">userentry</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
         <span class="c1">#also shows the registered authentification services (but don&#39;t show passwords</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">stripPasswords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">))</span></div>
+        <span class="k">if</span> <span class="n">hideflag</span> <span class="o">==</span> <span class="s2">&quot;nohide&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">stripPasswords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Settings.authCred"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.authCred">[docs]</a>    <span class="k">def</span> <span class="nf">authCred</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">service</span><span class="p">):</span>
+<div class="viewcode-block" id="Settings.authCred"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.authCred">[docs]</a>    <span class="k">def</span> <span class="nf">authCred</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">service</span><span class="p">,</span><span class="n">qryfields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="s2">&quot;passw&quot;</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;obtains username credentials for a certain service</span>
 <span class="sd">        :param service: name of the service</span>
 <span class="sd">        :returns a namedtuple with credentials&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">service</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No credentials for service </span><span class="si">%s</span><span class="s2"> found in the database. Please register your credentials using Settings.updateAuth()&quot;</span><span class="o">%</span><span class="n">service</span><span class="p">)</span>
+            <span class="c1">#prompt for the necessary fields and store in database</span>
+            <span class="n">creddict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span><span class="n">service</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">qryfields</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;passw&quot;</span><span class="p">:</span>
+                    <span class="n">val</span><span class="o">=</span><span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;Please enter passw for authentication service </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">service</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">val</span><span class="o">=</span><span class="nb">input</span><span class="p">(</span><span class="s1">&#39;Please enter </span><span class="si">%s</span><span class="s1"> for authentication service </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">service</span><span class="p">))</span>
+                <span class="n">creddict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateAuth</span><span class="p">(</span><span class="n">cred</span><span class="o">=</span><span class="n">Credentials</span><span class="p">(</span><span class="o">**</span><span class="n">creddict</span><span class="p">))</span>
+            
         <span class="k">return</span> <span class="n">Credentials</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="n">service</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">[</span><span class="n">service</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Settings.updateAuth"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.updateAuth">[docs]</a>    <span class="k">def</span> <span class="nf">updateAuth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cred</span><span class="p">:</span><span class="n">Credentials</span><span class="p">):</span>
@@ -396,14 +389,27 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ses</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
     
-<div class="viewcode-block" id="Settings.getMirror"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.getMirror">[docs]</a>    <span class="k">def</span> <span class="nf">getMirror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">alias</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;MirrorMaps&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;MirrorMaps&quot;</span><span class="p">][</span><span class="n">alias</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultentry</span><span class="o">.</span><span class="n">conf</span><span class="p">[</span><span class="s2">&quot;DataDir&quot;</span><span class="p">]</span></div>
+<div class="viewcode-block" id="Settings.get_PG_path"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.get_PG_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_PG_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Possibly modifies a path so it becomes a path accessible by the Database host itself&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgmount</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="c1">#just prepend to a relative path</span>
+                <span class="n">url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pgmount</span><span class="p">,</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">#try modifying the path</span>
+                <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">localdataroot</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pgmount</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">url</span></div>
+    
+<div class="viewcode-block" id="Settings.get_local_path"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.get_local_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_local_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;possibly prepend the localdataroot root to the path or&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Settings.setMirror"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.setMirror">[docs]</a>    <span class="k">def</span> <span class="nf">setMirror</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">alias</span><span class="p">,</span><span class="n">mirror</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">defaultupdate</span><span class="p">({</span><span class="s2">&quot;MirrorMaps&quot;</span><span class="p">:{</span><span class="n">alias</span><span class="p">:</span><span class="n">mirror</span><span class="p">}})</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">localdataroot</span><span class="p">,</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">url</span></div>
+    
+<div class="viewcode-block" id="Settings.generalize_path"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.generalize_path">[docs]</a>    <span class="k">def</span> <span class="nf">generalize_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">url</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">localdataroot</span><span class="p">,</span><span class="s2">&quot;$</span><span class="si">{LOCALDATAROOT}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Settings.encryptAuth"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.encryptAuth">[docs]</a>    <span class="k">def</span> <span class="nf">encryptAuth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Encrypt the authentification credentials to store in the database&quot;&quot;&quot;</span>
@@ -455,7 +461,8 @@
 <div class="viewcode-block" id="Settings.getDataDir"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.getDataDir">[docs]</a>    <span class="k">def</span> <span class="nf">getDataDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">scheme</span><span class="p">,</span><span class="n">dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieves the data Directory, possibly appended with a dataset and subdirs&quot;&quot;&quot;</span>
         <span class="c1">#begin with setting the default</span>
-        <span class="n">ddir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getMirror</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
+        <span class="n">ddir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">localdataroot</span>
+
         <span class="n">ddir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span>
 
         <span class="c1">#Possibly we need to append a dataset directory </span>
@@ -466,20 +473,12 @@
         <span class="k">if</span> <span class="n">subdirs</span><span class="p">:</span>
             <span class="n">ddir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="n">subdirs</span><span class="p">)</span>
 
-        <span class="c1">#NOTE: this posssibly applies a mapping of the root part of the directory </span>
-        <span class="k">return</span> <span class="n">getCreateDir</span><span class="p">(</span><span class="n">ddir</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">mirrorMap</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">getCreateDir</span><span class="p">(</span><span class="n">ddir</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Settings.getCacheDir"><a class="viewcode-back" href="../../../reference/geoslurp.db.html#geoslurp.db.settings.Settings.getCacheDir">[docs]</a>    <span class="k">def</span> <span class="nf">getCacheDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">scheme</span><span class="p">,</span><span class="n">dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">subdirs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Obtain and create a cache directory&quot;&quot;&quot;</span>
         <span class="c1">#starting point</span>
         <span class="n">ddir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span><span class="n">scheme</span><span class="p">)</span>
-
-        <span class="c1"># if &quot;CacheDir&quot; in self.userentry.conf:</span>
-        <span class="c1">#     ddir=self.userentry.conf[&quot;CacheDir&quot;]</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     ddir=self.defaultentry.conf[&quot;CacheDir&quot;]</span>
-        <span class="c1">#</span>
-        <span class="c1"># ddir=os.path.join(ddir,scheme)</span>
 
         <span class="c1">#POssibly we need to append a dataset directory </span>
         <span class="k">if</span> <span class="n">dataset</span><span class="p">:</span>
@@ -495,25 +494,28 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -522,37 +524,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -1,59 +1,59 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>geoslurp.dataset.pandasbase &mdash; geoslurp v1.1.0 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
   
+
   
   
 
   
 
   
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="geoslurp v1.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,6 +84,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,13 +104,14 @@
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">geoslurp</a>
@@ -117,10 +119,13 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
 
 
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -148,8 +153,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -177,74 +180,188 @@
 <span class="c1"># License along with Frommle; if not, write to the Free Software</span>
 <span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
 
-<span class="c1"># Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019</span>
+<span class="c1"># Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2021</span>
 
-<span class="kn">from</span> <span class="nn">geoslurp.dataset.dataSetBase</span> <span class="k">import</span> <span class="n">DataSet</span>
-<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="k">import</span> <span class="n">slurplog</span>
+<span class="kn">from</span> <span class="nn">geoslurp.dataset.dataSetBase</span> <span class="kn">import</span> <span class="n">DataSet</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.slurplogger</span> <span class="kn">import</span> <span class="n">slurplog</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Table</span><span class="p">,</span><span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">BigInteger</span><span class="p">,</span><span class="n">Date</span><span class="p">,</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">LargeBinary</span><span class="p">,</span><span class="n">ARRAY</span><span class="p">,</span><span class="n">JSON</span><span class="p">,</span><span class="n">BIGINT</span>
 
+<span class="kn">from</span> <span class="nn">geoalchemy2.types</span> <span class="kn">import</span> <span class="n">Geography</span><span class="p">,</span><span class="n">Raster</span>
+<span class="kn">from</span> <span class="nn">geoalchemy2.elements</span> <span class="kn">import</span> <span class="n">WKBElement</span><span class="p">,</span><span class="n">RasterElement</span>
+<span class="kn">import</span> <span class="nn">shapely.wkb</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">func</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">geoslurp.types.zarr</span> <span class="kn">import</span> <span class="n">OutDBZarrType</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
-
-
+<span class="n">geoinfo</span><span class="o">=</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;geoinfo&quot;</span><span class="p">,[</span><span class="s2">&quot;srid&quot;</span><span class="p">,</span><span class="s2">&quot;geoname&quot;</span><span class="p">,</span><span class="s2">&quot;geomtype&quot;</span><span class="p">,</span><span class="s2">&quot;dims&quot;</span><span class="p">,</span><span class="s2">&quot;rastname&quot;</span><span class="p">],</span><span class="n">defaults</span><span class="o">=</span><span class="p">(</span><span class="mi">4326</span><span class="p">,</span><span class="s2">&quot;geom&quot;</span><span class="p">,</span><span class="s2">&quot;GEOMETRY&quot;</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;rast&quot;</span><span class="p">,))</span>
 
 <div class="viewcode-block" id="PandasBase"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase">[docs]</a><span class="k">class</span> <span class="nc">PandasBase</span><span class="p">(</span><span class="n">DataSet</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class which reads in a pandas compatible table (CSV, excel are currently supported) it in a db table&quot;&quot;&quot;</span>
-    <span class="n">table</span><span class="o">=</span><span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot;Base class which reads in a pandas compatible table (CSV, excel, or in memory dataframe are currently supported) it in a db table&quot;&quot;&quot;</span>
     <span class="n">pdfile</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">skipfooter</span><span class="o">=</span><span class="mi">0</span>
     <span class="n">ftype</span><span class="o">=</span><span class="s2">&quot;csv&quot;</span>
-    <span class="n">dtypes</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
+    <span class="n">geoinfo</span><span class="o">=</span><span class="n">geoinfo</span><span class="p">()</span>
+    <span class="n">inbulk</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dbconn</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dbconn</span><span class="p">)</span>
+    
+
+<div class="viewcode-block" id="PandasBase.setGeoInfo"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase.setGeoInfo">[docs]</a>    <span class="k">def</span> <span class="nf">setGeoInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try to extract srid, geometry type from a geopandas geodataframe&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">:</span>
+            <span class="n">srid</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_epsg</span><span class="p">()</span>
+            <span class="n">geoname</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">name</span>
+            
+            <span class="n">geomtypes</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">geom_type</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">geomtypes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">geomtype</span><span class="o">=</span><span class="n">geomtypes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">geomtype</span><span class="o">=</span><span class="s2">&quot;GEOMETRY&quot;</span>
+
+            <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">has_z</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="n">dims</span><span class="o">=</span><span class="mi">3</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dims</span><span class="o">=</span><span class="mi">2</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">=</span><span class="n">geoinfo</span><span class="p">(</span><span class="n">srid</span><span class="p">,</span><span class="n">geoname</span><span class="p">,</span><span class="n">geomtype</span><span class="p">,</span><span class="n">dims</span><span class="p">)</span></div>
+
+    
+
 <div class="viewcode-block" id="PandasBase.modify_df"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase.modify_df">[docs]</a>    <span class="k">def</span> <span class="nf">modify_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A derived type can overload this to make modifications to the dataframe before registering it in the database&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">df</span></div>
 
-<div class="viewcode-block" id="PandasBase.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">df</span></div>
+    
+<div class="viewcode-block" id="PandasBase.columnsFromDataframe"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase.columnsFromDataframe">[docs]</a>    <span class="k">def</span> <span class="nf">columnsFromDataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of columns from a dataframe)&quot;&quot;&quot;</span>
+        <span class="n">Map</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="nb">int</span><span class="p">):</span> <span class="n">Integer</span><span class="p">,</span> 
+                <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="nb">float</span><span class="p">):</span><span class="n">Float</span><span class="p">,</span><span class="nb">dict</span><span class="p">:</span><span class="n">JSON</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">:</span><span class="n">BIGINT</span><span class="p">,</span>
+                <span class="nb">float</span><span class="p">:</span><span class="n">Float</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span><span class="n">Float</span><span class="p">,</span>
+                <span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="s2">&quot;integer&quot;</span><span class="p">:</span> <span class="n">Integer</span><span class="p">,</span> 
+                <span class="s2">&quot;floating&quot;</span><span class="p">:</span><span class="n">Float</span><span class="p">,</span><span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span><span class="n">OutDBZarrType</span><span class="p">(</span><span class="n">defaultZstore</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">outdbArchiveName</span><span class="p">())}</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+        
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span>
+                <span class="c1">#already added</span>
+                <span class="k">continue</span>
+            
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">rastname</span><span class="p">:</span>
+                <span class="n">cType</span><span class="o">=</span><span class="n">Raster</span><span class="p">(</span><span class="n">spatial_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">geoname</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">srid</span> <span class="o">==</span> <span class="mi">4326</span><span class="p">:</span>
+                    <span class="n">cType</span> <span class="o">=</span> <span class="n">Geography</span><span class="p">(</span><span class="n">geometry_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">geomtype</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">srid</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">dimension</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cType</span> <span class="o">=</span> <span class="n">Geometry</span><span class="p">(</span><span class="n">geometry_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">geomtype</span><span class="p">,</span> <span class="n">srid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">srid</span><span class="p">,</span> <span class="n">spatial_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">dimension</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">infer_dtype</span><span class="p">(</span><span class="n">col</span><span class="p">,</span><span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;mixed&quot;</span><span class="p">:</span>
+                    <span class="n">val</span><span class="o">=</span><span class="n">col</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">first_valid_index</span><span class="p">()]</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+                        <span class="c1">#wrap the type in an array</span>
+                        <span class="n">cType</span><span class="o">=</span><span class="n">ARRAY</span><span class="p">(</span><span class="n">Map</span><span class="p">[</span><span class="n">val</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span><span class="n">dimensions</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">cType</span><span class="o">=</span><span class="n">Map</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cType</span><span class="o">=</span><span class="n">Map</span><span class="p">[</span><span class="n">dtype</span><span class="p">]</span>
+
+            <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Column</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">cType</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">cols</span></div>
+
+<div class="viewcode-block" id="PandasBase.registerInDatabase"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase.registerInDatabase">[docs]</a>    <span class="k">def</span> <span class="nf">registerInDatabase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setGeoInfo</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropTable</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">columnsFromDataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">createTable</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbulk</span><span class="p">:</span>
+            <span class="n">bulk</span><span class="o">=</span><span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="c1"># possibly modify &quot;geom&quot; and &quot;rast&quot; entries so they can be consumed by the database</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">rastname</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">rastname</span><span class="p">]</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">ST_FromGDALRaster</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">rastname</span><span class="p">]),</span><span class="n">srid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">srid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">geoname</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">geoname</span><span class="p">]</span><span class="o">=</span><span class="n">WKBElement</span><span class="p">(</span><span class="n">shapely</span><span class="o">.</span><span class="n">wkb</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">geoname</span><span class="p">]),</span><span class="n">srid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geoinfo</span><span class="o">.</span><span class="n">srid</span><span class="p">)</span>
+            
+            <span class="c1"># slurplog.info(f&quot;Adding entry {k}&quot;)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbulk</span><span class="p">:</span>
+                <span class="n">bulk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> 
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbulk</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bulkInsert</span><span class="p">(</span><span class="n">bulk</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PandasBase.register"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">df</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update/populate a database table from a pandas compatible file) </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ftype</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
-            <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">,</span><span class="n">skipfooter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">skipfooter</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1">#supplying an existing dataframe takes precedence</span>
+            <span class="n">indf</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ftype</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
+            <span class="n">indf</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">,</span><span class="n">skipfooter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">skipfooter</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ftype</span> <span class="o">==</span> <span class="s2">&quot;excel&quot;</span><span class="p">:</span>
-            <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">,</span><span class="n">skipfooter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">skipfooter</span><span class="p">)</span>
+            <span class="n">indf</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">,</span><span class="n">skipfooter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">skipfooter</span><span class="p">,</span><span class="n">engine</span><span class="o">=</span><span class="s2">&quot;openpyxl&quot;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know how to open </span><span class="si">%s</span><span class="s2">, specify ftype&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">))</span>
             <span class="c1">#possibly modify dataframe in derived class </span>
-            
-        <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filling pandas table </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2"> with data from </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdfile</span><span class="p">))</span>
         
-        <span class="n">df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">modify_df</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>                
-        <span class="n">df</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">dbeng</span><span class="p">,</span><span class="n">schema</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
 
+        <span class="n">indf</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">modify_df</span><span class="p">(</span><span class="n">indf</span><span class="p">)</span>
+        
+        <span class="n">slurplog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filling pandas table </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">registerInDatabase</span><span class="p">(</span><span class="n">indf</span><span class="p">)</span>
 
         <span class="c1">#also update entry in the inventory table</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updateInvent</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="PandasBase.pull"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;overload when needed&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="PandasBase.outdbArchiveName"><a class="viewcode-back" href="../../../reference/geoslurp.dataset.html#geoslurp.dataset.pandasbase.PandasBase.outdbArchiveName">[docs]</a>    <span class="k">def</span> <span class="nf">outdbArchiveName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataDir</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;_data.zarr&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Roelof Rietbroek.
+        &#169; Copyright 2021, Roelof Rietbroek.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -253,37 +370,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'v1.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

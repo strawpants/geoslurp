@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>geoslurp.view.graceviews &mdash; geoslurp v1.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> geoslurp
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">An introduction to Geoslurp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation of the geoslurp package and setting up the PostgreSQL instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../confsettings.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Reference Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">geoslurp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>geoslurp.view.graceviews</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for geoslurp.view.graceviews</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of geoslurp.</span>
+<span class="c1"># geoslurp is free software; you can redistribute it and/or</span>
+<span class="c1"># modify it under the terms of the GNU Lesser General Public</span>
+<span class="c1"># License as published by the Free Software Foundation; either</span>
+<span class="c1"># version 3 of the License, or (at your option) any later version.</span>
+
+<span class="c1"># geoslurp is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="c1"># Lesser General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with Frommle; if not, write to the Free Software</span>
+<span class="c1"># Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA</span>
+
+<span class="c1"># Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2020</span>
+
+<span class="kn">from</span> <span class="nn">geoslurp.view.viewBase</span> <span class="kn">import</span> <span class="n">TView</span>
+<span class="kn">from</span> <span class="nn">geoslurp.config.catalogue</span> <span class="kn">import</span> <span class="n">geoslurpCatalogue</span>
+
+
+<div class="viewcode-block" id="subqry1"><a class="viewcode-back" href="../../../reference/geoslurp.view.html#geoslurp.view.graceviews.subqry1">[docs]</a><span class="k">def</span> <span class="nf">subqry1</span><span class="p">(</span><span class="n">table</span><span class="p">,</span><span class="n">nmax</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">apptypes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GAA&quot;</span><span class="p">,</span><span class="s2">&quot;GAB&quot;</span><span class="p">,</span><span class="s2">&quot;GAC&quot;</span><span class="p">,</span><span class="s2">&quot;GAD&quot;</span><span class="p">]):</span>
+    <span class="n">tname</span><span class="o">=</span><span class="s2">&quot;gravity.</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+    <span class="n">sbqry</span><span class="o">=</span><span class="s2">&quot;SELECT a.tstart+(a.tend-a.tstart)/2 AS time, a.uri AS gsm, b.uri AS gaa, c.uri AS gab, d.uri as gac, e.uri as gad from (SELECT tstart,tend,uri from </span><span class="si">%s</span><span class="s2"> WHERE type =&#39;GSM&#39; AND nmax = </span><span class="si">%d</span><span class="s2">) a &quot;</span>\
+            <span class="s2">&quot;INNER JOIN </span><span class="si">%s</span><span class="s2"> b ON ABS(EXTRACT(day FROM a.tstart-b.tstart)) &lt; </span><span class="si">%d</span><span class="s2"> AND  ABS(EXTRACT(day FROM a.tend-b.tend)) &lt; </span><span class="si">%d</span><span class="s2"> AND b.type = &#39;GAA&#39; &quot;</span>\
+            <span class="s2">&quot;INNER JOIN </span><span class="si">%s</span><span class="s2"> c ON ABS(EXTRACT(day FROM a.tstart-c.tstart)) &lt; </span><span class="si">%d</span><span class="s2"> AND ABS(EXTRACT(day FROM a.tend-c.tend)) &lt; </span><span class="si">%d</span><span class="s2"> AND c.type = &#39;GAB&#39; &quot;</span>\
+            <span class="s2">&quot;INNER JOIN </span><span class="si">%s</span><span class="s2"> d ON ABS(EXTRACT(day FROM a.tstart-d.tstart)) &lt; </span><span class="si">%d</span><span class="s2"> AND ABS(EXTRACT(day FROM a.tend-d.tend)) &lt; </span><span class="si">%d</span><span class="s2"> AND d.type = &#39;GAC&#39; &quot;</span>\
+            <span class="s2">&quot;INNER JOIN </span><span class="si">%s</span><span class="s2"> e ON ABS(EXTRACT(day FROM a.tstart-e.tstart)) &lt; </span><span class="si">%d</span><span class="s2"> AND ABS(EXTRACT(day FROM a.tend-e.tend)) &lt; </span><span class="si">%d</span><span class="s2"> AND e.type = &#39;GAD&#39; &quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tname</span><span class="p">,</span><span class="n">nmax</span><span class="p">,</span><span class="n">tname</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">tname</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">tname</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">tname</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">tol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sbqry</span></div>
+
+<div class="viewcode-block" id="buildGSML2qry"><a class="viewcode-back" href="../../../reference/geoslurp.view.html#geoslurp.view.graceviews.buildGSML2qry">[docs]</a><span class="k">def</span> <span class="nf">buildGSML2qry</span><span class="p">(</span><span class="n">gtable</span><span class="p">,</span><span class="n">gfotable</span><span class="p">,</span><span class="n">nmax</span><span class="p">,</span><span class="n">tol</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">qry</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> UNION </span><span class="si">%s</span><span class="s2"> ORDER BY time&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">subqry1</span><span class="p">(</span><span class="n">gtable</span><span class="p">,</span><span class="n">nmax</span><span class="p">,</span><span class="n">tol</span><span class="p">),</span><span class="n">subqry1</span><span class="p">(</span><span class="n">gfotable</span><span class="p">,</span><span class="n">nmax</span><span class="p">,</span><span class="n">tol</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">qry</span></div>
+
+<div class="viewcode-block" id="GRACECOMB_L2_JPL_n96"><a class="viewcode-back" href="../../../reference/geoslurp.view.html#geoslurp.view.graceviews.GRACECOMB_L2_JPL_n96">[docs]</a><span class="k">class</span> <span class="nc">GRACECOMB_L2_JPL_n96</span><span class="p">(</span><span class="n">TView</span><span class="p">):</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span>
+    <span class="n">qry</span><span class="o">=</span><span class="n">buildGSML2qry</span><span class="p">(</span><span class="s2">&quot;gracel2_jpl_rl06&quot;</span><span class="p">,</span><span class="s2">&quot;gracefol2_jpl_rl06&quot;</span><span class="p">,</span><span class="mi">96</span><span class="p">)</span> </div>
+
+<div class="viewcode-block" id="GRACECOMB_L2_JPL_n60"><a class="viewcode-back" href="../../../reference/geoslurp.view.html#geoslurp.view.graceviews.GRACECOMB_L2_JPL_n60">[docs]</a><span class="k">class</span> <span class="nc">GRACECOMB_L2_JPL_n60</span><span class="p">(</span><span class="n">TView</span><span class="p">):</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span>
+    <span class="n">qry</span><span class="o">=</span><span class="n">buildGSML2qry</span><span class="p">(</span><span class="s2">&quot;gracel2_jpl_rl06&quot;</span><span class="p">,</span><span class="s2">&quot;gracefol2_jpl_rl06&quot;</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span> </div>
+
+<div class="viewcode-block" id="GRACECOMB_L2_GFZ_n60"><a class="viewcode-back" href="../../../reference/geoslurp.view.html#geoslurp.view.graceviews.GRACECOMB_L2_GFZ_n60">[docs]</a><span class="k">class</span> <span class="nc">GRACECOMB_L2_GFZ_n60</span><span class="p">(</span><span class="n">TView</span><span class="p">):</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span>
+    <span class="n">qry</span><span class="o">=</span><span class="n">buildGSML2qry</span><span class="p">(</span><span class="s2">&quot;gracel2_gfz_rl06&quot;</span><span class="p">,</span><span class="s2">&quot;gracefol2_gfz_rl06&quot;</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span> </div>
+
+<div class="viewcode-block" id="GRACECOMB_L2_GFZ_n96"><a class="viewcode-back" href="../../../reference/geoslurp.view.html#geoslurp.view.graceviews.GRACECOMB_L2_GFZ_n96">[docs]</a><span class="k">class</span> <span class="nc">GRACECOMB_L2_GFZ_n96</span><span class="p">(</span><span class="n">TView</span><span class="p">):</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span>
+    <span class="n">qry</span><span class="o">=</span><span class="n">buildGSML2qry</span><span class="p">(</span><span class="s2">&quot;gracel2_gfz_rl06&quot;</span><span class="p">,</span><span class="s2">&quot;gracefol2_gfz_rl06&quot;</span><span class="p">,</span><span class="mi">96</span><span class="p">)</span> </div>
+
+<div class="viewcode-block" id="GRACECOMB_L2_CSR_n60"><a class="viewcode-back" href="../../../reference/geoslurp.view.html#geoslurp.view.graceviews.GRACECOMB_L2_CSR_n60">[docs]</a><span class="k">class</span> <span class="nc">GRACECOMB_L2_CSR_n60</span><span class="p">(</span><span class="n">TView</span><span class="p">):</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span>
+    <span class="n">qry</span><span class="o">=</span><span class="n">buildGSML2qry</span><span class="p">(</span><span class="s2">&quot;gracel2_csr_rl06&quot;</span><span class="p">,</span><span class="s2">&quot;gracefol2_csr_rl06&quot;</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span> </div>
+
+<div class="viewcode-block" id="GRACECOMB_L2_CSR_n96"><a class="viewcode-back" href="../../../reference/geoslurp.view.html#geoslurp.view.graceviews.GRACECOMB_L2_CSR_n96">[docs]</a><span class="k">class</span> <span class="nc">GRACECOMB_L2_CSR_n96</span><span class="p">(</span><span class="n">TView</span><span class="p">):</span>
+    <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;gravity&quot;</span>
+    <span class="n">qry</span><span class="o">=</span><span class="n">buildGSML2qry</span><span class="p">(</span><span class="s2">&quot;gracel2_csr_rl06&quot;</span><span class="p">,</span><span class="s2">&quot;gracefol2_csr_rl06&quot;</span><span class="p">,</span><span class="mi">96</span><span class="p">)</span> </div>
+
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addView</span><span class="p">(</span><span class="n">GRACECOMB_L2_JPL_n96</span><span class="p">)</span>
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addView</span><span class="p">(</span><span class="n">GRACECOMB_L2_JPL_n60</span><span class="p">)</span>
+
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addView</span><span class="p">(</span><span class="n">GRACECOMB_L2_GFZ_n96</span><span class="p">)</span>
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addView</span><span class="p">(</span><span class="n">GRACECOMB_L2_GFZ_n60</span><span class="p">)</span>
+
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addView</span><span class="p">(</span><span class="n">GRACECOMB_L2_CSR_n96</span><span class="p">)</span>
+<span class="n">geoslurpCatalogue</span><span class="o">.</span><span class="n">addView</span><span class="p">(</span><span class="n">GRACECOMB_L2_CSR_n60</span><span class="p">)</span>
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Roelof Rietbroek.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
