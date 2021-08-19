@@ -264,6 +264,8 @@ class  TN14_SLR_GSFC(DataSet):
         self._dbinvent.data={"citation":"GRACE technical note 14"}
         lastupdate=datetime.now()
         mjd00=datetime(1858,11,17)
+        nmax=2
+        omax=0
         with open(os.path.join(self.cacheDir(),self.fout),'r') as fid:
             #skip header
             for ln in fid:
@@ -288,6 +290,7 @@ class  TN14_SLR_GSFC(DataSet):
                 cnmv.append(float(c20))
                 sigcnmv.append(float(sigc20))
                 if c30 != "NaN":
+                    nmax=3
                     nv.append(3)
                     mv.append(0)
                     tv.append(0)
@@ -297,10 +300,9 @@ class  TN14_SLR_GSFC(DataSet):
                 #register the accumulated entry
                 tstart=mjd00+timedelta(days=float(mjd0))
                 tend=mjd00+timedelta(days=float(mjd1))
-                #snap the central epoch to the 15th of the month
-                tcent=datetime(tstart.year,tstart.month,15)
+                tcent=tstart+(tend-tstart)/2
             
-                meta={"type":"GSM","time":tcent,"tstart":tstart,"tend":tend,"lastupdate":lastupdate,"nmax":1,"omax":1,"format":"JSONB","gm":0.3986004415e+15,"re":0.6378136460e+07}
+                meta={"type":"GSM","time":tcent,"tstart":tstart,"tend":tend,"lastupdate":lastupdate,"nmax":nmax,"omax":omax,"format":"JSONB","gm":0.3986004415e+15,"re":0.6378136460e+07}
                 meta["data"]=xr.Dataset(data_vars=dict(cnm=(["shg"],cnmv),sigcnm=(["shg"],sigcnmv)),coords=dict(n=(["shg"],nv),m=(["shg"],mv),t=(["shg"],tv)))
                 
                 self.addEntry(meta)
