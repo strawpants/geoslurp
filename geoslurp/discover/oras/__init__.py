@@ -13,6 +13,6 @@
 # License along with geoslurp; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019  
+# Author Alisa Yakhontova (yakhontova@geod.uni-bonn.de), Roelof Rietbroek (r.rietbroek@utwente.nl), 2020
 
 from .orasQuery import * 
