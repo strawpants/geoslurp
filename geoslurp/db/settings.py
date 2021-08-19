@@ -256,18 +256,9 @@ class Settings():
         plen = bs - divmod(len(conf), bs)[1]
         pad = b' '*plen
         self.userentry.auth = iv + encryptor.update(conf+pad) + encryptor.finalize()
-        # bs = Blowfish.block_size
-        # iv=Random.new().read(bs)
-        # crypto = Blowfish.new(self.db.passw, Blowfish.MODE_CBC, iv)
-        # conf=json.dumps(self.auth)
-        # #padd with spaces to be a multiple of bs
-        # plen = bs - divmod(len(conf), bs)[1]
-        # pad = ' '*plen
-        # self.userentry.auth = iv + crypto.encrypt(conf + pad)
-        #
 
     def decryptAuth(self):
-        """Decrypt the authenficiation credentials as stored in the database"""
+        """Decrypt the authenficiation credentials as stored in the database""" 
         if self.userentry.auth:
             bs=int(algorithms.Blowfish.block_size/8)
             backend = default_backend()
@@ -279,17 +270,6 @@ class Settings():
         else:
             self.auth={}
 
-        # bs = Blowfish.block_size
-        # if self.userentry.auth:
-        #     entry=self.userentry.auth
-        #     iv=self.userentry.auth[0:bs]
-        #     encr=self.userentry.auth[bs:]
-        #     crypto = Blowfish.new(self.db.passw, Blowfish.MODE_CBC, iv)
-        #     self.auth=json.loads(crypto.decrypt(encr))
-        # else:
-        #     #just empty
-        #     self.auth={}
-        #     return
 
     def getDataDir(self,scheme,dataset=None,subdirs=None):
         """Retrieves the data Directory, possibly appended with a dataset and subdirs"""

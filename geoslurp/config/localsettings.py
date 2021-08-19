@@ -182,7 +182,7 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
                 #check for password in the lastused file (needs to be manually entered)
                 if "passwd" in lastOpts[dbalias] and not readonlyuser:
                     argsout.password=lastOpts[dbalias]["passwd"]
-                elif "readonlyPasswd" in lastOpt[dbalias] and readonlyuser:
+                elif "readonlyPasswd" in lastOpts[dbalias] and readonlyuser:
                     argsout.password=lastOpts[dbalias]["readonlyPasswd"]
                 else:
                     #prompt for password
