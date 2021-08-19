@@ -22,35 +22,16 @@ from shapely.geometry import Polygon
 class BtdBox():
     """Class which holds a geographical bounding box, a vertical depth range and a datetime range"""
 
-    s=-90.0
-    n=90.0
-    w=0.0
-    e=360.0
-    ts=datetime.min
-    te=datetime.max
-    zmin=sys.float_info.min
-    zmax=sys.float_info.max
 
-    def __init__(self,s=None,n=None,w=None,e=None,ts=None,te=None,zmin=None,zmax=None):
-        if s:
-            self.s=s
-        if n:
-            self.n=n
-        if w:
-            self.w=w
-
-        if e:
-            self.e=e
-
-        if ts:
-            self.ts=ts
-        if te:
-            self.te=te
-        if zmin:
-            self.zmin=zmin
-
-        if zmax:
-            self.zmax=zmax
+    def __init__(self,s=-90.0,n=90.0,w=0.0,e=360.0,ts=datetime.min,te=datetime.max,zmin=sys.float_info.min,zmax=sys.float_info.max):
+        self.s=s
+        self.n=n
+        self.w=w
+        self.e=e
+        self.ts=ts
+        self.te=te
+        self.zmin=zmin
+        self.zmax=zmax
             
             
         self.check()

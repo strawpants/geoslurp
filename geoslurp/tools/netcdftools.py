@@ -23,6 +23,11 @@ from geoslurp.datapull.uri import UriFile
 from geoslurp.config.slurplogger import slurplogger
 
 
+
+def ncStr(ncelem):
+    """extracts a utf-8 encoded string from a  netcdf character variable and strips trailing junk"""
+    return b"".join(ncelem).decode('utf-8').strip("\0")
+
 def nccopyAtt(ncin,ncout,excl=[]):
     """Function to copy attributes from an open netcdf file to another"""
     for attnm in ncin.ncattrs():

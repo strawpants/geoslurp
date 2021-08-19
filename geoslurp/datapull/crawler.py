@@ -47,7 +47,7 @@ class CrawlerBase(ABC):
         with ThreadPoolExecutor(max_workers=maxconn) as connectionPool:
             for uri in self.uris():
                 # print("add ",uri.url)
-                futures.append(connectionPool.submit(deepcopy(uri).download,outdir,check,gzip,None,continueonError))
+                futures.append(connectionPool.submit(deepcopy(uri).download,direc=outdir,check=check,gzip=gzip,continueonError=continueonError))
 
         for future in futures:
             if future.result()[1]:

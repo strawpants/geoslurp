@@ -20,6 +20,7 @@ from geoslurp.datapull.ftp import Crawler as ftpCrawler
 from geoslurp.datapull.ftp import Uri as ftpUri
 from geoslurp.datapull import findFiles
 from geoslurp.datapull import UriFile
+from geoslurp.tools.netcdftools import ncStr
 from geoalchemy2.types import Geography
 from geoalchemy2.elements import WKBElement
 from sqlalchemy import Column,Integer,String, Boolean, ARRAY
@@ -71,7 +72,7 @@ OceanObsTBase=declarative_base(metadata=MetaData(schema=scheme))
 
 # Setup the postgres table
 
-geoMpointType = Geography(geometry_type="MULTIPOINTZ", srid='4326', spatial_index=True,dimension=3)
+geoMpointType = Geography(geometry_type="MULTIPOINTZ", srid='4326', spatial_index=True,dimension=3,from_text="ST_GeogfromWKB")
 
 class ArgoTable(OceanObsTBase):
     """Defines the Argo PostgreSQL table"""
@@ -90,10 +91,6 @@ class ArgoTable(OceanObsTBase):
     iprof=Column(ARRAY(Integer))
     geom=Column(geoMpointType)
 
-
-def ncStr(ncelem):
-    """extracts a utf-8 encoded string from a  netcdf character variable and strips trailing junk"""
-    return b"".join(ncelem).decode('utf-8').strip("\0")
 
 def argoMetaExtractor(uri,cachedir=False):
     """Extract meta information (tracks, etc) as a dictionary from an argo prof file  floats"""
@@ -160,7 +157,7 @@ def argoMetaExtractor(uri,cachedir=False):
 
         meta={"wmoid":wmoid,"uri":url,"datacenter":datacenter,"lastupdate":uri.lastmod,"tstart":tstart,"tend":tend,
               "mode":mode,"ascend":ascend,"tlocation":tlocation,"cycle":cycle,"iprof":iprof,
-              "geom":WKBElement(geoMpoints.ExportToWkb(),srid=4326,extended=True)}
+              "geom":geoMpoints.ExportToWkb()}
     except Exception as e:
         raise RuntimeWarning("Cannot extract meta information from "+ url+ str(e))
 
