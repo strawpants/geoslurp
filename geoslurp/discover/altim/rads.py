@@ -22,7 +22,7 @@ def radsQuery(dbcon, sattable, polyWKT,tspan=None,cycle=None):
     #retrieve/reflect the table
     tbl=dbcon.getTable(sattable,'altim')
 
-    qry=select([tbl.c.uri,literal_column('geom::geometry').label('geom')])
+    qry=select([tbl.c.tstart,tbl.c.tend,tbl.c.uri,literal_column('geom::geometry').label('geom')])
     # qry=select([tbl.c.uri,tbl.c.geom])
 
     if tspan:
@@ -41,3 +41,18 @@ def radsQuery(dbcon, sattable, polyWKT,tspan=None,cycle=None):
     # print(qry)
     return dbcon.dbeng.execute(qry)
 
+# def queryMonthlyRads(dbcon, sattable, polyWKT,tstart,tend):
+#     """Query the database for lists of monthly Argo profiles within a certain polygon and time span"""
+    
+#     out = {}
+
+#     for entry in radsQuery(dbcon, sattable, polyWKT=polyWKT,tspan=[tstart,tend],cycle=None):
+#         epoch=(entry.tlocation.year,entry.tlocation.month)
+#         #pnt=shpextract(entry)
+#         tmpdict = {"uri": entry.uri}
+#         if not epoch in out:
+#             out[epoch] = [tmpdict]
+#         else:
+#             out[epoch].append(tmpdict)
+
+#     return out

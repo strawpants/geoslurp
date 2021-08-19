@@ -52,5 +52,6 @@ def awipiesWKB(dbcon, tspan, geoWKT=False):
     
     return [(shpextract(x)) for x in awipiesQuery(dbcon,tspan)]
 
+ 
 
 
