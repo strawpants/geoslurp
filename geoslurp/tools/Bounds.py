@@ -17,6 +17,7 @@
 from datetime import datetime
 import sys
 from copy import deepcopy
+from shapely.geometry import Polygon
 
 class BtdBox():
     """Class which holds a geographical bounding box, a vertical depth range and a datetime range"""
@@ -50,7 +51,8 @@ class BtdBox():
 
         if zmax:
             self.zmax=zmax
-
+            
+            
         self.check()
 
     def toGreenwhich(self):
@@ -137,3 +139,21 @@ class BtdBox():
         """Returns a WKT represetation of the geographical bounding box"""
         return "POLYGON(( %f %f, %f %f, %f %f, %f %f, %f %f ))"%(self.w,self.n,self.w,self.s,self.e,self.s,self.e,self.n,self.w,self.n)
 
+    def poly(self):
+        return Polygon.from_bounds(self.w, self.s, self.e, self.n)
+    
+    def corners(self):
+        #(minx, maxx, miny, maxy) 
+        return [self.w, self.e, self.s, self.n]
+    
+    def w(self):
+        return self.w
+    
+    def e(self):
+        return self.e
+    
+    def s(self):
+        return self.s
+    
+    def n(self):
+        return self.n

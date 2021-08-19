@@ -200,6 +200,7 @@ class RadsBase(DataSet):
             slurplogger().info("Listing files to process (this can take a while)...")
 
             if cycle:
+                # import pdb; pdb.set_trace()
                 files=[UriFile(file) for file in findFiles(os.path.join(self._dbinvent.datadir,self.sat,self.phase,"c%03d"%(cycle)),'.*\.nc$',since=since)]
             else:
                 files=[UriFile(file) for file in findFiles(os.path.join(self._dbinvent.datadir,self.sat,self.phase),'.*\.nc$',since=since)]
