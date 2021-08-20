@@ -93,7 +93,10 @@ def main(argv):
 
     if args.auth_config:
         for alias,dvals in args.auth_config.items():
-            conf.updateAuth(Credentials(alias=alias,**dvals))
+            if dvals == "delete":
+                conf.delAuth(alias)
+            else:
+                conf.updateAuth(Credentials(alias=alias,**dvals))
 
     if args.refresh:
         geoslurpCatalogue.refresh(conf)
@@ -326,7 +329,7 @@ def addCommandLineArgs():
 
         parser.add_argument("--auth-config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register (and encrypt on a user basis in the database) authentification services "
-                                 "(pass as a JSON dict, e.g. {\"servicename\":{\"user\":..,\"passw\":...}})")
+                            "(pass as a JSON dict, e.g. {\"servicename\":{\"user\":..,\"passw\":...}}). To delete an entry specify {\"servicename\":\"delete\"}")
         
         parser.add_argument("--admin-config", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register admin/default settings  (pass as a JSON dict, e.g. {\"DataDir\":\"path/\"})")

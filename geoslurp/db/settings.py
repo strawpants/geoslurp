@@ -27,9 +27,16 @@ import os
 from collections import namedtuple
 from geoslurp.config.slurplogger import slurplogger
 import sys
+import getpass
+
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
-import getpass
+
+# for the newer encryption
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import base64
 
 def getCreateDir(returndir):
     """creates a directory when not existent and return it"""
@@ -246,18 +253,18 @@ class Settings():
 
     def encryptAuth(self):
         """Encrypt the authentification credentials to store in the database"""
-        bs = int(algorithms.Blowfish.block_size / 8)
-        backend = default_backend()
-        iv = os.urandom(bs)
-        cipher = Cipher(algorithms.Blowfish(self.db.passw.encode('utf-8')), modes.CBC(iv), backend=backend)
-        encryptor = cipher.encryptor()
-        conf=json.dumps(self.auth).encode('utf-8')
-        #padd with spaces to be a multiple of bs
-        plen = bs - divmod(len(conf), bs)[1]
-        pad = b' '*plen
-        self.userentry.auth = iv + encryptor.update(conf+pad) + encryptor.finalize()
+        salt = os.urandom(16)
+        cyph=self.genCypher(salt,self.db.passw.encode('utf-8'))
 
-    def decryptAuth(self):
+        conf=json.dumps(self.auth).encode('utf-8')
+        
+        if self.authver== "ENCRV1":
+            slurplogger().warning("Replacing the authentication details with a safer encryption (not compatible with older geoslurp versions")
+            self.authver="ENCRV2"
+        self.userentry.auth = self.authver.encode('utf-8') + salt +  cyph.encrypt(conf)  
+        return
+    
+    def decryptAuthv1(self):
         """Decrypt the authenficiation credentials as stored in the database""" 
         if self.userentry.auth:
             bs=int(algorithms.Blowfish.block_size/8)
@@ -270,6 +277,27 @@ class Settings():
         else:
             self.auth={}
 
+    def decryptAuth(self):
+        """Decrypt the authenfication credentials as stored in the database""" 
+        self.authver="ENCRV2"
+        if self.userentry.auth:
+            shft=6
+            if self.userentry.auth[0:shft] == b"ENCRV2":
+                salt = self.userentry.auth[shft:shft+16]
+                cyph=self.genCypher(salt,self.db.passw.encode('utf-8'))
+                self.auth=json.loads(cyph.decrypt(self.userentry.auth[shft+16:]))
+            else:
+                #rollback encryption version
+                self.authver="ENCRV1"
+                #decrypt using the old version
+                self.decryptAuthv1()
+        else:
+            self.auth={}
+    
+    @staticmethod
+    def genCypher(salt,password):
+        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),length=32,salt=salt,iterations=100000)
+        return Fernet(base64.urlsafe_b64encode(kdf.derive(password)))
 
     def getDataDir(self,scheme,dataset=None,subdirs=None):
         """Retrieves the data Directory, possibly appended with a dataset and subdirs"""
