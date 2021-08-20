@@ -29,6 +29,8 @@ ch.setFormatter(formatter)
 
 # add ch to logger
 slurplog.addHandler(ch)
+#this is needed to avoid double messages
+slurplog.propagate=False
 
 # geoslurp wide logger
 def slurplogger():

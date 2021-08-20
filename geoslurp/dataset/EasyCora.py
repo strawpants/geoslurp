@@ -35,6 +35,7 @@ from queue import Queue
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.config.catalogue import geoslurpCatalogue
 import os
+from pathlib import Path
 import re
 import numpy as np
 # To do:  etract meta information with a threadpool
@@ -72,7 +73,7 @@ class CoraTable(OceanObsTBase):
 
 
 
-def coraMetaExtractor(uri,cachedir=False):
+def coraMetaExtractor(uri):
     """Extract meta information (tracks, etc) as a dictionary from an argo prof file  floats"""
 
     try:
@@ -171,11 +172,21 @@ class EasyCora(DataSet):
         
         #unpack the downloaded files in the data directory
         datadir=self.dataDir()
-        # for tarf in [UriFile(f) for f in findFiles(self.cacheDir(),".*tgz")]:
-        for tarf in updated:
-            slurplogger().info(f"Extracting trajectory files from {tarf.url}")
-            with tarfile.open(tarf.url) as tf:
-                tf.extractall(datadir)
+        for tarf in [UriFile(f) for f in findFiles(self.cacheDir(),".*tgz$")]:
+            succesfile=os.path.join(datadir,os.path.basename(tarf.url)+".isextracted")
+            try:
+                #check if the files need unpacking (only unpack when needed)
+                    #check if the last file is already extracted
+                    if os.path.exists(succesfile):
+                        slurplogger().info(f"{tarf.url} is already extracted, skipping")
+                    else:
+                        with tarfile.open(tarf.url,"r:gz") as tf:
+                            slurplogger().info(f"Extracting trajectory files from {tarf.url}")
+                            tf.extractall(datadir)
+                            #touch the sucessfile to indcate this archive has been sucessfully extracted
+                        Path(succesfile).touch()
+            except tarfile.ReadError as exc:
+                raise exc
 
     def register(self,pattern='.*\.nc$'):
         """Register downloaded trajectory files from CORA
