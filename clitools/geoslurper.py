@@ -368,7 +368,7 @@ def addCommandLineArgs():
                             help="Increase verbosity of the output one cvan use multiple v's after another (e.g. -vv) "
                                  "to increase verbosity. The default prints errors only")
 
-        parser.add_argument('--data-dir',type=str,metavar='DIR',nargs=1,
+        parser.add_argument('--data-dir',type=str,metavar='DIR',
                 help="Specify a dataset specific data directory DIR")
         
         # parser.add_argument('--cache-dir',type=str,metavar='DIR',nargs=1,
