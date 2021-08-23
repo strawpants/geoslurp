@@ -32,7 +32,10 @@ from geoslurp.types.zarr import OutDBZarrType
 import xarray as xr
 import os
 
-geoinfo=namedtuple("geoinfo",["srid","geoname","geomtype","dims","rastname"],defaults=(4326,"geom","GEOMETRY",2,"rast",))
+#geoinfo=namedtuple("geoinfo",["srid","geoname","geomtype","dims","rastname"],defaults=(4326,"geom","GEOMETRY",2,"rast",))
+#make compatible with 3.6
+geoinfo=namedtuple("geoinfo",["srid","geoname","geomtype","dims","rastname"])
+geoinfo.__new__.__defaults__=(4326,"geom","GEOMETRY",2,"rast",)
 
 class PandasBase(DataSet):
     """Base class which reads in a pandas compatible table (CSV, excel, or in memory dataframe are currently supported) it in a db table"""
