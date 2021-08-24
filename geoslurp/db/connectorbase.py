@@ -15,6 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 import inspect
+import os
 
 def raiseNotImpl():
     fname=inspect.stack()[1].function

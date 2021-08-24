@@ -78,7 +78,7 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
     argsout=copy.deepcopy(args)
     
     if dbalias:
-        args.dbalias=dbalias
+        argsout.dbalias=dbalias
 
     if argsout.local_settings:
         settingsFile=argsout.local_settings
@@ -90,18 +90,18 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
         with open(settingsFile, 'r') as fid:
             lastOpts=yaml.safe_load(fid)
     else:
-        if not args.dbalias:
-            args.dbalias="geoslurp"
+        if not argsout.dbalias:
+            argsout.dbalias="geoslurp"
         #set the defaults (note a host with None will try to connect to a local unix socket
         lastOpts={"dbalias":args.dbalias,args.dbalias:defaultdbdict}
 
     isUpdated=False
-    if args.dbalias:
+    if argsout.dbalias:
         lastOpts["dbalias"]=argsout.dbalias
         dbalias=args.dbalias
     else:
         dbalias=lastOpts["dbalias"]
-        args.dbalias=dbalias
+        argsout.dbalias=dbalias
 
     if not args.dbalias in lastOpts:
         lastOpts[dbalias]=defaultdbdict
