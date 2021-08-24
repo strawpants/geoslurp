@@ -33,4 +33,4 @@ def geoslurpConnect(args=None,readonly_user=True,update=False,local_settings=Non
         args.dbalias=dbalias
 
     userSettings=readLocalSettings(args=args,readonlyuser=readonly_user)
-    return GeoslurpConnector(host=userSettings.host,user=userSettings.user,passwd=userSettings.password,cache=userSettings.cache)
+    return GeoslurpConnector(host=userSettings.host,user=userSettings.user,passwd=userSettings.password,cache=userSettings.cache,dataroot=userSettings.dataroot)

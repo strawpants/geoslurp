@@ -242,6 +242,8 @@ class Settings():
     
     def get_local_path(self,url):
         """possibly prepend the localdataroot root to the path or"""
+        #possibly subsitute localdataroot placeholder
+        url=url.replace("${LOCALDATAROOT}",self.db.localdataroot)
 
         if not url.startswith("/"):
             url=os.path.join(self.db.localdataroot,url)

@@ -31,7 +31,7 @@ from collections import namedtuple
 from geoslurp.types.zarr import OutDBZarrType
 import xarray as xr
 import os
-
+from datetime import datetime
 #geoinfo=namedtuple("geoinfo",["srid","geoname","geomtype","dims","rastname"],defaults=(4326,"geom","GEOMETRY",2,"rast",))
 #make compatible with 3.6
 geoinfo=namedtuple("geoinfo",["srid","geoname","geomtype","dims","rastname"])
@@ -83,7 +83,9 @@ class PandasBase(DataSet):
                 np.int64:BIGINT,
                 float:Float,np.float64:Float,
                 "string": String, "integer": Integer, 
-                "floating":Float,xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName())}
+                "floating":Float,
+                xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName()),
+                "datetime64":DateTime}
         cols = [Column('id', Integer, primary_key=True)]
         
         for name,col in df.iteritems():

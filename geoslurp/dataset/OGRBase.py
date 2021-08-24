@@ -19,7 +19,7 @@ from geoslurp.dataset.dataSetBase import DataSet
 from osgeo import gdal,osr
 from geoslurp.config.slurplogger import slurplogger
 from geoalchemy2 import WKBElement,Geography,Geometry
-from sqlalchemy import Table,Column, Integer, String, Float, BigInteger,Date,DateTime
+from sqlalchemy import Column, Integer, String, Float, BigInteger,Date,DateTime
 from geoslurp.db import tableMapFactory
 import re
 

@@ -212,7 +212,8 @@ class DataSet(ABC):
         #fill the table with the file list and last modification timsstamps
         count=0
         for uri in urilist:
-            entry=tmptable(uri=uri.url,lastmod=uri.lastmod)
+            url=self.conf.generalize_path(uri.url)
+            entry=tmptable(uri=url,lastmod=uri.lastmod)
             ses.add(entry)
             count+=1
             if count > self.commitperN:
@@ -236,8 +237,9 @@ class DataSet(ABC):
 
         #submit transaction
         trans.commit()
+
         #return entried which need updating he entries in the original table which need updating
-        return [UriFile(x.uri,x.lastmod) for x in qrynew]
+        return [UriFile(self.conf.get_local_path(x.uri),x.lastmod) for x in qrynew]
 
 
     def entryNeedsUpdate(self,likestr,lastmod,col=None):
