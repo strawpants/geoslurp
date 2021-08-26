@@ -40,7 +40,7 @@ from dateutil.parser import parse
 
 class MotuGridsBase(RasterBase):
     """Downloads and register subsets of gridded data with the motu client"""
-    outofdb=True
+    outofdb=False
     rastregex="\.nc$"
     auxcolumns=[Column("lastupdate",TIMESTAMP),Column("time",ARRAY(TIMESTAMP))]
     updated=[]
