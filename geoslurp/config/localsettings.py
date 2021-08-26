@@ -78,6 +78,7 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
     argsout=copy.deepcopy(args)
     
     if dbalias:
+        #overrules possible value from args
         argsout.dbalias=dbalias
 
     if argsout.local_settings:
@@ -98,12 +99,14 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
     isUpdated=False
     if argsout.dbalias:
         lastOpts["dbalias"]=argsout.dbalias
-        dbalias=args.dbalias
+        dbalias=argsout.dbalias
     else:
+        #ue the default from the configuration file
         dbalias=lastOpts["dbalias"]
         argsout.dbalias=dbalias
 
-    if not args.dbalias in lastOpts:
+    if not dbalias in lastOpts:
+        #create a defaukt entry for this alias
         lastOpts[dbalias]=defaultdbdict
 
     #update dict with provided options from argsout
