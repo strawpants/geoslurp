@@ -23,7 +23,7 @@ class mss_cls2015(MotuGridsBase):
     """Downloads the mean sea surface heigth data as netcdf"""
     scheme='altim'
     variables=["mss","mss_err"]
-    bandname=variables[0]
+    preview={"bandnr":1,"bandname":variables[0]}
     # tiles=[1000,1000]
     # python motuclient.py -u roelof@geod.uni-bonn.de -p your_password(1) -m https://motu.aviso.altimetry.fr/motu-web/Motu -s AvisoMSS -d dataset-mss-cnes-cls15-global -x 20 -X 120 -y -75 -Y 30 -t "2015-01-01" -T "2015-01-01" --outputWritten netcdf4 -v sea_surface_height_above_reference_ellipsoid -v mss_err -o your_output_directory(1) -f your_output_file_name(1) --proxy-server=your_proxy_server_url:your_proxy_port_number(2) --proxy-user=your_proxy_user_login(3) --proxy-pwd=your_proxy_user_password(3)
     authalias="avisoftp"

@@ -22,7 +22,10 @@ from geoslurp.datapull.uri import findFiles, UriFile
 from sqlalchemy import Column,Integer,String,Float
 from geoalchemy2 import Raster
 from sqlalchemy import func,select,text
-from osgeo import gdal
+import rasterio as rio
+from rasterio.io import MemoryFile
+from rasterio.crs import CRS
+import numpy as np
 
 class RasterBase(DataSet):
     """Base class to load raster (tiles) into the postgis database"""
@@ -38,10 +41,13 @@ class RasterBase(DataSet):
     overviews=None
     #[ulx,xres,xskew,uly,yskew,yres]
     geotransform=None
+    preview={} #creates a raster which is a preview of the complete rasterdataset only
     def __init__(self,dbcon):
         super().__init__(dbcon)
         if self.outofdb and not self.srcdir:
             #expects stuff in the datadirectory
+            self.srcdir=self.dataDir()
+        elif self.preview and not self.srcdir:
             self.srcdir=self.dataDir()
         elif not self.outofdb and not self.srcdir:
             #use the cacheDir
@@ -126,53 +132,57 @@ class RasterBase(DataSet):
     def rastExtract(self,uri):
         """How things are extracted from the raster file (this may be overloaded in derived classes for more granular access"""
         slurplogger().info("Extracting info from raster: %s"%(uri.url))
-
-        bandnr=1
-        if self.outofdb:
+        
+        if self.preview:
+            bandnr=self.preview["bandnr"]
+            bandname=self.preview["bandname"]
+            
             #explicitly open the gdal file to get the bounding box info
             if uri.url.endswith(".nc"):
                 prefix="NETCDF:"
             else:
                 prefix=""
 
-            if self.bandname:
-                suffix=":"+self.bandname
+            if bandname:
+                suffix=":"+bandname
             else:
                 suffix=""
 
-            fraster=gdal.Open(prefix+uri.url+suffix)
+            rdata=rio.open(prefix+uri.url+suffix)
+            nx=rdata.width
+            ny=rdata.height
+            nodata=rdata.nodata
+            scale=rdata.scales[bandnr]
+            offset=rdata.offsets[bandnr]
+            transform=rdata.transform
+            dtype=rdata.dtypes[bandnr]
 
-            # if self.geotransform:
-                # fraster.SetGeoTransform(self.geotransform)
-                # nx=fraster.RasterYSize
-                # ny=fraster.RasterXSize
-            # else:
-            nx=fraster.RasterXSize
-            ny=fraster.RasterYSize
-
-            ulx, xres, xskew, uly, yskew, yres  = fraster.GetGeoTransform()
-            # uly, yres, yskew, ulx, xskew, xres  = fraster.GetGeoTransform()
-
-
-            emptyrast=func.ST_MakeEmptyRaster(nx,ny,ulx,uly,xres,yres,xskew,yskew,self.srid)
-
-            #create an out of db rasterband
-            outdbfile=self.conf.get_PG_path(uri.url)
-
-            rastb=fraster.GetRasterBand(bandnr)
-            nodata=rastb.GetNoDataValue()
-            scale=rastb.GetScale()
-            offset=rastb.GetOffset()
-
-
-            meta={"rast":func.ST_AddBand(emptyrast,prefix+outdbfile+suffix,[bandnr],0,nodata),
-                  "uri":uri.url,"add_offset":offset,"scale_factor":scale}
-            fraster=None
+            if self.outofdb:
+                #create an out of db rasterband
+                ulx,uly,xres,yres,xskew,yskew=[transform[2],transform[5],transform[0],transform[4],transform[1],transform[3]]
+                emptyrast=func.ST_MakeEmptyRaster(nx,ny,ulx,uly,xres,yres,xskew,yskew,self.srid)
+                outdbfile=self.conf.get_PG_path(uri.url)
+                meta={"rast":func.ST_AddBand(emptyrast,prefix+outdbfile+suffix,[bandnr],0,nodata),
+                      "uri":uri.url,"add_offset":offset,"scale_factor":scale}
+            else:
+                with MemoryFile() as memfile:
+                    with memfile.open(driver='GTiff', count=1,
+                            width=nx,height=ny,
+                            dtype=dtype, nodata=nodata,
+                            crs=CRS.from_epsg(self.srid),transform=transform) as dataset:
+                        dataset.write(np.expand_dims(rdata.read(bandnr),0))
+                    
+                    meta={"rast":func.ST_FromGDALRaster(bytes(memfile.getbuffer()),srid=self.srid),
+                        "uri":uri.url,"add_offset":offset,"scale_factor":scale}
         else:
-            #read directly from gdal format
+            if self.outofdb:
+                raise NotImplementedError("Can currently only work with outofdb previews, not entire bandsets")
+            
+            #read the entire thing directly from gdal format
             with open(uri.url,'rb') as fid:
                 fbytes=fid.read()
                 meta={"rast":func.ST_FromGDALRaster(fbytes,srid=self.srid),"uri":uri.url}
 
         return meta
+
 
