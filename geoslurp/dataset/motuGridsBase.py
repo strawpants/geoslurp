@@ -36,6 +36,7 @@ from geoslurp.datapull import findFiles,UriFile
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.dataset.RasterBase import RasterBase
 import copy
+from dateutil.parser import parse
 
 class MotuGridsBase(RasterBase):
     """Downloads and register subsets of gridded data with the motu client"""
@@ -60,6 +61,12 @@ class MotuGridsBase(RasterBase):
         :param tstart: start date (as yyyy-mm-dd) for the extraction
         :param tend: end date (as yyyy-mm-dd) for the extraction
         """
+        
+        if type(tstart)  == str:
+            tstart=parse(tstart)
+
+        if type(tend)  == str:
+            tend=parse(tend)
 
         if not name:
             raise RuntimeError("A name must be supplied to MotuGridsBase.pull !!")
@@ -130,7 +137,7 @@ class MotuGridsBase(RasterBase):
         time=ncid.variables["time"]
         # import pdb;pdb.set_trace()
         # t0=datetime(1950,1,1)
-        meta["time"]=num2date(time[:],time.units)
+        meta["time"]=num2date(time[:],time.units,only_use_cftime_datetimes=False)
         # s=int(x),seconds=int(86400*divmod(x,int(x))[1])) for x in ncid['time'][:]]
         return meta
 
