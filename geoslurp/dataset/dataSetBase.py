@@ -104,11 +104,12 @@ class DataSet(ABC):
         self._dbinvent.updatefreq=self.updatefreq
         
         #see if there are custom columns defined inthe table
-        for col in self.table.__table__.columns:
-            if re.search('geoslurp\.types\.',str(col.type.__class__)):
-                if not "customcolumns" in self._dbinvent.data:
-                    self._dbinvent.data["customcolumns"]={}
-                self._dbinvent.data["customcolumns"][col.name]={"type":col.type.__repr__(),"class":str(col.type.__class__)}
+        if self.table:
+            for col in self.table.__table__.columns:
+                if re.search('geoslurp\.types\.',str(col.type.__class__)):
+                    if not "customcolumns" in self._dbinvent.data:
+                        self._dbinvent.data["customcolumns"]={}
+                    self._dbinvent.data["customcolumns"][col.name]={"type":col.type.__repr__(),"class":str(col.type.__class__)}
 
         self._ses.commit()
 

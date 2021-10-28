@@ -28,6 +28,8 @@ from shapely.geometry import Polygon
 from shapely.wkt import dumps as wktdumps
 from netCDF4 import Dataset as ncDset
 from netCDF4 import num2date
+import time
+from urllib.error import HTTPError
 
 envelopType = Geography(geometry_type="POLYGON", srid='4326')
 
@@ -62,6 +64,8 @@ class ERA5Base(DataSet):
     def __init__(self,dbconn):
         super().__init__(dbconn)
         self.areas_nwse={}
+        if not "cds_jobs" in self._dbinvent.data:
+            self._dbinvent.data["cds_jobs"]={}
 
     def appendRequest(self,name,area):
         bb=area.envelope.exterior.xy
@@ -69,21 +73,93 @@ class ERA5Base(DataSet):
         self.areas_nwse[name]=[np.max(bb[1]),np.min(bb[0]),np.min(bb[1]),np.max(bb[0])]
 
     def pull(self):
-
         if not os.path.exists(os.path.join(os.path.expanduser("~"),".cdsapirc")):
             raise RuntimeError("Before using the cdsapi please visit https://cds.climate.copernicus.eu/api-how-to to obtain a token and setup your ~/.cdsapirc file")
         dout=self.dataDir()
-        #start a client
-        c = cdsapi.Client()
+        requests=[]
+        #start a client (which allows queing jobs in the bacjground)
+        client = cdsapi.Client(wait_until_complete=False)
         for name,area in self.areas_nwse.items():
             fout=os.path.join(dout,self.dset+"_"+name+".nc")
             if os.path.exists(fout):
                 slurplogger().info(f"Already downloaded ERA5 data for area {name}")
                 continue
-            requestdict=self.getRequestDict(area)
-            slurplogger().info(f"Downloading ERA5 for {name}")
-            c.retrieve(self.dset,requestdict,fout)
+            
+            req_id=None
+            #possibly get the request id from a previously queued job
+            if fout in self._dbinvent.data["cds_jobs"]:
+                req_id=self._dbinvent.data["cds_jobs"][fout]
+            
+            
+            if req_id:
+                #try to get an existing job
+                slurplogger().info(f"Trying to retrieve previously queued job for {fout}")
+                try:
+                    req=cdsapi.api.Result(client,dict(request_id=req_id))
+                    req.update()
+                except: 
+                    #Job cannot be found anymore
+                    slurplogger().info(f"Job cannot be found for {fout}, retrying")
+                    req_id=None
+                    del self._dbinvent.data["cds_jobs"][fout]
 
+            if not req_id:
+                #start a new request
+                slurplogger().info(f"Queuing new ERA5 request for {fout}")
+                requestdict=self.getRequestDict(area)
+                req=client.retrieve(self.dset,requestdict)
+                req.update()
+                req_id=req.reply["request_id"]
+                #add an entry to the inventory
+                self._dbinvent.data["cds_jobs"][fout]=req_id
+            
+            requests.append((req,fout,req.reply["state"]))
+        #Sync the possibly updated queueinfo to the database
+        self._ses.commit()
+        
+        #wait for tasks to finish and download results to files
+        sleep=30
+        nDownloaded=0
+        nFailed=0
+        import pdb;pdb.set_trace()
+        while (nDownloaded+nFailed) < len(requests):
+            # don't be too pushy and wait a while before checking
+            time.sleep(sleep)
+            for i,(req,fout,stateprev) in enumerate(requests):
+                # import pdb;pdb.set_trace()
+                if not fout:
+                    #already downloaded the file in this queue
+                    continue
+                req.update()
+                reply = req.reply
+                req_id=reply["request_id"]
+                state=reply['state']
+
+                if state != stateprev:
+                    slurplogger().info(f"Request ID: {req_id}, changed state to:{state}")
+                    requests[i]=(req,fout,state)
+
+                if state == "completed":
+                    #download file
+                    slurplogger().info(f"Downloading ERA5 request for {fout}")
+                    req.download(fout)
+                    #mark as done downloading (replace entry with None tuple)
+                    requestdict[i]=(None,None,None)
+                    nDownloaded+=1
+                elif state in ("failed",):
+                    nFailed+=1
+                    slurplogger().error(f'Message: {reply["error"].get("message")}')
+                    slurplogger().error(f'Reason: {reply["error"].get("reason")}')
+                    for n in (
+                        reply.get("error", {}).get("context", {}).get("traceback", "").split("\n")
+                    ):
+                        if n.strip() == "":
+                            break
+                        slurplogger().error("  %s", n)
+                    raise Exception(
+                        f'reply["error"].get("message")  reply["error"].get("reason")'
+                    )
+            
     def getRequestDict(self,area):
         """Builds a dictionary for the cdsapi
         :param area (shapely geometry) geometry which will be used to compute the bounding box to download data for"""
