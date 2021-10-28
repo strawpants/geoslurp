@@ -121,7 +121,6 @@ class ERA5Base(DataSet):
         sleep=30
         nDownloaded=0
         nFailed=0
-        import pdb;pdb.set_trace()
         while (nDownloaded+nFailed) < len(requests):
             # don't be too pushy and wait a while before checking
             time.sleep(sleep)
@@ -144,7 +143,7 @@ class ERA5Base(DataSet):
                     slurplogger().info(f"Downloading ERA5 request for {fout}")
                     req.download(fout)
                     #mark as done downloading (replace entry with None tuple)
-                    requestdict[i]=(None,None,None)
+                    requests[i]=(None,None,None)
                     nDownloaded+=1
                 elif state in ("failed",):
                     nFailed+=1
