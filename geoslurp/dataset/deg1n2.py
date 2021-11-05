@@ -281,6 +281,7 @@ class  TN14_SLR_GSFC(DataSet):
                 mv=[]
                 tv=[]
                 cnmv=[]
+                dcnmv=[]
                 sigcnmv=[]
                 
                 #Append c20 coefficients
@@ -288,6 +289,7 @@ class  TN14_SLR_GSFC(DataSet):
                 mv.append(0)
                 tv.append(0)
                 cnmv.append(float(c20))
+                dcnmv.append(float(dc20)*1e-10)
                 sigcnmv.append(float(sigc20))
                 if c30 != "NaN":
                     nmax=3
@@ -295,6 +297,7 @@ class  TN14_SLR_GSFC(DataSet):
                     mv.append(0)
                     tv.append(0)
                     cnmv.append(float(c30))
+                    dcnmv.append(float(dc30)*1e-10)
                     sigcnmv.append(float(sigc30))
 
                 #register the accumulated entry
@@ -303,7 +306,7 @@ class  TN14_SLR_GSFC(DataSet):
                 tcent=tstart+(tend-tstart)/2
             
                 meta={"type":"GSM","time":tcent,"tstart":tstart,"tend":tend,"lastupdate":lastupdate,"nmax":nmax,"omax":omax,"format":"JSONB","gm":0.3986004415e+15,"re":0.6378136460e+07}
-                meta["data"]=xr.Dataset(data_vars=dict(cnm=(["shg"],cnmv),sigcnm=(["shg"],sigcnmv)),coords=dict(n=(["shg"],nv),m=(["shg"],mv),t=(["shg"],tv)))
+                meta["data"]=xr.Dataset(data_vars=dict(cnm=(["shg"],cnmv),dcnm=(["shg"],dcnmv),sigcnm=(["shg"],sigcnmv)),coords=dict(n=(["shg"],nv),m=(["shg"],mv),t=(["shg"],tv)))
                 
                 self.addEntry(meta)
             self.updateInvent()
