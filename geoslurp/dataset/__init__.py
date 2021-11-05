@@ -22,5 +22,6 @@ from .mss_cnes_cls2015 import *
 from .IceSatDrainDiv import *
 from .Hydrosheds import *
 from .EasyCora import *
+from .gracefilters import *
 # datasetgeneric should always be to last one to load(!)
 from .datasetgeneric import *

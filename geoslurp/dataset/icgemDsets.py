@@ -41,6 +41,7 @@ class ICGEM_static(DataSet):
         #initialize postgreslq table
         GravitySHTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
         self.updated=[]
+    
     def pull(self,pattern=None,list=False):
         """Pulls static gravity fields from the icgem website
         :param pattern: only download files whose name obeys this regular expression
@@ -65,6 +66,9 @@ class ICGEM_static(DataSet):
                     self.updated.append(tmp)
 
     def register(self,pattern=None):
+        """Register static gravity fields donwloaded in the data director
+        :param pattern: only register files whose filename obeys this regular expression
+        """
         if not pattern:
             pattern='.*\.gz'
         #create a list of files which need to be (re)registered
@@ -81,7 +85,6 @@ class ICGEM_static(DataSet):
                 continue
 
             meta=icgemMetaExtractor(uri)
-
             self.addEntry(meta)
 
         self.updateInvent()

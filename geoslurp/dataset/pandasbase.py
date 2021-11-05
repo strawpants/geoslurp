@@ -29,6 +29,7 @@ from sqlalchemy import func
 import numpy as np
 from collections import namedtuple
 from geoslurp.types.zarr import OutDBZarrType
+from geoslurp.types.numpy import datetime64Type
 import xarray as xr
 import os
 from datetime import datetime
@@ -85,7 +86,8 @@ class PandasBase(DataSet):
                 "string": String, "integer": Integer, 
                 "floating":Float,
                 xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName()),
-                "datetime64":DateTime}
+                "datetime64":DateTime,
+                np.dtype('<M8[ns]'):datetime64Type}
         cols = [Column('id', Integer, primary_key=True)]
         
         for name,col in df.iteritems():
