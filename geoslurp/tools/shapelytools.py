@@ -16,6 +16,7 @@
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2019
 
 
+from rasterio.io import MemoryFile
 import shapely.wkb
 
 def shpextract(entry):
@@ -24,4 +25,8 @@ def shpextract(entry):
 
 
 # def closestDistance():
-    
+def wkb2shapely(geom):
+    return shapely.wkb.loads(str(geom),hex=True)
+
+def gdal2rastio(rast):
+    return MemoryFile(rast.tobytes())

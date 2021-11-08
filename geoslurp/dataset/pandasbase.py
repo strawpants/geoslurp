@@ -176,4 +176,8 @@ class PandasBase(DataSet):
 
 
     def outdbArchiveName(self):
-        return os.path.join(self.dataDir(),self.name+"_data.zarr")
+        if self.stripuri:
+            arname=self.conf.generalize_path(os.path.join(self.dataDir(),self.name+"_data.zarr"))
+        else:
+            arname=os.path.join(self.dataDir(),self.name+"_data.zarr")
+        return arname

@@ -66,7 +66,7 @@ class OutDBZarrType(UserDefinedType):
 
     def result_processor(self, dialect, coltype):
         def process(value):
-            return self.zstore
+            return value
         return process
 
 
