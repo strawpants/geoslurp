@@ -24,8 +24,9 @@ import os
 
 class OutDBZarrType(UserDefinedType):
     """Converts a column of xarray Dataarrays to an out-of-db data representation"""
-    def __init__(self,defaultZstore=None):
+    def __init__(self,defaultZstore=None,modifyUri=None):
         self.defaultZstore=defaultZstore
+        self.modifyUri=modifyUri
 
     def get_col_spec(self, **kw):
         return "JSONB"
@@ -48,6 +49,7 @@ class OutDBZarrType(UserDefinedType):
                 #Expand a dimension and add a coordinate for lookup
                 append_dim="gslrp"
                 value=value.expand_dims({append_dim:1})
+            vname=value.name
             value=value.to_dataset()
 
             if os.path.exists(storage):
@@ -59,8 +61,10 @@ class OutDBZarrType(UserDefinedType):
                 #start with a new file
                 iappend=1
                 value.to_zarr(storage,mode='w')
-            
-            metadict=Json({"uri":storage,"slice":{append_dim:iappend}})
+            if self.modifyUri:
+                storage=self.modifyUri(storage)
+                
+            metadict=Json({"uri":storage,"varnames":[vname],"slice":{append_dim:iappend}})
             return metadict
         return process
 

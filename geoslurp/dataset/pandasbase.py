@@ -85,7 +85,7 @@ class PandasBase(DataSet):
                 float:Float,np.float64:Float,
                 "string": String, "integer": Integer, 
                 "floating":Float,
-                xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName()),
+                xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path),
                 "datetime64":DateTime,
                 np.dtype('<M8[ns]'):datetime64Type}
         cols = [Column('id', Integer, primary_key=True)]
@@ -176,8 +176,8 @@ class PandasBase(DataSet):
 
 
     def outdbArchiveName(self):
-        if self.stripuri:
-            arname=self.conf.generalize_path(os.path.join(self.dataDir(),self.name+"_data.zarr"))
-        else:
-            arname=os.path.join(self.dataDir(),self.name+"_data.zarr")
+        # if self.stripuri:
+            # arname=self.conf.generalize_path(os.path.join(self.dataDir(),self.name+"_data.zarr"))
+        # else:
+        arname=os.path.join(self.dataDir(),self.name+"_data.zarr")
         return arname

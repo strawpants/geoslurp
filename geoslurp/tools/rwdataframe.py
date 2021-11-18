@@ -53,10 +53,6 @@ def saveDataFrame(gsconn,df,name,schema="public",overwrite=False,stripuri=False)
 
 
 
-
-# def load_spatialite(dbapi_conn, connection_record):
-        # dbapi_conn.enable_load_extension(True)
-        # #ok below is not really portable and only works for linux
         # # dbapi_conn.load_extension('/usr/lib/mod_spatialite.so')
 
         # dbapi_conn.execute("SELECT load_extension('mod_spatialite');")
