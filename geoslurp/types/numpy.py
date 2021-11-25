@@ -20,13 +20,7 @@ from sqlalchemy.types import DateTime
 import numpy as np
 from datetime import datetime
 
-
-class datetime64Type(TypeDecorator):
-    """Converts a column of numpy datetime64[ns] to a DateTime representation"""
-    impl = DateTime
-
-    def process_bind_param(self, value, dialect):
-        """Stores an xarray DataArray to a  JSON object"""
+def np_to_datetime(value):
         if not hasattr(value,'dtype'):
             raise TypeError(f"Expected a np.datetime64  got {type(value)}")
         if value.dtype == np.dtype('datetime64[ns]'):
@@ -40,6 +34,14 @@ class datetime64Type(TypeDecorator):
         else:
             raise TypeError(f"Expected a np.datetime64[..]  got {value.dtype})")
         return datetime.utcfromtimestamp(value.astype(int)*res)
+
+class datetime64Type(TypeDecorator):
+    """Converts a column of numpy datetime64[ns] to a DateTime representation"""
+    impl = DateTime
+
+    def process_bind_param(self, value, dialect):
+        """Converts a numpy datetime64 object to a python datetime"""
+        return np_to_datetime(value)
 
     def process_result_value(self, value, dialect):
             return np.datetime64(value)

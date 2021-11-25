@@ -56,37 +56,64 @@ class CDSBase(DataSet):
     
     def metaExtractor(self,uri):
         """implement this function in derived class"""
+        raise NotImplementedError("MetaExtractor(self,uri) not implemented")
         return {}
 
-    def pull(self):
+    def pull(self,maxreq=100):
         dout=self.dataDir()
         
         cdsQueue=Cds(self.resource,self._dbinvent.data["cds_jobs"])
-
         #add requests to the CDS queue
         #Not it is expected that the derived class adds these requestdictionaries in one way or the other (default will be empty)
-        for name,reqdict in self.reqdicts.items():
-            fout=os.path.join(dout,self.resource+"_"+name+".nc")
-            cdsQueue.queueRequest(fout,reqdict)
         
-        #Sync the possibly updated queueinfo to the database
+        #only submit maxreq at once
+        nreq=0
+        for name,reqdict in self.reqdicts.items():
+            if self.oformat == 'netcdf':
+                app=".nc"
+            elif self.oformat == 'grib':
+                app=".grb"
+
+            fout=os.path.join(dout,self.resource+"_"+name+".grb")
+            cdsQueue.queueRequest(fout,reqdict)
+            nreq+=1
+            if nreq > maxreq:
+                #do an intermediate download before submitting more requests
+                #Sync the possibly updated queueinfo to the database
+                self._dbinvent.data["cds_jobs"]=cdsQueue.jobqueue
+                self._ses.commit()
+        
+                #wait for tasks to finish and download results to files
+                cdsQueue.downloadQueue()
+                cdsQueue.clearRequests()
+                nreq=0
+
+        #download outstanding jobs
         self._dbinvent.data["cds_jobs"]=cdsQueue.jobqueue
         self._ses.commit()
-        
+
         #wait for tasks to finish and download results to files
         cdsQueue.downloadQueue()
+
+        cdsQueue.clearRequests()
 
     def register(self):
         if not self.table:
             #create a new table on the fly
             self.createTable(self.columns)
+        
+        if self.oformat == 'netcdf':
+            app=".nc"
+        elif self.oformat == 'grib':
+            app=".grb"
         #create a list of files which need to be (re)registered
-        newfiles=self.retainnewUris([UriFile(file) for file in findFiles(self.dataDir(),".*\.nc$")])
+        newfiles=self.retainnewUris([UriFile(file) for file in findFiles(self.dataDir(),f".*\{app}$")])
         for uri in newfiles:
             meta=self.metaExtractor(uri)
             if not meta:
                 #don't register empty entries
                 continue
+            slurplogger().info(f"Adding metadata from {uri.url}")
             self.addEntry(meta)
         self._dbinvent.data["Description"]=self.description
         self.updateInvent()

@@ -30,6 +30,8 @@ from geoslurp.dataset.RasterBase import RasterBase
 import xarray as xr
 from datetime import datetime
 from geoslurp.config.catalogue import geoslurpCatalogue
+from geoslurp.types.numpy import np_to_datetime
+from copy import deepcopy
 
 class GloFASBase(CDSBase):
     """Provides a Base class from which subclasses can inherit to download a subset of the data per area"""
@@ -56,24 +58,25 @@ class GloFASBase(CDSBase):
         
         #loop over the requested years (need to split this up to prevent too lrage requests
         for yr in range(self.yrstart,self.yrend+1):
-            reqdict["hyear"]=f"{yr}"
+            reqdictcp=deepcopy(reqdict)
+            reqdictcp["hyear"]=f"{yr}"
             name_yr=f"{name}_{yr}"
-            self.reqdicts[name_yr]=reqdict
+            self.reqdicts[name_yr]=reqdictcp
 
 
-    def MetaExtractor(self,uri):
-        name=os.path.basename(uri.url).split('_')[-1][0:-3]
-        ds=xr.load_dset(uri.url,engine='cfgrib')
+    def metaExtractor(self,uri):
+        name="".join(os.path.basename(uri.url).split('_')[-2:])[0:-4]
+        ds=xr.open_dataset(uri.url,engine='cfgrib')
         data={"dimensions":{ky:val for ky,val in ds.dims.items()},"variables":{ky:{"long_name":val.attrs["long_name"],"dimensions":val.dims} for ky,val in ds.variables.items()}}
 
-        tstart=ds.time.values[0]
-        tend=ds.time.values[-1]
+        tstart=np_to_datetime(ds.time.values[0])
+        tend=np_to_datetime(ds.time.values[-1])
         latmin=ds.latitude.min().values
         latmax=ds.latitude.max().values
         lonmin=ds.longitude.min().values
-        lon.max=ds.longitude.max().values
+        lonmax=ds.longitude.max().values
         bbox=Polygon([(lonmin,latmin),(lonmin,latmax),(lonmax,latmax),(lonmax,latmin)])
-        return {"name":name,"lastupdate":ncuri.lastmod,"tstart":tstart,"tend":tend,"uri":ncuri.url,"data":data,"geom":wktdumps(bbox)}
+        return {"name":name,"lastupdate":uri.lastmod,"tstart":tstart,"tend":tend,"uri":uri.url,"data":data,"geom":wktdumps(bbox)}
 
 
 class GloFASUpArea(RasterBase):

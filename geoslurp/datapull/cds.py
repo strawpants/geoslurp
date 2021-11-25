@@ -20,7 +20,7 @@ import time
 from copy import copy
 import numpy as np
 import os
-
+from urllib.error import HTTPError
 class Cds:
     def __init__(self,resource,jobqueue={}):
         #start a client (which allows queing jobs in the bacjground)
@@ -65,7 +65,19 @@ class Cds:
             self.jobqueue[fout]=req_id
         
         self.requests.append((req,fout,req.reply["state"]))
-
+    
+    def clearRequests(self,removestates=['downloaded','unavailable','failed']):
+        """clears certain requests and updates the jobqueue"""
+        reqs=[]
+        for req,fout,state in self.requests:
+            if state in removestates:
+                #clear from the jobqueue
+                if fout in self.jobqueue:
+                    del self.jobqueue[fout]
+            else:
+                reqs.append((req,fout,state))
+        #update requests
+        self.requests=reqs
 
     def downloadQueue(self,sleep=30):
         
@@ -76,9 +88,10 @@ class Cds:
             # don't be too pushy and wait a while before checking
             time.sleep(sleep)
             for i,(req,fout,stateprev) in enumerate(self.requests):
-                if not fout:
-                    #already downloaded the file in this queue
+                if stateprev == 'downloaded' or stateprev == 'unavailable':
+                    #already downloaded the file in this queue or previous attempt failed
                     continue
+                
                 req.update()
                 reply = req.reply
                 req_id=reply["request_id"]
@@ -86,15 +99,21 @@ class Cds:
 
                 if state != stateprev:
                     slurplogger().info(f"Request ID: {req_id}, changed state from {stateprev} to:{state}")
-                    self.requests[i]=(req,fout,state)
 
                 if state == "completed":
                     #download file
                     slurplogger().info(f"Downloading CDS request for {fout}")
-                    req.download(fout)
-                    #mark as done downloading (replace entry with None tuple)
-                    requests[i]=(None,None,None)
-                    nDownloaded+=1
+
+                    try:
+                        req.download(fout)
+                        nDownloaded+=1
+                        state="downloaded"
+                    except HTTPError:
+                        #resource may be gone in the meanwhile
+                        nFailed+=1
+                        slurplogger().error('Resource is not available anymore')
+                        state="unavailable"
+
                 elif state in ("failed",):
                     nFailed+=1
                     slurplogger().error(f'Message: {reply["error"].get("message")}')
@@ -108,4 +127,8 @@ class Cds:
                     raise Exception(
                         f'reply["error"].get("message")  reply["error"].get("reason")'
                     )
+                
+                if state != stateprev:
+                    self.requests[i]=(req,fout,state)
 
+            slurplogger().info(f"Successful downloads: {nDownloaded}/{len(self.requests)}, failure: {nFailed}")
