@@ -24,5 +24,6 @@ from .Hydrosheds import *
 from .EasyCora import *
 from .gracefilters import *
 from .glofas import *
+from .sentinelreforbits import *
 # datasetgeneric should always be to last one to load(!)
 from .datasetgeneric import *

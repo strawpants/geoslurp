@@ -22,7 +22,8 @@ from geoalchemy2 import WKBElement,Geography,Geometry
 from sqlalchemy import Column, Integer, String, Float, BigInteger,Date,DateTime
 from geoslurp.db import tableMapFactory
 import re
-
+from zipfile import ZipFile
+import os
 
 
 
@@ -139,9 +140,18 @@ class OGRBase(DataSet):
 
         slurplogger().info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme, self.name, self.ogrfile))
         
-        #open shapefile directory
+        #open shapefile directory or ogr file
+        if self.ogrfile.endswith('.kmz') and not gdal.GetDriverByName('LIBKML'): 
+            #unzip the kmz file
+            cache=self.cacheDir()
+            with ZipFile(self.ogrfile,'r') as zp:
+                kmlf=zp.namelist()[0]#take the first zip file only 
+                zp.extract(kmlf,cache)
+            kmlfile=os.path.join(cache,kmlf)
+            shpf=gdal.OpenEx(kmlfile,0)
 
-        shpf=gdal.OpenEx(self.ogrfile,0)
+        else:
+            shpf=gdal.OpenEx(self.ogrfile,0)
         
         count=0
         for ithlayer in range(shpf.GetLayerCount()):
@@ -165,7 +175,7 @@ class OGRBase(DataSet):
                     cols=self.columnsFromOgrFeat(feat)
                     self.createTable(cols)
                 values=self.valuesFromOgrFeat(feat,transform)
-#                 import pdb;pdb.set_trace()
+                # import pdb;pdb.set_trace()
                 try:
                     self.addEntry(values)
                 except:

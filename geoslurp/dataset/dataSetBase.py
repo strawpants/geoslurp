@@ -133,9 +133,9 @@ class DataSet(ABC):
         """returns the cache directory of this scheme and dataset"""
         if self._dbinvent.cache:
             if subdirs:
-                return getCreateDir(os.path.join(self._dbinvent.cache,subdirs),self.conf.mirrorMap)
+                return getCreateDir(os.path.join(self._dbinvent.cache,subdirs))
             else:
-                return getCreateDir(self._dbinvent.cache,self.conf.mirrorMap)
+                return getCreateDir(self._dbinvent.cache)
 
         return self.conf.getCacheDir(self.scheme, dataset=self.name,subdirs=subdirs)
     
