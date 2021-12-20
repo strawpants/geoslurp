@@ -25,7 +25,7 @@ from geoslurp.datapull import UriFile
 from geoslurp.datapull.rsync import Crawler as rsync
 from geoslurp.datapull.uri import findFiles
 import os
-from sqlalchemy.ext.declarative import declared_attr, as_declarative
+from sqlalchemy.ext.declarative import declared_attr, as_declarative,declarative_base
 from netCDF4 import Dataset as ncDset
 from osgeo import ogr
 from datetime import datetime,timedelta
@@ -36,7 +36,10 @@ from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.db.settings import getCreateDir
 geotracktype = Geography(geometry_type="MULTILINESTRINGZ", srid='4326', spatial_index=True, dimension=3)
 
-@as_declarative(metadata=MetaData(schema='altim'))
+scheme='altim'
+
+
+@as_declarative(metadata=MetaData(schema=scheme))
 class RadsTBase(object):
     @declared_attr
     def __tablename__(cls):
@@ -146,6 +149,7 @@ def radsMetaDataExtractor(uri):
     return meta
 
 
+
 class RadsBase(DataSet):
     """Base class for a satellite + phase in the rads database
     """
@@ -225,7 +229,70 @@ class RadsBase(DataSet):
 
 
 
+def extractCycleInfo(filename):
+   cycledicts=[]
+   #a 009 0149 0770 180606020805.000 180627212652.000  619 1262097
+   missionid=os.path.basename(filename)[0:-4]
+   frmt='%y%m%d%H%M%S.%f'
+   with open(filename,'rt') as fid:
+      for ln in fid.readlines():
+         (ph,cycle,startpass,endpass,tstart,tend,npass,cyclen)=ln.split()
+         cycle=int(cycle)
+         startpass=int(startpass)
+         endpass=int(endpass)
+         npass=int(npass)
+         tstart=datetime.strptime(tstart,frmt)
+         tend=datetime.strptime(tend,frmt)
+         cycledicts.append(dict(cycle=cycle,missionid=missionid,startpass=startpass,endpass=endpass,tstart=tstart,tend=tend,npass=npass))
 
+   return cycledicts
+
+RadsCTBase=declarative_base(metadata=MetaData(schema=scheme))
+class RadsCatalogueT(RadsCTBase):
+    __tablename__="radscycles"
+    id = Column(Integer, primary_key=True)
+    tstart=Column(TIMESTAMP,index=True)
+    tend=Column(TIMESTAMP,index=True)
+    cycle=Column(Integer)
+    startpass=Column(Integer)
+    endpass=Column(Integer)
+    npass=Column(Integer)
+    missionid=Column(String,index=True)
+
+
+
+class RadsCycles(DataSet):
+   table=RadsCatalogueT
+   scheme=scheme
+   def __init__(self,dbconn):
+      super().__init__(dbconn)
+      self.updated=None
+      #possibly use an external location for the data
+      if not self._dbinvent.datadir:
+         if 'RADSDATAROOT' in os.environ:
+            self.setDataDir(getCreateDir(os.path.join(os.environ['RADSDATAROOT'],'tables')))
+         else:
+            self.setDataDir(self.conf.getDataDir(self.scheme,subdirs="RADS/tables"))
+
+   def pull(self, cycle=None):
+      """Pulls the catalogues from the rads server 
+      :param cycle: only pulls data from a specific cycle
+      """
+      cred=self.conf.authCred("rads")
+
+      url="rads.tudelft.nl::rads/tables/"
+      #pull table data files
+      rsync(url,auth=cred).parallelDownload(self.dataDir(),True)
+
+   def register(self,cycle=None,since=None):
+      #truncate table
+      self.truncateTable()
+
+      for cyclefile in glob(self.dataDir()+'/*.cyc'):
+         slurplogger().info("extracting cycle catalogue from %s"%(cyclefile))
+         cycleinfo=extractCycleInfo(cyclefile)
+         self.bulkInsert(cycleinfo)
+      self.updateInvent()
 
 
 # Factory method to dynamically create classes
@@ -245,3 +312,4 @@ def getRADSDsets(conf):
     return out
 
 geoslurpCatalogue.addDatasetFactory(getRADSDsets)
+geoslurpCatalogue.addDataset(RadsCycles)
