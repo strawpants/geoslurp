@@ -18,26 +18,34 @@
 from geoslurp.datapull import CrawlerBase,  UriFile
 import subprocess
 import re
-
+import os
 class Crawler(CrawlerBase):
     """Crawler wrapper around the rsync program calls the linux rsync utility"""
     def __init__(self,url,auth):
         super().__init__(url)
         self.auth=auth
 
-    def parallelDownload(self,outdir,check=False):
+    def parallelDownload(self,outdir,check=False,includes=None,dryrun=False):
         updated=[]
+        cmd=['rsync', '-avz', '--del']
         if check:
-            cmd=['rsync', '-avz', '--del','--update', self.auth.user +"@"+self.rooturl,outdir]
-        else:
-            cmd=['rsync', '-avz', '--del', self.auth.user +"@"+self.rooturl,outdir]
-
+            cmd.append('--update')
+        if dryrun:
+            cmd.append('--dry-run')
+        if includes:
+            inclist="{'"+"','".join(includes)+"'}"
+            cmd.append(f"--include={inclist}")
+            #exclude everything else which is not obeying the include filters
+            cmd.append("--exclude='*'")
+            
+        cmd.append(self.auth.user +"@"+self.rooturl)
+        cmd.append(outdir)
         for file in self.startrsync(cmd):
-             updated.append(UriFile(file))
+             updated.append(UriFile(os.path.join(outdir,file)))
         return updated
 
     def startrsync(self,cmd):
-        """Start rsync and returns the lsit of files as a generator"""
+        """Start rsync and returns the list of files as a generator"""
         #start command and catch output
         dryrun=subprocess.Popen(cmd,stdout=subprocess.PIPE, env={"RSYNC_PASSWORD":self.auth.passw})
         buf,stderr=dryrun.communicate()
@@ -54,7 +62,6 @@ class Crawler(CrawlerBase):
 
     def ls(self):
         """list remote content (using dry run)"""
-        #write a tempoary passowrd file to /tmp
         cmd=['rsync', '-avz', '--del','--dry-run', self.auth.user +"@"+self.rooturl,'.']
         for file in self.startrsync(cmd):
             yield file

@@ -22,7 +22,7 @@ import shutil
 import re
 from geoslurp.db import Inventory,Settings
 from sqlalchemy.orm.exc import NoResultFound
-from datetime import datetime
+from datetime import datetime,timedelta
 from sqlalchemy import Table,Column,Integer,String
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from geoslurp.datapull import UriFile
@@ -113,8 +113,18 @@ class DataSet(ABC):
 
         self._ses.commit()
 
-    def info(self):
-        return self._dbinvent
+    # def info(self):
+        # return self._dbinvent
+
+    def isExpired(self):
+        """Checks whether the table data is expired relative to to the updatefrequency"""
+        if not self._dbinvent.updatefreq:
+            #ten years if not specified
+            updatefreq=timedelta(days=10*365)
+        else:
+            updatefreq=timedelta(days=self._dbinvent.updatefreq)
+
+        return (self._dbinvent.lastupdate + updatefreq ) < datetime.today()
 
     def dataDir(self,subdirs=None):
         """Returns the specialized data directory of this scheme and dataset

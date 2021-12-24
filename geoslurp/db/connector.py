@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from sqlalchemy import create_engine, MetaData,and_
+from sqlalchemy import create_engine, MetaData,and_,inspect
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import exists,select,column,table,text
 from sqlalchemy.schema import CreateSchema, DropSchema
@@ -126,8 +126,11 @@ class GeoslurpConnector(GeoslurpConnectorBase):
         else:
             self.dbeng.execute('DROP TABLE IF EXISTS "%s";' % (tablename.lower()))
     
-    def hasTable(self,tablename):
-        return self.dbeng.has_table(tablename)
+    def tableExists(self,tablename):
+        insp=inspect(self.dbeng)
+        sch,tbl=tablename.split(".")
+        return insp.has_table(tbl,sch)
+
 
     def getTable(self,tname,scheme="public",customcolumns=None):
         mdata=MetaData(bind=self.dbeng,schema=scheme)

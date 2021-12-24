@@ -80,7 +80,7 @@ class awipies(DataSet):
         obpsource.download(self.dataDir(),outfile=self.obpfile)
 
     def register(self):
-
+        self.truncateTable()
         obpfile=os.path.join(self.dataDir(),self.obpfile)
 
         for meta in extractMetaPies(obpfile):
