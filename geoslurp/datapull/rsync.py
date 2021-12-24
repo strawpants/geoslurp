@@ -33,10 +33,11 @@ class Crawler(CrawlerBase):
         if dryrun:
             cmd.append('--dry-run')
         if includes:
-            inclist="{'"+"','".join(includes)+"'}"
-            cmd.append(f"--include={inclist}")
+            cmd.extend([f'--include={inc}' for inc in includes]) 
+            # inclist='{"'+'","'.join(includes)+'"}'
+            # cmd.append(f'--include={inclist}')
             #exclude everything else which is not obeying the include filters
-            cmd.append("--exclude='*'")
+            cmd.append('--exclude=*')
             
         cmd.append(self.auth.user +"@"+self.rooturl)
         cmd.append(outdir)
