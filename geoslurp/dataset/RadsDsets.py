@@ -203,6 +203,8 @@ class RadsBase(DataSet):
                   include.extend([f"{self.sat}p{pss:04d}*nc" for pss in passes])
                else:
                   include.append(f"{self.sat}p{passes:04d}*nc")
+            else:
+               include.append(f"{self.sat}*nc")
 
         slurplogger().info(f"rsyncing rads data to {desturl}")
         self.updated=rsync(srcurl,auth=cred).parallelDownload(desturl,True,include)
@@ -291,9 +293,8 @@ class RadsCycles(DataSet):
              self._dbinvent.datadir=self.conf.getDataDir(self.scheme,subdirs="RADS")
          self.updateInvent(False)
 
-   def pull(self, cycle=None):
+   def pull(self):
       """Pulls the catalogues from the rads server 
-      :param cycle: only pulls data from a specific cycle
       """
       cred=self.conf.authCred("rads")
 
@@ -306,7 +307,7 @@ class RadsCycles(DataSet):
       #pull xml configuration files
       rsync(srcurl,auth=cred).parallelDownload(self.dataDir(),True)
 
-   def register(self,cycle=None,since=None):
+   def register(self):
       #truncate table
       self.truncateTable()
 
@@ -387,7 +388,7 @@ class RadsRefOrbits(DataSet):
          sat=mission[0:2]
          ph=mission[2:3]
          alttbl=f"{scheme}.rads_{sat}_{ph}"
-         slurplogger().info(f"Getting reference cycle for {alttbl}")
+         slurplogger().info(f"Getting reference cycle {entry['refcycle']} for {alttbl}")
          radsOrbit=geoslurpCatalogue.getDatasets(self.conf,f"{alttbl}")[0](self.db)
          radsOrbit.pull(cycle=entry["refcycle"])
          radsOrbit.register()
@@ -409,7 +410,7 @@ class RadsRefOrbits(DataSet):
          ph=mission[2:3]
          alttbl=f"{scheme}.rads_{sat}_{ph}"
          if not self.db.tableExists(alttbl):
-               slurplogger().info(f"Skipping mission {mission}, because {alttbl} does not exits")
+               slurplogger().info(f"Skipping mission {mission}, because {alttbl} does not exists")
                continue
          else:
             slurplogger().info(f"Registering mission {mission}")

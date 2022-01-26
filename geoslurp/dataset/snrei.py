@@ -19,13 +19,15 @@ from geoslurp.datapull.http import Uri as http
 from geoslurp.config.catalogue import geoslurpCatalogue
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column,Integer,String,MetaData
-from sqlalchemy.dialects.postgresql import TIMESTAMP
+from sqlalchemy.dialects.postgresql import TIMESTAMP,JSONB
 from geoslurp.datapull.github import Crawler as ghCrawler
 from geoslurp.datapull.github import GithubFilter as ghfilter
 from geoslurp.config.slurplogger import slurplogger
-
+from geoslurp.types import DataArrayJSONType
 from geoslurp.datapull import UriFile
 from geoslurp.datapull import findFiles
+import numpy as np
+import xarray as xr
 import gzip
 import re
 import os
@@ -40,14 +42,43 @@ def lloveMetaExtractor(uri):
     
     nmax=0
     reentry=re.compile('^ *[0-9]')
+    hn=[]
+    ln=[]
+    kn=[]
+    deg=[]
+    slurplogger().info(f"Processing {uri.url}")
+    descr=""
+    ref=None
     with gzip.open(uri.url,'rt') as fid:
-        for ln in fid:
-            if reentry.search(ln):
-                nmax=max(nmax,int(ln.split()[0]))
-                    
+        for line in fid:
+            if reentry.search(line):
+                linespl=line.split()
+                n=int(linespl[0])
+                if n == 1:
+                    #look for CF degree 1 coefficients only
+                    ref="CF"
+                    if linespl[4] != ref:
+                        #only use the degree 1 numbers of the chosen reference system
+                        continue
+                deg.append(n)
+                hln=[float(el.replace('D','E')) for el in linespl[1:4]]
+                #possibly replace infinity values with NaN
+                hln=[None if np.isinf(el) else el for el in hln]
+
+                hn.append(hln[0])
+                ln.append(hln[1])
+                kn.append(hln[2])
+            else:
+                #append comment to description
+                descr+=line
+
+    #create an xarray dataset
+    dslove=xr.Dataset(data_vars=dict(kn=(["degree"],kn),hn=(["degree"],hn),ln=(["degree"],ln)),coords=dict(degree=(["degree"],deg)))
     
+    #extract the maximum degree
+    nmax=dslove.degree.max().data.item()
     meta={"name":os.path.basename(uri.url).replace(".love.gz",""),"lastupdate":uri.lastmod,
-            "uri":uri.url,"loadtype":ltype,"nmax":nmax}
+            "descr":descr,"loadtype":ltype,"nmax":nmax,"ref":ref,"data":dslove}
 
 
     return meta
@@ -61,14 +92,16 @@ class LLoveTable(LLoveTBase):
     id=Column(Integer,primary_key=True)
     name=Column(String,unique=True)
     loadtype=Column(String)
+    ref=Column(String)
     lastupdate=Column(TIMESTAMP)
     nmax=Column(Integer)
-    uri=Column(String)
+    descr=Column(String)
+    data=Column(DataArrayJSONType)
 
 class LLove(DataSet):
     """Class for registering load love numbers (downloads from github) """
     scheme=schema
-    version=(0,0,0)
+    version=(1,0,0)
     table=LLoveTable
     def __init__(self,dbconn):
         super().__init__(dbconn)
@@ -85,29 +118,25 @@ class LLove(DataSet):
             token=cred.oauthtoken
         except:
             token=None
-        # import pdb;pdb.set_trace() 
         ghcrawler=ghCrawler(reponame,commitsha=commitsha,
                            filter=ghfilter({"type":"blob","path":"\.love"}),
                            followfilt=ghfilter({"type":"tree","path":"Love"}),
                            oauthtoken=token)
         
         #download all datasets
-        ghcrawler.parallelDownload(self.dataDir(),check=True,maxconn=3,gzip=True)
+        ghcrawler.parallelDownload(self.cacheDir(),check=True,maxconn=3,gzip=True)
 
     def register(self):
         slurplogger().info("Building file list..")
-        files=[UriFile(file) for file in findFiles(self.dataDir(),'.*love',self._dbinvent.lastupdate)]
+        files=[UriFile(file) for file in findFiles(self.cacheDir(),'.*love',self._dbinvent.lastupdate)]
 
         if len(files) == 0:
             slurplogger().info("LLove: No new files found since last update")
             return
-
-        filesnew=self.retainnewUris(files)
-        if len(filesnew) == 0:
-            slurplogger().info("LLove: No database update needed")
-            return
+        
+        self.truncateTable()
         #loop over files
-        for uri in filesnew:
+        for uri in files:
             self.addEntry(lloveMetaExtractor(uri))
         self.updateInvent()
 
