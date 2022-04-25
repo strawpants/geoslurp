@@ -103,9 +103,14 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
         crl.setopt(pycurl.HTTPHEADER,headers)
 
     if auth:
+        if hasattr(auth,"ftptls"):
+            #enable explicit ftp over tls
+            if auth.ftptls:
+                crl.setopt(pycurl.FTP_SSL, pycurl.FTPSSL_ALL)
+                crl.setopt(pycurl.FTPSSLAUTH,pycurl.FTPAUTH_TLS)
         #use authentification
         crl.setopt(pycurl.USERPWD,auth.user+":"+auth.passw)
-    
+
     if restdict:
         crl.setopt(crl.POSTFIELDS,urlencode(restdict))
     
@@ -193,7 +198,7 @@ class UriBase():
 
         #create directory if it does not exist
         if not os.path.exists(os.path.dirname(outf)):
-            os.makedirs(os.path.dirname(outf))
+            os.makedirs(os.path.dirname(outf),exist_ok=True)
 
         uri=UriFile(url=outf)
         if check and self.lastmod and uri.lastmod:

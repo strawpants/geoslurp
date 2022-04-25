@@ -56,7 +56,7 @@ def stripPasswords(d):
                 d[serv][ky]="*****"
     return d
 
-Credentials=namedtuple("Credentials","user passw alias oauthtoken url")
+Credentials=namedtuple("Credentials","user passw alias oauthtoken url ftptls")
 """A named tuple to store authentication credentials
 
 Attributes:
@@ -65,6 +65,7 @@ Attributes:
     passw (str): The password associated with the username
     oauthtoken (str): An oauth2 token
     url (str): The root url which is linked to this service
+    ftptls(bool): Use Explicit ftp over tls for this host and user
 """
 
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
