@@ -91,6 +91,7 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
         fid=fileorfid
 
     crl=pycurl.Curl()
+    #crl.setopt(pycurl.VERBOSE,1)
     crl.setopt(pycurl.USERAGENT,"curl/7.72.0")
     crl.setopt(pycurl.URL,url.replace(' ','%20'))
     crl.setopt(pycurl.FOLLOWLOCATION, 1)
@@ -106,6 +107,7 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
         if hasattr(auth,"ftptls"):
             #enable explicit ftp over tls
             if auth.ftptls:
+    #            crl.setopt(pycurl.HTTPPROXYTUNNEL,1)
                 crl.setopt(pycurl.FTP_SSL, pycurl.FTPSSL_ALL)
                 crl.setopt(pycurl.FTPSSLAUTH,pycurl.FTPAUTH_TLS)
         #use authentification
@@ -122,8 +124,9 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
         crl.perform()
     except pycurl.error as pyexc:
         # possibly remove a partly downloaded file
-        if os.path.exists(tmpfile):
-            os.remove(tmpfile)
+        if type(fileorfid) == str:       
+            if os.path.exists(tmpfile):
+                os.remove(tmpfile)
         raise pyexc
 
     modtime=timeFromStamp(crl.getinfo(pycurl.INFO_FILETIME))

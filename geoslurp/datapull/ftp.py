@@ -48,6 +48,7 @@ class Crawler(CrawlerBase):
 
         buf=Uri(url,auth=self.auth).buffer()
 
+        #import pdb;pdb.set_trace() 
         for ln in buf.getvalue().splitlines():
             t=None
             #try to parse the date from the buffer line
@@ -64,7 +65,6 @@ class Crawler(CrawlerBase):
                     else:
                         #last year
                         t=t.replace(year=datetime.now().year-1)
-
             name=ln.decode('utf-8').split()[-1]
             if regexdir.match(ln):
                 #append /
@@ -74,7 +74,6 @@ class Crawler(CrawlerBase):
 
     def uris(self, check=False,subdirs=''):
         """Generate a list files in a directory and return a list of uri"""
-
         for name,t in self.ls(subdirs):
             #only apply the pattern to the last column
             if re.search(self.pattern,name):
