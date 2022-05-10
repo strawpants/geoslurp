@@ -18,7 +18,7 @@
 import pandas as pd
 import geopandas as gpd
 import os
-from geoslurp.dataset import PandasBase
+from geoslurp.dataset.pandasbase import PandasBase
 import shutil
 
 

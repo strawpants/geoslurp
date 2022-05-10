@@ -21,7 +21,7 @@ from sqlalchemy import Column,Integer,String, Boolean,Float
 from sqlalchemy.dialects.postgresql import TIMESTAMP, JSONB
 import gzip as gz
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.types import DataArrayJSONType
+from geoslurp.types.json import DataArrayJSONType
 import re
 from datetime import datetime
 from enum import Enum

@@ -18,6 +18,9 @@
 
 
 import xarray as xr
+from geoslurp.dataset.xarraybase import XarrayBase
+import os
+import shutil
 
 @xr.register_dataarray_accessor("gslrp")
 class XarGeoslurp:
@@ -67,3 +70,22 @@ class XarGeoslurp:
                 da=self._obj.expand_dims({ky:1})
                 da=da.assign_coords({ky:[val]})
         return da
+    def save(self,gsconn,tablename,groupby,schema="public",outofdb=False,overwrite=False):
+        self._obj.to_dataset().gslrp.save(gsconn,tablename,groupby,schema,outofdb,overwrite)
+
+@xr.register_dataset_accessor("gslrp")
+class XarDsAccessor:
+    def __init__(self, xarray_obj):
+        self._obj = xarray_obj
+    
+    def save(self,gsconn,tablename,groupby,schema="public",outofdb=False,overwrite=False):
+        """Saves an xarray object to a geoslurp database"""
+        TableClass=type(tablename,(XarrayBase,),{"scheme":schema,"groupby":groupby,"outofdb":outofdb})
+        xrTable=TableClass(gsconn)
+        if overwrite:
+            xrTable.dropTable()
+            zarrar=xrTable.outdbArchiveName()
+            if os.path.exists(zarrar):
+                shutil.rmtree(zarrar)
+
+        xrTable.register(ds=self._obj)

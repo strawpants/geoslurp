@@ -19,8 +19,13 @@
 from sqlalchemy.types import UserDefinedType
 import xarray as xr
 from psycopg2.extras import Json
-from geoslurp.tools.xarray import XarGeoslurp
 import os
+
+def get_storage(ds):
+    return ds.attrs["gslrp_storage"]
+
+def get_append_dim(ds):
+    return ds.attrs["gslrp_append_dim"]
 
 class OutDBZarrType(UserDefinedType):
     """Converts a column of xarray Dataarrays to an out-of-db data representation"""
@@ -37,14 +42,12 @@ class OutDBZarrType(UserDefinedType):
             if type(value) != xr.DataArray:
                 raise TypeError(f"Expected a xarrayDataArray got {type(value)}")
             
-            if value.gslrp.storage:
-                #possibly overrule storage location (could be different per dataarray)
-                storage=value.gslrp.storage
-            else:
+            storage=get_storage(value)
+            if not storage:
                 storage=self.defaultZstore
             
             #find out whether this dataset needs to be appended to an existing
-            append_dim=value.gslrp.append_dim
+            append_dim=get_append_dim(value)
             if not append_dim:
                 #Expand a dimension and add a coordinate for lookup
                 append_dim="gslrp"

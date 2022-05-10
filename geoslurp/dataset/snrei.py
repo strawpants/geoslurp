@@ -23,7 +23,7 @@ from sqlalchemy.dialects.postgresql import TIMESTAMP,JSONB
 from geoslurp.datapull.github import Crawler as ghCrawler
 from geoslurp.datapull.github import GithubFilter as ghfilter
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.types import DataArrayJSONType
+from geoslurp.types.json import DataArrayJSONType
 from geoslurp.datapull import UriFile
 from geoslurp.datapull import findFiles
 import numpy as np
