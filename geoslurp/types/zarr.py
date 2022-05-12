@@ -21,11 +21,16 @@ import xarray as xr
 from psycopg2.extras import Json
 import os
 
+def getAttr(ds,key):
+    if key in ds.attrs:
+        return ds.attrs[key]
+    else:
+        return None
 def get_storage(ds):
-    return ds.attrs["gslrp_storage"]
+    return getAttr(ds,"gslrp_storage")
 
 def get_append_dim(ds):
-    return ds.attrs["gslrp_append_dim"]
+    return getAttr(ds,"gslrp_append_dim")
 
 class OutDBZarrType(UserDefinedType):
     """Converts a column of xarray Dataarrays to an out-of-db data representation"""
