@@ -44,9 +44,9 @@ class OutDBZarrType(UserDefinedType):
     def bind_processor(self, dialect):
         def process(value):
             """Stores an xarray DataArray to a zarr-archive and return a JSON with meta info"""
-            if type(value) != xr.DataArray:
-                raise TypeError(f"Expected a xarrayDataArray got {type(value)}")
-            
+            if type(value) != xr.DataArray and type(value) != xr.Dataset:
+                raise TypeError(f"Expected a xarrayDataArray/Dataset got {type(value)}")
+           
             storage=get_storage(value)
             if not storage:
                 storage=self.defaultZstore
@@ -58,7 +58,9 @@ class OutDBZarrType(UserDefinedType):
                 append_dim="gslrp"
                 value=value.expand_dims({append_dim:1})
             vname=value.name
-            value=value.to_dataset()
+
+            if type(value) == xr.DataArray:
+                value=value.to_dataset()
 
             if os.path.exists(storage):
                 #append

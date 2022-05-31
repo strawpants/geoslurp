@@ -35,7 +35,7 @@ from geoslurp.dataset.cdsbase import CDSBase
 envelopType = Geography(geometry_type="POLYGON", srid='4326')
 
 
-class ERA5Base(CDABase):
+class ERA5Base(CDSBase):
     """Provides a Base class from which subclasses can inherit to download a subset of the data per area"""
     scheme="atmo"
     resource='reanalysis-era5-pressure-levels-monthly-means'
@@ -43,6 +43,7 @@ class ERA5Base(CDABase):
     yrstart=2000
     yrend=2000
     variables=[]
+    plevels=None
     time="00:00"
 
     def __init__(self,dbconn):
@@ -52,7 +53,8 @@ class ERA5Base(CDABase):
         """Builds a dictionary for the cdsapi
         :param geomshape (shapely geometry) geometry which will be used to compute the bounding box to download data for"""
         reqdict=self.getDefaultDict(geomshape)
-        reqdict['pressure_level']=self.plevels
+        if self.plevels:
+            reqdict['pressure_level']=self.plevels
         reqdict['year']= [f"{yr}" for yr in range(self.yrstart,self.yrend+1)]
         reqdict['month']=[f"{mn:02d}" for mn in range(1,13)]
         reqdict['time']=self.time
@@ -60,7 +62,7 @@ class ERA5Base(CDABase):
         self.reqdicts[name]=reqdict
 
 
-    def MetaExtractor(self,ncuri):
+    def metaExtractor(self,ncuri):
         name=os.path.basename(ncuri.url).split('_')[-1][0:-3]
         ncid=ncDset(ncuri.url)
         data={"dimensions":{ky:val.size for ky,val in ncid.dimensions.items()},

@@ -20,7 +20,7 @@ from geoslurp.types.numpy import datetime64Type
 
 commonMap = {str: String, np.dtype(int): Integer, np.dtype(float):Float,dict:JSON, 
         np.int64:BIGINT, float:Float,np.float64:Float, "string": String, "integer": Integer, 
-        np.datetime64:datetime64Type, np.dtype('<M8[ns]'):datetime64Type}
+        np.datetime64:datetime64Type, np.dtype('<M8[ns]'):datetime64Type,np.str_:String}
 
 
 

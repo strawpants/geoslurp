@@ -21,19 +21,30 @@ import xarray as xr
 import os
 import json
 from datetime import datetime
+import numpy as np
 
 def custom_encoder(inval):
     if isinstance(inval,datetime):
         return inval.isoformat()
+    if isinstance(inval,np.int64):
+        return inval.item()
     else:
         type_name = inval.__class__.__name__
         raise TypeError(f"Object of type {type_name} is not serializable")
 
 class XarDBType(UserDefinedType):
     """Converts a column of xarray group to a database column representation (JSON)"""
-    def __init__(self,zstore=None,outofdb=False):
-        self.zstore=zstore
-        self.outofdb=outofdb
+    def __init__(self,parentds,outofdb=None,groupby=None):
+        self.outofdb=outofdb #filename of zarr store or None for in-database storage
+        self.parentds=parentds
+        self.groupby=groupby
+        self.groupby_counter=0
+
+        if self.groupby in self.parentds.xindexes:
+            self.slicenames=self.parentds.get_index(self.groupby).names
+        else:
+            self.slicenames=None
+            
 
     def get_col_spec(self, **kw):
         return "JSONB"
@@ -41,46 +52,25 @@ class XarDBType(UserDefinedType):
     def bind_processor(self, dialect):
         def process(value):
             """Stores an xarray DataArray or Dataset to a zarr-archive and return a JSON with meta info"""
-            if type(value) == xr.DataArray:
-                ds=value_.to_dataset()
-            elif type(value) == xr.Dataset:
-                ds=value
-            else:
+            if type(value) != xr.DataArray and type(value) != xr.Dataset:
                 raise TypeError(f"Expected a xarray DataArray/Dataset got {type(value)}")
-            
-            
-            # if selflrp.storage:
-                # #possibly overrule storage location (could be different per dataarray)
-                # storage=value.gslrp.storage
-            # else:
-                # storage=self.defaultZstore
-            
-            # #find out whether this dataset needs to be appended to an existing
-            # append_dim=value.gslrp.append_dim
-            # if not append_dim:
-                # #Expand a dimension and add a coordinate for lookup
-                # append_dim="gslrp"
-                # value=value.expand_dims({append_dim:1})
-            # vname=value.name
-            # value=value.to_dataset()
 
-            # if os.path.exists(storage):
-                # #append
-                # zstore=xr.open_zarr(storage)
-                # iappend=zstore.sizes[append_dim]+1
-                # value.to_zarr(storage,mode='a',append_dim=append_dim)
-            # else:
-                # #start with a new file
-                # iappend=1
-                # value.to_zarr(storage,mode='w')
-            # if self.modifyUri:
-                # storage=self.modifyUri(storage)
-                
-            # metadict=Json({"uri":storage,"varnames":[vname],"slice":{append_dim:iappend}})
-            if self.outofdb:
-                metadict=json.dumps({"uri":self.zstore})
+            if self.outofdb is not None:
+
+                if self.groupby_counter == 0:
+                    #save parentds to a zarr store
+                    if self.groupby in self.parentds.xindexes:
+                        self.parentds.reset_index(self.groupby).to_zarr(self.outofdb,mode='a')
+                    else:
+                        self.parentds.to_zarr(self.outofdb,mode='a')
+                self.groupby_counter+=1
+                if self.slicenames is None:
+                    metadict=json.dumps({"uri":self.outofdb,self.groupby:[x for x in value[self.groupby].values]},default=custom_encoder)
+                else:
+                    metadict=json.dumps({"uri":self.outofdb,self.groupby:{ky:vl for ky,vl in zip(self.slicenames, value[self.groupby].item())}},default=custom_encoder)
+
             else:
-                metadict=json.dumps(ds.to_dict(),default=custom_encoder)
+                metadict=json.dumps(value.to_dict(),default=custom_encoder)
             return metadict
         return process
 

@@ -74,7 +74,7 @@ class CDSBase(DataSet):
             elif self.oformat == 'grib':
                 app=".grb"
 
-            fout=os.path.join(dout,self.resource+"_"+name+".grb")
+            fout=os.path.join(dout,self.resource+"_"+name+app)
             cdsQueue.queueRequest(fout,reqdict)
             nreq+=1
             if nreq > maxreq:

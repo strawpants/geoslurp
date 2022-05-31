@@ -19,8 +19,10 @@
 
 import xarray as xr
 from geoslurp.dataset.xarraybase import XarrayBase
+from geoslurp.db import Settings
 import os
 import shutil
+import numpy as np
 
 @xr.register_dataarray_accessor("gslrp")
 class XarGeoslurp:
@@ -38,12 +40,17 @@ class XarGeoslurp:
     def storage(self,uri):
         self._obj.attrs["gslrp_storage"]=uri
     
+    @staticmethod
+    def expand_dim_impl(ds,name,value):
+        """Expands the data array with a 1-sized dimension and add a coordinate value"""
+        ds2=ds.expand_dims({name:1})
+        ds2=ds2.assign_coords({name:[value]})
+        ds2.gslrp.append_dim=name
+
+        return ds2
+    
     def expand_dim(self,name,value):
-        """Expands the data array with a 1-sized dimension possibly adding a coordinate value"""
-        da=self._obj.expand_dims({name:1})
-        da=da.assign_coords({name:[value]})
-        da.gslrp.append_dim=name
-        return da
+        return XarGeoslurp.expand_dim_impl(self._obj,name,value)
 
     @property
     def append_dim(self):
@@ -57,20 +64,27 @@ class XarGeoslurp:
         self._obj.attrs["gslrp_append_dim"]=append_dim
 
     def join_at(self,**kwargs):
+       return XarGeoslurp.join_at_impl(self._obj,kwargs)
+
+    @staticmethod
+    def join_at_impl(ds,**kwargs):
         """When reading/writing to geoslurp, join this datarray with others at this dimension/coordinate"""
         if len(kwargs) != 1:
             raise TypeError( "connectAt only accepts one argument)")
 
         for ky,val in kwargs.items():
-            if ky in self._obj.coords:
+            if ky in ds.coords:
                 pass
             else:
                 #add a new dimensions and coordinate (dim and coord have the same name)
-                self.append_dim=ky
-                da=self._obj.expand_dims({ky:1})
-                da=da.assign_coords({ky:[val]})
-        return da
+                ds.gslrp.append_dim=ky
+                ds2=ds.expand_dims({ky:1})
+                ds2=ds.assign_coords({ky:[val]})
+        return ds2
+
     def save(self,gsconn,tablename,groupby,schema="public",outofdb=False,overwrite=False):
+        if not self._obj.name:
+            self._obj.name=tablename
         self._obj.to_dataset().gslrp.save(gsconn,tablename,groupby,schema,outofdb,overwrite)
 
 @xr.register_dataset_accessor("gslrp")
@@ -78,6 +92,34 @@ class XarDsAccessor:
     def __init__(self, xarray_obj):
         self._obj = xarray_obj
     
+    @property
+    def storage(self):
+        if "gslrp_storage" in self._obj.attrs:
+            return self._obj.attrs["gslrp_storage"]
+        else:
+            return None
+
+    @storage.setter
+    def storage(self,uri):
+        self._obj.attrs["gslrp_storage"]=uri
+    
+    def expand_dim(self,name,value):
+        return XarGeoslurp.expand_dim_impl(self._obj,name,value)
+    
+    @property
+    def append_dim(self):
+        if "gslrp_append_dim" in self._obj.attrs:
+            return self._obj.attrs["gslrp_append_dim"]
+        else:
+            return None
+
+    @append_dim.setter
+    def append_dim(self,append_dim):
+        self._obj.attrs["gslrp_append_dim"]=append_dim
+    
+    def join_at(self,**kwargs):
+       return XarGeoslurp.join_at_impl(self._obj,kwargs)
+
     def save(self,gsconn,tablename,groupby,schema="public",outofdb=False,overwrite=False):
         """Saves an xarray object to a geoslurp database"""
         TableClass=type(tablename,(XarrayBase,),{"scheme":schema,"groupby":groupby,"outofdb":outofdb})
@@ -89,3 +131,39 @@ class XarDsAccessor:
                 shutil.rmtree(zarrar)
 
         xrTable.register(ds=self._obj)
+    
+    @staticmethod
+    def load(gsconn,qry,xrcol="data"):
+        """Load xarray dataset and auxiliary columns from a table into a new xarray dataset"""
+        qryres=gsconn.dbeng.execute(qry)
+        dsout=None
+        outofdb=False
+        cols=[]
+        for row in qryres:
+            if dsout is None:
+                #first row
+                
+                indexnames=[ky for ky in row.iterkeys() if ky != xrcol]
+                if "uri" in row[xrcol]:
+                    outofdb=True
+
+                if outofdb:
+                    zstore=row[xrcol]["uri"]
+                    if 'LOCALDATAROOT' in zstore:
+                        conf=Settings(gsconn)
+                        zstore=conf.get_local_path(zstore)
+
+                    dsout=xr.open_zarr(zstore,consolidated=False)
+                    #currently assumes all data is in the provided uri
+                else:
+                    dsout=xr.Dataset.from_dict(row[xrcol])
+            else:
+                if not outofdb:
+                    dsout=xr.concat([dsout,xr.Dataset.from_dict(row[xrcol])],indexnames[0])
+            #also assemble list of auxialiary columns as a dictionary
+            cols.append({ky:row[ky] for ky in indexnames})
+        if "time" in dsout and not outofdb:
+            dsout["time"]=[np.datetime64(ts) for ts in dsout.time.data]
+        
+        return cols,dsout
+

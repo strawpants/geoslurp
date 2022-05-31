@@ -26,6 +26,7 @@ from collections import namedtuple
 from geoslurp.types.xar import XarDBType
 from geoslurp.types.columnmapper import commonMap
 import xarray as xr
+import pandas as pd
 import os
 from datetime import datetime
 
@@ -56,31 +57,57 @@ class XarrayBase(DataSet):
         # return dscpy
 
 
-    def columnsFromXarGrp(self,grp):
-        """Returns a list of columns from an xarray object (groupedby)"""
+    def columnsFromXar(self,ds):
+        """Returns a  groupby obejct and a list of columns from an xarray object (groupedby)"""
         
+        # import pdb;pdb.set_trace() 
+        if self.groupby in ds.xindexes:
+            indx=ds.get_index(self.groupby)
+            if type(indx) == pd.MultiIndex:
+                self.mindex=indx
+            else:
+                self.mindex=None
+        else:
+            self.mindex=None
+
+        grp=ds.groupby(self.groupby)
+        
+        cols = [Column('id', Integer, primary_key=True)]
+
+        if self.mindex is None:
+            #only one variable to group over
+            indexitem1=next(iter(grp.groups))
+            ctype=commonMap[type(indexitem1)]
+            cols.append(Column(self.groupby,ctype,index=True))
+        else:
+            # expand found multindex in multiple columns
+            for name,indexitem1 in zip(self.mindex.names,self.mindex[0]):
+                ctype=commonMap[type(indexitem1)]
+                cols.append(Column(name,ctype,index=True))
+
         #get the first item which is used as an additional index
         #todo: cope with multindices (e.g. index on multiple columns)
-        indexitem1=next(iter(grp.groups))
-        ctype=commonMap[type(indexitem1)]
 
-        cols = [Column('id', Integer, primary_key=True),Column(self.groupby,ctype,index=True),Column('data',XarDBType(zstore=self.outdbArchiveName(),outofdb=self.outofdb))]
-        
-        return cols
+        cols.append(Column('data',XarDBType(parentds=ds,outofdb=self.outdbArchiveName(),groupby=self.groupby)))
+        return grp,cols
 
     def registerInDatabase(self,ds):
         self.dropTable()
-        
-        grpby=ds.groupby(self.groupby)
-        if self.table == None:
-            cols=self.columnsFromXarGrp(grpby)
-            self.createTable(cols)
+
+
+        grpby,cols=self.columnsFromXar(ds)
+        self.createTable(cols)
         
         if self.inbulk:
             bulk=[]
         
         for grp,val in grpby:
-            entry={self.groupby:grp,"data":val}
+            if self.mindex is None:
+                entry={self.groupby:grp,"data":val}
+            else:
+                entry={ky:item for ky,item in zip(self.mindex.names,grp)}
+                entry["data"]=val
+            
             if self.inbulk:
                 bulk.append(entry) 
             else:
@@ -111,5 +138,7 @@ class XarrayBase(DataSet):
 
 
     def outdbArchiveName(self):
-        arname=os.path.join(self.dataDir(),self.name+"_data.zarr")
-        return arname
+        if self.outofdb:
+            return os.path.join(self.dataDir(),self.name+"_data.zarr")
+        else:
+            return None

@@ -237,8 +237,6 @@ class DataSet(ABC):
         # first gather all the ids of i entries which are expired 
         subqry=ses.query(self.table.id).join(tmptable, and_(tmptable.uri == self.table.uri,tmptable.lastmod > self.table.lastupdate)).subquery()
         # #then delete those entries from the table
-        # import pdb;pdb.set_trace()
-        
         delqry=self.table.__table__.delete().where(self.table.id.in_(subqry))
         ses.execute(delqry)
 

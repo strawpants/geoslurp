@@ -86,10 +86,11 @@ class PandasBase(DataSet):
                 "string": String, "integer": Integer, 
                 "floating":Float,
                 xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path),
+                xr.Dataset:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path),
                 "datetime64":DateTime,
                 np.dtype('<M8[ns]'):datetime64Type}
         cols = [Column('id', Integer, primary_key=True)]
-        
+         
         for name,col in df.iteritems():
             if name == "id":
                 #already added
