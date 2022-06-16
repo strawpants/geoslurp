@@ -63,17 +63,35 @@ def main(argv):
     #print registered datasets (i.e. tables)
     if args.info:
         slurpInvent=Inventory(DbConn)
-        print("Registered datasets (scheme.dataset, owner, lastupdate):")
+        print("Registered entries:")
         if args.dset:
             #print a summary of the inventory
             dsetpat=re.compile(args.dset)
             for entry in slurpInvent:
-                if dsetpat.fullmatch(entry.scheme+'.'+entry.dataset):
-                    print("%s.%s %s %s"%(entry.scheme,entry.dataset,entry.owner,entry.lastupdate.isoformat()))
-        else:
+                if entry.dataset is not None and dsetpat.fullmatch(entry.scheme+'.'+entry.dataset):
+                    print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','view','pgfunc']})
+        
+        elif args.view:
             #print a summary of the inventory
+            viewpat=re.compile(args.view)
             for entry in slurpInvent:
-                print("%s.%s %s %s"%(entry.scheme,entry.dataset,entry.owner,entry.lastupdate.isoformat()))
+                if entry.view is not None and viewpat.fullmatch(entry.scheme+'.'+entry.view):
+                    print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','dataset','pgfunc']})
+        elif args.func:
+            #print a summary of the inventory
+            funcpat=re.compile(args.func)
+            for entry in slurpInvent:
+                if entry.pgfunc is not None and funcpat.fullmatch(entry.scheme+'.'+entry.pgfunc):
+                    print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','dataset','view']})
+        else:
+            #print a summary of the inventory (registered datasets, views, functions)
+            for entry in slurpInvent:
+                if entry.dataset is not None:
+                    print("DATASET: %s.%s %s %s"%(entry.scheme,entry.dataset,entry.owner,entry.lastupdate.isoformat()))
+                elif entry.view is not None:
+                    print("VIEW: %s.%s %s %s"%(entry.scheme,entry.view,entry.owner,entry.lastupdate.isoformat()))
+                elif entry.pgfunc is not None:
+                    print("FUNCTION: %s.%s %s %s"%(entry.scheme,entry.pgfunc,entry.owner,entry.lastupdate.isoformat()))
         sys.exit(0) 
     
     #change settings in the database
