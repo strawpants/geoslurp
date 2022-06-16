@@ -45,7 +45,7 @@ class settingsArgs:
     write_local_settings=False
     dbalias=None
 
-    def __init__(self,host=None,user=None,usekeyring=False,password=None,port=None,dataroot=None,cache=None,dbalias=None):
+    def __init__(self,host=None,user=None,usekeyring=False,password=None,port=None,dataroot=None,cache=None,dbalias=None,plugindir=None):
         if host:
             self.host=host
 
@@ -67,8 +67,13 @@ class settingsArgs:
             self.cache=cache
         if dbalias:
             self.dbalias=dbalias
+        
+        if plugindir:
+            self.plugindir=plugindir
 
-defaultdbdict={"host":None,"user":"geoslurp","port":5432,"readonlyUser":"slurpy","cache":"/tmp/geoslurp_cache","dataroot":os.path.join(os.path.expanduser('~'),'geoslurp_data')}
+defaultdbdict={"host":None,"user":"geoslurp","port":5432,"readonlyUser":"slurpy",
+        "cache":"/tmp/geoslurp_cache","dataroot":os.path.join(os.path.expanduser('~'),'geoslurp_data'),
+        "plugindir":os.path.abspath(os.path.dirname(__file__)+"../../../userplugins")}
 
 
 def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
@@ -218,6 +223,14 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
             argsout.cache=lastOpts[dbalias]["cache"]
         else:
             argsout.cache="/tmp/geoslurp_cache"
+    
+    if argsout.plugindir:
+        lastOpts[dbalias]["plugindir"]=argsout.plugindir
+    else:
+        if "plugindir" in lastOpts[dbalias]:
+            argsout.plugindir=lastOpts[dbalias]["plugindir"]
+        else:
+            argsout.plugindir=defaultdbdict["plugindir"]
 
     #write out  options to file to store these settings
     if isUpdated and argsout.write_local_settings:

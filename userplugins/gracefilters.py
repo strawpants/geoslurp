@@ -14,7 +14,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 # Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2021
-from geoslurp.dataset import PandasBase
+from geoslurp.dataset.pandasbase import PandasBase
 from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.datapull.http import Uri as http

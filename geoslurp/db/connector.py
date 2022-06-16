@@ -29,13 +29,13 @@ from geoslurp.db.connectorbase import GeoslurpConnectorBase
 
 class GeoslurpConnector(GeoslurpConnectorBase):
     """Holds a connector to a geoslurp database"""
-    def __init__(self, host, user, passwd=None, port=5432,dataroot=None,cache=None):
+    def __init__(self, host, user, passwd=None, port=5432,dataroot=None,cache=None,plugindir=None):
         """
         establishes a database engine whoch provides the base
         for creating sessions (ORM) or connections (SQL expressions)
         :param dburl: url of the database e.g.: postgresql+psycopg2://geoslurp:password@host/geoslurp
         """
-        super().__init__(dataroot=dataroot,cache=cache)
+        super().__init__(dataroot=dataroot,cache=cache,plugindir=plugindir)
 
 
         self.user=user

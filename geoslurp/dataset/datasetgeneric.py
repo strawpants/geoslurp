@@ -17,8 +17,6 @@
 
 from geoslurp.dataset.dataSetBase import DataSet
 
-from geoslurp.config.catalogue import geoslurpCatalogue
-
 class DataSetGeneric(DataSet):
     scheme="anyscheme"
     def __init__(self,dbcon):
@@ -29,5 +27,3 @@ class DataSetGeneric(DataSet):
     def register(self):
         raise NotImplementedError("No register method defined for a generic dataset")
 
-
-geoslurpCatalogue.addDataset(DataSetGeneric)

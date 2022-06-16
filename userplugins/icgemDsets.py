@@ -18,7 +18,8 @@
 
 
 
-from geoslurp.dataset import DataSet,GravitySHTBase
+from geoslurp.dataset import DataSet
+from geoslurp.tools.gravity import GravitySHTBase
 from geoslurp.datapull.icgem import  Crawler as IcgemCrawler
 from geoslurp.datapull.uri import findFiles
 import re

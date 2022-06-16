@@ -15,7 +15,7 @@
 
 # Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
 
-from geoslurp.dataset import OGRBase
+from geoslurp.dataset.OGRBase import OGRBase
 from geoslurp.datapull.http import Uri as http
 from geoslurp.config.catalogue import geoslurpCatalogue
 import urllib.request

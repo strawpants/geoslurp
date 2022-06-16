@@ -24,6 +24,8 @@ from geoslurp.config.slurplogger import slurplog
 from geoslurp.db import Inventory
 from importlib import import_module
 
+from geoslurp.dataset.datasetgeneric import DataSetGeneric
+
 class DatasetCatalogue:
     #holds dataset classes (not initiated!)
     __dsets__=[]
@@ -44,12 +46,11 @@ class DatasetCatalogue:
     
     @staticmethod 
     def addUserPlugPaths(conf,loadmod=False):
-        if 'userplugins' in conf.userentry.conf:
-            for upath in conf.userentry.conf["userplugins"].split(";"):
-                if sys.path.count(upath) == 0:
-                    sys.path.append(upath)
-                    if loadmod:
-                        mod=__import__(os.path.basename(upath))
+        for upath in conf.db.plugindir.split(";"):
+            if sys.path.count(upath) == 0:
+                sys.path.append(upath)
+                if loadmod:
+                    mod=__import__(os.path.basename(upath))
 
     def addDataset(self, datasetcls):
         self.__dsets__.append(datasetcls)
@@ -143,7 +144,7 @@ class DatasetCatalogue:
             return
         
         #dynamically import all relevant datasets and class factories (including userplugin datasets)
-        modgeo=__import__("geoslurp.dataset")
+        # modgeo=__import__("geoslurp.dataset")
        
         #dynamically load functions
         modgeof=__import__("geoslurp.dbfunc")
@@ -153,7 +154,6 @@ class DatasetCatalogue:
 
         #also load userplugins
         self.addUserPlugPaths(conf,True)
-
 
 
     def listDataSets(self,conf):
@@ -249,8 +249,8 @@ class DatasetCatalogue:
             #fall back with a generic type
 
             scheme,tbl=regex.split(".")
-            dsgen=self.getDsetClass(conf,"anyscheme.DataSetGeneric")
-            outdsets.append(type(tbl,(dsgen,),{"scheme":scheme}))
+            # dsgen=self.getDsetClass(conf,"anyscheme.DataSetGeneric")
+            outdsets.append(type(tbl,(DataSetGeneric,),{"scheme":scheme}))
 
         return outdsets
         
