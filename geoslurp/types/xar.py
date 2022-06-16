@@ -22,6 +22,7 @@ import os
 import json
 from datetime import datetime
 import numpy as np
+import pandas as pd
 
 def custom_encoder(inval):
     if isinstance(inval,datetime):
@@ -34,14 +35,16 @@ def custom_encoder(inval):
 
 class XarDBType(UserDefinedType):
     """Converts a column of xarray group to a database column representation (JSON)"""
-    def __init__(self,parentds,outofdb=None,groupby=None):
+    def __init__(self,parentds,outofdb=None,groupby=None,writeoutofdb=True):
         self.outofdb=outofdb #filename of zarr store or None for in-database storage
         self.parentds=parentds
         self.groupby=groupby
         self.groupby_counter=0
+        self.writeoutofdb=writeoutofdb
+        indx=self.parentds.get_index(self.groupby)
 
-        if self.groupby in self.parentds.xindexes:
-            self.slicenames=self.parentds.get_index(self.groupby).names
+        if type(indx) == pd.MultiIndex:
+            self.slicenames=indx.names
         else:
             self.slicenames=None
             
@@ -57,7 +60,7 @@ class XarDBType(UserDefinedType):
 
             if self.outofdb is not None:
 
-                if self.groupby_counter == 0:
+                if self.groupby_counter == 0 and self.writeoutofdb:
                     #save parentds to a zarr store
                     if self.groupby in self.parentds.xindexes:
                         self.parentds.reset_index(self.groupby).to_zarr(self.outofdb,mode='a')
@@ -65,7 +68,7 @@ class XarDBType(UserDefinedType):
                         self.parentds.to_zarr(self.outofdb,mode='a')
                 self.groupby_counter+=1
                 if self.slicenames is None:
-                    metadict=json.dumps({"uri":self.outofdb,self.groupby:[x for x in value[self.groupby].values]},default=custom_encoder)
+                    metadict=json.dumps({"uri":self.outofdb,self.groupby:value[self.groupby].item()},default=custom_encoder)
                 else:
                     metadict=json.dumps({"uri":self.outofdb,self.groupby:{ky:vl for ky,vl in zip(self.slicenames, value[self.groupby].item())}},default=custom_encoder)
 

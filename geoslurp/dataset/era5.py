@@ -43,7 +43,6 @@ class ERA5Base(CDSBase):
     yrstart=2000
     yrend=2000
     variables=[]
-    plevels=None
     time="00:00"
 
     def __init__(self,dbconn):

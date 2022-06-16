@@ -36,6 +36,7 @@ class XarrayBase(DataSet):
     xarfile=None #xarray compatible datafile
     groupby=None #on which dimension should the xarray be expanded?
     outofdb=False #whether to store the data as a zarr outside of the database
+    writeoutofdb=True #set to False to allow the registration of an existing xarray dataset without (re)writing it to disk
     inbulk=False
     timename="time" #possibly convert this datetime coordinate4 variable to a numeric form
     def __init__(self,dbconn):
@@ -88,7 +89,7 @@ class XarrayBase(DataSet):
         #get the first item which is used as an additional index
         #todo: cope with multindices (e.g. index on multiple columns)
 
-        cols.append(Column('data',XarDBType(parentds=ds,outofdb=self.outdbArchiveName(),groupby=self.groupby)))
+        cols.append(Column('data',XarDBType(parentds=ds,outofdb=self.outdbArchiveName(),groupby=self.groupby,writeoutofdb=self.writeoutofdb)))
         return grp,cols
 
     def registerInDatabase(self,ds):
@@ -139,6 +140,9 @@ class XarrayBase(DataSet):
 
     def outdbArchiveName(self):
         if self.outofdb:
-            return os.path.join(self.dataDir(),self.name+"_data.zarr")
+            if self.writeoutofdb:
+                return os.path.join(self.dataDir(),self.name+"_data.zarr")
+            else:
+                return self.xarfile
         else:
             return None

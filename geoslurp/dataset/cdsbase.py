@@ -54,6 +54,13 @@ class CDSBase(DataSet):
         if not "cds_jobs" in self._dbinvent.data:
             self._dbinvent.data["cds_jobs"]={}
     
+        if self.oformat == 'netcdf':
+            self.app=".nc"
+        elif self.oformat == 'grib':
+            self.app=".grb"
+        elif self.oformat =='tgz':
+            self.app=".tgz"
+
     def metaExtractor(self,uri):
         """implement this function in derived class"""
         raise NotImplementedError("MetaExtractor(self,uri) not implemented")
@@ -69,12 +76,8 @@ class CDSBase(DataSet):
         #only submit maxreq at once
         nreq=0
         for name,reqdict in self.reqdicts.items():
-            if self.oformat == 'netcdf':
-                app=".nc"
-            elif self.oformat == 'grib':
-                app=".grb"
 
-            fout=os.path.join(dout,self.resource+"_"+name+app)
+            fout=os.path.join(dout,self.resource+"_"+name+self.app)
             cdsQueue.queueRequest(fout,reqdict)
             nreq+=1
             if nreq > maxreq:
@@ -102,12 +105,8 @@ class CDSBase(DataSet):
             #create a new table on the fly
             self.createTable(self.columns)
         
-        if self.oformat == 'netcdf':
-            app=".nc"
-        elif self.oformat == 'grib':
-            app=".grb"
         #create a list of files which need to be (re)registered
-        newfiles=self.retainnewUris([UriFile(file) for file in findFiles(self.dataDir(),f".*\{app}$")])
+        newfiles=self.retainnewUris([UriFile(file) for file in findFiles(self.dataDir(),f".*\{self.app}$")])
         for uri in newfiles:
             meta=self.metaExtractor(uri)
             if not meta:
@@ -123,12 +122,17 @@ class CDSBase(DataSet):
         
         reqdict={
                 'format': self.oformat,
-                'product_type': self.productType,
                 'variable': self.variables,
                 }
+        
+        if self.productType:
+            reqdict["product_type"]=self.productType
+
         if geomshape:
             bb=geomshape.envelope.exterior.xy
             hres=self.res/2
+            if np.min(bb[0]) > 180 or np.min(bb[0]) < 0:
+                breakpoint()
             reqdict["area"]=[np.max(bb[1])+hres,np.min(bb[0])-hres,np.min(bb[1])-hres,np.max(bb[0])+hres]
         return reqdict
 
