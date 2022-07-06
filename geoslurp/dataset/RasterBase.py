@@ -19,17 +19,17 @@
 from geoslurp.dataset.dataSetBase import DataSet
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.datapull.uri import findFiles, UriFile
+from geoslurp.config.slurplogger import slurplog
 from sqlalchemy import Column,Integer,String,Float
 from geoalchemy2 import Raster
 from sqlalchemy import func,select,text
 import rasterio as rio
 from rasterio.io import MemoryFile
 from rasterio.crs import CRS
+from affine import Affine
 import numpy as np
-
 class RasterBase(DataSet):
     """Base class to load raster (tiles) into the postgis database"""
-    srid=None #will try to find out the srid autmatically (but it's better to explicitly set this)
     srcdir=None
     rastregex=".*"
     auxcolumns=None
@@ -40,7 +40,8 @@ class RasterBase(DataSet):
     bandname=None
     overviews=None
     #[ulx,xres,xskew,uly,yskew,yres]
-    geotransform=None
+    # geotransform=None
+    swapxy=False #transpose data (affine transformation)
     preview={} #creates a raster which is a preview of the complete rasterdataset only
     def __init__(self,dbcon):
         super().__init__(dbcon)
@@ -52,7 +53,8 @@ class RasterBase(DataSet):
         elif not self.outofdb and not self.srcdir:
             #use the cacheDir
             self.srcdir=self.cacheDir()
-
+        if self.swapxy and self.outofdb:
+            slurplog.warning("Swapxy requested on an outofdb file:your rasters will likely be trasnposed")
 
     def columns(self):
         #construct the columns
@@ -172,11 +174,17 @@ class RasterBase(DataSet):
 
         #explicitly open the gdal file to get the bounding box info
         rdata=rio.open(prefix+uri.url+suffix)
-        nx=rdata.width
-        ny=rdata.height
         nodata=rdata.nodata
-        transform=rdata.transform
-        
+        if self.swapxy:
+            nx=rdata.height
+            ny=rdata.width
+            transform=rdata.transform
+            transform=Affine(transform[4],transform[3],transform[5],transform[1],transform[0],transform[2])
+        else:
+            nx=rdata.width
+            ny=rdata.height
+            transform=rdata.transform
+
         if not bandnrs:
             bandnrs=[nr+1 for nr in range(rdata.count)]
         
@@ -186,12 +194,6 @@ class RasterBase(DataSet):
         offset=rdata.offsets[refband]
         dtype=rdata.dtypes[refband]
 
-
-        # scale=rdata.scales[bandnr]
-        # offset=rdata.offsets[bandnr]
-        # dtype=rdata.dtypes[bandnr]
-
-        
         if self.outofdb:
             #create an out of db rasterband
             ulx,uly,xres,yres,xskew,yskew=[transform[2],transform[5],transform[0],transform[4],transform[1],transform[3]]
@@ -208,8 +210,13 @@ class RasterBase(DataSet):
                         width=nx,height=ny,
                         dtype=dtype, nodata=nodata,
                         crs=CRS.from_epsg(self.srid),transform=transform) as dataset:
+                    
                     for bandn in bandnrs:
-                        dataset.write(np.expand_dims(rdata.read(bandn),0))
+                        if self.swapxy:
+                            data=np.expand_dims(rdata.read(bandn).transpose(),0)
+                        else:
+                            data=np.expand_dims(rdata.read(bandn),0)
+                        dataset.write(data)
                 
                 meta={"rast":func.ST_FromGDALRaster(bytes(memfile.getbuffer()),srid=self.srid), "uri":uri.url,"add_offset":offset,"scale_factor":scale}
         

@@ -30,3 +30,4 @@ from .AWIPIES import *
 from .ORAS5 import *
 from .sebs import *
 from .gleam import *
+from .imerg import *

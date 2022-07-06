@@ -19,6 +19,7 @@ from geoslurp.dataset.xarraybase import XarrayBase
 from geoslurp.datapull.ftp import Uri as ftp
 from geoslurp.config.catalogue import geoslurpCatalogue
 from datetime import datetime
+from geoslurp.config.slurplogger import slurplog
 import os
 import tarfile
 from scipy.io import loadmat
@@ -56,7 +57,7 @@ class SEBS_monthly(XarrayBase):
         appdim=None
         
         for mem in tf.getmembers():
-            print(f"converting {mem.name} to zarr") 
+            slurplog.info(f"Converting {mem.name} to zarr")
             mat=np.ma.masked_equal(loadmat(tf.extractfile(mem))['ETm'],0.0)
             mat.set_fill_value(np.nan)
             

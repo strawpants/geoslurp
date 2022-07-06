@@ -57,7 +57,7 @@ def setFtime(file,modTime=None):
         mtime=time.mktime(modTime.timetuple())
         os.utime(file,(mtime,mtime))
 
-def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,restdict=None,headers=None,customRequest=None,upfid=None):
+def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,restdict=None,headers=None,customRequest=None,upfid=None,cookiefile=None):
     """
     Download  the content of an url to an open file or buffer using pycurl
     :param url: url to download from
@@ -102,6 +102,13 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
 
     if headers:
         crl.setopt(pycurl.HTTPHEADER,headers)
+    
+    if cookiefile:
+        if os.path.exists(cookiefile):
+            crl.setopt(pycurl.COOKIEFILE, cookiefile)
+
+        crl.setopt(pycurl.COOKIEJAR, cookiefile)
+
 
     if auth:
         if hasattr(auth,"ftptls"):
@@ -110,7 +117,10 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
     #            crl.setopt(pycurl.HTTPPROXYTUNNEL,1)
                 crl.setopt(pycurl.FTP_SSL, pycurl.FTPSSL_ALL)
                 crl.setopt(pycurl.FTPSSLAUTH,pycurl.FTPAUTH_TLS)
-        #use authentification
+        if hasattr(auth,"trusted"):
+            if auth.trusted:
+                crl.setopt(pycurl.UNRESTRICTED_AUTH,1)
+        #use basic authentication
         crl.setopt(pycurl.USERPWD,auth.user+":"+auth.passw)
 
     if restdict:
@@ -159,12 +169,13 @@ class UriBase():
     auth=None #link to a certain authentification alias
     subdirs='' #create these subdrectories when downloading the file
     headers=None 
-    def __init__(self,url,lastmod=None,auth=None,subdirs='',headers=None):
+    def __init__(self,url,lastmod=None,auth=None,subdirs='',headers=None,cookiefile=None):
         self.url=url
         self.lastmod=lastmod
         self.auth=auth
         self.subdirs=subdirs
         self.headers=headers
+        self.cookiefile=cookiefile
 
     def updateModTime(self):
         """Tries to retrieve the last modification time of a file
@@ -212,9 +223,9 @@ class UriBase():
         slurplog.info("Downloading %s"%(uri.url))
         try:
             if self.lastmod:
-                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers)
+                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers,cookiefile=self.cookiefile)
             else:
-                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers)
+                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers,cookiefile=self.cookiefile)
         except pycurl.error as pyexc:
             slurplog.info("Download failed, skipping %s"%(uri.url))
             if not continueonError:

@@ -56,7 +56,7 @@ def stripPasswords(d):
                 d[serv][ky]="*****"
     return d
 
-Credentials=namedtuple("Credentials","user passw alias oauthtoken url ftptls")
+Credentials=namedtuple("Credentials","user passw alias oauthtoken url ftptls trusted")
 """A named tuple to store authentication credentials
 
 Attributes:
@@ -66,10 +66,12 @@ Attributes:
     oauthtoken (str): An oauth2 token
     url (str): The root url which is linked to this service
     ftptls(bool): Use Explicit ftp over tls for this host and user
+    trusted(bool): Allow forwarding password and username
 """
 
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
 
+commonCredentials={"podaac":["user","passw","trusted"]}
 
 
 
@@ -167,13 +169,19 @@ class Settings():
         else:
             print(stripPasswords(self.auth))
 
-    def authCred(self,service,qryfields=["user","passw"]):
+    def authCred(self,service,qryfields=None):
         """obtains username credentials for a certain service
         :param service: name of the service
+        :param qryfields: prompt for input for these fields when service is not present
         :returns a namedtuple with credentials"""
 
         if service not in self.auth:
             #prompt for the necessary fields and store in database
+            if qryfields is not None and service in commonCredentials:
+                qryfields=commonCredentials[service]
+            else:
+                qryfields=["user","passw"]
+
             creddict={"alias":service}
             for key in qryfields:
                 if key == "passw":

@@ -44,7 +44,7 @@ class settingsArgs:
     cache=None
     write_local_settings=False
     dbalias=None
-
+    plugindir=None
     def __init__(self,host=None,user=None,usekeyring=False,password=None,port=None,dataroot=None,cache=None,dbalias=None,plugindir=None):
         if host:
             self.host=host
@@ -65,6 +65,7 @@ class settingsArgs:
             self.dataroot=dataroot
         if cache:
             self.cache=cache
+
         if dbalias:
             self.dbalias=dbalias
         

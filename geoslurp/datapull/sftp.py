@@ -18,7 +18,7 @@
 import re
 from datetime import datetime
 import os
-from geoslurp.datapull import UriFile
+from geoslurp.datapull import UriFile,setFtime
 from geoslurp.datapull import CrawlerBase
 from geoslurp.config.slurplogger import slurplog
 import paramiko
@@ -50,7 +50,7 @@ def sshconnect(auth,url=None):
 
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(server,port,user,password)
+    ssh_client.connect(server,port,user,password,look_for_keys=False,allow_agent=False)
     sftp=ssh_client.open_sftp() 
     #possibly change directory
     if bool(subdir):
@@ -100,7 +100,12 @@ class UriSftp:
                 return uri,False
         slurplog.info("Downloading %s"%(uri.url))
 
+        stat=self.sftpconnection.stat(self.rpath)
+        mtime=datetime.fromtimestamp(stat.st_mtime)
         self.sftpconnection.get(self.rpath,outf)
+        #set the modification time to match the server
+        setFtime(outf,mtime)
+        
         return uri,True
 
 
@@ -127,5 +132,5 @@ class CrawlerSftp(CrawlerBase):
         for name,t in self.ls(subdirs):
             # #only apply the pattern to the last column
             if re.search(self.pattern,name):
-                yield UriSftp(url=name,sftpcon=self.sftpconnection)
+                yield UriSftp(url=name,sftpcon=self.sftpconnection,lastmod=t)
 

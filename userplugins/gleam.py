@@ -18,10 +18,9 @@
 from geoslurp.dataset.xarraybase import XarrayBase
 from geoslurp.datapull.sftp import CrawlerSftp as crawler
 from geoslurp.config.catalogue import geoslurpCatalogue
+from geoslurp.config.slurplogger import slurplog
 from datetime import datetime
 import os
-import tarfile
-from scipy.io import loadmat
 import xarray as xr
 import numpy as np
 
@@ -35,16 +34,23 @@ class gleam_monthly(XarrayBase):
         # note url should be of the form  sftp://server:port
         
         crwl=crawler(url=auth.url+"/data/v3.6b/monthly",auth=auth)
-        downdir=self.dataDir()
+        downdir=self.cacheDir()
         for uri in crwl.uris():
-            uri.download(downdir)
-    # def register(self):
-        # self.xarfile=os.path.join(self.dataDir(),"Global_land_monthly_ET_V2.zarr")
-        # tarar=os.path.join(self.cacheDir(),"Global_land_monthly_ET_V2.rar")
-        # if not os.path.isdir(self.xarfile):
-            # self.convert2zarr(tarar)
+            uri.download(downdir,check=True)
+
+    def convert2zarr(self):
+        slurplog.info("Converting data to zarr%s"%(self.xarfile))
+        #open all datasets together
+        ds=xr.open_mfdataset(os.path.join(self.cacheDir(),"*.nc"))
+        #save to zarr format
+        ds.to_zarr(self.xarfile)
+
+    def register(self):
+        self.xarfile=os.path.join(self.dataDir(),"2003-2021_GLEAM_v3.6b_MO.zarr")
+        if not os.path.isdir(self.xarfile):
+            self.convert2zarr()
         
-        # super().register()
+        super().register()
 
 
 geoslurpCatalogue.addDataset(gleam_monthly)
