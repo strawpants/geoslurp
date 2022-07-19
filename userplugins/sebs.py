@@ -20,11 +20,13 @@ from geoslurp.datapull.ftp import Uri as ftp
 from geoslurp.config.catalogue import geoslurpCatalogue
 from datetime import datetime
 from geoslurp.config.slurplogger import slurplog
+from geoslurp.tools.cf import *
 import os
 import tarfile
 from scipy.io import loadmat
 import xarray as xr
 import numpy as np
+from calendar import monthrange
 
 class SEBS_monthly(XarrayBase):
     outofdb=True
@@ -55,7 +57,6 @@ class SEBS_monthly(XarrayBase):
                      
         tf = tarfile.open(tarname)
         appdim=None
-        
         for mem in tf.getmembers():
             slurplog.info(f"Converting {mem.name} to zarr")
             mat=np.ma.masked_equal(loadmat(tf.extractfile(mem))['ETm'],0.0)
@@ -65,13 +66,21 @@ class SEBS_monthly(XarrayBase):
             time=datetime.strptime(mem.name[5:11]+"15","%Y%m%d")
             ds=dsbase.assign_coords(time=[time])
             ds["ETm"]=(["time","lat","lon"],np.expand_dims(mat,0))
+            mmmon_kgsecm2=1/(86400*monthrange(time.year,time.month)[1])
+            ds["ETm"]=ds.ETm*mmmon_kgsecm2
+            #add CF atributes
+            cfadd_global(ds,title="SEBSv2 Evapotranspiration estimates",references="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2020JD032873",source=f"Geoslurp class {self.__class__.__name__}")
+            cfadd_standard_name(ds.ETm,"water_evapotranspiration_flux")
+            # cfencode_time(ds.time)
+            cfadd_coord(ds.lon,'X',standard_name='longitude')
+            cfadd_coord(ds.lat,'Y',standard_name='latitude')
             if appdim:
                 ds.to_zarr(self.xarfile,append_dim=appdim)
             else:
+
                 ds.to_zarr(self.xarfile,mode='w')
                 appdim="time"
                      
-        # import pdb;pdb.set_trace()
             
     
     def register(self):
