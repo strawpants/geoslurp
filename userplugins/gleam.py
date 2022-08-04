@@ -19,6 +19,7 @@ from geoslurp.dataset.xarraybase import XarrayBase
 from geoslurp.datapull.sftp import CrawlerSftp as crawler
 from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.config.slurplogger import slurplog
+from geoslurp.tools.cf import cfadd_coord
 from datetime import datetime
 import os
 import xarray as xr
@@ -42,6 +43,9 @@ class gleam_monthly(XarrayBase):
         slurplog.info("Converting data to zarr%s"%(self.xarfile))
         #open all datasets together
         ds=xr.open_mfdataset(os.path.join(self.cacheDir(),"*.nc"))
+        cfadd_coord(ds.lon,'X',standard_name='longitude')
+        cfadd_coord(ds.lat,'Y',standard_name='latitude')
+
         #save to zarr format
         ds.to_zarr(self.xarfile)
 

@@ -68,9 +68,9 @@ class XarDBType(UserDefinedType):
                         self.parentds.to_zarr(self.outofdb,mode='a')
                 self.groupby_counter+=1
                 if self.slicenames is None:
-                    metadict=json.dumps({"uri":self.outofdb,self.groupby:value[self.groupby].item()},default=custom_encoder)
+                    metadict=json.dumps({"uri":self.outofdb,"slice":{self.groupby:value[self.groupby].item()}},default=custom_encoder)
                 else:
-                    metadict=json.dumps({"uri":self.outofdb,self.groupby:{ky:vl for ky,vl in zip(self.slicenames, value[self.groupby].item())}},default=custom_encoder)
+                    metadict=json.dumps({"uri":self.outofdb,"slice":{self.groupby:{ky:vl for ky,vl in zip(self.slicenames, value[self.groupby].item())}}},default=custom_encoder)
 
             else:
                 metadict=json.dumps(value.to_dict(),default=custom_encoder)

@@ -66,7 +66,8 @@ class SEBS_monthly(XarrayBase):
             time=datetime.strptime(mem.name[5:11]+"15","%Y%m%d")
             ds=dsbase.assign_coords(time=[time])
             ds["ETm"]=(["time","lat","lon"],np.expand_dims(mat,0))
-            mmmon_kgsecm2=1/(86400*monthrange(time.year,time.month)[1])
+            #note the scaling below also includes a scaling of 1/10 as mentioned here:https://data.tpdc.ac.cn/en/data/df4005fb-9449-4760-8e8a-09727df9fe36/)
+            mmmon_kgsecm2=1e-1/(86400*monthrange(time.year,time.month)[1])
             ds["ETm"]=ds.ETm*mmmon_kgsecm2
             #add CF atributes
             cfadd_global(ds,title="SEBSv2 Evapotranspiration estimates",references="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2020JD032873",source=f"Geoslurp class {self.__class__.__name__}")
