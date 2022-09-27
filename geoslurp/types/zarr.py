@@ -26,6 +26,7 @@ def getAttr(ds,key):
         return ds.attrs[key]
     else:
         return None
+
 def get_storage(ds):
     return getAttr(ds,"gslrp_storage")
 
@@ -34,9 +35,10 @@ def get_append_dim(ds):
 
 class OutDBZarrType(UserDefinedType):
     """Converts a column of xarray Dataarrays to an out-of-db data representation"""
-    def __init__(self,defaultZstore=None,modifyUri=None):
+    def __init__(self,defaultZstore=None,modifyUri=None,append_dim=None):
         self.defaultZstore=defaultZstore
         self.modifyUri=modifyUri
+        self.append_dim=append_dim
 
     def get_col_spec(self, **kw):
         return "JSONB"
@@ -47,16 +49,16 @@ class OutDBZarrType(UserDefinedType):
             if type(value) != xr.DataArray and type(value) != xr.Dataset:
                 raise TypeError(f"Expected a xarrayDataArray/Dataset got {type(value)}")
            
-            storage=get_storage(value)
-            if not storage:
-                storage=self.defaultZstore
+            storage=self.defaultZstore
             
             #find out whether this dataset needs to be appended to an existing
             append_dim=get_append_dim(value)
-            if not append_dim:
+            if not self.append_dim:
                 #Expand a dimension and add a coordinate for lookup
                 append_dim="gslrp"
                 value=value.expand_dims({append_dim:1})
+            else:
+                append_dim=self.append_dim
             vname=value.name
 
             if type(value) == xr.DataArray:

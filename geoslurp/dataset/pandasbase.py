@@ -46,6 +46,8 @@ class PandasBase(DataSet):
     encoding=None
     geoinfo=geoinfo()
     inbulk=False
+    #how to treat series which have xarray dataarrays or datasets
+    xrappend_dim=None
     def __init__(self,dbconn):
         super().__init__(dbconn)
     
@@ -85,8 +87,8 @@ class PandasBase(DataSet):
                 float:Float,np.float64:Float,
                 "string": String, "integer": Integer, 
                 "floating":Float,
-                xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path),
-                xr.Dataset:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path),
+                xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path,append_dim=self.xrappend_dim),
+                xr.Dataset:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path,append_dim=self.xrappend_dim),
                 "datetime64":DateTime,
                 np.dtype('<M8[ns]'):datetime64Type}
         cols = [Column('id', Integer, primary_key=True)]

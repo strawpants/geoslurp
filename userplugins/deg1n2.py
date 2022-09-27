@@ -156,8 +156,10 @@ class geocenter_GRCRL06_TN13(DataSet):
                     #register the accumulated entry
                     tstart=parseGSMDate(ts)
                     tend=parseGSMDate(te)
-                    #snap the central epoch to the 15th of the month
-                    tcent=datetime(tstart.year,tstart.month,15)
+                    #get the central time
+                    tcent=tstart+(tend-tstart)/2
+                    #snap the central epoch to the 15th of the month of the central time
+                    # tcent=datetime(tstart.year,tstart.month,15)
                 
                     meta={"type":"GSM","time":tcent,"tstart":tstart,"tend":tend,"lastupdate":lastupdate,"nmax":1,"omax":1,"origin":"CF","format":"JSONB","gm":0.3986004415e+15,"re":0.6378136460e+07}
                     meta["data"]=xr.Dataset(data_vars=dict(cnm=(["shg"],cnmv),sigcnm=(["shg"],sigcnmv)),coords=dict(n=(["shg"],nv),m=(["shg"],mv),t=(["shg"],tv)))

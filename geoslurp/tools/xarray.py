@@ -23,6 +23,7 @@ from geoslurp.db import Settings
 import os
 import shutil
 import numpy as np
+import re
 
 @xr.register_dataarray_accessor("gslrp")
 class XarGeoslurp:
@@ -126,16 +127,22 @@ class XarDsAccessor:
         xrTable=TableClass(gsconn)
         if overwrite:
             xrTable.dropTable()
-            zarrar=xrTable.outdbArchiveName()
-            if os.path.exists(zarrar):
-                shutil.rmtree(zarrar)
+            if outofdb:
+                zarrar=xrTable.outdbArchiveName()
+                if os.path.exists(zarrar):
+                    shutil.rmtree(zarrar)
 
         xrTable.register(ds=self._obj)
     
     @staticmethod
     def load(gsconn,qry,xrcol="data"):
         """Load xarray dataset and auxiliary columns from a table into a new xarray dataset"""
-        qryres=gsconn.dbeng.execute(qry)
+        # select all if the table looks like a table name [scheme.]tablename
+        if re.search(r'^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)?$',qry):
+            #take the whole table
+            qryres=gsconn.dbeng.execute(f"SELECT * FROM {qry}")
+        else:
+            qryres=gsconn.dbeng.execute(qry)
         dsout=None
         outofdb=False
         cols=[]
@@ -163,6 +170,7 @@ class XarDsAccessor:
             #also assemble list of auxialiary columns as a dictionary
             cols.append({ky:row[ky] for ky in indexnames})
         if "time" in dsout and not outofdb:
+            #convert time data to np datetime64
             dsout["time"]=[np.datetime64(ts) for ts in dsout.time.data]
         
         return cols,dsout

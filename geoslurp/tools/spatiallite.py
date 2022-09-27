@@ -15,42 +15,6 @@
 
 # Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2021
 
-import pandas as pd
-import geopandas as gpd
-import os
-from geoslurp.dataset.pandasbase import PandasBase
-import shutil
-
-
-
-
-def readDataFrame(eng,qry,index_col=None):
-    """Convenience function to read a dataframe from a database engine and convert to GeoDataFrame when a geometry column is present"""
-    #try reading as spatially aware database (postgis, spatialite)
-    try:
-        df=gpd.read_postgis(qry,eng,index_col=index_col)
-    except: 
-        #possible failure when this is not a table which has a geometry column, so try again with reading a non-postgis sql query
-        df=pd.read_sql_query(qry,eng,index_col=index_col)
-
-
-
-    return df
-
-
-def saveDataFrame(gsconn,df,name,schema="public",overwrite=False,stripuri=False):
-    """Saves a (geo) dataframe to a database engine"""
-    TableClass=type(name,(PandasBase,),{"scheme":schema,"stripuri":stripuri})
-    Table=TableClass(gsconn)
-    if overwrite:
-        zarrar=Table.outdbArchiveName()
-        if os.path.exists(zarrar):
-            shutil.rmtree(zarrar)
-        Table.dropTable()
-
-    Table.register(df=df)
-
-
 
 
         # # dbapi_conn.load_extension('/usr/lib/mod_spatialite.so')
