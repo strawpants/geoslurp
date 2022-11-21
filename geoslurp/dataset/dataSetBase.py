@@ -217,13 +217,17 @@ class DataSet(ABC):
         #setup a seperate session  and transaction in order to work with a temporary table
         trans,ses=self.db.transsession()
         
-        tmptable=self.db.createTable('tmpuris',cols,temporary=True,bind=ses.get_bind())
+        tmptable=self.db.createTable('tmpuris',cols,temporary=False,bind=ses.get_bind())
         # tmptable=self.db.createTable('tmpuris',cols,temporary=False,bind=ses.get_bind())
         # import pdb;pdb.set_trace()
         #fill the table with the file list and last modification timsstamps
         count=0
         for uri in urilist:
-            url=self.conf.generalize_path(uri.url)
+            if self.stripuri:
+                url=self.conf.generalize_path(uri.url)
+            else:
+                url=uri.url
+
             entry=tmptable(uri=url,lastmod=uri.lastmod)
             ses.add(entry)
             count+=1
@@ -232,21 +236,20 @@ class DataSet(ABC):
                 count=0
 
         ses.commit()
-
         #delete all entries which require updating
         # first gather all the ids of i entries which are expired 
         subqry=ses.query(self.table.id).join(tmptable, and_(tmptable.uri == self.table.uri,tmptable.lastmod > self.table.lastupdate)).subquery()
         # #then delete those entries from the table
         delqry=self.table.__table__.delete().where(self.table.id.in_(subqry))
         ses.execute(delqry)
-
-
+        ses.commit()
         #now make a list of new uris
         qrynew=ses.query(tmptable).outerjoin(self.table,self.table.uri == tmptable.uri).filter(self.table.uri == None)
 
         #submit transaction
         trans.commit()
 
+        import pdb;pdb.set_trace()
         #return entried which need updating he entries in the original table which need updating
         return [UriFile(self.conf.get_local_path(x.uri),x.lastmod) for x in qrynew]
 
