@@ -249,7 +249,7 @@ class DataSet(ABC):
         #submit transaction
         trans.commit()
 
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         #return entried which need updating he entries in the original table which need updating
         return [UriFile(self.conf.get_local_path(x.uri),x.lastmod) for x in qrynew]
 
