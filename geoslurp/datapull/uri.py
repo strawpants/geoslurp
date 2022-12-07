@@ -100,8 +100,6 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
     if customRequest:
         crl.setopt(pycurl.CUSTOMREQUEST,customRequest)
 
-    if headers:
-        crl.setopt(pycurl.HTTPHEADER,headers)
     
     if cookiefile:
         if os.path.exists(cookiefile):
@@ -120,9 +118,22 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
         if hasattr(auth,"trusted"):
             if auth.trusted:
                 crl.setopt(pycurl.UNRESTRICTED_AUTH,1)
-        #use basic authentication
-        crl.setopt(pycurl.USERPWD,auth.user+":"+auth.passw)
+        if hasattr(auth,'oauthtoken'):
+            #use oauth in a header to authenticate
+            oauthhead=f"Authorization: Bearer {auth.oauthtoken}"
+            if headers:
+                headers.append(oauthead)
+            else:
+                headers=[oauthhead]
 
+
+        else:
+            #use basic authentication
+            crl.setopt(pycurl.USERPWD,auth.user+":"+auth.passw)
+
+    if headers:
+        crl.setopt(pycurl.HTTPHEADER,headers)
+    
     if restdict:
         crl.setopt(crl.POSTFIELDS,urlencode(restdict))
     
