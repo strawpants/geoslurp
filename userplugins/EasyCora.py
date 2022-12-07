@@ -18,6 +18,7 @@
 from geoslurp.dataset.dataSetBase import DataSet
 from geoslurp.datapull.ftp import Crawler as ftpCrawler
 import tarfile
+from geoslurp.tools.tarsafe import tar_safe_extractall
 from geoslurp.tools.netcdftools import ncStr
 from geoslurp.datapull import findFiles
 from geoslurp.datapull import UriFile
@@ -182,7 +183,7 @@ class EasyCora(DataSet):
                     else:
                         with tarfile.open(tarf.url,"r:gz") as tf:
                             slurplogger().info(f"Extracting trajectory files from {tarf.url}")
-                            tf.extractall(datadir)
+                            tar_safe_extractall(tf,datadir)
                             #touch the sucessfile to indcate this archive has been sucessfully extracted
                         Path(succesfile).touch()
             except tarfile.ReadError as exc:
