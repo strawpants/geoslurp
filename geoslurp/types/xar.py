@@ -57,9 +57,9 @@ class XarDBType(UserDefinedType):
             """Stores an xarray DataArray or Dataset to a zarr-archive and return a JSON with meta info"""
             if type(value) != xr.DataArray and type(value) != xr.Dataset:
                 raise TypeError(f"Expected a xarray DataArray/Dataset got {type(value)}")
-
+    
             if self.outofdb is not None:
-
+                
                 if self.groupby_counter == 0 and self.writeoutofdb:
                     #save parentds to a zarr store
                     if self.groupby in self.parentds.xindexes:

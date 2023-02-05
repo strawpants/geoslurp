@@ -159,8 +159,10 @@ class XarDsAccessor:
                     if 'LOCALDATAROOT' in zstore:
                         conf=Settings(gsconn)
                         zstore=conf.get_local_path(zstore)
-
-                    dsout=xr.open_zarr(zstore,consolidated=False)
+                    if zstore.endswith('.zarr'):
+                        dsout=xr.open_zarr(zstore,consolidated=False)
+                    else:
+                        dsout=xr.open_dataset(zstore)
                     #currently assumes all data is in the provided uri
                 else:
                     dsout=xr.Dataset.from_dict(row[xrcol])

@@ -74,12 +74,22 @@ class DBFunc(ABC):
         
         dropexec=text("DROP FUNCTION IF EXISTS %s.%s;"%(self.scheme,self.name))
         self.db.dbeng.execute(dropexec) 
-    
     def register(self):
-        """Creates/replaces the  pgfunction in the database"""
-        pgheader="CREATE OR REPLACE FUNCTION %s(%s) RETURNS %s AS $dbff$\n"%(self.name,self.inargs,self.outargs)
-        pgbody=self.pgbody
-        pgfooter=";\n$dbff$ LANGUAGE %s;"%(self.language)
-        print(str(pgheader+pgbody+pgfooter))
-        self.db.dbeng.execute(text(pgheader+pgbody+pgfooter)) 
+        #iterate over overloaded functions
+        if type(self.inargs) == list and type(self.pgbody) == list:
+            #iterate over mutile function overloads
+            for inargs,pgbody in zip(self.inargs,self.pgbody):
+                self.register_overload(inargs,pgbody)
+        else:
+                self.register_overload(self.inargs,self.pgbody)
+
         self.updateInvent()
+    
+
+    def register_overload(self,inargs,pgbody):
+        """Creates/replaces the (overloaded) pgfunction in the database"""
+        slurplogger().info("Registering (overload) of %s function"%(self.name))
+        pgheader="CREATE OR REPLACE FUNCTION %s(%s) RETURNS %s AS $dbff$\n"%(self.name,inargs,self.outargs)
+        pgfooter=";\n$dbff$ LANGUAGE %s;"%(self.language)
+        # print(str(pgheader+pgbody+pgfooter))
+        self.db.dbeng.execute(text(pgheader+pgbody+pgfooter)) 

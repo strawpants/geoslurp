@@ -101,7 +101,6 @@ class XarrayBase(DataSet):
         
         if self.inbulk:
             bulk=[]
-        
         for grp,val in grpby:
             if self.mindex is None:
                 entry={self.groupby:grp,"data":val}
@@ -123,7 +122,7 @@ class XarrayBase(DataSet):
         if self.xarfile != "" and ds is None:
             #note if a ds is explicitly provided it takes precedence over the data from xarfile
             try:
-                ds=xr.open_dataset(self.xarfile)
+                ds=xr.open_dataset(self.xarfile,chunks='auto')
             except:
                 raise RuntimeError(f"Cannot open Xarray file {self.xarfile}")
         slurplog.info("Filling xarray table %s.%s" % (self.scheme, self.name))
