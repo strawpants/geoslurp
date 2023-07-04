@@ -37,20 +37,20 @@ class DatasetCatalogue:
     __dscache__={}
     __dfcache__={}
     __dvcache__={}
+    __pluginpaths__=None
     def __init__(self):
-        pass
+        #Set default plugin path (may have entries appended)
+        self.__pluginpaths__=[os.path.abspath(os.path.dirname(__file__)+"../../../geoslurp_userplugins")] 
     
     @staticmethod 
     def getCacheFile(conf):
         return os.path.join(conf.getCacheDir("Dset"),"Dset_Catalogue.yaml")
     
-    @staticmethod 
-    def addUserPlugPaths(conf,loadmod=False):
-        for upath in conf.db.plugindir.split(";"):
-            if sys.path.count(upath) == 0:
-                sys.path.append(upath)
-                if loadmod:
-                    mod=__import__(os.path.basename(upath))
+    def setUserPlugPaths(self,plugindirs,append=True):
+        if append:
+            self.__pluginpaths__.append(plugindirs)
+        else:
+            self.__pluginpaths__=plugindirs
 
     def addDataset(self, datasetcls):
         self.__dsets__.append(datasetcls)
@@ -66,6 +66,7 @@ class DatasetCatalogue:
 
     def refresh(self,conf):
         """Refresh the dataset catalogue"""
+
         self.registerAllDataSets(conf)
         
         #load inventory of existing datasets (for the templated)
@@ -119,8 +120,13 @@ class DatasetCatalogue:
             self.__catalogue__["views"][name]={"module":dv.__module__}
             self.__dvcache__[name]=dv
 
+        # add plugin paths before saving
         #save to yaml
+        
         self.__catalogue__["lastupdate"]=datetime.now()
+        self.__catalogue__["pluginpaths"]=self.__pluginpaths__
+         
+
         cachefile=self.getCacheFile(conf)
         slurplog.info("saving available Datasets, functions and views to catalogue %s"%cachefile)
         with open(cachefile,'wt') as fid:
@@ -129,13 +135,14 @@ class DatasetCatalogue:
     def loadCatalogue(self,conf):
         if self.__catalogue__:
             return
-
-        self.addUserPlugPaths(conf)
+        
         cachefile=self.getCacheFile(conf)
         if not os.path.exists(cachefile):
             self.refresh(conf)
         with open(cachefile,'rt') as fid:
             self.__catalogue__=yaml.safe_load(fid)
+            #extract user plugin paths
+            self.__pluginpaths__=self.__catalogue__["pluginpaths"]
 
     def registerAllDataSets(self,conf):
         """load all dataset classes (but don't construct them)"""
@@ -144,7 +151,6 @@ class DatasetCatalogue:
             return
         
         #dynamically import all relevant datasets and class factories (including userplugin datasets)
-        # modgeo=__import__("geoslurp.dataset")
        
         #dynamically load functions
         modgeof=__import__("geoslurp.dbfunc")
@@ -152,8 +158,11 @@ class DatasetCatalogue:
         #dynamically load views
         modgeov=__import__("geoslurp.view")
 
-        #also load userplugins
-        self.addUserPlugPaths(conf,True)
+        #also load datasets from userplugin directories
+        for upath in self.__pluginpaths__:
+            if sys.path.count(upath) == 0:
+                sys.path.append(upath)
+                mod=__import__(os.path.basename(upath))
 
 
     def listDataSets(self,conf):
