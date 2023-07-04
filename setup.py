@@ -26,7 +26,7 @@ setuptools.setup(
     name="geoslurp",
     author="Roelof Rietbroek",
     author_email="roelof@wobbly.earth",
-    version="2.1.1",
+    version="2.2.0",
     description="Python postgreSQL-PostGIS client for managing earth science datasets",
     long_description=long_description,
     long_description_content_type="text/markdown",
