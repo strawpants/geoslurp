@@ -37,10 +37,9 @@ def main(argv):
     args = parser.parse_args(argv[1:])
     args=check_args(args,parser)
 
-
     # We need a point of contact to communicate with the database
     try:
-        DbConn=GeoslurpConnector(args.host,args.user,args.password,cache=args.cache,dataroot=args.dataroot,plugindir=args.plugindir)
+        DbConn=GeoslurpConnector(args.host,args.user,args.password,cache=args.cache,dataroot=args.dataroot)
     except Exception as e:
         print(e)
         print("Cannot connect to postgresql database, quitting")
@@ -115,10 +114,13 @@ def main(argv):
                 conf.delAuth(alias)
             else:
                 conf.updateAuth(Credentials(alias=alias,**dvals))
-
+    
     if args.refresh:
-        geoslurpCatalogue.refresh(conf)
+        if args.refresh != "DEFAULTPATH":
+            #explicitly supply additional user plugin paths
+            geoslurpCatalogue.setUserPlugPaths(args.refresh.split(";"))
 
+        geoslurpCatalogue.refresh(conf)
 
     if args.list:
         # show available schemes and datasets
@@ -308,8 +310,8 @@ def addCommandLineArgs():
         parser.add_argument('-l','--list',action='store_true',
                             help="List all datasets which are available to use")
 
-        parser.add_argument('--refresh',action='store_true',
-                            help="Refresh the cache of the available datasets")
+        parser.add_argument("--refresh",metavar="USERPLUGINPATHS",nargs="?",type=str,const="DEFAULTPATH", help="Refresh the cache of the available datasets, views and functions. Optionally supply a set of USERPLUGINPATHS (seperate multiple paths with a semicolon) where dataset implementations can be found.")
+
         # parser.add_argument('--purge-scheme',action='store_true',
         #                     help="Purge selected scheme (This deletes all related datasets as well!")
 
@@ -372,8 +374,6 @@ def addCommandLineArgs():
                             help='Select the port where the database is served')
 
         parser.add_argument("--dataroot",metavar="DATAROOT",nargs="?",type=str, help="Specify the local root of the data directory. Defaults to ${HOME}/geoslurp_data")
-
-        parser.add_argument("--plugindir",metavar="DIREC",nargs="?",type=str, help="Append a directory where dataset implementations can be found.")
 
 
         parser.add_argument("--dbalias",metavar="DBALIAS",nargs="?",type=str, help="Specify the database alias to connect to. Each database alias can have a different host,port,user,password,dataroot,etc (see the localsettings file")
