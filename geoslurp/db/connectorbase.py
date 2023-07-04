@@ -25,8 +25,7 @@ class GeoslurpConnectorBase():
     """Holds the base class for a connector to a geoslurp database"""
     cache=None
     localdataroot=None
-    plugindir=None
-    def __init__(self,cache=None,dataroot=None,plugindir=None):
+    def __init__(self,cache=None,dataroot=None):
         """
         Sets the variables which all connectors have in common"""
 
@@ -40,9 +39,6 @@ class GeoslurpConnectorBase():
         else:
             #default when not specified
             self.cache="/tmp/geoslurp_cache"
-        
-        if plugindir:
-            self.plugindir=plugindir
 
 
     def transsession(self):
