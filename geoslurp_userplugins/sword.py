@@ -18,9 +18,6 @@
 
 from geoslurp.dataset.OGRBase import OGRBase
 from geoslurp.datapull.http import Uri as http
-from geoslurp.datapull.github import Crawler as ghCrawler
-from geoslurp.datapull.github import GithubFilter as ghfilter
-from geoslurp.datapull.github import cachedGithubCatalogue
 from geoslurp.config.catalogue import geoslurpCatalogue
 from datetime import datetime
 import json
@@ -33,8 +30,6 @@ class SwordBase(OGRBase):
     """
     Base class for SWORD: the SWOT River Database, Version 15. If you would like more information about SWORD, please see the paper published in Water Resources Research in 2021, led by Elizabeth Altenau. You can access it here: https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2021WR030054
     """
-    import os
-    import zipfile
     url='http://gaia.geosci.unc.edu/SWORD/SWORD_v15_gpkg.zip'
     path="SWORD_v15_gpkg.zip"
     scheme='globalgis'
