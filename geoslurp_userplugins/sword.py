@@ -46,7 +46,7 @@ class SwordBase(OGRBase):
         super().__init__(dbconn)
         self.ogrfile=os.path.join(self.cacheDir(),os.path.basename(self.path))
         self.gtype='GEOMETRY'
-        self.setCacheDir(os.path.join(conf.getCacheDir(scheme=self.scheme),'SwordBase'))
+        self.setCacheDir(os.path.join(self.conf.getCacheDir(scheme=self.scheme),'SwordBase'))
         self.ogrfile=self.getogrfile()
         
         
@@ -75,7 +75,7 @@ def getSwordDsets(conf):
         for swordtype in swordtypes:
             entry={"cont":continent,"swordtype":swordtype}
             clsname=continent + "_sword_" + swordtype
-            out.append(GeoshapeClassFactory(clsname,entry))
+            out.append(SwordClassFactory(clsname,entry))
 
 
     return out
