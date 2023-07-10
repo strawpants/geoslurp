@@ -100,6 +100,7 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
         lastOpts={"dbalias":args.dbalias,args.dbalias:defaultdbdict}
 
     isUpdated=False
+
     if argsout.dbalias:
         lastOpts["dbalias"]=argsout.dbalias
         dbalias=argsout.dbalias
