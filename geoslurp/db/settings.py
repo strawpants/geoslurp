@@ -71,7 +71,7 @@ Attributes:
 
 Credentials.__new__.__defaults__ = (None,) * len(Credentials._fields)
 
-commonCredentials={"podaac":["user","passw","trusted"]}
+commonCredentials={"podaac":["user","passw","trusted"],"github":["oauthtoken"]}
 
 
 
@@ -178,10 +178,11 @@ class Settings():
         if service not in self.auth:
             #prompt for the necessary fields and store in database
             if qryfields is not None and service in commonCredentials:
+                #note this overrules qryfields arguments!
                 qryfields=commonCredentials[service]
-            else:
+            elif qryfields is None:
                 qryfields=["user","passw"]
-
+                
             creddict={"alias":service}
             for key in qryfields:
                 if key == "passw":
