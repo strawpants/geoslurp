@@ -43,7 +43,7 @@ class SwordBase(OGRBase):
         self.gtype='GEOMETRY'
         self.setCacheDir(os.path.join(self.conf.getCacheDir(scheme=self.scheme),'SwordBase'))
         self.ogrfile=self.getogrfile()
-        
+        self.swapxy = True
         
     def pull(self):
         """Pulls the geojson data from the url and unpacks it in the cache directory"""
