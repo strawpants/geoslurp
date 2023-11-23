@@ -178,7 +178,7 @@ def main(argv):
         sys.exit(0)
     
     
-    if not (args.pull or args.register or args.purge_cache or args.purge_data or args.purge_entry):
+    if not (args.pull or args.register or args.purge_cache or args.purge_data or args.purge_entry or args.export):
         sys.exit(0)
     
     if args.pull:
@@ -226,6 +226,10 @@ def main(argv):
                 ds.register(**regopts)
             except KeyboardInterrupt:
                 ds.halt()
+
+        if args.export:
+            ds.export(args.export)
+
         #We need to explicitly delete the dataset instance or else the database QueuePool gets exhausted 
         del ds
     
@@ -329,6 +333,8 @@ def addCommandLineArgs():
 
         parser.add_argument("--register", metavar="JSON",action=JsonParseAction, nargs="?",const=False, default=False,
                             help="Register data in the database (possibly pass on options as a JSON dict)")
+        parser.add_argument("--export", metavar="OUTPUTFILE",type=str, nargs="?",const="auto", default=False,
+                            help="Export the selected tables in a SQLITE or geopackage file. The type of output is determined from the OUTPUTFILE extension (.sql or .gpkg). When no OUTPUTFILE is provided an SQLITE or gpkg file is dumped in the current directory (depending on whether thee table has a geometry columns.")
 
         # parser.add_argument("--update", metavar="JSON", action=JsonParseAction, nargs="?",const=False,default=False,
                             # help="Implies both --pull and --register, but applies only to the updated data (accepts JSON options)")

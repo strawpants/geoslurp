@@ -19,7 +19,7 @@ import os
 import geopandas as gpd
 import pandas as pd
 from geoslurp.tools.shapelytools import shpextract
-from geoslurp.db.settings import MirrorMap
+# from geoslurp.db.settings import MirrorMap
 import re
 import tarfile
 from sqlalchemy import create_engine

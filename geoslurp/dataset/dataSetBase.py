@@ -29,7 +29,7 @@ from geoslurp.datapull import UriFile
 from sqlalchemy import and_
 from geoslurp.db.settings import getCreateDir
 from geoslurp.db import tableMapFactory
-
+from geoslurp.db.exporter import exportQuery
 
 def rmfilterdir(ddir,filter='*'):
     """Remove directories and files based on a certain regex filter"""
@@ -337,14 +337,26 @@ class DataSet(ABC):
             raise RuntimeError("No migration implemented")
         if version > self.version:
             raise RuntimeError("Registered database has a higher version number than supported")
+    
+    def export(self,outputfile):
+        """Export the table to a different format"""
+        qry=f"SELECT * FROM {self.scheme}.{self.name};"
+        qryres=self.db.dbeng.execute(qry)
+        layer=f"{self.name}"
+        if outputfile == "auto":
+            #create a name based on the current scheme and table name
+            if "geom" in qryres.keys():
+                outputfile=f"{self.scheme}_{self.name}.gpkg"
+            else:
+                outputfile=f"{self.scheme}_{self.name}.sql"
+        if outputfile.endswith(".gpkg"):
+            driver="GPKG"
+        elif outputfile.endswith(".sql"):
+            driver="SQLITE"
+        else:
+            raise RuntimeError("in Export: Unknown outputfile selected")
+
+        slurplogger().info(f"Exporting table to {outputfile}")
+        exportQuery(qryres,outputfile,layer=layer,driver=driver)
 
 
-    # def loadTable(self):
-        # """Reflects a dataset table from the database"""
-        # if self.table:
-            # slurplogger().warning("Reflecting and overwriting existing database table with data from server")
-
-
-        # if custumcolumns in self._dbinvent.data:
-            # #override columns with customn types
-            # cols=
