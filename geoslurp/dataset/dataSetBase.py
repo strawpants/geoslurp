@@ -217,7 +217,7 @@ class DataSet(ABC):
         #setup a seperate session  and transaction in order to work with a temporary table
         trans,ses=self.db.transsession()
         
-        tmptable=self.db.createTable('tmpuris',cols,temporary=False,bind=ses.get_bind())
+        tmptable=self.db.createTable('tmpuris',cols,temporary=True,bind=ses.get_bind())
         # tmptable=self.db.createTable('tmpuris',cols,temporary=False,bind=ses.get_bind())
         # import pdb;pdb.set_trace()
         #fill the table with the file list and last modification timsstamps

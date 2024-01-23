@@ -110,6 +110,7 @@ class TUGRAZGRACEL2Base(DataSet):
     scheme=scheme
     release=''
     subdirs=''
+    stripuri=True
     def __init__(self,dbconn):
         super().__init__(dbconn)
         #initialize postgreslq table
@@ -130,7 +131,7 @@ class TUGRAZGRACEL2Base(DataSet):
             files=self.updated
         else:
             files=[UriFile(file) for file in findFiles(self._dbinvent.datadir,'.*gfc.gz',since=self._dbinvent.lastupdate)]
-
+        # breakpoint()
         newfiles=self.retainnewUris(files)
         #loop over files
         for uri in newfiles:
@@ -149,6 +150,7 @@ class TUGRAZGRACEL2NormalBase(DataSet):
     release=''
     subdirs=''
     updated=False
+    stripuri=True
     def __init__(self,dbconn):
         super().__init__(dbconn)
 
