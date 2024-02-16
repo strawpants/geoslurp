@@ -34,10 +34,12 @@ class MirrorMap:
         else:
             self.from_mirror=from_mirror+"/"
         
-        if to_mirror.endswith("/"):
-            self.to_mirror=to_mirror
-        else:
-            self.to_mirror=to_mirror+"/"
+        self.to_mirror=to_mirror
+        
+        # if to_mirror.endswith("/"):
+            # self.to_mirror=to_mirror
+        # else:
+            # self.to_mirror=to_mirror+"/"
             
     def apply(self,url):
         return url.replace(self.from_mirror,self.to_mirror)
@@ -57,9 +59,8 @@ def exportGeoQuery(qryresult,outputfile,layer=None,driver="GPKG",packFiles=False
     exportQuery(qryresult,outputfile,layer=layer,driver=driver,packFiles=packFiles,striproot=striproot)
 
 
-def exportQuery(qryresult,outputfile,layer=None,driver="SQLITE",packFiles=False,striproot=None):
+def exportQuery(qryresult,outputfile,layer=None,driver="SQLITE",packUriCols=[],striproot=None,localdataroot=None):
     """Export a query without a geometry column, and possibly pack corresponding files"""
-    
     if "geom" in qryresult.keys():
         useGeoPandas=True
     else:
@@ -73,17 +74,16 @@ def exportQuery(qryresult,outputfile,layer=None,driver="SQLITE",packFiles=False,
         df["geometry"]=None
     else:
         df=pd.DataFrame()
-
     #initialize columns
     for ky in (ky for ky in qryresult.keys() if ky not in ["geom","id"]):
         df[ky]=None
    
-    if packFiles:
+    if packUriCols:
         #open a tgz archive
         farchive=os.path.splitext(outputfile)[0]+"_files.tgz"
         farchivetmp=os.path.splitext(outputfile)[0]+"_files.tar"
         if striproot:
-            mmap=MirrorMap(striproot,farchive+":/")
+            mmap=MirrorMap(striproot,farchive+":")
 
         #open/reopen archive
         if os.path.exists(farchive):
@@ -112,12 +112,14 @@ def exportQuery(qryresult,outputfile,layer=None,driver="SQLITE",packFiles=False,
             elif ky == "data":
                 #convert to json
                 val=json.dumps(val)
-            elif ky == "uri" and packFiles:
+            elif ky in packUriCols:
                 #modify the uri and add file in the archive
                 if not striproot:
                     #try stripping of everything before and including 'geoslurp' from the path
                     striproot=re.search("^.*/geoslurp/",val).group(0)
-                    mmap=MirrorMap(striproot,farchive+":/")
+                    mmap=MirrorMap(striproot,farchive+":")
+                if localdataroot:
+                    val=val.replace('${LOCALDATAROOT}',localdataroot)
                 uriorig=val
                 val=mmap.apply(val)
                 #create a new tarfile member if needed
@@ -132,7 +134,7 @@ def exportQuery(qryresult,outputfile,layer=None,driver="SQLITE",packFiles=False,
 
         df=df.append(entrymod,ignore_index=True)
     
-    if packFiles:
+    if packUriCols:
         tarar.close()
         if os.path.exists(farchivetmp):
             #rezip the tar archive and clean up
