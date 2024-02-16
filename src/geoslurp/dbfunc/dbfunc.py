@@ -27,7 +27,7 @@ from datetime import datetime
 
 class DBFunc(ABC):
     """Abstract Base class which holds a database functione"""
-    scheme='public'
+    schema='public'
     db=None
     version=(0,0,0)
     updatefreq=None
@@ -35,8 +35,17 @@ class DBFunc(ABC):
     outargs=None #output of the function (e.g. "TABLE(int,varchar)")
     pgbody="" # contains the PGSQL body code
     language='plpgsql'
+    
+    @classmethod
+    def sfname(cls):
+        return cls.schema+"."+cls.__name__.lower().replace("-","_")
+    
+    @classmethod
+    def fname(cls):
+        return cls.__name__.lower().replace("-","_")
+    
     def __init__(self,dbcon):
-        self.name=self.__class__.__name__.lower().replace('-',"_")
+        self.name=self.fname()
         self.db=dbcon
 
         #Initiate a session for keeping track of the inventory entry

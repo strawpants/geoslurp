@@ -1,5 +1,4 @@
 from geoslurp.dbfunc.dbfunc import DBFunc
-from geoslurp.config.catalogue import geoslurpCatalogue
 
 
 class readfile(DBFunc):
@@ -42,4 +41,3 @@ class readfile(DBFunc):
        
         super().register()
 
-geoslurpCatalogue.addDbFunc(readfile)

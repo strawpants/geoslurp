@@ -58,32 +58,40 @@ class DataSet(ABC):
     """Abstract Base class which hold a dataset (corresponding to a database table"""
     table=None
     commitCounter=0
-    scheme='public'
+    schema='public'
     db=None
     version=(0,0,0)
     updatefreq=None
     commitperN=500
     stripuri=False
     
+    @classmethod
+    def stname(cls):
+        return cls.schema+"."+cls.__name__.lower().replace("-","_")
+    
+    @classmethod
+    def tname(cls):
+        return cls.__name__.lower().replace("-","_")
+
     def __init__(self,dbcon):
-        if re.search("TEMPLATE",".".join([self.scheme,self.__class__.__name__])):
+        if re.search("TEMPLATE",".".join([self.schema,self.__class__.__name__])):
             raise RuntimeError("Refusing to instantiate templated dataset")
 
-        self.name=self.__class__.__name__.lower().replace('-',"_")
+        self.name=self.tname()
         self.db=dbcon
 
         #Initiate a session for keeping track of the inventory entry
         self._ses=self.db.Session()
         invent=Inventory(self.db)
         try:
-            self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.scheme ).filter(invent.table.dataset == self.name).one()
+            self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.schema ).filter(invent.table.dataset == self.name).one()
             #possibly migrate table
             self.migrate(self._dbinvent.version)
         except NoResultFound:
             #possibly create a schema
-            self.db.CreateSchema(self.scheme)
+            self.db.CreateSchema(self.schema)
             #set defaults for the  inventory
-            self._dbinvent = invent.table(scheme=self.scheme, dataset=self.name,
+            self._dbinvent = invent.table(scheme=self.schema, dataset=self.name,
                     version=self.version, updatefreq=self.updatefreq,data={}, 
                     lastupdate=datetime.min, owner=self.db.user)
             #add the default entry to the database
@@ -127,27 +135,27 @@ class DataSet(ABC):
         return (self._dbinvent.lastupdate + updatefreq ) < datetime.today()
 
     def dataDir(self,subdirs=None):
-        """Returns the specialized data directory of this scheme and dataset
+        """Returns the specialized data directory of this schema and dataset
         The directory will be created if it does not exist"""
         
         if self._dbinvent.datadir:
             return getCreateDir(self._dbinvent.datadir)
         #else try to retrieve the standard datadir from the configuration
-        return self.conf.getDataDir(self.scheme, dataset=self.name,subdirs=subdirs)
+        return self.conf.getDataDir(self.schema, dataset=self.name,subdirs=subdirs)
     
     def setDataDir(self,ddir):
         self._dbinvent.datadir=ddir
         self.updateInvent(False)
 
     def cacheDir(self,subdirs=None):
-        """returns the cache directory of this scheme and dataset"""
+        """returns the cache directory of this schema and dataset"""
         if self._dbinvent.cache:
             if subdirs:
                 return getCreateDir(os.path.join(self._dbinvent.cache,subdirs))
             else:
                 return getCreateDir(self._dbinvent.cache)
 
-        return self.conf.getCacheDir(self.scheme, dataset=self.name,subdirs=subdirs)
+        return self.conf.getCacheDir(self.schema, dataset=self.name,subdirs=subdirs)
     
     def setCacheDir(self,cdir):
         self._dbinvent.cache=cdir
@@ -173,10 +181,10 @@ class DataSet(ABC):
 
     def purgeentry(self):
         """Delete dataset entry in the database"""
-        slurplogger().info(f"Deleting {self.scheme}.{self.name} entry")
+        slurplogger().info(f"Deleting {self.schema}.{self.name} entry")
         self._ses.delete(self._dbinvent)
         self._ses.commit()
-        self.db.dropTable(self.name,self.scheme)
+        self.db.dropTable(self.name,self.schema)
 
     def halt(self):
         """can be overridden to properly clean up an aborted operation"""
@@ -306,15 +314,16 @@ class DataSet(ABC):
 
     def truncateTable(self):
         """Truncate all entries in a table"""
-        self.db.truncateTable(self.name,self.scheme.lower())
+        self.db.truncateTable(self.name,self.schema.lower())
 
     def createTable(self,cols=None,session=None):
         """dynamically creates a table (when it does not exists) from a list of colums"""
         if self.table == None:
             if cols == None:
                 raise RuntimeError("Creating a dynamic table requires the specification of columns")
-            self.table=Table(self.name, self.db.mdata, *cols, schema=self.scheme,extend_existing=True)
-            self.table.create(checkfirst=True)
+
+            self.table=Table(self.name, self.db.mdata, *cols, schema=self.schema,extend_existing=True)
+            self.table.create(bind=self.db.dbeng,checkfirst=True)
             tableMap=tableMapFactory(self.name,self.table)
             self.table=tableMap
         else:
@@ -328,7 +337,7 @@ class DataSet(ABC):
             session.commit()
 
     def dropTable(self):
-        self.db.dropTable(self.name,self.scheme.lower())
+        self.db.dropTable(self.name,self.schema.lower())
 
     def migrate(self,version):
         """Properly migrate a table between software versions
@@ -340,15 +349,15 @@ class DataSet(ABC):
     
     def export(self,outputfile):
         """Export the table to a different format"""
-        qry=f"SELECT * FROM {self.scheme}.{self.name};"
+        qry=f"SELECT * FROM {self.schema}.{self.name};"
         qryres=self.db.dbeng.execute(qry)
         layer=f"{self.name}"
         if outputfile == "auto":
-            #create a name based on the current scheme and table name
+            #create a name based on the current schema and table name
             if "geom" in qryres.keys():
-                outputfile=f"{self.scheme}_{self.name}.gpkg"
+                outputfile=f"{self.schema}_{self.name}.gpkg"
             else:
-                outputfile=f"{self.scheme}_{self.name}.sql"
+                outputfile=f"{self.schema}_{self.name}.sql"
         if outputfile.endswith(".gpkg"):
             driver="GPKG"
         elif outputfile.endswith(".sql"):

@@ -1,0 +1,73 @@
+# pyproject.toml  
+# This file is part of geoslurp.
+# geoslurp is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 3 of the License, or (at your option) any later version.
+
+# geoslurp is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public
+# License along with Frommle; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+# Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2024
+
+[build-system]
+requires = ["setuptools>=61.0","setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "geoslurp"
+dynamic = ["version"]
+authors = [
+  { name="Roelof Rietbroek", email="r.rietbroek@utwente.nl" },
+]
+description="Python postgreSQL-PostGIS client for managing earth science datasets"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Development Status :: 5 - Production/Stable"
+]
+dependencies = [ "pandas >= 2.0", "pyaml >= 23.9.0", "scipy", "xarray >= 2023.1.0",
+"importlib_metadata","requests","SQLALchemy>=2.0","pycurl","keyring","psycopg2","GeoAlchemy2","geopandas","rasterio","gdal","netCDF4","lxml"]
+
+[project.optional-dependencies]
+dset=["xarray >= 2023.1.0","Shapely","motuclient == 3.0.0","cdsapi==0.6.1","paramiko==2.11.1"]
+
+[project.scripts]
+geoslurper = "geoslurp.cli.geoslurper:main"
+
+[tool.setuptools_scm]
+# empty for now
+
+[project.urls]
+"Homepage" = "https://github.com/strawpants/geoslurp/"
+"Bug Tracker" = "https://github.com/strawpants/geoslurp/"
+
+
+# Entry points of datsets, view and functions which are provided along the geoslurp package
+
+[project.entry-points."geoslurp.dsetfactories"]
+geoshapes = "geoslurp.plugins.dset.geoshapes:getGeoshapesDsets"
+psmsl = "geoslurp.plugins.dset.PSMSL:getPSMSLDsets"
+
+[project.entry-points."geoslurp.viewfactories"]
+graceview = "geoslurp.plugins.views.graceviews:getGRACEviews"
+
+
+[project.entry-points."geoslurp.dbfuncs"]
+maskgeom = "geoslurp.plugins.dbfunc.maskgeom:gs_maskgeom"
+loadfile = "geoslurp.plugins.dbfunc.readfile:readfile"
+
+
+
+
+

@@ -1,5 +1,4 @@
 from geoslurp.dbfunc.dbfunc import DBFunc
-from geoslurp.config.catalogue import geoslurpCatalogue
 
 
 class gs_maskgeom(DBFunc):
@@ -38,5 +37,3 @@ class gs_maskgeom(DBFunc):
     def __init__(self,dbcon):
         super().__init__(dbcon)
 
-geoslurpCatalogue.addDbFunc(gs_maskgeom)
-#"\tRETURN ST_Union(ST_AsRaster(geom,refrast, '8BUI'),refrast);\n"\

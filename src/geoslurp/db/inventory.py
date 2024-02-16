@@ -21,7 +21,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy import MetaData
-scheme="admin"
+schema="admin"
 GSBase=declarative_base(metadata=MetaData(schema='admin'))
 
 class InventTable(GSBase):
@@ -52,7 +52,7 @@ class Inventory:
         self._ses=self.db.Session()
 
         #creates the inventory table if it doesn't exists
-        if not geoslurpConn.dbeng.has_table(self.table.__tablename__):
+        if not geoslurpConn.tableExists(f"{schema}.{self.table.__tablename__}"):
             GSBase.metadata.create_all(geoslurpConn.dbeng)
             #also grant geoslurp all privileges
             self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.inventory to geoslurp;')
@@ -69,10 +69,10 @@ class Inventory:
 
     def __getitem__(self, dataset):
         """Retrieves the entry from the inventory table corresponding to the dataset
-        :param dataset: Table to be searched for. This can be either a table name (without the scheme) or as scheme.table"""
+        :param dataset: Table to be searched for. This can be either a table name (without the schema) or as schema.table"""
         #we need to open up a small sqlalcheny session here
         # note  this will raise a NoResultsFound exception if none was found (should be treated by caller)
-        #when a dot is present we also need to check for the scheme
+        #when a dot is present we also need to check for the schema
         spl=dataset.split(".")
         if len(spl) == 1:
             return self._ses.query(InventTable).filter(InventTable.dataset == spl[0]).one()

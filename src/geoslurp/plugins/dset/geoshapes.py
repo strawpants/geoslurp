@@ -31,7 +31,7 @@ class geoshapeBase(OGRBase):
     """Base class for a geoshapes dataset (selection of handrawn shapes) (downloads from github) """
     url=None
     path=None
-    scheme='globalgis'
+    schema='globalgis'
     version=(0,0,0)
     def __init__(self,dbconn):
         super().__init__(dbconn)
@@ -58,7 +58,6 @@ def getGeoshapesDsets(conf):
         token=cred.oauthtoken
     except:
         token=None
-    # import pdb;pdb.set_trace() 
     catalog=cachedGithubCatalogue(reponame,cachedir=cachedir,commitsha=commitsha,
                        gfilter=ghfilter({"type":"blob","path":"\.geojson"}),
                        gfollowfilter=ghfilter({"type":"tree","path":"envelopes"}),
@@ -74,7 +73,7 @@ def getGeoshapesDsets(conf):
     return out
 
 
-geoslurpCatalogue.addDatasetFactory(getGeoshapesDsets)
+# geoslurpCatalogue.addDatasetFactory(getGeoshapesDsets)
 
 
 

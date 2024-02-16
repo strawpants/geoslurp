@@ -31,12 +31,12 @@ from geoslurp.config.slurplogger import slurplogger
 from geoslurp.config.catalogue import geoslurpCatalogue
 
 
-scheme="oceanobs"
+schema="oceanobs"
 
 geoPointtype = Geography(geometry_type="POINTZ", srid='4326', spatial_index=True,dimension=3)
 
 #define a declarative baseclass for spherical harmonics gravity  data
-@as_declarative(metadata=MetaData(schema=scheme))
+@as_declarative(metadata=MetaData(schema=schema))
 class PSMSLTBase(object):
     @declared_attr
     def __tablename__(cls):
@@ -58,7 +58,7 @@ class PSMSLBase(DataSet):
     url=None
     typ=None
     freq=None
-    scheme=scheme
+    schema=schema
     def __init__(self,dbconn):
         super().__init__(dbconn)
         PSMSLTBase.metadata.create_all(self.db.dbeng, checkfirst=True)
@@ -143,4 +143,3 @@ def getPSMSLDsets(conf):
     return out
 
 
-geoslurpCatalogue.addDatasetFactory(getPSMSLDsets)

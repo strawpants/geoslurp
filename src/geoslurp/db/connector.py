@@ -26,6 +26,13 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from geoslurp.config.slurplogger import  slurplogger, debugging
 import getpass
 from geoslurp.db.connectorbase import GeoslurpConnectorBase
+import warnings
+from sqlalchemy import exc as sa_exc
+
+
+def tname(tablename,schema=None):
+    """Create a fully qualified database name in lower case from a schema and tablename"""
+    tnm=".".join(filter(None,[schema,tablename])).lower()
 
 class GeoslurpConnector(GeoslurpConnectorBase):
     """Holds a connector to a geoslurp database"""
@@ -49,16 +56,20 @@ class GeoslurpConnector(GeoslurpConnectorBase):
             self.host=""
         else:
             self.host=host
+        
 
         echo=debugging()
         dburl="postgresql+psycopg2://"+user+":"+self.passw+"@"+self.host+":"+str(port)+"/geoslurp"
         self.dbeng = create_engine(dburl, echo=echo)
         self.Session = sessionmaker(bind=self.dbeng)
-        self.mdata = MetaData(bind=self.dbeng)
 
+        self.mdata = MetaData()
+        #reflect the public tables
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=sa_exc.SAWarning)
+            self.mdata.reflect(bind=self.dbeng)
         if not self.schemaexists('admin'):
-            raise RuntimeError("The database does not have an admin scheme, is it properly initialized?")
-
+            raise RuntimeError("The database does not have an admin schema, is it properly initialized?")
 
     def transsession(self):
         """Retrieve a  session which is bound to a connection rather than an engine (e.g. useful for temporary tables)"""
@@ -71,36 +82,40 @@ class GeoslurpConnector(GeoslurpConnectorBase):
         conn = self.dbeng.raw_connection()
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = conn.cursor()
-        cursor.execute('VACUUM ANALYZE %s."%s";' % (schema, tableName))
+        table=tname(tablename,schema)
+        cursor.execute(text(f'VACUUM ANALYZE {table}";'))
 
     def CreateSchema(self, schema,private=False):
-        if private:
-            self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s;"%(schema.lower()))
-        else:
-            self.dbeng.execute("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION geoslurp;"%(schema.lower()))
-            self.dbeng.execute("GRANT USAGE ON SCHEMA %s to geobrowse;"%((schema.lower())))
+        with self.dbeng.connect() as conn:
+            if private:
+                conn.execute(text("CREATE SCHEMA IF NOT EXISTS %s;"%(schema.lower())))
+            else:
+                conn.execute(text("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION geoslurp;"%(schema.lower())))
+                conn.execute(text("GRANT USAGE ON SCHEMA %s to geobrowse;"%((schema.lower()))))
 
-            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geobrowse,geoslurp;"%((schema.lower())))
-            self.dbeng.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geobrowse,geoslurp;"%((schema.lower())))
+                conn.execute(text("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geobrowse,geoslurp;"%((schema.lower()))))
+                conn.execute(text("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geobrowse,geoslurp;"%((schema.lower()))))
 
     def schemaexists(self,name):
-        return self.Session().query(exists(select([column("schema_name")]).select_from(text("information_schema.schemata")).where(text("schema_name = '%s'"%(name))))).scalar()
+        qry=exists(select(column("schema_name")).select_from(text("information_schema.schemata")).where(text("schema_name = '%s'"%(name))))
+        return self.Session().query(qry).scalar()
 
     def dropSchema(self, schema, cascade=False):
-        self.dbeng.execute(DropSchema(schema.lower(), cascade=cascade))
+        with self.dbeng.connectio() as conn:
+            conn.execute(DropSchema(schema.lower(), cascade=cascade))
 
-    def createTable(self, tablename,columns,scheme=None,temporary=False,truncate=False,bind=None):
+    def createTable(self, tablename,columns,schema=None,temporary=False,truncate=False,bind=None):
         """Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper"""
+        
 
-        if bind:
-            mdata=MetaData(bind=bind)
-        else:
+        if bind is None:
             bind=self.dbeng
-            mdata=self.mdata
+        
+        mdata.reflect(self.dbeng,schema=schema)
 
 
         if truncate:
-            self.truncateTable(tablename,scheme)
+            self.truncateTable(tablename,schema)
 
         if tablename in mdata.tables:
             table=mdata.tables[tablename]
@@ -108,23 +123,22 @@ class GeoslurpConnector(GeoslurpConnectorBase):
             if temporary:
                 table = Table(tablename, mdata, *columns, prefixes=['TEMPORARY'],postgresql_on_commit='PRESERVE ROWS')
             else:
-                table = Table(tablename, mdata, *columns, schema=scheme)
+                table = Table(tablename, mdata, *columns, schema=schema)
 
             table.create(bind=bind,checkfirst=True)
 
         return tableMapFactory(tablename, table)
 
-    def truncateTable(self,tablename,scheme=None):
-        if scheme:
-            self.dbeng.execute("TRUNCATE TABLE %s.%s;"%(scheme,tablename))
-        else:
-            self.dbeng.execute("TRUNCATE TABLE %s;"%(tablename))
+    def truncateTable(self,tablename,schema=None):
+
+        table=tname(tablename,schema)
+        with self.dbeng.connect() as conn: 
+            conn.execute(text(f"TRUNCATE TABLE {table}"))
 
     def dropTable(self, tablename, schema=None):
-        if schema:
-            self.dbeng.execute('DROP TABLE IF EXISTS %s."%s";' % (schema.lower(), tablename.lower()))
-        else:
-            self.dbeng.execute('DROP TABLE IF EXISTS "%s";' % (tablename.lower()))
+        table=tname(tablename,schema)
+        with self.dbeng.connect() as conn: 
+            conn.execute(text(f'DROP TABLE IF EXISTS {table};'))
     
     def tableExists(self,tablename):
         insp=inspect(self.dbeng)
@@ -132,47 +146,40 @@ class GeoslurpConnector(GeoslurpConnectorBase):
         return insp.has_table(tbl,sch)
 
 
-    def getTable(self,tname,scheme="public",customcolumns=None):
-        mdata=MetaData(bind=self.dbeng,schema=scheme)
+    def getTable(self,tname,schema="public",customcolumns=None):
+        mdata=MetaData(bind=self.dbeng,schema=schema)
         if customcolumns:
             return Table(tname, mdata, *customcolumns,autoload=True, autoload_with=self.dbeng)
         else:
             return Table(tname, mdata, autoload=True, autoload_with=self.dbeng)
 
-    def getFunc(self,fname,scheme="public"):
+    def getFunc(self,fname,schema="public"):
         """returns a database function based up string names"""
-        if scheme == "public":
+        if schema == "public":
             return getattr(func,fname)
         else:
             return getattr(getattr(func,schema),fname)
 
     def createView(self, viewname, qry,schema=None):
-        if schema:
-            self.dbeng.execute('CREATE VIEW %s."%s" AS %s;' % (schema.lower(), viewname.lower(),qry))
-        else:
-            self.dbeng.execute('CREATE VIEW  "%s" AS %s;' % (viewname.lower(),qry))
+        viewn=tname(viewname,schema)
+        with self.dbeng.connect() as conn:
+            conn.execute(text(f'CREATE VIEW {viewn} AS {qry};'))
     
     def dropView(self, viewname, schema=None):
-        if schema:
-            self.dbeng.execute('DROP VIEW IF EXISTS %s."%s";' % (schema.lower(), viewname.lower()))
-        else:
-            self.dbeng.execute('DROP TABLE IF EXISTS "%s";' % (viewname.lower()))
+        viewn=tname(viewname,schema)
+        
+        with self.dbeng.connect() as conn:
+            conn.execute(text(f'DROP VIEW IF EXISTS {viewn};'))
 
     def addUser(self,name,passw,readonly=False):
         """Adds a user to the database (note executing this functions requires appropriate database rights"""
         slurplogger().info("Adding new user: %s"%(name))
-        if readonly:
-            self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geobrowse;"%(name,passw))
-        else:
-            self.dbeng.execute("CREATE USER %s WITH ENCRYPTED PASSWORD '%s' IN ROLE geoslurp,geobrowse;"%(name,passw))
+        with self.dbeng.connect() as conn:
+            if readonly:
+                self.dbeng.execute(text(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE geobrowse;"))
+            else:
+                self.dbeng.execute(text(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE geoslurp,geobrowse;"))
 
 
 
-
-    #ay, adapted from geoslurptools.db.connector
-    def getInventEntry(self,tname,scheme):
-        mdata=MetaData(bind=self.dbeng,schema='admin')
-        tbl=Table('inventory', mdata, autoload=True, autoload_with=self.dbeng)
-        qry=select([tbl]).where(and_((tbl.c.scheme == scheme) & (tbl.c.dataset == tname)))
-        return self.dbeng.execute(qry).first()
 

@@ -19,6 +19,8 @@
 import logging
 
 slurplog=logging.getLogger("Geoslurp")
+# default is info level
+slurplog.setLevel(logging.INFO)
 
 ch = logging.StreamHandler()
 # create formatter

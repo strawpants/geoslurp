@@ -57,21 +57,21 @@ class GeoslurpConnectorBase():
     def dropSchema(self, schema, cascade=False):
         raiseNotImpl()
 
-    def createTable(self, tablename,columns,scheme=None,temporary=False,truncate=False,bind=None):
+    def createTable(self, tablename,columns,schema=None,temporary=False,truncate=False,bind=None):
         """Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper"""
 
         raiseNotImpl()
 
-    def truncateTable(self,tablename,scheme=None):
+    def truncateTable(self,tablename,schema=None):
         raiseNotImpl()
 
     def dropTable(self, tablename, schema=None):
         raiseNotImpl()
 
-    def getTable(self,tname,scheme="public"):
+    def getTable(self,tname,schema="public"):
         raiseNotImpl()
 
-    def getFunc(self,fname,scheme="public"):
+    def getFunc(self,fname,schema="public"):
         """returns a database function based up string names"""
         raiseNotImpl()
 

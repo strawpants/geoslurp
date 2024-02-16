@@ -98,7 +98,7 @@ class Settings():
         self.db=dbconn
         self.ses=self.db.Session()
         #creates the settings table if it doesn't exists
-        if not self.db.dbeng.has_table('settings',schema='admin'):
+        if not self.db.tableExists("admin.settings"):
             GSBase.metadata.create_all(self.db.dbeng)
             # #also grant geoslurp all privileges
             # #geoslurp users need to be able to add themselves to the admin.settings table
@@ -311,12 +311,12 @@ class Settings():
         kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),length=32,salt=salt,iterations=100000)
         return Fernet(base64.urlsafe_b64encode(kdf.derive(password)))
 
-    def getDataDir(self,scheme,dataset=None,subdirs=None):
+    def getDataDir(self,schema,dataset=None,subdirs=None):
         """Retrieves the data Directory, possibly appended with a dataset and subdirs"""
         #begin with setting the default
         ddir=self.db.localdataroot
 
-        ddir=os.path.join(ddir,scheme)
+        ddir=os.path.join(ddir,schema)
 
         #Possibly we need to append a dataset directory 
         if dataset:
@@ -328,10 +328,10 @@ class Settings():
 
         return getCreateDir(ddir)
 
-    def getCacheDir(self,scheme,dataset=None,subdirs=None):
+    def getCacheDir(self,schema,dataset=None,subdirs=None):
         """Obtain and create a cache directory"""
         #starting point
-        ddir=os.path.join(self.db.cache,scheme)
+        ddir=os.path.join(self.db.cache,schema)
 
         #POssibly we need to append a dataset directory 
         if dataset:

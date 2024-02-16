@@ -23,24 +23,32 @@ from datetime import datetime
 class TView:
     """Base class which holds and manages a table view"""
     sqlqry=None
-    scheme='public'
+    schema='public'
     db=None
     version=(0,0,0)
     
+    @classmethod
+    def svname(cls):
+        return cls.schema+"."+cls.__name__.lower().replace("-","_")
+    
+    @classmethod
+    def vname(cls):
+        return cls.__name__.lower().replace("-","_")
+    
     def __init__(self,dbcon):
-        self.name=self.__class__.__name__.lower().replace('-',"_")
+        self.name=self.vname()
         self.db=dbcon
 
         #Initiate a session for keeping track of the inventory entry
         self._ses=self.db.Session()
         invent=Inventory(self.db)
         try:
-            self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.scheme ).filter(invent.table.view == self.name).one()
+            self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.schema ).filter(invent.table.view == self.name).one()
         except NoResultFound:
             #possibly create a schema
-            self.db.CreateSchema(self.scheme)
+            self.db.CreateSchema(self.schema)
             #set defaults for the  inventory
-            self._dbinvent = invent.table(scheme=self.scheme, view=self.name,
+            self._dbinvent = invent.table(scheme=self.schema, view=self.name,
                     version=self.version, data={}, lastupdate=datetime.min, owner=self.db.user)
             #add the default entry to the database
             self._ses.add(self._dbinvent)
@@ -59,15 +67,15 @@ class TView:
     def register(self):
         """Register the view in the database"""
         slurplogger().info("Creating view %s "%(self.name))
-        self.db.dropView(self.name,schema=self.scheme)
-        self.db.createView(self.name,schema=self.scheme,qry=self.qry)
+        self.db.dropView(self.name,schema=self.schema)
+        self.db.createView(self.name,schema=self.schema,qry=self.qry)
 
     def purgeentry(self):
         """Delete table view entry in the database"""
         slurplogger().info("Deleting %s entry"%(self.name))
         self._ses.delete(self._dbinvent)
         self._ses.commit()
-        self.db.dropView(self.name,self.scheme)
+        self.db.dropView(self.name,self.schema)
 
     def halt(self):
         """can be overridden to properly clean up an aborted operation"""

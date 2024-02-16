@@ -136,9 +136,9 @@ class OGRBase(DataSet):
         :returns nothing (but sets the internal qlalchemy table)
         """
         # currently we can only cope with updating the entire table as a whole
-        self.db.dropTable(self.name,self.scheme)
+        self.db.dropTable(self.name,self.schema)
 
-        slurplogger().info("Filling POSTGIS table %s.%s with data from %s" % (self.scheme, self.name, self.ogrfile))
+        slurplogger().info("Filling POSTGIS table %s.%s with data from %s" % (self.schema, self.name, self.ogrfile))
         
         #open shapefile directory or ogr file
         if self.ogrfile.endswith('.kmz') and not gdal.GetDriverByName('LIBKML'): 
