@@ -33,6 +33,7 @@ from sqlalchemy import exc as sa_exc
 def tname(tablename,schema=None):
     """Create a fully qualified database name in lower case from a schema and tablename"""
     tnm=".".join(filter(None,[schema,tablename])).lower()
+    return tnm
 
 class GeoslurpConnector(GeoslurpConnectorBase):
     """Holds a connector to a geoslurp database"""
@@ -95,6 +96,7 @@ class GeoslurpConnector(GeoslurpConnectorBase):
 
                 conn.execute(text("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geobrowse,geoslurp;"%((schema.lower()))))
                 conn.execute(text("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geobrowse,geoslurp;"%((schema.lower()))))
+                conn.commit()
 
     def schemaexists(self,name):
         qry=exists(select(column("schema_name")).select_from(text("information_schema.schemata")).where(text("schema_name = '%s'"%(name))))
@@ -103,6 +105,7 @@ class GeoslurpConnector(GeoslurpConnectorBase):
     def dropSchema(self, schema, cascade=False):
         with self.dbeng.connectio() as conn:
             conn.execute(DropSchema(schema.lower(), cascade=cascade))
+            conn.commit()
 
     def createTable(self, tablename,columns,schema=None,temporary=False,truncate=False,bind=None):
         """Creates a (temporary) table from sqlalchemy columns and returns the corresponding tablemapper"""
@@ -134,12 +137,14 @@ class GeoslurpConnector(GeoslurpConnectorBase):
         table=tname(tablename,schema)
         with self.dbeng.connect() as conn: 
             conn.execute(text(f"TRUNCATE TABLE {table}"))
+            conn.commit()
 
     def dropTable(self, tablename, schema=None):
         table=tname(tablename,schema)
         with self.dbeng.connect() as conn: 
             conn.execute(text(f'DROP TABLE IF EXISTS {table};'))
-    
+            conn.commit()
+
     def tableExists(self,tablename):
         insp=inspect(self.dbeng)
         sch,tbl=tablename.split(".")
@@ -164,22 +169,25 @@ class GeoslurpConnector(GeoslurpConnectorBase):
         viewn=tname(viewname,schema)
         with self.dbeng.connect() as conn:
             conn.execute(text(f'CREATE VIEW {viewn} AS {qry};'))
+            conn.commit()
     
     def dropView(self, viewname, schema=None):
         viewn=tname(viewname,schema)
         
         with self.dbeng.connect() as conn:
             conn.execute(text(f'DROP VIEW IF EXISTS {viewn};'))
+            conn.commit()
 
     def addUser(self,name,passw,readonly=False):
         """Adds a user to the database (note executing this functions requires appropriate database rights"""
         slurplogger().info("Adding new user: %s"%(name))
         with self.dbeng.connect() as conn:
             if readonly:
-                self.dbeng.execute(text(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE geobrowse;"))
+                conn.execute(text(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE geobrowse;"))
             else:
-                self.dbeng.execute(text(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE geoslurp,geobrowse;"))
+                conn.execute(text(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE geoslurp,geobrowse;"))
 
+            conn.commit()
 
 
 

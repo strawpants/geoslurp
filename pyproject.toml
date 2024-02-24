@@ -57,7 +57,7 @@ geoslurper = "geoslurp.cli.geoslurper:main"
 
 [project.entry-points."geoslurp.dsetfactories"]
 geoshapes = "geoslurp.plugins.dset.geoshapes:getGeoshapesDsets"
-psmsl = "geoslurp.plugins.dset.PSMSL:getPSMSLDsets"
+#psmsl = "geoslurp.plugins.dset.PSMSL:getPSMSLDsets"
 
 [project.entry-points."geoslurp.viewfactories"]
 graceview = "geoslurp.plugins.views.graceviews:getGRACEviews"

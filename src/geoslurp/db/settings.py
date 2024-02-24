@@ -52,11 +52,11 @@ def stripPasswords(d):
     for serv,dsub in d.items():
         # print(serv)
         for ky,v in dsub.items():
-            if ky == "passw" or ky == "oauthtoken":
+            if ky in ["passw","oauthtoken","apikey"]:
                 d[serv][ky]="*****"
     return d
 
-Credentials=namedtuple("Credentials","user passw alias oauthtoken url ftptls trusted")
+Credentials=namedtuple("Credentials","user passw alias oauthtoken apikey url ftptls trusted")
 """A named tuple to store authentication credentials
 
 Attributes:
@@ -64,6 +64,7 @@ Attributes:
     alias (str): (obligatory) The short name of this service
     passw (str): The password associated with the username
     oauthtoken (str): An oauth2 token
+    apikey (str): a API key for webservices
     url (str): The root url which is linked to this service
     ftptls(bool): Use Explicit ftp over tls for this host and user
     trusted(bool): Allow forwarding password and username
@@ -185,8 +186,8 @@ class Settings():
                 
             creddict={"alias":service}
             for key in qryfields:
-                if key == "passw":
-                    val=getpass.getpass(prompt='Please enter passw for authentication service %s\n'%service)
+                if key in ["passw","oauthtoken","apikey"]:
+                    val=getpass.getpass(prompt=f'Please enter {key} for authentication service %s\n'%service)
                 else:
                     val=input('Please enter %s for authentication service %s\n'%(key,service))
                 creddict[key]=val

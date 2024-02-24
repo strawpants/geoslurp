@@ -318,9 +318,14 @@ class DataSet(ABC):
 
     def createTable(self,cols=None,session=None):
         """dynamically creates a table (when it does not exists) from a list of colums"""
+        if not self.db.schemaexists(self.schema):
+            self.db.CreateSchema(self.schema)
+        
         if self.table == None:
             if cols == None:
                 raise RuntimeError("Creating a dynamic table requires the specification of columns")
+
+            
 
             self.table=Table(self.name, self.db.mdata, *cols, schema=self.schema,extend_existing=True)
             self.table.create(bind=self.db.dbeng,checkfirst=True)

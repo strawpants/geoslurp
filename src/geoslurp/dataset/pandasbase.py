@@ -85,15 +85,15 @@ class PandasBase(DataSet):
                 np.dtype(float):Float,dict:JSON,
                 np.int64:BIGINT,
                 float:Float,np.float64:Float,
-                "string": String, "integer": Integer, 
+                "string": String, "integer": BIGINT, 
                 "floating":Float,
                 xr.DataArray:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path,append_dim=self.xrappend_dim),
                 xr.Dataset:OutDBZarrType(defaultZstore=self.outdbArchiveName(),modifyUri=self.conf.generalize_path,append_dim=self.xrappend_dim),
                 "datetime64":DateTime,
-                np.dtype('<M8[ns]'):datetime64Type}
+                np.dtype('<M8[ns]'):datetime64Type,
+                np.dtype('<M8[ms]'):datetime64Type}
         cols = [Column('id', Integer, primary_key=True)]
-         
-        for name,col in df.iteritems():
+        for name,col in df.items():
             if name == "id":
                 #already added
                 continue
@@ -166,7 +166,7 @@ class PandasBase(DataSet):
 
         indf=self.modify_df(indf)
         
-        slurplog.info("Filling pandas table %s.%s" % (self.scheme, self.name))
+        slurplog.info("Filling pandas table %s.%s" % (self.schema, self.name))
         
         self.registerInDatabase(indf)
 
