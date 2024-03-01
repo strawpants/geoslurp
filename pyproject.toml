@@ -36,7 +36,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Development Status :: 5 - Production/Stable"
 ]
-dependencies = [ "pandas >= 2.0", "pyaml >= 23.9.0", "scipy", "xarray >= 2023.1.0",
+dependencies = [ "pandas >= 2.0", "pyaml >= 23.9.0", "scipy", "xarray >= 2023.1.0", "numpy",
 "importlib_metadata","requests","SQLALchemy>=2.0","pycurl","keyring","psycopg2","GeoAlchemy2","geopandas","rasterio","gdal","netCDF4","lxml"]
 
 [project.optional-dependencies]
