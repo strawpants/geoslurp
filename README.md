@@ -11,4 +11,10 @@ The geoslurp module itself is a pure python module, which acts as a client. For 
 
 
 
+## TODO for release v3
+
+* Fix doc generation and move to readthedocs
+* Renew links to docs and static images
+* check and fix github actions
+* Add change log to this README
 
