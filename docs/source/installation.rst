@@ -6,7 +6,7 @@ Installation of the geoslurp package and setting up the PostgreSQL instance
 
 Geoslurp will only function when a PostGIS enabled database server is reachable. The python module geoslurp can be considered as a client and does not require the installation of a PostGreSQL database on the client machine itself. In this way, several hosts, with geoslurp installed as clients, can access the same database and data storage location, as indicated in the diagram below.
 
-.. image:: graphics/geoslurp_network.svg
+.. image:: _static/geoslurp_network.svg
    :width: 600
 
 Installation of the geoslurp package
