@@ -190,7 +190,7 @@ class UriBase():
 
     def updateModTime(self):
         """Tries to retrieve the last modification time of a file
-        Note: his is often not supported by the server"""
+        Note: this is often not supported by the server"""
         crl=pycurl.Curl()
         crl.setopt(pycurl.URL,self.url)
         #note: not all servers support this query with NOBODY set to 1
@@ -258,7 +258,8 @@ class UriFile(UriBase):
             #Lets set lastmod straight away if the file exists
             if os.path.exists(url) and not lastmod:
                 self.updateModTime()
-            
+            elif not os.path.exists(url) and not lastmod:
+                self.lastmod=datetime.min
 
         def updateModTime(self):
             self.lastmod = datetime.fromtimestamp(os.path.getmtime(self.url))

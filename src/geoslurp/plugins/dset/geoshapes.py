@@ -72,7 +72,6 @@ def getGeoshapesDsets(conf):
     return out
 
 
-# geoslurpCatalogue.addDatasetFactory(getGeoshapesDsets)
 
 
 

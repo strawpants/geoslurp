@@ -24,7 +24,7 @@ from geoslurp.db import Inventory,Settings
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime,timedelta
 from sqlalchemy import Table,Column,Integer,String
-from sqlalchemy.dialects.postgresql import TIMESTAMP
+from sqlalchemy.dialects.postgresql import TIMESTAMP,insert
 from geoslurp.datapull import UriFile
 from sqlalchemy import and_
 from geoslurp.db.settings import getCreateDir
@@ -306,6 +306,14 @@ class DataSet(ABC):
             self.commitCounter=0
         else:
             self.commitCounter+=1
+    
+    def upsertEntry(self,metadict,index_elements):
+        if self.stripuri and "uri" in metadict:
+            metadict["uri"]=self.conf.generalize_path(metadict["uri"])
+        insert_stmt=insert(self.table).values(**metadict)
+        do_update_stmt=insert_stmt.on_conflict_do_update(index_elements=index_elements,set_=self.table.__table__.c)
+        self._ses.execute(do_update_stmt)
+        self._ses.commit()
 
     def bulkInsert(self,dictlist):
         """Insert a  list of dicts in bulk mode"""

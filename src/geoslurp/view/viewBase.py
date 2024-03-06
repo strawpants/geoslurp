@@ -81,4 +81,5 @@ class TView:
         """can be overridden to properly clean up an aborted operation"""
         pass
 
-
+    def exists(self):
+        return self.db.tableExists(self.svname())

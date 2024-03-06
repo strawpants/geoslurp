@@ -152,7 +152,6 @@ class OGRBase(DataSet):
 
         else:
             shpf=gdal.OpenEx(self.ogrfile,0)
-        
         count=0
         for ithlayer in range(shpf.GetLayerCount()):
             shpflayer=shpf.GetLayer(ithlayer)
@@ -175,7 +174,6 @@ class OGRBase(DataSet):
                     cols=self.columnsFromOgrFeat(feat)
                     self.createTable(cols)
                 values=self.valuesFromOgrFeat(feat,transform)
-                # import pdb;pdb.set_trace()
                 try:
                     self.addEntry(values)
                 except:
