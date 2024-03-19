@@ -102,15 +102,15 @@ jobs:
         #gh release upload
         #'${{ github.ref_name }}' dist/**
         #--repo '${{ github.repository }}'
-  publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
+  publish-to-pypi:
+    name: Publish Python 🐍 distribution 📦 to PyPI
     needs:
     - build
     runs-on: ubuntu-latest
 
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/geoslurp
+      name: pypi
+      url: https://pypi.org/p/geoslurp
 
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
@@ -124,4 +124,4 @@ jobs:
     - name: Publish distribution 📦 to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        repository-url: https://test.pypi.org/legacy/
+        repository-url: https://upload.pypi.org
