@@ -50,7 +50,7 @@ geoslurper = "geoslurp.cli.geoslurper:main"
 
 [project.urls]
 "Homepage" = "https://github.com/strawpants/geoslurp/"
-"Bug Tracker" = "https://github.com/strawpants/geoslurp/"
+"Bug Tracker" = "https://github.com/strawpants/geoslurp/issues"
 
 
 # Entry points of datsets, view and functions which are provided along the geoslurp package
