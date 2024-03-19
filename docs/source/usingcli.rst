@@ -7,46 +7,45 @@ Getting info and help
 ---------------------
 List the available help options on the command line::
 
-        geoslurper.py --help
+        geoslurper --help
 
-To get detailed help on the *pull* and *register* method of a certain dataset (some datasets may require specialized command line arguments here). One can combine the *help* option with the *-d* dataset option::
+To get detailed help on the *pull* and *register* method of a certain dataset (some datasets may require specialized command line arguments here). One can combine the *help* option with a dataset::
 
-    geoslurper.py --help -d altim.Duacs
+    geoslurper --help altim.Duacs
+
+A dataset should be specified in the form SCHEMA.DATASET
 
 To list available datasets which are contained in the cached catalogue::
 
-   geoslurper.py --list
+   geoslurper --list
 
 To retrieve registration info on the current database holdings::
 
-   geoslurper.py --info
+   geoslurper --info
 
 Show the user's settings as stored in the database::
 
-    geoslurper.py --show-config
+    geoslurper --show-config
 
 Administrative tasks
 --------------------
 
-Whenever new dataset classes are added to the geoslurp/geoslurp/dataset or the user's plugin path (usersettings variable `userplugins`) one should explicitly refresh the dataset catalogue::
-
-    geoslurper.py --refresh
 
 Default settings( available for all users, unless individually overruled) can be added to the database by users who have sufficient privileges. The option expects JSON arguments to specify the settings::
 
-    geoslurper.py --admin-config '{"userplugins":"/home/geoslurp/geoslurpplugins"}'
+    geoslurper --admin-config '{"userplugins":"/home/geoslurp/geoslurpplugins"}'
 
 User settings can also be added by providing JSON arguments::
 
-    geoslurper.py --config '{"userplugins":"/home/roelof/customplugins"}'
+    geoslurper --config '{"userplugins":"/home/roelof/customplugins"}'
 
 Register authentication details for a specific service alias. For example for the copernicus Marine service one can specify::
 
-    geoslurper.py --auth-config '{"cmems": {"user": "yourusername", "passw": "yoursupersecretpassword"}}'
+    geoslurper --auth-config '{"cmems": {"user": "yourusername", "passw": "yoursupersecretpassword"}}'
 
 Another example, needed for repetitive crawling of github repo's::
 
-    geoslurper.py --auth-config '{"github": {"oauth": "OAUTHAPIKEY"}}'
+    geoslurper --auth-config '{"github": {"oauth": "OAUTHAPIKEY"}}'
 
 
 Dataset Management
@@ -55,18 +54,30 @@ Datasets can be explicitly described by using the *-d* option in the form of *sc
 
 To download the data needed for a specific dataset::
 
-    geoslurper.py --pull -d oceanobs.Orsifronts
+    geoslurper --pull oceanobs.Orsifronts
 
 To delete the data belonging to a certain dataset::
 
-    geoslurper.py --purge-data -d oceanobs.Orsifronts
+    geoslurper --purge-data oceanobs.Orsifronts
 
 To register a certain dataset in the database::
 
-    geoslurper.py --register -d oceanobs.Orsifronts
+    geoslurper --register oceanobs.Orsifronts
 
 To delete the database tables associated with the database::
 
-    geoslurper.py --purge-entry -d oceanobs.Orsifronts
+    geoslurper --purge-entry oceanobs.Orsifronts
+
+View management
+---------------
+TBD
+
+Database Function Management
+----------------------------
+TBD
+
+
+
+
 
 

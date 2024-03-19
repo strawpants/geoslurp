@@ -4,6 +4,6 @@ Reference Documentation
 .. toctree::
    tableconventions
    clitools
-   reference/geoslurp
+   references/geoslurp.rst
 
 

@@ -16,7 +16,7 @@ author = 'Roelof Rietbroek'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 
-extensions = ['nbsphinx', 'sphinxcontrib.apidoc', 'sphinx.ext.autodoc','sphinx.ext.napoleon']
+extensions = ['nbsphinx', 'sphinxcontrib.apidoc', 'sphinx.ext.autodoc','sphinx.ext.napoleon','sphinxcontrib.autoprogram']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store','**.ipynb_checkpoints']
@@ -30,6 +30,8 @@ apidoc_output_dir = 'references'
 apidoc_separate_modules = False
 apidoc_module_first=True
 apidoc_toc_file=False
+
+autodoc_mock_imports = ["cdsapi","motu_utils"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

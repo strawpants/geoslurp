@@ -5,5 +5,5 @@ Command line tools
 
 .. _geoslurphelp:
 
-.. autoprogram:: clitools.geoslurper:addCommandLineArgs()
-   :prog: clitools/geoslurper.py
+.. autoprogram:: geoslurp.cli.geoslurper:addCommandLineArgs()
+   :prog: geoslurper

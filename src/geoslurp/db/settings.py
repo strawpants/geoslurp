@@ -59,7 +59,7 @@ def stripPasswords(d):
 Credentials=namedtuple("Credentials","user passw alias oauthtoken apikey url ftptls trusted")
 """A named tuple to store authentication credentials
 
-Attributes:
+Parameters:
     user (str): Username for the service
     alias (str): (obligatory) The short name of this service
     passw (str): The password associated with the username
