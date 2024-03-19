@@ -1,4 +1,8 @@
 # Download and manage datasets in a PostGreSQL database with the PostGIS
+
+[![Build and Publish](https://github.com/strawpants/geoslurp/actions/workflows/python-publish.yml/badge.svg)](https://github.com/strawpants/geoslurp/actions/workflows/python-publish.yml)
+[![PyPI version](https://badge.fury.io/py/geoslurp.svg)](https://badge.fury.io/py/geoslurp)
+[![Documentation Status](https://readthedocs.org/projects/geoslurp/badge/?version=latest)](https://geoslurp.wobbly.earth/latest/?badge=latest)
 The idea is that this tool contains script to download (i.e. **slurp**) commonly used datasets and to register them in a postgresql+postgis database. This database can then be queried allowing the retrieval of the relevant data or datafiles. 
 
 The main documentation lives at [geoslurp.wobbly.earth](https://geoslurp.wobbly.earth)
