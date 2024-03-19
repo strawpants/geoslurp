@@ -9,8 +9,12 @@ The geoslurp module itself is a pure python module, which acts as a client. For 
 
 ![Image of geoslurp clients versus database server](docs/source/_static/geoslurp_network.svg)
 
-## Change log
-* Use python entry points to register
+## Change log V3
+* Use python entry points to register datasets, views and functions (removes registration of user plugin directories)
+* Move documentation to [https://readthedocs.org](https://geoslurp.wobbly.earth)
+* Change github actions to pusblish and then release
+* Work with SQAlchemy 2
+* more (see commit messages)
 
 ## TODO's
 * Move remaining 'orphaned' datasets to suitable python packages modules or include in the main package
