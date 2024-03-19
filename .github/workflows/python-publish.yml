@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish geoslurp 📦 to PyPI 
+name: Build and Publish 
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: "3.x"
     - name: Install pypa/build
@@ -36,7 +36,7 @@ jobs:
     - name: Build a source tarball
       run: python3 -m build -s
     - name: Store the distribution packages
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: python-package-distributions
         path: dist/
@@ -54,7 +54,7 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
     - name: Download all the dists
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: python-package-distributions
         path: dist/
@@ -75,17 +75,17 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for sigstore
 
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Sign the dists with Sigstore
-      uses: sigstore/gh-action-sigstore-python@v1.2.3
-      with:
-        inputs: >-
-          ./dist/*.tar.gz
-          ./dist/*.whl
+    #- name: Download all the dists
+      #uses: actions/download-artifact@v4
+      #with:
+        #name: python-package-distributions
+        #path: dist/
+    #- name: Sign the dists with Sigstore
+      #uses: sigstore/gh-action-sigstore-python@v1.2.3
+      #with:
+        #inputs: >-
+          #./dist/*.tar.gz
+          #./dist/*.whl
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
@@ -94,13 +94,13 @@ jobs:
         '${{ github.ref_name }}'
         --repo '${{ github.repository }}'
         --notes ""
-    - name: Upload artifact signatures to GitHub Release
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      # Upload to GitHub Release using the `gh` CLI.
-      # `dist/` contains the built packages, and the
-      # sigstore-produced signatures and certificates.
-      run: >-
-        gh release upload
-        '${{ github.ref_name }}' dist/**
-        --repo '${{ github.repository }}'
+    #- name: Upload artifact signatures to GitHub Release
+      #env:
+        #GITHUB_TOKEN: ${{ github.token }}
+      ## Upload to GitHub Release using the `gh` CLI.
+      ## `dist/` contains the built packages, and the
+      ## sigstore-produced signatures and certificates.
+      #run: >-
+        #gh release upload
+        #'${{ github.ref_name }}' dist/**
+        #--repo '${{ github.repository }}'
