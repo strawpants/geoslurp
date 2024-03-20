@@ -53,6 +53,16 @@ class DatasetCatalogue:
             facfunc=entry.load()
             for dset in facfunc(conf):
                 self.__dscache__[dset.stname()]=dset
+        
+        #also directly load datasets (statically created)
+        dsetgrp="geoslurp.dsets"
+        epsdsets=entry_points(group=dsetgrp)
+        for entry in epsdsets:
+            #expand the dataset and register them
+            dset=entry.load()
+            self.__dscache__[dset.stname()]=dset
+
+
         self.__dsplugsloaded__=True
     
     def loadViewPlugins(self):
@@ -108,7 +118,8 @@ class DatasetCatalogue:
         if name in self.__dscache__:
             return self.__dscache__[name]
         else:
-            raise KeyError(f"Dataset {name} not found")
+            schema=name.split(".")[0]
+            raise KeyError(f"Dataset {name} not found (is the associated module '{schema}' installed?)")
 
         
     def getDFuncClass(self,conf,name):

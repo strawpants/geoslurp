@@ -84,7 +84,7 @@ class DataSet(ABC):
         self._ses=self.db.Session()
         invent=Inventory(self.db)
         try:
-            self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.schema ).filter(invent.table.dataset == self.name).one()
+            self._dbinvent=invent[self.stname()]
             #possibly migrate table
             self.migrate(self._dbinvent.version)
         except NoResultFound:
