@@ -142,7 +142,7 @@ class GeoslurpConnector(GeoslurpConnectorBase):
     def dropTable(self, tablename, schema=None):
         table=tname(tablename,schema)
         with self.dbeng.connect() as conn: 
-            conn.execute(text(f'DROP TABLE IF EXISTS {table};'))
+            conn.execute(text(f'DROP TABLE IF EXISTS {table} CASCADE;'))
             conn.commit()
 
     def tableExists(self,tablename):
