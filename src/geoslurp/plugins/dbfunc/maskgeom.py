@@ -4,7 +4,7 @@ from geoslurp.dbfunc.dbfunc import DBFunc
 class gs_maskgeom(DBFunc):
     """Registers a plpython function which returns a raster made from a geometry"""
     language="plpgsql"
-    inargs=["geom geometry, pixsize numeric, gridreg boolean=false"]
+    inargs=["geom geometry, pixsize numeric, gridreg boolean=false, touched boolean=true"]
     outargs="raster"
     pgbody=["DECLARE\n"\
             "shft float;\n"\
@@ -14,11 +14,11 @@ class gs_maskgeom(DBFunc):
             "ELSE\n"\
             "shft=pixsize/2;\n"\
             "END IF;\n"\
-           "\tRETURN ST_AsRaster(geom,pixsize,-pixsize,shft,shft, '8BUI');\n"\
+           "\tRETURN ST_Union(ST_AsRaster(geom,pixsize,-pixsize,shft,shft, '8BUI', touched => touched)) as rast;\n"\
             "END"]
 
     #other overload (using a geograpical extent and pixel size)
-    inargs.append("geom geometry,west numeric,east numeric,south numeric,north numeric, pixsize numeric")
+    inargs.append("geom geometry,west numeric,east numeric,south numeric,north numeric, pixsize numeric, touched boolean=true")
     pgbody.append("DECLARE\n"\
             "refrast raster;\n"\
             "maskrast raster;\n"\
@@ -29,7 +29,7 @@ class gs_maskgeom(DBFunc):
             "height=floor((north-south)/pixsize);\n"
             "refrast=ST_MakeEmptyRaster(width, height, west, north, pixsize);\n"
             "refrast=ST_addband(refrast,'8BUI'::text,0.0);\n"
-            "maskrast=ST_asRaster(geom,refrast,'8BUI');\n"
+            "maskrast=ST_asRaster(geom,refrast,'8BUI',touched=>touched);\n"
             "\tRETURN ST_Union(rast) as rast from refrast,maskrast;\n"\
             "END")
 

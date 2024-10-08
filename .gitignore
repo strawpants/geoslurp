@@ -7,3 +7,4 @@ build
 *.pyc
 *.gpg
 .ipynb_checkpoints
+pygeoslurp

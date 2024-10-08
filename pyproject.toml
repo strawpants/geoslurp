@@ -58,6 +58,8 @@ geoslurper = "geoslurp.cli.geoslurper:main"
 [project.entry-points."geoslurp.dsetfactories"]
 geoshapes = "geoslurp.plugins.dset.geoshapes:getGeoshapesDsets"
 grdcsets = "geoslurp.plugins.dset.grdc:getGRDCDsets"
+naturalearth = "geoslurp.plugins.dset.naturalearth:getNaturalEarthDsets"
+oceansub = "geoslurp.plugins.dset.ne_ocean_fast:getOceanFastDsets"
 #psmsl = "geoslurp.plugins.dset.PSMSL:getPSMSLDsets"
 
 [project.entry-points."geoslurp.viewfactories"]

@@ -38,10 +38,10 @@ class DatasetCatalogue:
     __vwplugsloaded__=False
     def __init__(self):
         pass
-
-    def loadDatasetPlugins(self,conf):
+    @classmethod
+    def loadDatasetPlugins(cls,conf):
         """Adds news datasets, through the entry_points functionality"""
-        if self.__dsplugsloaded__:
+        if cls.__dsplugsloaded__:
             #no need to redo this
             return
             
@@ -52,7 +52,7 @@ class DatasetCatalogue:
             #expand the datasets in the factory and register them
             facfunc=entry.load()
             for dset in facfunc(conf):
-                self.__dscache__[dset.stname()]=dset
+                cls.__dscache__[dset.stname()]=dset
         
         #also directly load datasets (statically created)
         dsetgrp="geoslurp.dsets"
@@ -60,10 +60,8 @@ class DatasetCatalogue:
         for entry in epsdsets:
             #expand the dataset and register them
             dset=entry.load()
-            self.__dscache__[dset.stname()]=dset
-
-
-        self.__dsplugsloaded__=True
+            cls.__dscache__[dset.stname()]=dset
+        cls.__dsplugsloaded__=True
     
     def loadViewPlugins(self):
         """Add news views, through the entry_points functionality"""
@@ -97,10 +95,10 @@ class DatasetCatalogue:
         
         self.__dbfuncplugsloaded__=True
         
-
-    def listDataSets(self,conf):
-        self.loadDatasetPlugins(conf)
-        return self.__dscache__.keys()
+    @classmethod
+    def listDataSets(cls,conf):
+        cls.loadDatasetPlugins(conf)
+        return cls.__dscache__.keys()
 
     def listFunctions(self,conf):
         self.loadDbfuncPlugins()

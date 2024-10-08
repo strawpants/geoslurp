@@ -21,7 +21,6 @@ from geoslurp.datapull.github import Crawler as ghCrawler
 from geoslurp.datapull.github import GithubFilter as ghfilter
 from geoslurp.datapull.github import cachedGithubCatalogue
 
-from geoslurp.config.catalogue import geoslurpCatalogue
 import json
 from zipfile import ZipFile
 import os
@@ -32,7 +31,7 @@ class NaturalEarthBase(OGRBase):
     """Base class for  a Natural Earth dataset (downloads from github) """
     url=None
     path=None
-    scheme='globalgis'
+    schema='natearth'
     version=(4,1,0)
     swapxy=True
     def __init__(self,dbconn):
@@ -48,6 +47,9 @@ class NaturalEarthBase(OGRBase):
 
 def NaturalEarthClassFactory(clsName,catentry):
     return type(clsName, (NaturalEarthBase,), {"url":catentry["url"],"path":catentry["path"]})
+
+
+
 
 def getNaturalEarthDsets(conf):
     """retrieves the available natural earth datasets"""
@@ -74,7 +76,6 @@ def getNaturalEarthDsets(conf):
     return out
 
 
-geoslurpCatalogue.addDatasetFactory(getNaturalEarthDsets)
 
 
 

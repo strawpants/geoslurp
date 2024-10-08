@@ -19,7 +19,7 @@ from abc import ABC, abstractmethod
 import os
 from geoslurp.config.slurplogger import slurplogger
 from geoslurp.db import Inventory,Settings
-
+import re
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import text
 from sqlalchemy.sql import func
@@ -52,12 +52,12 @@ class DBFunc(ABC):
         self._ses=self.db.Session()
         invent=Inventory(self.db)
         try:
-            self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.scheme ).filter(invent.table.pgfunc == self.name).one()
+            self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.schema ).filter(invent.table.pgfunc == self.name).one()
         except NoResultFound:
             #possibly create a schema
-            self.db.CreateSchema(self.scheme)
+            self.db.CreateSchema(self.schema)
             #set defaults for the  inventory
-            self._dbinvent = invent.table(scheme=self.scheme, pgfunc=self.name,
+            self._dbinvent = invent.table(scheme=self.schema, pgfunc=self.name,
                     version=self.version, updatefreq=self.updatefreq,data={}, 
                     lastupdate=datetime.min, owner=self.db.user)
             #add the default entry to the database
@@ -77,12 +77,16 @@ class DBFunc(ABC):
 
     def purgeentry(self):
         """Delete pgfunction entry in the database"""
-        slurplogger().info("Deleting %s function entry"%(self.name))
         self._ses.delete(self._dbinvent)
+        #extract the argument types
+        for iarg in self.inargs:
+            saniarg=re.sub(r'\s*,\s+',',',iarg).split(",")
+            atypes=",".join([re.search(r'\S+\s+([a-zA-Z0-9]+)[,=$]?',sa).group(1) for sa in saniarg])
+            
+            dropexec=text(f"DROP FUNCTION IF EXISTS {self.schema}.{self.name}({atypes})")
+            slurplogger().info(f"Deleting {dropexec.text} function entry")
+            self._ses.execute(dropexec) 
         self._ses.commit()
-        
-        dropexec=text("DROP FUNCTION IF EXISTS %s.%s;"%(self.scheme,self.name))
-        self.db.dbeng.execute(dropexec) 
     def register(self):
         #iterate over overloaded functions
         if type(self.inargs) == list and type(self.pgbody) == list:
@@ -101,4 +105,5 @@ class DBFunc(ABC):
         pgheader="CREATE OR REPLACE FUNCTION %s(%s) RETURNS %s AS $dbff$\n"%(self.name,inargs,self.outargs)
         pgfooter=";\n$dbff$ LANGUAGE %s;"%(self.language)
         # print(str(pgheader+pgbody+pgfooter))
-        self.db.dbeng.execute(text(pgheader+pgbody+pgfooter)) 
+        self._ses.execute(text(pgheader+pgbody+pgfooter)) 
+        self._ses.commit()

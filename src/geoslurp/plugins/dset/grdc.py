@@ -264,7 +264,6 @@ def getGRDCDsets(conf):
             view=grdc_stations_monthly
         else:
             view=grdc_stations_daily
-
         qtable=type(clsName +"Table", (grdcTBase,), {})
         grdcdset.append(type(clsName, (grdc_DSBase,), {"table":qtable,"view":view}))
     

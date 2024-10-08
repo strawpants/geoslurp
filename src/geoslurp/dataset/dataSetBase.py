@@ -64,7 +64,7 @@ class DataSet(ABC):
     updatefreq=None
     commitperN=500
     stripuri=False
-    
+
     @classmethod
     def stname(cls):
         return cls.schema+"."+cls.__name__.lower().replace("-","_")
@@ -86,7 +86,8 @@ class DataSet(ABC):
         try:
             self._dbinvent=invent[self.stname()]
             #possibly migrate table
-            self.migrate(self._dbinvent.version)
+            migrated=self.migrate(self._dbinvent.version)
+            self.exists=True
         except NoResultFound:
             #possibly create a schema
             self.db.CreateSchema(self.schema)
@@ -97,6 +98,7 @@ class DataSet(ABC):
             #add the default entry to the database
             self._ses.add(self._dbinvent)
             self._ses.commit()
+            self.exists=False
         #load user settings
         self.conf=Settings(self.db)
         
@@ -160,6 +162,7 @@ class DataSet(ABC):
     def setCacheDir(self,cdir):
         self._dbinvent.cache=cdir
         self.updateInvent(False)
+    
 
     @abstractmethod
     def pull(self):
@@ -359,7 +362,8 @@ class DataSet(ABC):
             raise RuntimeError("No migration implemented")
         if version > self.version:
             raise RuntimeError("Registered database has a higher version number than supported")
-    
+        return False #no migration took place
+
     def export(self,outputfile):
         """Export the table to a different format"""
         qry=f"SELECT * FROM {self.schema}.{self.name};"

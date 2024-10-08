@@ -9,3 +9,4 @@ All operations which are supported by the command line tool can also be performe
    CreateDynDSet
    BasicDiscovery
    export2Portable
+   OceanFunction

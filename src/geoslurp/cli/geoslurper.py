@@ -137,6 +137,7 @@ def main():
         conf.defaultupdate(args.admin_config)
 
     if args.auth_config:
+        # import pdb;pdb.set_trace()
         for alias,dvals in args.auth_config.items():
             if dvals == "delete":
                 conf.delAuth(alias)
