@@ -65,7 +65,8 @@ def cfadd_global(ds,title=None,comment="Auto generated",references="",source=Non
     ds.attrs['comment'] = comment
     if crs:
         crs=CRS(crs)
-        ds.attrs['spatial_ref']=crs.to_cf()
+        ds.coords['spatial_ref'] = 0
+        ds.coords['spatial_ref'].attrs=crs.to_cf()
 
 
 def cfadd_standard_name(dsvar,standard_name,units=None,long_name=None):
