@@ -25,18 +25,17 @@ from geoalchemy2.elements import WKBElement
 from geoslurp.datapull.http import Uri as http
 from datetime import datetime
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.config.catalogue import geoslurpCatalogue
 from osgeo import ogr
 import gzip as gz
 import os
 import re
 
-scheme='cryo'
+schema='cryo'
 
 
 geoPolyType = Geography(geometry_type="POLYGON", srid='4326', spatial_index=True,dimension=2)
 
-@as_declarative(metadata=MetaData(schema=scheme))
+@as_declarative(metadata=MetaData(schema=schema))
 class draindivTBase(object):
     @declared_attr
     def __tablename__(cls):
@@ -52,7 +51,7 @@ def IceSatPolygons(fname):
     if not os.path.exists(fname):
         raise FileNotFoundError("Drainage divide file  %s not found is the data pulled?"%fname)
 
-    if re.search("Ant_.+Polygons.txt",fname):
+    if re.search("ant_.+polygons.txt",fname):
         idx=[2,1,0]
     else:
         idx=[0,2,1]
@@ -88,16 +87,17 @@ def IceSatPolygons(fname):
 class IceSatDDivBase(DataSet):
     """Icesat Drainage divide table base"""
     version=(0,0,0)
-    scheme=scheme
+    schema=schema
     def __init__(self,dbcon):
         super().__init__(dbcon)
         self.table.metadata.create_all(self.db.dbeng, checkfirst=True)
-        self._dbinvent.data={"citation":"Zwally, H. Jay, Mario B. Giovinetto, Matthew A. Beckley, and Jack L. Saba, 2012, Antarctic and Greenland Drainage Systems, GSFC Cryospheric Sciences Laboratory, at http://icesat4.gsfc.nasa.gov/cryo_data/ant_grn_drainage_systems.php. "}
-        self.setCacheDir(self.conf.getCacheDir(self.scheme,'Icesat_Draindiv'))
+        self._dbinvent.data={"citation":"Zwally, H. Jay, Mario B. Giovinetto, Matthew A. Beckley, and Jack L. Saba, 2012, Antarctic and Greenland Drainage Systems, GSFC Cryospheric Sciences Laboratory, at https://earth.gsfc.nasa.gov/cryo/data/polar-altimetry/antarctic-and-greenland-drainage-systems"}
+        self.setCacheDir(self.conf.getCacheDir(self.schema,'Icesat_Draindiv'))
 
     def pull(self):
         """Download ascii file"""
-        httpserv=http(os.path.join('https://icesat4.gsfc.nasa.gov/cryo_data/drainage_divides/',self.fbase),lastmod=datetime(2020,1,10))
+        rooturl="https://earth.gsfc.nasa.gov/sites/default/files/lab_cryo/data/polar_ice_altimetry/antarctic_and_greenland_drainage_systems/"
+        httpserv=http(os.path.join(rooturl,self.fbase),lastmod=datetime(2020,1,10))
         uri,upd=httpserv.download(self.cacheDir(),check=True,gzip=True)
 
     def register(self):
@@ -122,11 +122,9 @@ def DrainDivClassFactory(clsName,fbase):
 
 
 def getDrainDivDsets(conf):
-    clslookup={"antarc_ddiv_icesat":"Ant_Full_DrainageSystem_Polygons.txt","green_ddiv_icesat":"GrnDrainageSystems_Ekholm.txt","antarc_ddiv_icesat_grnd":"Ant_Grounded_DrainageSystem_Polygons.txt"}
+    clslookup={"antarc_ddiv_icesat":"ant_full_drainagesystem_polygons.txt","green_ddiv_icesat":"grndrainagesystems_ekholm.txt","antarc_ddiv_icesat_grnd":"ant_grounded_drainagesystem_polygons.txt"}
     out=[]
     for clsName,fbase in clslookup.items():
         out.append(DrainDivClassFactory(clsName,fbase))
     return out
 
-
-geoslurpCatalogue.addDatasetFactory(getDrainDivDsets)

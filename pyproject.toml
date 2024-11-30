@@ -60,6 +60,7 @@ geoshapes = "geoslurp.plugins.dset.geoshapes:getGeoshapesDsets"
 grdcsets = "geoslurp.plugins.dset.grdc:getGRDCDsets"
 naturalearth = "geoslurp.plugins.dset.naturalearth:getNaturalEarthDsets"
 oceansub = "geoslurp.plugins.dset.ne_ocean_fast:getOceanFastDsets"
+icedraindiv = "geoslurp.plugins.dset.icedraindiv:getDrainDivDsets"
 #psmsl = "geoslurp.plugins.dset.PSMSL:getPSMSLDsets"
 
 [project.entry-points."geoslurp.viewfactories"]
