@@ -18,7 +18,7 @@ from geoslurp.config.localsettings import readLocalSettings,settingsArgs
 from geoslurp.db.connector import GeoslurpConnector
 
 
-def geoslurpConnect(args=None,readonly_user=True,update=False,local_settings=None,dbalias=None):
+def geoslurpConnect(args=None,readonly_user=True,local_settings=None,dbalias=None):
     """Convenience wrapper to start a connection with a geoslurpdatabase. Returns a database connection while taking use of stored settings from the users 
     configuration file ($HOME/.geoslurp_lastused.yaml).
     :param args: Class which encapsulates different connection parameters

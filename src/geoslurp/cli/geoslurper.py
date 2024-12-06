@@ -14,7 +14,7 @@
 # License along with Frommle; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
+# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018 -2024
 
 #Command line program to Download and manage Earth science data
 
