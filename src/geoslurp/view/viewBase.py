@@ -41,7 +41,7 @@ class TView:
 
         #Initiate a session for keeping track of the inventory entry
         self._ses=self.db.Session()
-        invent=Inventory(self.db)
+        invent=Inventory(self.db,ses=self._ses)
         try:
             self._dbinvent=self._ses.query(invent.table).filter(invent.table.scheme == self.schema ).filter(invent.table.view == self.name).one()
         except NoResultFound:

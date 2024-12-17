@@ -82,7 +82,7 @@ class DataSet(ABC):
 
         #Initiate a session for keeping track of the inventory entry
         self._ses=self.db.Session()
-        invent=Inventory(self.db)
+        invent=Inventory(self.db,ses=self._ses)
         try:
             self._dbinvent=invent[self.stname()]
             #possibly migrate table
@@ -109,6 +109,7 @@ class DataSet(ABC):
 
 
     def updateInvent(self,updateTime=True):
+        
         if updateTime:
             self._dbinvent.lastupdate=datetime.now()
         self._dbinvent.updatefreq=self.updatefreq
@@ -120,7 +121,8 @@ class DataSet(ABC):
                     if not "customcolumns" in self._dbinvent.data:
                         self._dbinvent.data["customcolumns"]={}
                     self._dbinvent.data["customcolumns"][col.name]={"type":col.type.__repr__(),"class":str(col.type.__class__)}
-
+        breakpoint()
+        self._ses.flush()
         self._ses.commit()
 
     # def info(self):

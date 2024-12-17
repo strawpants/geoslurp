@@ -54,7 +54,6 @@ class PandasBase(DataSet):
 
     def setGeoInfo(self,df):
         """Try to extract srid, geometry type from a geopandas geodataframe"""
-
         if type(df) == gpd.GeoDataFrame:
             srid=df.crs.to_epsg()
             geoname=df.geometry.name
@@ -158,7 +157,8 @@ class PandasBase(DataSet):
             indf=pd.read_csv(self.pdfile,skipfooter=self.skipfooter,encoding=self.encoding)
         elif self.ftype == "excel":
             indf=pd.read_excel(self.pdfile,skipfooter=self.skipfooter,engine="openpyxl")
-
+        elif self.ftype =="GPKG":
+            indf=gpd.read_file(self.pdfile,driver=self.ftype)
         else:
             raise RuntimeError("Don't know how to open %s, specify ftype"%(self.pdfile))
             #possibly modify dataframe in derived class 

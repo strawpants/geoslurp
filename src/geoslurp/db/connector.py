@@ -103,7 +103,7 @@ class GeoslurpConnector(GeoslurpConnectorBase):
         return self.Session().query(qry).scalar()
 
     def dropSchema(self, schema, cascade=False):
-        with self.dbeng.connectio() as conn:
+        with self.dbeng.connect() as conn:
             conn.execute(DropSchema(schema.lower(), cascade=cascade))
             conn.commit()
 

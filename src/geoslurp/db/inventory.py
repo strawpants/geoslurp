@@ -43,13 +43,17 @@ class InventTable(GSBase):
 class Inventory:
     """Class which provides read/write access to the postgresql inventory table"""
     table=InventTable
-    def __init__(self,geoslurpConn):
+    def __init__(self,geoslurpConn,ses=None):
         """
 
         :type geoslurpConn: geoslurp database connector
         """
         self.db=geoslurpConn
-        self._ses=self.db.Session()
+        if ses is not None:
+            self._ses=ses
+        else:
+            #create a new dedicated session
+            self._ses=self.db.Session()
 
         #creates the inventory table if it doesn't exists
         if not geoslurpConn.tableExists(f"{schema}.{self.table.__tablename__}"):
