@@ -24,6 +24,7 @@ import os
 import shutil
 import numpy as np
 import re
+from sqlalchemy import text
 
 @xr.register_dataarray_accessor("gslrp")
 class XarGeoslurp:
@@ -140,22 +141,22 @@ class XarDsAccessor:
         # select all if the table looks like a table name [scheme.]tablename
         if re.search(r'^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)?$',qry):
             #take the whole table
-            qryres=gsconn.dbeng.execute(f"SELECT * FROM {qry}")
-        else:
-            qryres=gsconn.dbeng.execute(qry)
+            qry=f"SELECT * FROM {qry}"
+
+        with gsconn.dbeng.connect() as conn:
+            qryres=conn.execute(text(qry))
         dsout=None
         outofdb=False
         cols=[]
         for row in qryres:
             if dsout is None:
                 #first row
-                
-                indexnames=[ky for ky in row.iterkeys() if ky != xrcol]
-                if "uri" in row[xrcol]:
+                indexnames=[ky for ky in qryres.mappings().keys() if ky != xrcol]
+                if "uri" in row._mapping[xrcol]:
                     outofdb=True
 
                 if outofdb:
-                    zstore=row[xrcol]["uri"]
+                    zstore=row._mapping[xrcol]["uri"]
                     if 'LOCALDATAROOT' in zstore:
                         conf=Settings(gsconn)
                         zstore=conf.get_local_path(zstore)
@@ -165,12 +166,12 @@ class XarDsAccessor:
                         dsout=xr.open_dataset(zstore)
                     #currently assumes all data is in the provided uri
                 else:
-                    dsout=xr.Dataset.from_dict(row[xrcol])
+                    dsout=xr.Dataset.from_dict(row._mapping[xrcol])
             else:
                 if not outofdb:
-                    dsout=xr.concat([dsout,xr.Dataset.from_dict(row[xrcol])],indexnames[0])
+                    dsout=xr.concat([dsout,xr.Dataset.from_dict(row._mapping[xrcol])],indexnames[0])
             #also assemble list of auxialiary columns as a dictionary
-            cols.append({ky:row[ky] for ky in indexnames})
+            cols.append({ky:row._mapping[ky] for ky in indexnames})
         if "time" in dsout and not outofdb:
             #convert time data to np datetime64
             dsout["time"]=[np.datetime64(ts) for ts in dsout.time.data]

@@ -121,7 +121,6 @@ class DataSet(ABC):
                     if not "customcolumns" in self._dbinvent.data:
                         self._dbinvent.data["customcolumns"]={}
                     self._dbinvent.data["customcolumns"][col.name]={"type":col.type.__repr__(),"class":str(col.type.__class__)}
-        breakpoint()
         self._ses.flush()
         self._ses.commit()
 

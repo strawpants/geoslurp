@@ -20,6 +20,7 @@ from geoslurp.config.localsettings import readLocalSettings,settingsArgs
 from geoslurp.db.connector import GeoslurpConnector
 from geoslurp.db import Settings
 from geoslurp.config.catalogue import DatasetCatalogue
+from sqlalchemy import text
 
 class GeoslurpManager:
     def __init__(self,args=None,readonly_user=True,conf_file=None,dbalias=None):
@@ -67,6 +68,12 @@ class GeoslurpManager:
         if self._conf is None:
             self._conf=Settings(self.conn)
         return self._conf
+
+    def execute(self,qry):
+        with self.conn.dbeng.connect() as conn:
+            res=conn.execute(text(qry))
+            conn.commit()
+        return res
 
     def dataset(self,name:str):
         

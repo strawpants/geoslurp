@@ -251,7 +251,7 @@ def main():
     #loop over requested view
     if view is not None:
         #initialize the class
-        dv=dvclass(DbConn)
+        dv=view(DbConn)
 
         if args.register:
             dv.register(**regopts)
