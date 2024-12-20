@@ -40,11 +40,11 @@ class PdAccessor:
         Table.register(df=self._obj)
 
     @staticmethod
-    def load(gsconn,qry,index_col=None):
+    def load(gsconn,qry,index_col=None,geom_col='geometry'):
         """Read a dataframe from a database engine and convert to GeoDataFrame when a geometry column is present"""
         #try reading as spatially aware database (postgis, spatialite)
         try:
-            df=gpd.read_postgis(qry,gsconn.dbeng,index_col=index_col)
+            df=gpd.read_postgis(qry,gsconn.dbeng,index_col=index_col,geom_col=geom_col)
         except: 
             #possible failure when this is not a table which has a geometry column, so try again with reading a non-postgis sql query
             df=pd.read_sql_query(qry,gsconn.dbeng,index_col=index_col)

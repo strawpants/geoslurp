@@ -189,5 +189,8 @@ class GeoslurpConnector(GeoslurpConnectorBase):
 
             conn.commit()
 
-
+    def execute(self,qry):
+        with self.dbeng.connect() as conn:
+            conn.execute(text(qry))
+            conn.commit()
 

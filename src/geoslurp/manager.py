@@ -68,13 +68,10 @@ class GeoslurpManager:
         if self._conf is None:
             self._conf=Settings(self.conn)
         return self._conf
-
+    
     def execute(self,qry):
-        with self.conn.dbeng.connect() as conn:
-            res=conn.execute(text(qry))
-            conn.commit()
-        return res
-
+        self.conn.execute(qry)
+    
     def dataset(self,name:str):
         
         #initialize a dataset class (Note this requires a database connection)
