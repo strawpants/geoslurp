@@ -315,7 +315,7 @@ class DataSet(ABC):
         if self.stripuri and "uri" in metadict:
             metadict["uri"]=self.conf.generalize_path(metadict["uri"])
         insert_stmt=insert(self.table).values(**metadict)
-        do_update_stmt=insert_stmt.on_conflict_do_update(index_elements=index_elements,set_=self.table.__table__.c)
+        do_update_stmt=insert_stmt.on_conflict_do_update(index_elements=index_elements,set_=metadict)
         self._ses.execute(do_update_stmt)
         self._ses.commit()
 
