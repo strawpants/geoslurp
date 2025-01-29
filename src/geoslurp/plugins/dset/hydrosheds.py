@@ -17,6 +17,7 @@
 
 
 from geoslurp.dataset.OGRBase import OGRBase
+from geoslurp.dbfunc.dbfunc import DBFunc
 from geoslurp.datapull.http import Uri as http
 from geoslurp.config.slurplogger import slurplogger
 from zipfile import ZipFile
@@ -71,10 +72,22 @@ def hydrobasinsClassFactory(hytype,lev):
 def getHyBasins(conf):
     out=[]
     for hytype in ["hybas_af","hybas_eu","hybas_ar","hybas_as","hybas_au","hybas_na","hybas_sa","hybas_si","hybas_gr"]:
-        for lev in range(1,7):
+        for lev in range(1,13):
             out.append(hydrobasinsClassFactory(hytype,lev))
 
     return out
 
 
 
+class max_upstream_pfaf_id(DBFunc):
+    """Registers a plpython function which can read a file from the server and return a bytestring"""
+    language="plpython3u"
+    inargs="pfafid bigint"
+    outargs="bigint"
+    pgbody="import re\n"\
+        "match=re.search(r'[2468]{1}',str(pfafid)[:2:-1][1:])\n"\
+        "if match is None:\n"\
+        "   exp=10\n"\
+        "else:\n"\
+        "   exp=10**(match.start()+1)\n"\
+        "return int(pfafid/exp+1)*exp"

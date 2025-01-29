@@ -71,7 +71,7 @@ grdcviews = "geoslurp.plugins.dset.grdc:getGRDCviews"
 [project.entry-points."geoslurp.dbfuncs"]
 maskgeom = "geoslurp.plugins.dbfunc.maskgeom:gs_maskgeom"
 loadfile = "geoslurp.plugins.dbfunc.readfile:readfile"
-
+max_pfaf = "geoslurp.plugins.dset.hydrosheds:max_upstream_pfaf_id"
 
 
 

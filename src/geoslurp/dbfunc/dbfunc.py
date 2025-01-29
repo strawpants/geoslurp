@@ -79,10 +79,14 @@ class DBFunc(ABC):
         """Delete pgfunction entry in the database"""
         self._ses.delete(self._dbinvent)
         #extract the argument types
-        for iarg in self.inargs:
+        if type(self.inargs) == list:
+            iargs=self.inargs
+        else:
+            iargs=[self.inargs]
+
+        for iarg in iargs:
             saniarg=re.sub(r'\s*,\s+',',',iarg).split(",")
             atypes=",".join([re.search(r'\S+\s+([a-zA-Z0-9]+)[,=$]?',sa).group(1) for sa in saniarg])
-            
             dropexec=text(f"DROP FUNCTION IF EXISTS {self.schema}.{self.name}({atypes})")
             slurplogger().info(f"Deleting {dropexec.text} function entry")
             self._ses.execute(dropexec) 
