@@ -24,6 +24,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import text
 from sqlalchemy.sql import func
 from datetime import datetime
+import inspect
 
 class DBFunc(ABC):
     """Abstract Base class which holds a database functione"""
@@ -109,5 +110,5 @@ class DBFunc(ABC):
         pgheader="CREATE OR REPLACE FUNCTION %s(%s) RETURNS %s AS $dbff$\n"%(self.name,inargs,self.outargs)
         pgfooter=";\n$dbff$ LANGUAGE %s;"%(self.language)
         # print(str(pgheader+pgbody+pgfooter))
-        self._ses.execute(text(pgheader+pgbody+pgfooter)) 
+        self._ses.execute(text(pgheader+inspect.cleandoc(pgbody)+pgfooter)) 
         self._ses.commit()

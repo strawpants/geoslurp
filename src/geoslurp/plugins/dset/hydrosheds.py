@@ -24,7 +24,6 @@ from zipfile import ZipFile
 from datetime import datetime
 import os
 
-
 schema="hydrosheds"
 class HydroshedBase(OGRBase):
     """Base class for the shapefiles/geodatabase from the hydrosheds family"""
@@ -82,12 +81,17 @@ def getHyBasins(conf):
 class max_upstream_pfaf_id(DBFunc):
     """Registers a plpython function which can read a file from the server and return a bytestring"""
     language="plpython3u"
-    inargs="pfafid bigint"
+    inargs="pfafid bigint, nignore integer"
     outargs="bigint"
-    pgbody="import re\n"\
-        "match=re.search(r'[2468]{1}',str(pfafid)[:2:-1][1:])\n"\
-        "if match is None:\n"\
-        "   exp=10\n"\
-        "else:\n"\
-        "   exp=10**(match.start()+1)\n"\
-        "return int(pfafid/exp+1)*exp"
+    pgbody="""
+            import re
+            nign=nignore
+            if nign is None:    
+                nign=1
+            match=re.search(r'[2468]{1}',str(pfafid)[:2:-1][nign:])
+            if match is None:
+               exp=10**9
+            else:
+               exp=10**(match.start()+nign)
+            return int(pfafid/exp+1)*exp
+            """
