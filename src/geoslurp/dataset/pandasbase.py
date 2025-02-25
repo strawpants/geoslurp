@@ -182,5 +182,9 @@ class PandasBase(DataSet):
         # if self.stripuri:
             # arname=self.conf.generalize_path(os.path.join(self.dataDir(),self.name+"_data.zarr"))
         # else:
-        arname=os.path.join(self.dataDir(),self.name+"_data.zarr")
+        try:
+            arname=os.path.join(self.dataDir(),self.name+"_data.zarr")
+        except OSError:
+            #ok we probably don't need this anyway
+            arname=self.name+"_data.zarr"
         return arname
