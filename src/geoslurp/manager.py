@@ -79,4 +79,6 @@ class GeoslurpManager:
         #return an initialized dataset class
         return ds(self.conn)
 
-
+    @property
+    def clientconf(self):
+        return self._localconf
