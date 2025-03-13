@@ -70,7 +70,7 @@ class GeoslurpManager:
         return self._conf
     
     def execute(self,qry):
-        self.conn.execute(qry)
+        return self.conn.execute(qry)
     
     def dataset(self,name:str):
         
