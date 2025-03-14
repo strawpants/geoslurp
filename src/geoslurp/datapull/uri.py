@@ -57,14 +57,14 @@ def setFtime(file,modTime=None):
         mtime=time.mktime(modTime.timetuple())
         os.utime(file,(mtime,mtime))
 
-def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,restdict=None,headers=None,customRequest=None,upfid=None,cookiefile=None):
+def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,restdict=None,headers=None,customRequest=None,upfid=None,cookiefile=None,checkssl=True):
     """
     Download  the content of an url to an open file or buffer using pycurl
     :param url: url to download from
     :param fileorfid: filename or open file or buffer
     :param mtime: explicitly set the modification time to this (usefull when modification times are not supported
     b the server)
-    :param gzip: additionally gzip the file on disk (note this routine does not append \*.gz to the file name)
+    :param gzip: additionally gzip the file on disk (note this routine does not append .gz to the file name)
     :param gunzip: automatically gunzip the downloaded file
     :param auth: supply authentification data (user and passw)
     :param restdic: a set of (REST) API name-value pairs to be added to the url (provide as a dict)
@@ -72,7 +72,7 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
     :param customRequest: set a custoi request (e.g. for WEBDAV servers)
     :return: modification time of remote file
     """
-
+    
     if gzip and gunzip:
         raise RuntimeError("cannot gzip and gunzip at the same time")
 
@@ -93,6 +93,10 @@ def curlDownload(url,fileorfid,mtime=None,gzip=False,gunzip=False,auth=None,rest
     crl=pycurl.Curl()
     #crl.setopt(pycurl.VERBOSE,1)
     crl.setopt(pycurl.USERAGENT,"curl/7.72.0")
+    if not checkssl:
+        crl.setopt(pycurl.SSL_VERIFYPEER,0)
+        crl.setopt(pycurl.SSL_VERIFYHOST,0)
+
     crl.setopt(pycurl.URL,url.replace(' ','%20'))
     crl.setopt(pycurl.FOLLOWLOCATION, 1)
     crl.setopt(pycurl.WRITEDATA,fid)
@@ -180,13 +184,14 @@ class UriBase():
     auth=None #link to a certain authentification alias
     subdirs='' #create these subdrectories when downloading the file
     headers=None 
-    def __init__(self,url,lastmod=None,auth=None,subdirs='',headers=None,cookiefile=None):
+    def __init__(self,url,lastmod=None,auth=None,subdirs='',headers=None,cookiefile=None,checkssl=True):
         self.url=url
         self.lastmod=lastmod
         self.auth=auth
         self.subdirs=subdirs
         self.headers=headers
         self.cookiefile=cookiefile
+        self.checkssl=checkssl
 
     def updateModTime(self):
         """Tries to retrieve the last modification time of a file
@@ -234,9 +239,9 @@ class UriBase():
         slurplog.info("Downloading %s"%(uri.url))
         try:
             if self.lastmod:
-                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers,cookiefile=self.cookiefile)
+                curlDownload(self.url,uri.url,self.lastmod,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers,cookiefile=self.cookiefile,checkssl=self.checkssl)
             else:
-                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers,cookiefile=self.cookiefile)
+                self.lastmod=curlDownload(self.url,uri.url,gzip=gzip,gunzip=gunzip,auth=self.auth,restdict=restdict,headers=self.headers,cookiefile=self.cookiefile,checkssl=self.checkssl)
         except pycurl.error as pyexc:
             slurplog.info("Download failed, skipping %s"%(uri.url))
             if not continueonError:
