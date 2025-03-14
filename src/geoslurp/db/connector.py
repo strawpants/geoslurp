@@ -113,8 +113,8 @@ class GeoslurpConnector(GeoslurpConnectorBase):
 
         if bind is None:
             bind=self.dbeng
-        
-        mdata.reflect(self.dbeng,schema=schema)
+        mdata=self.mdata 
+        # mdata.reflect(self.dbeng,schema=schema)
 
 
         if truncate:
