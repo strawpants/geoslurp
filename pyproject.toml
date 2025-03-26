@@ -63,10 +63,12 @@ oceansub = "geoslurp.plugins.dset.ne_ocean_fast:getOceanFastDsets"
 icedraindiv = "geoslurp.plugins.dset.icedraindiv:getDrainDivDsets"
 hydroshedsbasins = "geoslurp.plugins.dset.hydrosheds:getHyBasins"
 #psmsl = "geoslurp.plugins.dset.PSMSL:getPSMSLDsets"
+gleamdset = "geoslurp.plugins.dset.gleam:getGleamDsets"
 
 [project.entry-points."geoslurp.viewfactories"]
 graceview = "geoslurp.plugins.views.graceviews:getGRACEviews"
 grdcviews = "geoslurp.plugins.dset.grdc:getGRDCviews"
+
 
 [project.entry-points."geoslurp.dbfuncs"]
 maskgeom = "geoslurp.plugins.dbfunc.maskgeom:gs_maskgeom"

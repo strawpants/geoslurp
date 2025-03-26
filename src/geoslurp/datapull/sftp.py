@@ -119,6 +119,7 @@ class CrawlerSftp(CrawlerBase):
 
     def ls(self,subdirs=''):
         if bool(subdirs):
+            olddir=self.sftpconnection.getcwd()
             self.sftpconnection.chdir(subdirs)
 
         for name in self.sftpconnection.listdir():
@@ -126,6 +127,9 @@ class CrawlerSftp(CrawlerBase):
             mtime=datetime.fromtimestamp(stat.st_mtime)
             yield name,mtime
     
+        if bool(subdirs):
+            #change back to original directory
+            self.sftpconnection.chdir(olddir)
 
     def uris(self, check=False,subdirs=''):
         # """Generate a list files in a directory and return a list of uri"""
