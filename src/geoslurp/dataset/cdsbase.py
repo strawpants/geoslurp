@@ -34,7 +34,7 @@ envelopType = Geography(geometry_type="POLYGON", srid='4326')
 
 class CDSBase(DataSet):
     """Provides a Base class from which subclasses can inherit to download CDS hosted data"""
-    scheme="cds" 
+    schema="cds" 
     # The following need to be set in hte derived class
     resource=None
     productType=None
@@ -49,6 +49,9 @@ class CDSBase(DataSet):
     oformat='netcdf'
     description="CDS subset downloaded from cds.climate.copernicus.eu"
     res=0.0 # resolution of the pixels in the grid (used for adding a margin around the downloaded area when not 0)
+    cdsalias=None
+    dformat='unarchived'
+    resumejobs=False
     def __init__(self,dbconn):
         super().__init__(dbconn)
         if not "cds_jobs" in self._dbinvent.data:
@@ -65,17 +68,26 @@ class CDSBase(DataSet):
         """implement this function in derived class"""
         raise NotImplementedError("MetaExtractor(self,uri) not implemented")
         return {}
+    
+    def addRequest(self,name,requestdict,priority=0):
+        self.reqdicts[name]=(priority,requestdict)
 
-    def pull(self,maxreq=100):
+    def pull(self,maxreq=10):
         dout=self.dataDir()
+        if self.cdsalias is None:
+            auth=None
+        else:
+            #get url and api key from the database user
+            auth=self.conf.authCred(self.cdsalias,qryfields=["apikey","url"])
         
-        cdsQueue=Cds(self.resource,self._dbinvent.data["cds_jobs"])
+        cdsQueue=Cds(self.resource,self._dbinvent.data["cds_jobs"],auth=auth)
         #add requests to the CDS queue
         #Not it is expected that the derived class adds these requestdictionaries in one way or the other (default will be empty)
-        
+        #sort requests by priority
+        reqsorted=sorted(self.reqdicts.items(),key=lambda item:item[1][0])
         #only submit maxreq at once
         nreq=0
-        for name,reqdict in self.reqdicts.items():
+        for name,(priority,reqdict) in reqsorted:
 
             fout=os.path.join(dout,self.resource+"_"+name+self.app)
             cdsQueue.queueRequest(fout,reqdict)
@@ -121,7 +133,8 @@ class CDSBase(DataSet):
         #return a default cdsapi dictionary with common parameters
         
         reqdict={
-                'format': self.oformat,
+                'data_format': self.oformat,
+                'download_format': self.dformat,
                 'variable': self.variables,
                 }
         
@@ -131,8 +144,8 @@ class CDSBase(DataSet):
         if geomshape:
             bb=geomshape.envelope.exterior.xy
             hres=self.res/2
-            if np.min(bb[0]) > 180 or np.min(bb[0]) < 0:
-                breakpoint()
+            # if np.min(bb[0]) > 180 or np.min(bb[0]) < 0:
+                # breakpoint()
             reqdict["area"]=[np.max(bb[1])+hres,np.min(bb[0])-hres,np.min(bb[1])-hres,np.max(bb[0])+hres]
         return reqdict
 

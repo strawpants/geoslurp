@@ -13,7 +13,7 @@
 # License along with Frommle; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2021
+# Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2025
 
 
 from sqlalchemy import Column, Integer, String, DateTime,JSON
@@ -29,40 +29,55 @@ from geoslurp.dataset.cdsbase import CDSBase
 from geoslurp.dataset.RasterBase import RasterBase
 import xarray as xr
 from datetime import datetime
-from geoslurp.config.catalogue import geoslurpCatalogue
 from geoslurp.types.numpy import np_to_datetime
 from copy import deepcopy
 
-class GloFASBase(CDSBase):
+schema="glofasv4"
+
+
+class GloFASBasev4(CDSBase):
     """Provides a Base class from which subclasses can inherit to download a subset of the data per area"""
-    scheme="hydro"
+    schema=schema
     resource='cems-glofas-historical'
     productType='consolidated'
     yrstart=2000
     yrend=2000
     variables='river_discharge_in_the_last_24_hours'
     oformat='grib'
-    res=0.1 #degrees
+    res=0.05 #degrees
+    version=(4,0,0)
+    priority="time"  #priorotizrize by 'time' or 'request'
     def __init__(self,dbconn):
         super().__init__(dbconn)
+        self.prio=0
 
     def appendRequest(self,name,geomshape):
         """Builds a dictionary for the cdsapi
         :param geomshape (shapely geometry) geometry which will be used to compute the bounding box to download data for"""
         reqdict=self.getDefaultDict(geomshape)
-        reqdict['system_version']='version_3_1'
+        reqdict['system_version']='version_4_0'
         reqdict['hydrological_model']='lisflood'
         reqdict['hyear']= [f"{yr}" for yr in range(self.yrstart,self.yrend+1)]
-        reqdict['hmonth']=['january','february','march','april','may','june','july','august', 'september','october','november','december']
+        reqdict['hmonth']=[f"{mn:02d}" for mn in range(1,13)]
+        # reqdict['hmonth']=['january','february','march','april','may','june','july','august', 'september','october','november','december']
         reqdict['hday']=[f"{mn:02d}" for mn in range(1,32)]
         
-        #loop over the requested years (need to split this up to prevent too lrage requests
+        if self.priority == 'request':
+            prio=self.prio
+        else:
+            prio=0
+
+        #loop over the requested years (need to split this up to prevent too large requests
         for yr in range(self.yrstart,self.yrend+1):
             reqdictcp=deepcopy(reqdict)
             reqdictcp["hyear"]=f"{yr}"
             name_yr=f"{name}_{yr}"
-            self.reqdicts[name_yr]=reqdictcp
+            if self.priority == 'time':
+                prio+=1
+            self.addRequest(name_yr,reqdictcp,prio)
 
+        if self.priority == 'request':
+            self.prio+=1
 
     def metaExtractor(self,uri):
         name="".join(os.path.basename(uri.url).split('_')[-2:])[0:-4]
@@ -79,19 +94,31 @@ class GloFASBase(CDSBase):
         return {"name":name,"lastupdate":uri.lastmod,"tstart":tstart,"tend":tend,"uri":uri.url,"data":data,"geom":wktdumps(bbox)}
 
 
-class GloFASUpArea(RasterBase):
+class GloFASUpAreav4(RasterBase):
     """Class which downloads and registers the auxiliary uparea file"""
     regularblocking=True
-    scheme="hydro" 
-    
+    schema=schema 
+    version=(4,0,0) 
     def pull(self):
-        upsrc=http("https://confluence.ecmwf.int/download/attachments/143039724/upArea.nc",lastmod=datetime(2021,11,17))
+        
+        #upsrc=http("https://confluence.ecmwf.int/download/attachments/143039724/upArea.nc",lastmod=datetime(2021,11,17))
+        
+        upsrc=http("https://confluence.ecmwf.int/download/attachments/242067380/uparea_glofas_v4_0.nc")
         #download to cache only (will be in db raster)
         urif,upd=upsrc.download(self.srcdir,check=True)
 
 
+class GloFASElevationv4(RasterBase):
+    """Class which downloads and registers the auxiliary elevation file"""
+    regularblocking=True
+    schema=schema 
+    version=(4,0,0) 
+    def pull(self):
+        upsrc=http("https://confluence.ecmwf.int/download/attachments/242067380/elevation_glofas_v4_0.nc")
+        #download to cache only (will be in db raster)
+        urif,upd=upsrc.download(self.srcdir,check=True)
 
-geoslurpCatalogue.addDataset(GloFASUpArea)
 
-
+def getGloFASDsets(conf):
+    return [GloFASUpAreav4,GloFASElevationv4]
 

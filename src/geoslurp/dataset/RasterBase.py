@@ -112,23 +112,24 @@ class RasterBase(DataSet):
         #fix the srid
         if self.srid:
             self._ses.execute(
-                text("select UpdateRasterSRID('%s'::name,'%s'::name,'rast'::name,%d)"%(self.scheme,self.name,self.srid))
+                text("select UpdateRasterSRID('%s'::name,'%s'::name,'rast'::name,%d)"%(self.schema,self.name,self.srid))
             )
 
         #add/compute raster constraints
         self._ses.execute(
-            text("select AddRasterConstraints('%s'::name,'%s'::name,'rast'::name)"%(self.scheme,self.name))
+            text("select AddRasterConstraints('%s'::name,'%s'::name,'rast'::name)"%(self.schema,self.name))
         )
         if self.regularblocking:
             self._ses.execute(
-                text("select AddRasterConstraints('%s'::name,'%s'::name,'rast'::name,'regular_blocking')"%(self.scheme,self.name))
+                text("select AddRasterConstraints('%s'::name,'%s'::name,'rast'::name,'regular_blocking')"%(self.schema,self.name))
             )
 
         #create overviews
         if self.overviews:
             for factor in self.overviews:
-                self._ses.execute(text("select ST_CreateOverview('%s.%s'::regclass, 'rast', %d, 'Lanczos')"%(self.scheme,self.name,factor)))
+                self._ses.execute(text("select ST_CreateOverview('%s.%s'::regclass, 'rast', %d, 'Lanczos')"%(self.schema,self.name,factor)))
 
+        self._ses.commit()
         self.updateInvent()
 
     def rastExtract(self,uri):

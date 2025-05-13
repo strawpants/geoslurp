@@ -22,13 +22,20 @@ import numpy as np
 import os
 from urllib.error import HTTPError
 class Cds:
-    def __init__(self,resource,jobqueue={}):
+    def __init__(self,resource,jobqueue={},auth=None):
         #start a client (which allows queing jobs in the bacjground)
-        if not os.path.exists(os.path.join(os.path.expanduser("~"),".cdsapirc")):
-            raise RuntimeError("Before using the cdsapi please visit https://cds.climate.copernicus.eu/api-how-to to obtain a token and setup your ~/.cdsapirc file")
-        self.client = cdsapi.Client(wait_until_complete=False)
+
+        if auth is None: 
+            if not os.path.exists(os.path.join(os.path.expanduser("~"),".cdsapirc")):
+                raise RuntimeError("Before using the cdsapi please visit https://cds.climate.copernicus.eu/api-how-to to obtain a token and setup your ~/.cdsapirc file")
+        
+            self.client = cdsapi.Client(wait_until_complete=False)
+        else:
+            self.client = cdsapi.Client(wait_until_complete=False,url=auth.url,key=auth.apikey)
+
         self.resource=resource
         self.jobqueue=jobqueue
+
         self.requests=[] 
 
     def queueRequest(self,fout,requestDict):
@@ -47,10 +54,12 @@ class Cds:
             #try to get an existing job
             slurplogger().info(f"Trying to retrieve previously queued job for {fout}")
             try:
-                req=cdsapi.api.Result(self.client,dict(request_id=req_id))
+                # see https://github.com/ecmwf-projects/cads-api-client/issues/94
+                req=self.client.client.get_remote(req_id)
+                # req=cdsapi.api.Result(self.client,dict(request_id=req_id))
                 req.update()
             except: 
-                #Job cannot be found anymore
+                #Job cannot be found 
                 slurplogger().info(f"Job cannot be found anymore for {fout}, requeing")
                 req_id=None
                 del self.jobqueue[fout]
@@ -66,6 +75,17 @@ class Cds:
         
         self.requests.append((req,fout,req.reply["state"]))
     
+    def loadRequests(self):
+        """Load previous requests from job queue"""
+        for fout,req_id in self.jobqueue.items():
+            if os.path.exists(fout):
+                slurplogger().info(f"Already downloaded file {fout}, skipping request")
+            return
+            req=self.client.client.get_remote(req_id)
+            # req=cdsapi.api.Result(self.client,dict(request_id=req_id))
+            req.update()
+            self.requests.append((req,fout,req.reply['state']))
+
     def clearRequests(self,removestates=['downloaded','unavailable','failed']):
         """clears certain requests and updates the jobqueue"""
         reqs=[]
