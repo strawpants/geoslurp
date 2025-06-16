@@ -81,8 +81,14 @@ def IceSatPolygons(fname):
                 #initialize a ring
                 ring=ogr.Geometry(ogr.wkbLinearRing)
                 ring.AddPoint(row[1],row[2])
-
-
+        #return the last polygon
+        poly=ogr.Geometry(ogr.wkbPolygon)
+        poly.AddGeometry(ring)
+        poly.FlattenTo2D()
+        poly.CloseRings()
+        meta={"basinid":row[0],"geom":WKBElement(poly.ExportToIsoWkb(),srid=4326)}
+        
+        yield meta
 
 class IceSatDDivBase(DataSet):
     """Icesat Drainage divide table base"""
