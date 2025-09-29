@@ -24,8 +24,7 @@ from geoslurp.db import tableMapFactory
 import re
 from zipfile import ZipFile
 import os
-
-
+from tqdm import tqdm
 
 class OGRBase(DataSet):
     """Base class which downloads a single OGR layer (e.g. shapefile) and registers it as a postgis table"""
@@ -168,7 +167,7 @@ class OGRBase(DataSet):
             # print(self.targetprj)
             
             # print(sourceprj.IsSame(self.targetprj))
-            for feat in shpflayer:
+            for feat in tqdm(shpflayer,desc="Processing features"):
                 count+=1
                 if self.table == None:
                     cols=self.columnsFromOgrFeat(feat)
@@ -176,7 +175,9 @@ class OGRBase(DataSet):
                 values=self.valuesFromOgrFeat(feat,transform)
                 try:
                     self.addEntry(values)
-                except:
+                except Exception as e:
+                    slurplogger().warning(e)
+                    breakpoint()
                     pass
                 #commit every X times
                 

@@ -65,6 +65,7 @@ hydroshedsbasins = "geoslurp.plugins.dset.hydrosheds:getHyBasins"
 glofas = "geoslurp.plugins.dset.glofas:getGloFASDsets"
 #psmsl = "geoslurp.plugins.dset.PSMSL:getPSMSLDsets"
 gleamdset = "geoslurp.plugins.dset.gleam:getGleamDsets"
+geoglowsdset = "geoslurp.plugins.dset.geoglows:getGeoglowsDsets"
 
 [project.entry-points."geoslurp.viewfactories"]
 graceview = "geoslurp.plugins.views.graceviews:getGRACEviews"
