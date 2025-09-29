@@ -88,6 +88,15 @@ def main():
     if args.add_readonly_user:
         addUser(DbConn,args.add_readonly_user,True)
 
+    #possibly create a new schema
+    if args.create_schema:
+        try:
+            DbConn.CreateSchema(args.create_schema)
+            print("Created schema %s with default geoslurp permissions"%(args.create_schema))
+        except Exception as e:
+            print(e)
+            print("Could not create schema %s, quitting"%(args.create_schema))
+            sys.exit(1)
 
     #print registered datasets (i.e. tables)
     if args.info:
@@ -376,6 +385,8 @@ def addCommandLineArgs():
         parser.add_argument("--add-user",metavar="username",type=str,
                 help='Add a new postgresql user (you will be prompted for a password, or you can append the password after a colon e.g. pietje:secretpassword)')
         
+
+        
         parser.add_argument("--add-readonly-user",metavar="username",type=str,
                             help='Add a new readonly postgresql user (you will be prompted for a password, or you can append the password after a colon e.g. pietje:secretpassword)')
 
@@ -383,6 +394,9 @@ def addCommandLineArgs():
         parser.add_argument("--password",metavar="password",type=str,
                             help='Select password for the postgresql user')
 
+        parser.add_argument("--create-schema",metavar="schemaname",type=str,
+                help='Create a new postgresql schema with the default geoslurp permissions')
+        
         parser.add_argument("--port",metavar="port",type=int, default=5432,
                             help='Select the port where the database is served')
 
