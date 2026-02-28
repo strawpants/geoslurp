@@ -18,7 +18,7 @@
 from abc import ABC, abstractmethod
 import os
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.db import Inventory,Settings
+from geoslurp.db import Inventory,Users
 import re
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import text
@@ -65,7 +65,7 @@ class DBFunc(ABC):
             self._ses.add(self._dbinvent)
             self._ses.commit()
         #load user settings
-        self.conf=Settings(self.db)
+        self.conf=Users(self.db)
 
     def updateInvent(self,updateTime=True):
         if updateTime:

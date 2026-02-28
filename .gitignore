@@ -8,3 +8,4 @@ build
 *.gpg
 .ipynb_checkpoints
 pygeoslurp
+.env

@@ -19,7 +19,7 @@
 
 import xarray as xr
 from geoslurp.dataset.xarraybase import XarrayBase
-from geoslurp.db import Settings
+from geoslurp.db import Users
 import os
 import shutil
 import numpy as np
@@ -158,7 +158,7 @@ class XarDsAccessor:
                 if outofdb:
                     zstore=row._mapping[xrcol]["uri"]
                     if 'LOCALDATAROOT' in zstore:
-                        conf=Settings(gsconn)
+                        conf=Users(gsconn)
                         zstore=conf.get_local_path(zstore)
                     if zstore.endswith('.zarr'):
                         dsout=xr.open_zarr(zstore,consolidated=False)

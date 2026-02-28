@@ -18,7 +18,7 @@
 
 from geoslurp.config.localsettings import readLocalSettings,settingsArgs
 from geoslurp.db.connector import GeoslurpConnector
-from geoslurp.db import Settings
+from geoslurp.db import Users
 from geoslurp.config.catalogue import DatasetCatalogue
 from sqlalchemy import text
 

@@ -20,14 +20,14 @@ import os
 from geoslurp.config.slurplogger import slurplogger
 import shutil
 import re
-from geoslurp.db import Inventory,Settings
+from geoslurp.db import Inventory, Users
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime,timedelta
 from sqlalchemy import Table,Column,Integer,String
 from sqlalchemy.dialects.postgresql import TIMESTAMP,insert
 from geoslurp.datapull import UriFile
 from sqlalchemy import and_
-from geoslurp.db.settings import getCreateDir
+from geoslurp.db.users import getCreateDir
 from geoslurp.db import tableMapFactory
 from geoslurp.db.exporter import exportQuery
 
@@ -100,7 +100,7 @@ class DataSet(ABC):
             self._ses.commit()
             self.exists=False
         #load user settings
-        self.conf=Settings(self.db)
+        self.conf=Users(self.db)
         
         #possibly create the table when explictily provided
         # the table creation will be postponed when no explicit table is provided
@@ -117,7 +117,7 @@ class DataSet(ABC):
         #see if there are custom columns defined inthe table
         if self.table:
             for col in self.table.__table__.columns:
-                if re.search('geoslurp\.types\.',str(col.type.__class__)):
+                if re.search(r'geoslurp\.types\.',str(col.type.__class__)):
                     if not "customcolumns" in self._dbinvent.data:
                         self._dbinvent.data["customcolumns"]={}
                     self._dbinvent.data["customcolumns"][col.name]={"type":col.type.__repr__(),"class":str(col.type.__class__)}

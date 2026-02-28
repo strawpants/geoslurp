@@ -1,0 +1,19 @@
+services:
+  geoslurpdb:
+    build: . 
+    #image: strawpants/geoslurp:latest 
+    hostname: geoslurpdb
+    container_name: geoslurpdb
+    restart: unless-stopped
+    volumes:
+      - "${PG_DATA}:/var/lib/postgresql"
+      - "${OUT_DB_VOLUME}:/geo_outdb"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: geoslurp
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+

@@ -20,14 +20,16 @@ from sqlalchemy import Column,Integer,String,Float,DateTime,ARRAY,JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.mutable import MutableDict
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData,text,UUID
+import uuid
+
 schema="admin"
 GSBase=declarative_base(metadata=MetaData(schema='admin'))
 
 class InventTable(GSBase):
     """Defines the GEOSLURP POSTGRESQL inventory table"""
     __tablename__='inventory'
-    id=Column(Integer, primary_key=True)
+    id=Column(UUID, primary_key=True,default=uuid.uuid7)
     scheme=Column(String)
     dataset=Column(String,unique=True)
     pgfunc=Column(String,unique=True)
@@ -59,11 +61,11 @@ class Inventory:
         if not geoslurpConn.tableExists(f"{schema}.{self.table.__tablename__}"):
             GSBase.metadata.create_all(geoslurpConn.dbeng)
             #also grant geoslurp all privileges
-            self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.inventory to geoslurp;')
-            self.db.dbeng.execute('GRANT USAGE ON SEQUENCE admin.inventory_id_seq to geoslurp')
+            self._ses.execute(text('GRANT ALL PRIVILEGES ON admin.inventory to geoslurp;'))
+            self._ses.execute(text('GRANT USAGE ON SEQUENCE admin.inventory_id_seq to geoslurp'))
 
             #read only user's may need to access information in the inventory table
-            self.db.dbeng.execute('GRANT SELECT ON admin.inventory to geobrowse;')
+            self._ses.execute(text('GRANT SELECT ON admin.inventory to geobrowse;'))
 
 
     def __iter__(self):

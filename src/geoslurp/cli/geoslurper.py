@@ -24,7 +24,7 @@ from geoslurp.db import Inventory, Credentials
 from geoslurp.db import GeoslurpConnector
 import json
 import logging
-from geoslurp.db import Settings
+from geoslurp.db import Users
 from geoslurp.config.localsettings import readLocalSettings
 from geoslurp.config.catalogue import DatasetCatalogue
 import getpass
@@ -52,11 +52,15 @@ def main():
         sys.exit(1)
 
 
+    #Add a new user if requested
+    if args.add_user:
+        addUser(DbConn,args.add_user,args.user_role)
+
     # # Process common options
     geoslurpCatalogue=DatasetCatalogue()
 
-    # Initializes an object which holds the current settings
-    conf=Settings(DbConn)
+    # Initializes an object which holds the current User settings
+    conf=Users(DbConn)
     if args.list:
         if args.dvfexpr is None:
             subsearch=""
@@ -81,12 +85,6 @@ def main():
         #do not do other stuff after listing
         return 
 
-    #Add a new user
-    if args.add_user:
-        addUser(DbConn,args.add_user,False)
-
-    if args.add_readonly_user:
-        addUser(DbConn,args.add_readonly_user,True)
 
     #possibly create a new schema
     if args.create_schema:
@@ -271,7 +269,7 @@ def main():
         del dv
 
 
-def addUser(conn,user,readonly):
+def addUser(conn,user,role):
     userpass=user.split(":")
     if len(userpass) == 1:
         userpass.append(getpass.getpass(prompt='Please enter new password: '))
@@ -279,11 +277,8 @@ def addUser(conn,user,readonly):
         if userpass[1] != passwcheck:
             print("Passwords do not match, please try again")
             sys.exit(1)
-    else:
-        passw1=userpass[1]
 
-    # import ipdb;ipdb.set_trace()
-    conn.addUser(userpass[0],userpass[1],readonly)
+    conn.createUser(userpass[0],userpass[1],role)
 
 class JsonParseAction(argparse.Action):
     """Parse Arguments provided as JSON into dictionaries"""
@@ -384,11 +379,12 @@ def addCommandLineArgs():
 
         parser.add_argument("--add-user",metavar="username",type=str,
                 help='Add a new postgresql user (you will be prompted for a password, or you can append the password after a colon e.g. pietje:secretpassword)')
+
         
 
         
-        parser.add_argument("--add-readonly-user",metavar="username",type=str,
-                            help='Add a new readonly postgresql user (you will be prompted for a password, or you can append the password after a colon e.g. pietje:secretpassword)')
+        parser.add_argument("--user-role",metavar="role",type=str,choices=['admin','editor','browse'],default='browse',
+                            help='Specify the role of the user to be added: admin/editor/browser')
 
 
         parser.add_argument("--password",metavar="password",type=str,

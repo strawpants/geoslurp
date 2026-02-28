@@ -13,14 +13,16 @@
 # License along with Frommle; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-# Author Roelof Rietbroek (roelof@geod.uni-bonn.de), 2018
+# Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2018-2026
 
 # reads and writes contains a class to work with  the geoslurp inventory table
 from sqlalchemy import Column,Integer,String,Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB, BYTEA
+
 from sqlalchemy.ext.mutable import MutableDict
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData,text,UUID
+import uuid
 
 import json
 import os
@@ -28,6 +30,7 @@ from collections import namedtuple
 from geoslurp.config.slurplogger import slurplogger
 import sys
 import getpass
+import uuid
 
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
@@ -82,60 +85,34 @@ commonCredentials={"podaac":["user","passw","trusted"],"github":["oauthtoken"]}
 GSBase=declarative_base(metadata=MetaData(schema='admin'))
 
 
-class SettingsTable(GSBase):
+class UsersTable(GSBase):
     """Defines the GEOSLURP POSTGRESQL settings table"""
-    __tablename__='settings'
-    id=Column(Integer, primary_key=True)
+    __tablename__='users'
+    id=Column(UUID, primary_key=True,default=uuid.uuid7)
     user=Column(String, unique=True)
     conf=Column(MutableDict.as_mutable(JSONB))
     auth=Column(BYTEA) # stored as blowfish encrypted bytearray
 
 
-class Settings():
-    """Read and write default and user specific settings to and from the database"""
-    table=SettingsTable
+class Users():
+    """Read and write user specific settings to and from the database"""
+    table=UsersTable
     pgmount=None
     def __init__(self,dbconn):
         self.db=dbconn
         self.ses=self.db.Session()
         #creates the settings table if it doesn't exists
-        if not self.db.tableExists("admin.settings"):
-            GSBase.metadata.create_all(self.db.dbeng)
-            # #also grant geoslurp all privileges
-            # #geoslurp users need to be able to add themselves to the admin.settings table
-            self.db.dbeng.execute('GRANT ALL PRIVILEGES ON admin.settings to geoslurp')
-            self.db.dbeng.execute('GRANT USAGE ON SEQUENCE admin.settings_id_seq to geoslurp')
-
-        try:
-            #extract the default entry
-            self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
-        except:
-            #create a new default entry
-            self.defaultentry=SettingsTable(user='default',conf={})
-            self.ses.add(self.defaultentry)
-            self.ses.commit()
-            #also create a view to the default which may be read by the geobrowse group
-            self.db.dbeng.execute("CREATE VIEW admin.settings_default as select * from admin.settings as t where t.user  = 'default'")
-            self.db.dbeng.execute("GRANT SELECT ON admin.settings_default to geobrowse")
-
-
-            #retrieve again
-            self.defaultentry=self.ses.query(self.table).filter(self.table.user == 'default').one()
-        #retrieve/create a user entry
+        if not self.db.tableExists("admin.users"):
+            slurplogger.error("table admin.users does not exist, has the database been properly initialized?")
+        #retrieve the user entry
         try:
             self.userentry=self.ses.query(self.table).filter(self.table.user == self.db.user).one()
             if not self.userentry.conf:
                 self.userentry.conf={}
         except:
-            #make a new empty entry
+            #make a new volatile entry (only
             self.userentry=self.table(user=self.db.user,conf={})
             self.ses.add(self.userentry)
-            self.ses.commit()
-
-        if "pg_geoslurpmount" in self.defaultentry.conf:
-            #retrieve the dataroot to which the postgresql instance itself has access (e.g. for out-db-raster)
-            self.pgmount=self.defaultentry.conf["pg_geoslurpmount"]
-
         self.decryptAuth()
 
     #The operators below overload the [] operators allowing the retrieval and  setting of dictionary items
@@ -153,13 +130,6 @@ class Settings():
 
     def __delitem__(self, key):
         del self.userentry.conf[key]
-    
-    def getdefaults(self,key):
-        """returns the default"""
-        return self.defaultentry.conf[key]
-
-    def setdefault(self,key,val):
-        self.defaultentry.conf[key]=val
 
     def show(self,hideflag="hide"):
         """Show the loaded user configuration"""
@@ -200,6 +170,7 @@ class Settings():
         self.auth.update({cred.alias:dict([(ky, val) for ky, val in zip(cred._fields, cred) if bool(val) and ky != "alias"])})
         self.encryptAuth()
         self.ses.commit()
+        self.ses.flush()
 
     def delAuth(self,key):
         """Delete an authentication entry by specifying it's alias"""
@@ -222,7 +193,6 @@ class Settings():
                     else:
                         self.userentry.conf[ky]=val
 
-                # self.userentry.conf.update(indict)
             else:
                 self.userentry.conf=indict
 
@@ -307,6 +277,8 @@ class Settings():
         else:
             self.auth={}
     
+
+
     @staticmethod
     def genCypher(salt,password):
         kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),length=32,salt=salt,iterations=100000)

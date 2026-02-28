@@ -91,11 +91,11 @@ class GeoslurpConnector(GeoslurpConnectorBase):
             if private:
                 conn.execute(text("CREATE SCHEMA IF NOT EXISTS %s;"%(schema.lower())))
             else:
-                conn.execute(text("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION geoslurp;"%(schema.lower())))
+                conn.execute(text("CREATE SCHEMA IF NOT EXISTS %s AUTHORIZATION geoeditor;"%(schema.lower())))
                 conn.execute(text("GRANT USAGE ON SCHEMA %s to geobrowse;"%((schema.lower()))))
 
-                conn.execute(text("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geobrowse,geoslurp;"%((schema.lower()))))
-                conn.execute(text("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geobrowse,geoslurp;"%((schema.lower()))))
+                conn.execute(text("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT SELECT ON TABLES TO geobrowse,geoeditor;"%((schema.lower()))))
+                conn.execute(text("ALTER DEFAULT PRIVILEGES IN SCHEMA %s GRANT USAGE ON SEQUENCES TO geobrowse,geoeditor;"%((schema.lower()))))
                 conn.commit()
 
     def schemaexists(self,name):
@@ -178,16 +178,18 @@ class GeoslurpConnector(GeoslurpConnectorBase):
             conn.execute(text(f'DROP VIEW IF EXISTS {viewn};'))
             conn.commit()
 
-    def addUser(self,name,passw,readonly=False):
+    def createUser(self,name,passw,role='browse'):
         """Adds a user to the database (note executing this functions requires appropriate database rights"""
         slurplogger().info("Adding new user: %s"%(name))
-        with self.dbeng.connect() as conn:
-            if readonly:
-                conn.execute(text(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE geobrowse;"))
-            else:
-                conn.execute(text(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE geoslurp,geobrowse;"))
+        rmap={"browse":"geobrowse","admin":"geoadmin,geoeditor,geobrowse","editor":"geoeditor,geobrowse"}
 
-            conn.commit()
+        self.execute(f"CREATE USER {name} WITH ENCRYPTED PASSWORD '{passw}' IN ROLE {rmap[role]};")
+        #insert a new entry in the admin.users table
+        qry=f"INSERT into admin.users (\"user\",conf) VALUES ('{name}','{{}}') ON CONFLICT (\"user\") DO NOTHING"
+        self.execute(qry)
+        
+        if role == 'admin':
+            self.execute(f"ALTER ROLE {name} WITH CREATEROLE")
 
     def execute(self,qry):
         with self.dbeng.connect() as conn:

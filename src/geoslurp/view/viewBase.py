@@ -16,7 +16,7 @@
 # Author Roelof Rietbroek (r.rietbroek@utwente.nl), 2020
 
 from geoslurp.config.slurplogger import slurplogger
-from geoslurp.db import Inventory,Settings
+from geoslurp.db import Inventory,Users
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 
@@ -54,7 +54,7 @@ class TView:
             self._ses.add(self._dbinvent)
             self._ses.commit()
         #load user settings
-        self.conf=Settings(self.db)
+        self.conf=Users(self.db)
         
     def updateInvent(self,updateTime=True):
         if updateTime:
