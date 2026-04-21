@@ -37,10 +37,9 @@ def main():
     parser=addCommandLineArgs()
 
     #make sure the last option is separated and interpreted as a positional argument when it is not an option
-    if not argv[-1].startswith('-'):
-        argv.insert(-1,"--")
         
     args = parser.parse_args(argv[1:])
+    
     args=check_args(args,parser)
 
     # We need a point of contact to communicate with the database
@@ -62,25 +61,22 @@ def main():
     # Initializes an object which holds the current User settings
     conf=Users(DbConn)
     if args.list:
-        if args.dvfexpr is None:
-            subsearch=""
-        else:
-            subsearch=args.dvfexpr
 
+        
         # show available schemes and datasets
         print("Available datasets (SCHEME.DATASET):")
         for catentry in geoslurpCatalogue.listDataSets(conf):
-            if subsearch in catentry:
+            if args.dataset in catentry:
                 print("\t%s"%(catentry))    
         
         print("Available functions (SCHEME.FUNCTION):")
         for catentry in geoslurpCatalogue.listFunctions(conf):
-            if subsearch in catentry:
+            if args.func in catentry:
                 print("\t%s"%(catentry))
         
         print("Available views (SCHEME.VIEW):")
         for catentry in geoslurpCatalogue.listViews(conf):
-            if subsearch in catentry:
+            if args.view in catentry:
                 print("\t%s"%(catentry))
         #do not do other stuff after listing
         return 
@@ -96,30 +92,11 @@ def main():
             print("Could not create schema %s, quitting"%(args.create_schema))
             sys.exit(1)
 
-    #print registered datasets (i.e. tables)
+    #print registered datasets,views,functions (i.e. tables)
     if args.info:
         slurpInvent=Inventory(DbConn)
-        if args.dvfexpr:
-            #print a summary of the inventory
-            dsetpat=re.compile(args.dvfexpr)
-            for entry in slurpInvent:
-                if entry.dataset is not None and f"{entry.scheme}.{entry.dataset}" == args.dvfexpr:
-                    print("Registered entry:")
-                    print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','view','pgfunc']})
         
-        elif args.view:
-            #print a summary of the inventory
-            viewpat=re.compile(args.view)
-            for entry in slurpInvent:
-                if entry.view is not None and viewpat.fullmatch(entry.scheme+'.'+entry.view):
-                    print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','dataset','pgfunc']})
-        elif args.func:
-            #print a summary of the inventory
-            funcpat=re.compile(args.func)
-            for entry in slurpInvent:
-                if entry.pgfunc is not None and funcpat.fullmatch(entry.scheme+'.'+entry.pgfunc):
-                    print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','dataset','view']})
-        else:
+        if not (args.dataset or args.func or args.view):
             #print a summary of the inventory (registered datasets, views, functions)
             for entry in slurpInvent:
                 if entry.dataset is not None:
@@ -128,7 +105,32 @@ def main():
                     print("VIEW: %s.%s %s %s"%(entry.scheme,entry.view,entry.owner,entry.lastupdate.isoformat()))
                 elif entry.pgfunc is not None:
                     print("FUNCTION: %s.%s %s %s"%(entry.scheme,entry.pgfunc,entry.owner,entry.lastupdate.isoformat()))
-        sys.exit(0) 
+            sys.exit(0) 
+        
+
+        #print more detailed help
+
+        dsetpat=re.compile(args.dataset)
+        for entry in slurpInvent:
+            if entry.dataset is not None and f"{entry.scheme}.{entry.dataset}" == args.dataset:
+                print("Registered dataset entry:")
+                print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','view','pgfunc']})
+        
+        #print a summary of the inventory
+        viewpat=re.compile(args.view)
+        for entry in slurpInvent:
+            if entry.view is not None and viewpat.fullmatch(entry.scheme+'.'+entry.view):
+                print("Registered view entry:")
+                print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','dataset','pgfunc']})
+       
+        #print a summary of the inventory
+        funcpat=re.compile(args.func)
+        for entry in slurpInvent:
+            if entry.pgfunc is not None and funcpat.fullmatch(entry.scheme+'.'+entry.pgfunc):
+                print("Registered function entry:")
+                print({ky:val for ky,val in entry.__dict__.items() if ky not in ['_sa_instance_state','dataset','view']})
+        
+
     
     #change settings in the database
     
@@ -152,46 +154,13 @@ def main():
                 conf.updateAuth(Credentials(alias=alias,**dvals))
 
 
-    if not ( args.dvfexpr or args.func or args.view ):
-        #OK jsut gracefully exit
-        sys.exit(0)
-
-    if args.dvfexpr and not (args.func or args.view):
-        dataset=geoslurpCatalogue.getDsetClass(conf, args.dvfexpr)
-    else:
-        dataset=None
-
-    if args.func:
-        func=geoslurpCatalogue.getDFuncClass(conf, args.dvfexpr)
-    else:
-        func=None
-
-    if args.view:
-        view=geoslurpCatalogue.getViewClass(conf, args.dvfexpr)
-    else:
-        view=None
-
-    if dataset is None and func is None and view is None:
-        print("No valid dataset,function or view selected")
-        sys.exit(1)
-
-    # dataset specific help
-    if args.help: 
-        if args.dvfexpr and not (args.func or args.view):
-            print("Detailed info on %s options which may be provided as JSON dictionaries"%(dataset.__name__))
-            print("\t%s.pull:\n\t\t %s"%(dataset.__name__,dataset.pull.__doc__))
-            print("\t%s.register:\n\t%s"%(dataset.__name__,dataset.register.__doc__))
-        if args.func:
-            print("Detailed info on %s options which may be provided as JSON dictionaries"%(func.__name__))
-            print("\t%s.register:\n\t%s"%(func.__name__,func.register.__doc__))
-
-        if args.view:
-            print("Detailed info on %s options which may be provided as JSON dictionaries"%(view.__name__))
-            print("\t%s.register:\n\t%s"%(view.__name__,view.register.__doc__))
+    if not ( args.dataset or args.func or args.view ):
+        #Nothing to do further gracefully exit
         sys.exit(0)
     
-    
-    if not (args.pull or args.register or args.purge_cache or args.purge_data or args.purge_entry or args.export):
+
+    if not (args.help or args.pull or args.register or args.purge_cache or args.purge_data or args.purge_entry or args.export):
+        #nothing to do
         sys.exit(0)
     
     if args.pull:
@@ -208,7 +177,15 @@ def main():
             regopts={}
         args.register=True
     
-    if dataset is not None:
+    if args.dataset:
+        # retrieve the class
+        dataset=geoslurpCatalogue.getDsetClass(conf, args.dataset)
+        if args.help: 
+            print("Detailed info on %s options which may be provided as JSON dictionaries"%(dataset.__name__))
+            print("\t%s.pull:\n\t\t %s"%(dataset.__name__,dataset.pull.__doc__))
+            print("\t%s.register:\n\t%s"%(dataset.__name__,dataset.register.__doc__))
+            sys.exit(0)
+        
         #initialize the class
         ds=dataset(DbConn)
 
@@ -243,7 +220,15 @@ def main():
         del ds
     
     #loop over requested function
-    if func is not None:
+    if args.func:
+        #retrieve function class
+        func=geoslurpCatalogue.getDFuncClass(conf, args.dvfexpr)
+        
+        if args.help:
+            print("Detailed info on %s options which may be provided as JSON dictionaries"%(func.__name__))
+            print("\t%s.register:\n\t%s"%(func.__name__,func.register.__doc__))
+            sys.exit(0)
+
         #initialize the class
         df=func(DbConn)
 
@@ -256,7 +241,14 @@ def main():
         del df
 
     #loop over requested view
-    if view is not None:
+    if args.view :
+        
+        view=geoslurpCatalogue.getViewClass(conf, args.dvfexpr)
+        if args.help:
+            print("Detailed info on %s options which may be provided as JSON dictionaries"%(view.__name__))
+            print("\t%s.register:\n\t%s"%(view.__name__,view.register.__doc__))
+            sys.exit(0)
+        
         #initialize the class
         dv=view(DbConn)
 
@@ -315,16 +307,19 @@ def addCommandLineArgs():
         parser.add_argument('-h','--help',action='store_true',
                              help="Prints detailed help (may be used in combination with a positional argument matching a certain dataset for detailed JSON options)")
         #Look for a datasets, view or functionsto manage
-        parser.add_argument("dvfexpr",metavar="SCHEMA.ITEM",nargs="?",type=str,default=None,
-                help='Select a fully qualified dataset, function or view specified as schema.tablename/function/view. use --func  or --view to specify the type considered (default is a dataset')
-
-        parser.add_argument("-f","--func",action="store_true",
-                help='Use geoslurp database functions')
+        parser.add_argument("-d","--dataset",metavar="SCHEMA.DATASET",nargs="?",type=str,default="",
+                help='Select a fully qualified dataset and its schema')
         
-        parser.add_argument("-V","--view",action="store_true",
-                help='Use geoslurp database views)')
+        parser.add_argument("-f","--func",metavar="SCHEMA.FUNCTION",nargs="?",type=str,default="",
+                help='Select an importable database function to e.g. register')
+
+        parser.add_argument("-V","--view",metavar="SCHEMA.VIEW",nargs="?",type=str,default="",
+                help='Select a importable database view to e.g. register.')
+        
+
+
         parser.add_argument('-i','--info',action='store_true',
-                            help="Show information about selected datasets")
+                            help="Show information about selected datasets,functions,views")
 
         parser.add_argument('-l','--list',action='store_true',
                             help="List all datasets which are available to use. When a positional argument is supplied it will be used as a search string")
@@ -433,9 +428,10 @@ def check_args(args,parser):
     if not any(vars(args).values()):
         print(__file__+' Error: no arguments provided, try --help', file=sys.stderr)
         sys.exit(1)
-
+    
     if args.help:
-        if not ( args.dvfexpr or args.func ) :
+        if not ( args.dataset or args.func or args.view ):
+            #only print complete help when no specialized help is requested
             parser.print_help()
             sys.exit(0)
 

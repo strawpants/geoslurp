@@ -39,7 +39,7 @@ geoinfo=namedtuple("geoinfo",["srid","geoname","geomtype","dims","rastname"])
 geoinfo.__new__.__defaults__=(4326,"geom","GEOMETRY",2,"rast",)
 
 class PandasBase(DataSet):
-    """Base class which reads in a pandas compatible table (CSV, excel, or in memory dataframe are currently supported) it in a db table"""
+    """Base class which reads in a pandas compatible table (CSV, excel, parquet, or in memory dataframe are currently supported) it in a db table"""
     pdfile=None
     skipfooter=0
     ftype="csv"
@@ -159,6 +159,8 @@ class PandasBase(DataSet):
             indf=pd.read_excel(self.pdfile,skipfooter=self.skipfooter,engine="openpyxl")
         elif self.ftype =="GPKG":
             indf=gpd.read_file(self.pdfile,driver=self.ftype)
+        elif self.ftype == "parquet":
+            indf=pd.read_parquet(self.pdfile)
         else:
             raise RuntimeError("Don't know how to open %s, specify ftype"%(self.pdfile))
             #possibly modify dataframe in derived class 

@@ -20,6 +20,7 @@ from geoslurp.datapull.http import Uri as http
 from geoslurp.config.slurplogger import slurplogger
 import os
 from geoslurp.dataset.OGRBase import OGRBase
+from geoslurp.dataset.pandasbase import PandasBase
 
 schema="geoglowsv2"
 
@@ -44,7 +45,25 @@ class GeoglowsGlobalStreams(OGRBase):
         basename=os.path.basename(self.url)
         uri.download(direc=self.cacheDir(),outfile=basename)
 
+# include global model meta data as table
+class GeoglowsGlobalModelData(PandasBase):
+    """Adds meta information on the above stream links"""
+    schema=schema
+    ftype='parquet'
+    url="http://geoglows-v2.s3-us-west-2.amazonaws.com/tables/v2-model-table.parquet"
+    def __init__(self,dbconn):
+        super().__init__(dbconn)
+
+        self.pdfile=os.path.join(self.cacheDir(),os.path.basename(self.url))
+
+    def pull(self):
+        """Pulls the parquet data from the Amazon bucket and store it in the cache directory"""
+        uri=http(self.url)
+        basename=os.path.basename(self.url)
+        uri.download(direc=self.cacheDir(),outfile=basename)
+
+
 
 def getGeoglowsDsets(conf):
-    return [GeoglowsGlobalStreams]
+    return [GeoglowsGlobalStreams,GeoglowsGlobalModelData]
 
