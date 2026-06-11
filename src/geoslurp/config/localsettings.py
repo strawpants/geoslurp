@@ -22,7 +22,7 @@ import keyring
 import getpass
 import copy
 from geoslurp.config import slurplog
-
+from keyring.errors import KeyringLocked
 
 class settingsArgs:
     """Stand-in class with several settings.
@@ -173,6 +173,13 @@ def readLocalSettings(args=settingsArgs(),readonlyuser=True,dbalias=None):
                 slurplog.warning("no suitable python keyring backend found")
                 argsout.password=None
                 hasBackend=False
+            except KeyringLocked:
+                slurplog.warning("Problem retrieving password from keyring")
+                argsout.password=None
+                hasBackend=True
+            
+
+
 
             if not argsout.password:
                 argsout.password=getpass.getpass(prompt='Please enter password for %s: '%(argsout.user))
